@@ -1,8 +1,8 @@
 ### The official Skyscraper F.A.Q (frequently asked questions)
 A quick note before I let you loose on the questions:
 * You can get a list of all available command-line options by running `Skyscraper --help`
-* For a more thorough description of the command-line options go [here](https://github.com/Gemba/skyscraper/blob/master/docs/CLIHELP.md)
-* You can read all about the available `config.ini` options [here](https://github.com/Gemba/skyscraper/blob/master/docs/CONFIGINI.md)
+* For a more thorough description of the command-line options go [here](CLIHELP.md)
+* You can read all about the available `config.ini` options [here](CONFIGINI.md)
 
 And now for the questions (and answers)...
 
@@ -12,14 +12,14 @@ And now for the questions (and answers)...
 
 **A:** You probably forgot to generate the gamelist. Skyscraper has two modes; resource gathering mode and gamelist generation mode. First you gather data into Skyscraper's resource cache by scraping the platform with any of the supported scraping modules (eg. `Skyscraper -p snes -s thegamesdb`). When you feel like you have gathered all the resources that you need, you then generate the gamelist by simply leaving out the `-s MODULE` option (eg. `Skyscraper -p snes`).
 
-Read more about the resource cache [here](https://github.com/Gemba/skyscraper/blob/master/docs/CACHE.md).
+Read more about the resource cache [here](CACHE.md).
 </details>
   
 #### Q: Skyscraper keeps quitting on me with errors about request limits or similar. What's going on?
 <details>
   <summary>Expand answer...</summary>
 
-**A:** Almost all of the scraping modules, such as ScreenScraper and TheGamesDb, have restrictions applied to avoid users overloading their servers. These restrictions are set by them, not Skyscraper. Some modules even require you to log in to use them. Read more about the restrictions and how to deal with them [here](https://github.com/Gemba/skyscraper/blob/master/docs/SCRAPINGMODULES.md). If you've created a user at ScreenScraper and want to use your credentials with Skyscraper, just add the following section to `/home/USER/.skyscraper/config.ini`. Type it *exactly* like this, but with your own user and pass.
+**A:** Almost all of the scraping modules, such as ScreenScraper and TheGamesDb, have restrictions applied to avoid users overloading their servers. These restrictions are set by them, not Skyscraper. Some modules even require you to log in to use them. Read more about the restrictions and how to deal with them [here](SCRAPINGMODULES.md). If you've created a user at ScreenScraper and want to use your credentials with Skyscraper, just add the following section to `/home/USER/.skyscraper/config.ini`. Type it *exactly* like this, but with your own user and pass.
 
 ```
 [screenscraper]
@@ -31,7 +31,7 @@ userCreds="USER:PASS"
 <details>
   <summary>Expand answer...</summary>
 
-**A:** Skyscraper includes a powerful artwork compositor you can set up any way you like. Read more about the possibilities [here](https://github.com/Gemba/skyscraper/blob/master/docs/ARTWORK.md). If you just want it to export the raw unmodified screenshot and other pieces of artwork, you can use the `/home/USER/.skyscraper/artwork.xml.example2` and copy it to `/home/USER/.skyscraper/artwork.xml`. Remember to regenerate the gamelists after you've done this to make use of the new artwork configuration. This can be done simply by running Skyscraper with `Skyscraper -p PLATFORM`. This will regenerate the gamelist for that platform using this new artwork configuration.
+**A:** Skyscraper includes a powerful artwork compositor you can set up any way you like. Read more about the possibilities [here](ARTWORK.md). If you just want it to export the raw unmodified screenshot and other pieces of artwork, you can use the `/home/USER/.skyscraper/artwork.xml.example2` and copy it to `/home/USER/.skyscraper/artwork.xml`. Remember to regenerate the gamelists after you've done this to make use of the new artwork configuration. This can be done simply by running Skyscraper with `Skyscraper -p PLATFORM`. This will regenerate the gamelist for that platform using this new artwork configuration.
 </details>
 
 #### Q: I've edited the artwork.xml or some other part of Skyscraper's gamelist specific configurations, but the games still show up the same inside my frontend. Why is that?
@@ -63,7 +63,7 @@ WARNING!!! Some people tend to run Skyscraper with `sudo Skyscraper ...`. Do *no
 <details>
   <summary>Expand answer...</summary>
 
-**A:** YES! Absolutely. In addition to taking options from the command-line, Skyscraper also reads the `/home/USER/.skyscraper/config.ini` file, which is where you should set everything up. This file allows you to configure things both globally, per-platform, per-frontend and per-scraping module. Read more about the available options and option priorities [here](https://github.com/Gemba/skyscraper/blob/master/docs/CONFIGINI.md)
+**A:** YES! Absolutely. In addition to taking options from the command-line, Skyscraper also reads the `/home/USER/.skyscraper/config.ini` file, which is where you should set everything up. This file allows you to configure things both globally, per-platform, per-frontend and per-scraping module. Read more about the available options and option priorities [here](CONFIGINI.md)
 </details>
 
 #### Q: When I try to scrape data or generate gamelists I get all sorts of write permission errors and missing configurations. What's going on?

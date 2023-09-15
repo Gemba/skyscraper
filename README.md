@@ -7,7 +7,7 @@ Below is the original and slightly adapted README. If you are interested about t
 
 A powerful and versatile yet easy to use game scraper written in C++ for use with multiple frontends running on a Linux system (macOS and Windows too, but not officially supported). It scrapes and caches various game resources from various scraping sources, including media such as screenshot, cover and video. It then gives you the option to generate a game list and artwork for the chosen frontend by combining all of the cached resources.
 
-All Skyscraper features are [well-documented](https://github.com/Gemba/skyscraper/tree/master/docs) and there's also a [F.A.Q](https://github.com/Gemba/skyscraper/blob/master/docs/FAQ.md).
+All Skyscraper features are [well-documented](docs) and there's also a [F.A.Q](docs/FAQ.md) with answers.
 
 ## 🎮Platforms Supported (set with '-p'):
 Check the full list of platforms [here](docs/PLATFORMS.md).
@@ -58,7 +58,7 @@ If that went well, proceed to the default installation instructions below. It sh
 
 NOTE 1! User 'davidmgrantham' reports that the `--with-default-names` above might be deprecated for some macOS installations. If you remove it, you also need to download the `update_skyscraper.sh` and edit the `tar` commands to be `gtar` before running it.
 
-NOTE 2! User 'trvrplk' reports numerous issues on MacOS 11.2+. Check [here](https://github.com/Gemba/skyscraper/issues/301) for potential fixes.
+NOTE 2! User 'trvrplk' reports numerous issues on MacOS 11.2+. Check [here](https://github.com/muldjord/skyscraper/issues/301) for potential fixes.
 
 ### Download, compile and install
 When you've installed the prerequisites as described above, you can install Skyscraper by typing in the following commands:
@@ -141,7 +141,7 @@ One of Skyscraper's most powerful features is the resource cache. It's important
 ### Custom data
 I addition to allowing scraping from locally cached resources, Skyscraper also allows you to import your own data into the resource cache with the `-s import` scraping module. You can also edit existing resources in the cache or add individual `user` resources with the `--cache edit` command. Lastly, you also have the option of importing existing EmulationStation game list data into the Skyscraper resource cache if you need it. You can do this with the `-s esgamelist` scraping module.
 
-To read more about any of the features described above, please check out all of the documentation [here](https://github.com/Gemba/skyscraper/tree/master/docs).
+To read more about any of the features described above, please check out all of the documentation [here](docs/).
 
 ### Artwork look and effects
 Check the full artwork documentation [here](docs/ARTWORK.md)
