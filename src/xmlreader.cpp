@@ -54,14 +54,14 @@ QList<GameEntry> XmlReader::getEntries(QString inputFolder) {
     QDomNodeList pathNodes = elementsByTagName("folder");
 
     addEntries(gameNodes, gameEntries, inputFolder);
-    addEntries(pathNodes, gameEntries, inputFolder);
+    addEntries(pathNodes, gameEntries, inputFolder, true);
 
     return gameEntries;
 }
 
 void XmlReader::addEntries(const QDomNodeList &nodes,
                            QList<GameEntry> &gameEntries,
-                           const QString &inputFolder) {
+                           const QString &inputFolder, bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
         GameEntry entry;
         entry.path = makeAbsolute(nodes.at(a).firstChildElement("path").text(),
@@ -94,6 +94,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         entry.eSLastPlayed = nodes.at(a).firstChildElement("lastplayed").text();
         entry.eSKidGame = nodes.at(a).firstChildElement("kidgame").text();
         entry.eSSortName = nodes.at(a).firstChildElement("sortname").text();
+        entry.isFolder = isFolder;
         gameEntries.append(entry);
     }
 }
