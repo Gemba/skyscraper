@@ -25,6 +25,7 @@
 
 #include "attractmode.h"
 
+#include "gameentry.h"
 #include "nametools.h"
 #include "strtools.h"
 
@@ -39,31 +40,32 @@ bool AttractMode::loadOldGameList(const QString &gameListFileString) {
     if (gameListFile.open(QIODevice::ReadOnly)) {
         while (!gameListFile.atEnd()) {
             QList<QByteArray> snippets = gameListFile.readLine().split(';');
-            if (snippets.length() >= 17) {
+            if (snippets.length() >= __LAST) {
                 if (snippets.at(0) == "#Name") {
                     continue;
                 }
                 GameEntry entry;
-                entry.baseName = snippets.at(0);
+                entry.baseName = snippets.at(ROMNAME);
                 // Do NOT get sqr and par notes here. They are not used by
                 // skipExisting
-                entry.title = snippets.at(1);
+                entry.title = snippets.at(TITLE);
                 // entry.aMEmulator = snippets.at(2);
-                entry.aMCloneOf = snippets.at(3);
+                entry.aMCloneOf = snippets.at(CLONEOF);
                 // full iso date
-                entry.releaseDate = snippets.at(4) % "0101";
-                entry.publisher = snippets.at(5);
-                entry.tags = snippets.at(6);
-                entry.players = snippets.at(7);
-                entry.aMRotation = snippets.at(8);
-                entry.aMControl = snippets.at(9);
-                entry.aMStatus = snippets.at(10);
-                entry.aMDisplayCount = snippets.at(11);
-                entry.aMDisplayType = snippets.at(12);
-                entry.aMAltRomName = snippets.at(13);
-                entry.aMAltTitle = snippets.at(14);
-                entry.aMExtra = snippets.at(15);
-                entry.aMButtons = snippets.at(16);
+                entry.releaseDate = snippets.at(YEAR) % "0101";
+                entry.publisher = snippets.at(MANUFACTURER);
+                entry.tags = snippets.at(CATEGORY);
+                entry.players = snippets.at(PLAYERS);
+                entry.aMRotation = snippets.at(ROTATION);
+                entry.aMControl = snippets.at(CONTROL);
+                entry.aMStatus = snippets.at(STATUS);
+                entry.aMDisplayCount = snippets.at(DISPLAYCOUNT);
+                entry.aMDisplayType = snippets.at(DISPLAYTYPE);
+                entry.aMAltRomName = snippets.at(ALTROMNAME);
+                entry.aMAltTitle = snippets.at(ALTTITLE);
+                entry.aMExtra = snippets.at(EXTRA);
+                entry.aMButtons = snippets.at(BUTTONS);
+                entry.rating = snippets.at(RATING);
                 oldEntries.append(entry);
             }
         }

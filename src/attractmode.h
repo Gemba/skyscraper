@@ -35,6 +35,7 @@ class AttractMode : public AbstractFrontend {
 
 public:
     AttractMode();
+
     void checkReqs() override;
     bool skipExisting(QList<GameEntry> &gameEntries,
                       QSharedPointer<Queue> queue) override;
@@ -54,6 +55,16 @@ public:
     QString getVideosFolder() override;
 
 private:
+    enum Cols {
+        // clang-format off
+        ROMNAME = 0,  TITLE,        EMULATOR,    CLONEOF,    YEAR,
+        MANUFACTURER, CATEGORY,     PLAYERS,     ROTATION,   CONTROL,
+        STATUS,       DISPLAYCOUNT, DISPLAYTYPE, ALTROMNAME, ALTTITLE,
+        EXTRA,        BUTTONS,      SERIES,      LANGUAGE,   REGION,
+        RATING,       __LAST
+        // clang-format on
+    };
+
     bool saveDescFile = false;
     QFileInfo emuInfo;
     QDir descDir;
