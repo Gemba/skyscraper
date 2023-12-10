@@ -84,10 +84,9 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
 
 void EmulationStation::preserveFromOld(GameEntry &entry) {
     for (const auto &oldEntry : oldEntries) {
-        QString oldFileName = oldEntry.path.mid(oldEntry.path.lastIndexOf("/"),
-                                                oldEntry.path.length());
-        QString fileName =
-            entry.path.mid(entry.path.lastIndexOf("/"), entry.path.length());
+        QString oldFileName =
+            oldEntry.path.right(oldEntry.path.lastIndexOf("/"));
+        QString fileName = entry.path.right(entry.path.lastIndexOf("/"));
         if (oldFileName == fileName) {
             if (entry.eSFavorite.isEmpty())
                 entry.eSFavorite = oldEntry.eSFavorite;
@@ -123,8 +122,6 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
 void EmulationStation::assembleList(QString &finalOutput,
                                     QList<GameEntry> &gameEntries) {
     int dots = 0;
-    // Always make dotMod at least 1 or it will give "floating point exception"
-    // when modulo
     int dotMod = gameEntries.length() * 0.1 + 1;
     if (dotMod == 0)
         dotMod = 1;
