@@ -60,6 +60,7 @@ private:
 
     QString getMediaTypeFolder(QString type, bool detectVideoPath = false);
     bool checkEmulatorFile(QString fileName);
+    QString concatPath(QString absPath, QString sub);
 };
 
 #endif // ATTRACTMODE_H
