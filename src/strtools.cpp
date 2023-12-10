@@ -28,6 +28,7 @@
 #include <QCryptographicHash>
 #include <QDate>
 #include <QRegularExpression>
+#include <QStringBuilder>
 
 QString StrTools::xmlUnescape(QString str) {
     str = str.replace("&amp;", "&")
@@ -122,7 +123,7 @@ QByteArray StrTools::magic(const QByteArray str) {
 
     QByteArray thingie;
     for (int a = 0; a < str.length(); ++a) {
-        thingie.append(QString::number(strChars[a] += magicChars[a]).toUtf8() +
+        thingie.append(QString::number(strChars[a] += magicChars[a]).toUtf8() %
                        ";");
     }
 
@@ -327,8 +328,8 @@ QString StrTools::conformTags(const QString str) {
 #endif
     for (auto &tag : tagList) {
         tag = tag.simplified();
-        tag = tag.left(1).toUpper() + tag.mid(1, tag.length() - 1);
-        tags += tag.simplified() + ", ";
+        tag = tag.left(1).toUpper() % tag.mid(1, tag.length() - 1);
+        tags = tags % tag.simplified() % ", ";
     }
     tags.chop(2);
     return tags;
@@ -338,11 +339,11 @@ QString StrTools::getVersionHeader() {
     QString headerString = "Running Skyscraper v" VERSION " by Lars Muldjord";
     QString dashesString = "";
     for (int a = 0; a < headerString.length(); ++a) {
-        dashesString += "-";
+        dashesString = dashesString % "-";
     }
 
-    return QString("\033[1;34m" + dashesString + "\033[0m\n\033[1;33m" +
-                   headerString + "\033[0m\n\033[1;34m" + dashesString +
+    return QString("\033[1;34m" % dashesString % "\033[0m\n\033[1;33m" %
+                   headerString % "\033[0m\n\033[1;34m" % dashesString %
                    "\033[0m\n");
 }
 
@@ -351,17 +352,17 @@ QString StrTools::getVersionBanner() {
     int idx = 0;
     QStringList b = {
         // clang-format off
-         g[idx++] + "m _______ __                                                     ___",
-         g[idx++] + "m|   _   |  |--.--.--.-----.----.----.---.-.-----.-----.----.   |\"\"\"|",
-         g[idx++] + "m|   1___|    <|  |  |__ --|  __|   _|  _  |  _  |  -__|   _|   |\"\"\"|",
-         g[idx++] + "m|____   |__|__|___  |_____|____|__| |___._|   __|_____|__|     |\"\"\"|",
-        (g[idx++] + "m|:  1   |     |_____|                     |__|  %1     |\"\"\"|").arg(VERSION,10),
-         g[idx++] + "m|::.. . |                                                      |\"\"\"|",
-         g[idx++] + "m`-------' by Lars Muldjord and contributors                   \"\"''''\"",
+         g[idx++] % "m _______ __                                                     ___",
+         g[idx++] % "m|   _   |  |--.--.--.-----.----.----.---.-.-----.-----.----.   |\"\"\"|",
+         g[idx++] % "m|   1___|    <|  |  |__ --|  __|   _|  _  |  _  |  -__|   _|   |\"\"\"|",
+         g[idx++] % "m|____   |__|__|___  |_____|____|__| |___._|   __|_____|__|     |\"\"\"|",
+        (g[idx++] + "m|:  1   |     |_____|                     |__|  %1     |\"\"\"|").arg(VERSION, 10),
+         g[idx++] % "m|::.. . |                                                      |\"\"\"|",
+         g[idx++] % "m`-------' by Lars Muldjord and contributors                   \"\"''''\"",
         // clang-format on
     };
     QString bs= "\b\b\b\b\b\b\b\b\b\b\b";
-    return bs + "\033[38;5;" + b.join("\n\033[38;5;") + "\033[0m \n";
+    return bs % "\033[38;5;" % b.join("\n\033[38;5;") % "\033[0m \n";
 }
 
 QString StrTools::stripBrackets(const QString str) {
