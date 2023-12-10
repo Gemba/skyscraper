@@ -46,7 +46,6 @@
 #include "attractmode.h"
 #include "emulationstation.h"
 #include "pegasus.h"
-#include "retrobat.h"
 #include "skyscraper.h"
 #include "strtools.h"
 
@@ -735,10 +734,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (parser.isSet("f") && frontends.contains(parser.value("f"))) {
         config.frontend = parser.value("f");
     }
-    if (config.frontend == "emulationstation") {
+    if (config.frontend == "emulationstation" || config.frontend == "retrobat") {
         frontend = new EmulationStation;
-    } else if (config.frontend == "retrobat") {
-        frontend = new RetroBat;
     } else if (config.frontend == "attractmode") {
         frontend = new AttractMode;
     } else if (config.frontend == "pegasus") {
