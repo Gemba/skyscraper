@@ -27,6 +27,7 @@
 #define EMULATIONSTATION_H
 
 #include "abstractfrontend.h"
+#include "gameentry.h"
 
 class EmulationStation : public AbstractFrontend {
     Q_OBJECT

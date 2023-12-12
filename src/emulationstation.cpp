@@ -75,9 +75,10 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
                     break;
                 }
             } else if (current.isDir()) {
-                // Use current.absoluteFilePath here since it is already a path.
-                // Otherwise it will use the parent folder
-                if (current.absoluteFilePath() == queue->at(b).absolutePath()) {
+                // Use current.canonicalFilePath here since it is already a
+                // path. Otherwise it will use the parent folder
+                if (current.canonicalFilePath() ==
+                    queue->at(b).canonicalPath()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
@@ -111,29 +112,38 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
             if (entry.eSKidGame.isEmpty()) {
                 entry.eSKidGame = oldEntry.eSKidGame;
             }
-            if (entry.eSSortName.isEmpty()) {
+            if (entry.eSSortName.isEmpty() || entry.isFolder) {
                 entry.eSSortName = oldEntry.eSSortName;
             }
-            if (entry.developer.isEmpty()) {
+            if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
             }
-            if (entry.publisher.isEmpty()) {
+            if (entry.publisher.isEmpty() || entry.isFolder) {
                 entry.publisher = oldEntry.publisher;
             }
-            if (entry.players.isEmpty()) {
+            if (entry.players.isEmpty() || entry.isFolder) {
                 entry.players = oldEntry.players;
             }
-            if (entry.description.isEmpty()) {
+            if (entry.description.isEmpty() || entry.isFolder) {
                 entry.description = oldEntry.description;
             }
-            if (entry.rating.isEmpty()) {
+            if (entry.rating.isEmpty() || entry.isFolder) {
                 entry.rating = oldEntry.rating;
             }
-            if (entry.releaseDate.isEmpty()) {
+            if (entry.releaseDate.isEmpty() || entry.isFolder) {
                 entry.releaseDate = oldEntry.releaseDate;
             }
-            if (entry.tags.isEmpty()) {
+            if (entry.tags.isEmpty() || entry.isFolder) {
                 entry.tags = oldEntry.tags;
+            }
+            if (entry.isFolder) {
+                entry.title = oldEntry.title;
+                entry.coverFile = oldEntry.coverFile;
+                entry.screenshotFile = oldEntry.screenshotFile;
+                entry.wheelFile = oldEntry.wheelFile;
+                entry.marqueeFile = oldEntry.marqueeFile;
+                entry.textureFile = oldEntry.textureFile;
+                entry.videoFile = oldEntry.videoFile;
             }
             break;
         }
@@ -142,10 +152,23 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
 
 void EmulationStation::assembleList(QString &finalOutput,
                                     QList<GameEntry> &gameEntries) {
-    for (auto &entry : gameEntries) {
-        if (entry.isFolder) {
-            continue;
+    QString extensions = Platform::get().getFormats(
+        config->platform, config->extensions, config->addExtensions);
+    // Check if the platform has both cue and bin extensions. Remove
+    // bin if it does to avoid count() below to be 2. I thought
+    // about removing bin extensions entirely from platform.cpp, but
+    // I assume I've added them per user request at some point.
+    bool cueSuffix = false;
+    if (extensions.contains("*.cue")) {
+        cueSuffix = true;
+        if (extensions.contains("*.bin")) {
+            extensions.replace("*.bin", "");
+            extensions = extensions.simplified();
         }
+    }
+
+    QDir inputDir = QDir(config->inputFolder);
+    for (auto &entry : gameEntries) {
         if (config->platform == "daphne") {
             // 'daphne/roms/yadda_yadda.zip' -> 'daphne/yadda_yadda.daphne'
             entry.path.replace("daphne/roms/", "daphne/")
@@ -153,48 +176,36 @@ void EmulationStation::assembleList(QString &finalOutput,
             continue;
         }
         QFileInfo entryInfo(entry.path);
-        // Check if game is in subfolder. If so, change entry to <folder>
-        // type.
-        QString entryAbsolutePath = entryInfo.absolutePath();
+        // always use canonical file path to ROM
+        entry.path = entryInfo.canonicalFilePath();
+
         // Check if path is exactly one subfolder beneath root platform
-        // folder (has one more '/')
-        if (entryAbsolutePath.count("/") ==
-            config->inputFolder.count("/") + 1) {
-            QString extensions = Platform::get().getFormats(
-                config->platform, config->extensions, config->addExtensions);
-            // Check if the platform has both cue and bin extensions. Remove
-            // bin if it does to avoid count() below to be 2. I thought
-            // about removing bin extensions entirely from platform.cpp, but
-            // I assume I've added them per user request at some point.
-            if (extensions.contains("*.cue") && extensions.contains("*.bin")) {
-                extensions.replace("*.bin", "");
-                extensions = extensions.simplified();
-            }
-            // Check if subfolder has more roms than one, in which case we
-            // stick with <game>
-            if (QDir(entryAbsolutePath, extensions).count() == 1) {
+        // folder (has one more '/') and uses *.cue suffix
+        QString entryCanonicalPath = entryInfo.canonicalPath();
+        if (cueSuffix && entryCanonicalPath.count("/") ==
+                             config->inputFolder.count("/") + 1) {
+            // Check if subfolder has exactly one ROM, in which case we
+            // use <folder>
+            if (QDir(entryCanonicalPath, extensions).count() == 1) {
                 entry.isFolder = true;
-                entry.path = entryAbsolutePath;
+                entry.path = entryCanonicalPath;
             }
         }
 
-        // check if <folder> element(s) are needed
-        QString entryAbsDir = entryInfo.absoluteDir().absolutePath();
-        // config->inputFolder is absolute
-        QString subPath =
-            QDir(config->inputFolder).relativeFilePath(entryAbsDir);
+        // inputDir is canonical
+        QString subPath = inputDir.relativeFilePath(entryCanonicalPath);
         if (subPath != ".") {
+            // <folder> element(s) are needed
             addFolder(config->inputFolder, subPath, gameEntries);
         }
     }
 
     int dots = -1;
-    // Always make dotMod at least 1 or it will give "floating point exception"
-    // when modulo
     int dotMod = 1 + gameEntries.length() * 0.1;
 
     finalOutput.append("<?xml version=\"1.0\"?>\n");
     finalOutput.append("<gameList>\n");
+
     for (auto &entry : gameEntries) {
         if (++dots % dotMod == 0) {
             printf(".");
@@ -216,8 +227,9 @@ void EmulationStation::addFolder(QString &base, QString sub,
                                  QList<GameEntry> &gameEntries) {
     bool found = false;
     QString absPath = base % "/" % sub;
+    qDebug() << "addFolder() called with:" << absPath;
 
-    for (auto entry : gameEntries) {
+    for (auto &entry : gameEntries) {
         if (entry.isFolder && entry.path == absPath) {
             found = true;
             break;
@@ -227,9 +239,10 @@ void EmulationStation::addFolder(QString &base, QString sub,
     if (!found) {
         GameEntry fe;
         fe.path = absPath;
-        fe.title = sub.right(sub.lastIndexOf('/'));
+        fe.title = sub.mid(sub.lastIndexOf('/') + 1, sub.length());
         fe.isFolder = true;
-        qDebug() << "addFolder() folder, path: " << fe.path;
+        qDebug() << "addFolder() adding folder elem, path:" << fe.path
+                 << "with title/name:" << fe.title;
         gameEntries.append(fe);
     }
 
@@ -300,7 +313,7 @@ QString EmulationStation::elem(QString elem, QString &data, bool addEmptyElem,
     QString e;
     if (data.isEmpty()) {
         if (addEmptyElem) {
-            e = QString("    <%1 />").arg(elem);
+            e = QString("    <%1/>").arg(elem);
         }
     } else {
         QString d = data;
