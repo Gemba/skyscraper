@@ -112,6 +112,9 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
         case RATING:
             getRating(game);
             break;
+        case ROTATION:
+            getRotation(game);
+            break;
         case TAGS:
             getTags(game);
             break;
@@ -247,6 +250,22 @@ void AbstractScraper::getTags(GameEntry &game) {
     }
     game.tags = data.left(data.indexOf(tagsPost.toUtf8()));
 }
+
+void AbstractScraper::getRotation(GameEntry &game) {
+    if (rotationPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : rotationPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : rotationPre) {
+        nomNom(nom);
+    }
+    game.rotation = data.left(data.indexOf(rotationPost.toUtf8()));
+}
+
 
 void AbstractScraper::getRating(GameEntry &game) {
     if (ratingPre.isEmpty()) {

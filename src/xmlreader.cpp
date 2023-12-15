@@ -87,6 +87,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         entry.publisher = nodes.at(a).firstChildElement("publisher").text();
         entry.tags = nodes.at(a).firstChildElement("genre").text();
         entry.rating = nodes.at(a).firstChildElement("rating").text();
+        entry.rotation = nodes.at(a).firstChildElement("rotation").text();
         entry.players = nodes.at(a).firstChildElement("players").text();
         entry.eSFavorite = nodes.at(a).firstChildElement("favorite").text();
         entry.eSHidden = nodes.at(a).firstChildElement("hidden").text();

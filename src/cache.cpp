@@ -42,7 +42,8 @@
 static inline QStringList txtTypes(bool useGenres = true) {
     QStringList txtTypes = {"title",     "platform",  "description",
                             "publisher", "developer", "players",
-                            "ages",      "rating",    "releasedate"};
+                            "ages",      "rating",    "releasedate",
+                            "rotation"};
     txtTypes.append(useGenres ? "genres" : "tags");
     return txtTypes;
 }
@@ -232,6 +233,12 @@ void Cache::printPriorities(QString cacheId) {
            game.rating.toStdString().c_str(),
            (game.ratingSrc.isEmpty() ? QString("\033[1;31mmissing\033[0m")
                                      : game.ratingSrc)
+               .toStdString()
+               .c_str());
+    printf("Rotation:       '\033[1;32m%s\033[0m' (%s)\n",
+           game.rotation.toStdString().c_str(),
+           (game.rotationSrc.isEmpty() ? QString("\033[1;31mmissing\033[0m")
+                                     : game.rotationSrc)
                .toStdString()
                .c_str());
     printf("Cover:          '");
@@ -430,6 +437,12 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                         : ""))
                                .toStdString()
                                .c_str());
+                    printf("\033[1;33m6\033[0m) Roation %s\n",
+                           QString((game.rotationSrc.isEmpty()
+                                        ? "(\033[1;31mmissing\033[0m)"
+                                        : ""))
+                               .toStdString()
+                               .c_str());
                     printf("\033[1;33m7\033[0m) Genres %s\n",
                            QString((game.tagsSrc.isEmpty()
                                         ? "(\033[1;31mmissing\033[0m)"
@@ -472,6 +485,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         typeInput = "8";
                     } else if (type == "description") {
                         typeInput = "9";
+                    } else if (type == "rotation") {
+                        typeInput = "10";
                     }
                 }
                 if (typeInput == "") {
@@ -545,6 +560,11 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         printf(
                             "\033[1;34mPlease enter game description. Type "
                             "'\\n' for newlines:\033[0m (Enter to cancel)\n> ");
+                        getline(std::cin, valueInput);
+                    } else if (typeInput == "10") {
+                        newRes.type = "rotation";
+                        printf("\033[1;34mPlease enter rotation:\033[0m "
+                               "(Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else {
                         printf("Invalid input, resource creation "
@@ -935,6 +955,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             printf("  \033[1;32mages\033[0m\n");
             printf("  \033[1;32mtags\033[0m\n");
             printf("  \033[1;32mrating\033[0m\n");
+            printf("  \033[1;32mrotation\033[0m\n");
             printf("  \033[1;32mreleasedate\033[0m\n");
             printf("  \033[1;32mcover\033[0m\n");
             printf("  \033[1;32mscreenshot\033[0m\n");
@@ -1142,6 +1163,7 @@ void Cache::showStats(int verbosity) {
         int ages = 0;
         int tags = 0;
         int ratings = 0;
+        int rotations = 0;
         int releaseDates = 0;
         int covers = 0;
         int screenshots = 0;
@@ -1160,6 +1182,7 @@ void Cache::showStats(int verbosity) {
             ages += it.value().ages;
             tags += it.value().tags;
             ratings += it.value().ratings;
+            rotations += it.value().rotations;
             releaseDates += it.value().releaseDates;
             covers += it.value().covers;
             screenshots += it.value().screenshots;
@@ -1177,6 +1200,7 @@ void Cache::showStats(int verbosity) {
         printf("  Ages         : %d\n", ages);
         printf("  Tags         : %d\n", tags);
         printf("  Ratings      : %d\n", ratings);
+        printf("  Rotations    : %d\n", rotations);
         printf("  ReleaseDates : %d\n", releaseDates);
         printf("  Covers       : %d\n", covers);
         printf("  Screenshots  : %d\n", screenshots);
@@ -1197,6 +1221,7 @@ void Cache::showStats(int verbosity) {
             printf("  Ages         : %d\n", it.value().ages);
             printf("  Tags         : %d\n", it.value().tags);
             printf("  Ratings      : %d\n", it.value().ratings);
+            printf("  Rotations    : %d\n", it.value().rotations);
             printf("  ReleaseDates : %d\n", it.value().releaseDates);
             printf("  Covers       : %d\n", it.value().covers);
             printf("  Screenshots  : %d\n", it.value().screenshots);
@@ -1228,6 +1253,8 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].tags++;
     } else if (type == "rating") {
         resCountsMap[source].ratings++;
+    } else if (type == "rotation") {
+        resCountsMap[source].rotations++;
     } else if (type == "releasedate") {
         resCountsMap[source].releaseDates++;
     } else if (type == "cover") {
@@ -1572,6 +1599,11 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         if (entry.rating != "") {
             resource.type = "rating";
             resource.value = entry.rating;
+            addResource(resource, entry, cacheAbsolutePath, config, output);
+        }
+        if (entry.rotation != "") {
+            resource.type = "rotation";
+            resource.value = entry.rotation;
             addResource(resource, entry, cacheAbsolutePath, config, output);
         }
         if (entry.releaseDate != "") {
@@ -1925,6 +1957,9 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
             } else if (type == "rating") {
                 entry.rating = result;
                 entry.ratingSrc = source;
+            } else if (type == "rotation") {
+                entry.rotation = result;
+                entry.rotationSrc = source;
             } else if (type == "releasedate") {
                 entry.releaseDate = result;
                 entry.releaseDateSrc = source;

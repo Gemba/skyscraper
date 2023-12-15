@@ -115,6 +115,8 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
                 entry.releaseDate = oldEntry.releaseDate;
             if (entry.tags.isEmpty())
                 entry.tags = oldEntry.tags;
+            if (entry.rotation.isEmpty())
+                entry.rotation = oldEntry.rotation;
             break;
         }
     }
@@ -249,6 +251,13 @@ void EmulationStation::assembleList(QString &finalOutput,
             finalOutput.append("    <rating>" +
                                StrTools::xmlEscape(entry.rating) +
                                "</rating>\n");
+        }
+        if (entry.rotation.isEmpty()) {
+            finalOutput.append("    <rotation />\n");
+        } else {
+            finalOutput.append("    <rotation>" +
+                               StrTools::xmlEscape(entry.rotation) +
+                               "</rotation>\n");
         }
         if (entry.description.isEmpty()) {
             finalOutput.append("    <desc />\n");

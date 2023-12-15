@@ -56,6 +56,7 @@ struct ResCounts {
     int ages;
     int tags;
     int ratings;
+    int rotations;
     int releaseDates;
     int covers;
     int screenshots;

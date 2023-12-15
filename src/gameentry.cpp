@@ -76,6 +76,9 @@ void GameEntry::calculateCompleteness(bool videoEnabled) {
     if (ages.isEmpty()) {
         completeness -= valuePerType;
     }
+    if (rotation.isEmpty()) {
+        completeness -= valuePerType;
+    }
     if (videoEnabled && videoFormat.isEmpty()) {
         completeness -= valuePerType;
     }

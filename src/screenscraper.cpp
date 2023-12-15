@@ -53,6 +53,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(PLAYERS);
     fetchOrder.append(AGES);
     fetchOrder.append(RATING);
+    fetchOrder.append(ROTATION);
     fetchOrder.append(DESCRIPTION);
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(TAGS);
@@ -280,6 +281,24 @@ void ScreenScraper::getDescription(GameEntry &game) {
 
 void ScreenScraper::getPlayers(GameEntry &game) {
     game.players = jsonObj["joueurs"].toObject()["text"].toString();
+}
+
+void ScreenScraper::getRotation(GameEntry &game) {
+    int value = jsonObj["rotation"].toObject()["text"].toString();
+    switch(value)
+    {
+        case 90:
+	    game.rotation = "Left";
+	    break;
+        case 270:
+	    game.rotation = "Right";
+	    break;
+        case 180:
+	    game.rotation = "Upsidedown";
+	    break;
+	default:
+	    break;
+    }
 }
 
 void ScreenScraper::getAges(GameEntry &game) {

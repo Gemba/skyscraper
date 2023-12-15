@@ -327,6 +327,7 @@ void ScraperWorker::run() {
         game.tags = StrTools::xmlUnescape(game.tags);
         game.tags = StrTools::conformTags(game.tags);
         game.rating = StrTools::xmlUnescape(game.rating);
+        game.rotation = StrTools::xmlUnescape(game.rotation);
         game.players = StrTools::xmlUnescape(game.players);
         // Make sure we have the correct single digit format of 'players'
         game.players = StrTools::conformPlayers(game.players);
@@ -391,6 +392,8 @@ void ScraperWorker::run() {
                       game.tagsSrc + ")\n");
         output.append("Rating (0-1):   '\033[1;32m" + game.rating +
                       "\033[0m' (" + game.ratingSrc + ")\n");
+        output.append("Rotation:       '\033[1;32m" + game.rotation +
+                      "\033[0m' (" + game.rotationSrc + ")\n");
         output.append("Cover:          " +
                       QString((game.coverData.isNull() ? "\033[1;31mNO"
                                                        : "\033[1;32mYES")) +

@@ -65,6 +65,7 @@ protected:
     virtual void getAges(GameEntry &game);
     virtual void getTags(GameEntry &game);
     virtual void getRating(GameEntry &game);
+    virtual void getRotation(GameEntry &game);
     virtual void getReleaseDate(GameEntry &game);
     virtual void getCover(GameEntry &game);
     virtual void getScreenshot(GameEntry &game);
@@ -110,6 +111,8 @@ protected:
     QString tagsPost;
     QList<QString> ratingPre;
     QString ratingPost;
+    QList<QString> rotationPre;
+    QString rotationPost;
     QList<QString> releaseDatePre;
     QString releaseDatePost;
     QList<QString> coverPre;
