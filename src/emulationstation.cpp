@@ -25,12 +25,19 @@
 
 #include "emulationstation.h"
 
+#include "gameentry.h"
 #include "platform.h"
 #include "strtools.h"
 #include "xmlreader.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QRegularExpression>
+#include <QStringBuilder>
+
+static inline QRegularExpression isoTimeRe() {
+    return QRegularExpression("(^$|T[0-9]{6}$)");
+}
 
 EmulationStation::EmulationStation() {}
 
@@ -68,9 +75,10 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
                     break;
                 }
             } else if (current.isDir()) {
-                // Use current.absoluteFilePath here since it is already a path.
-                // Otherwise it will use the parent folder
-                if (current.absoluteFilePath() == queue->at(b).absolutePath()) {
+                // Use current.canonicalFilePath here since it is already a
+                // path. Otherwise it will use the parent folder
+                if (current.canonicalFilePath() ==
+                    queue->at(b).canonicalPath()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
@@ -88,32 +96,54 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
             oldEntry.path.right(oldEntry.path.lastIndexOf("/"));
         QString fileName = entry.path.right(entry.path.lastIndexOf("/"));
         if (oldFileName == fileName) {
-            if (entry.eSFavorite.isEmpty())
+            if (entry.eSFavorite.isEmpty()) {
                 entry.eSFavorite = oldEntry.eSFavorite;
-            if (entry.eSHidden.isEmpty())
+            }
+            if (entry.eSHidden.isEmpty()) {
                 entry.eSHidden = oldEntry.eSHidden;
-            if (entry.eSPlayCount.isEmpty())
+            }
+            if (entry.eSPlayCount.isEmpty()) {
                 entry.eSPlayCount = oldEntry.eSPlayCount;
-            if (entry.eSLastPlayed.isEmpty())
+            }
+            if (entry.eSLastPlayed.isEmpty()) {
                 entry.eSLastPlayed = oldEntry.eSLastPlayed;
-            if (entry.eSKidGame.isEmpty())
+            }
+            if (entry.eSKidGame.isEmpty()) {
                 entry.eSKidGame = oldEntry.eSKidGame;
-            if (entry.eSSortName.isEmpty())
+            }
+            if (entry.eSSortName.isEmpty() || entry.isFolder) {
                 entry.eSSortName = oldEntry.eSSortName;
-            if (entry.developer.isEmpty())
+            }
+            if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
-            if (entry.publisher.isEmpty())
+            }
+            if (entry.publisher.isEmpty() || entry.isFolder) {
                 entry.publisher = oldEntry.publisher;
-            if (entry.players.isEmpty())
+            }
+            if (entry.players.isEmpty() || entry.isFolder) {
                 entry.players = oldEntry.players;
-            if (entry.description.isEmpty())
+            }
+            if (entry.description.isEmpty() || entry.isFolder) {
                 entry.description = oldEntry.description;
-            if (entry.rating.isEmpty())
+            }
+            if (entry.rating.isEmpty() || entry.isFolder) {
                 entry.rating = oldEntry.rating;
-            if (entry.releaseDate.isEmpty())
+            }
+            if (entry.releaseDate.isEmpty() || entry.isFolder) {
                 entry.releaseDate = oldEntry.releaseDate;
-            if (entry.tags.isEmpty())
+            }
+            if (entry.tags.isEmpty() || entry.isFolder) {
                 entry.tags = oldEntry.tags;
+            }
+            if (entry.isFolder) {
+                entry.title = oldEntry.title;
+                entry.coverFile = oldEntry.coverFile;
+                entry.screenshotFile = oldEntry.screenshotFile;
+                entry.wheelFile = oldEntry.wheelFile;
+                entry.marqueeFile = oldEntry.marqueeFile;
+                entry.textureFile = oldEntry.textureFile;
+                entry.videoFile = oldEntry.videoFile;
+            }
             break;
         }
     }
@@ -121,219 +151,195 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
 
 void EmulationStation::assembleList(QString &finalOutput,
                                     QList<GameEntry> &gameEntries) {
-    int dots = 0;
-    int dotMod = gameEntries.length() * 0.1 + 1;
-    if (dotMod == 0)
-        dotMod = 1;
-    finalOutput.append("<?xml version=\"1.0\"?>\n<gameList>\n");
+    QString extensions = Platform::get().getFormats(
+        config->platform, config->extensions, config->addExtensions);
+    // Check if the platform has both cue and bin extensions. Remove
+    // bin if it does to avoid count() below to be 2. I thought
+    // about removing bin extensions entirely from platform.cpp, but
+    // I assume I've added them per user request at some point.
+    bool cueSuffix = false;
+    if (extensions.contains("*.cue")) {
+        cueSuffix = true;
+        if (extensions.contains("*.bin")) {
+            extensions.replace("*.bin", "");
+            extensions = extensions.simplified();
+        }
+    }
+
+    QList<GameEntry> added;
+    QDir inputDir = QDir(config->inputFolder);
     for (auto &entry : gameEntries) {
-        if (dots % dotMod == 0) {
+        if (config->platform == "daphne") {
+            // 'daphne/roms/yadda_yadda.zip' -> 'daphne/yadda_yadda.daphne'
+            entry.path.replace("daphne/roms/", "daphne/")
+                .replace(".zip", ".daphne");
+            continue;
+        }
+        QFileInfo entryInfo(entry.path);
+        // always use canonical file path to ROM
+        entry.path = entryInfo.canonicalFilePath();
+
+        // Check if path is exactly one subfolder beneath root platform
+        // folder (has one more '/') and uses *.cue suffix
+        QString entryCanonicalDir = entryInfo.canonicalPath();
+        if (cueSuffix && entryCanonicalDir.count("/") ==
+                             config->inputFolder.count("/") + 1) {
+            // Check if subfolder has exactly one ROM, in which case we
+            // use <folder>
+            if (QDir(entryCanonicalDir, extensions).count() == 1) {
+                entry.isFolder = true;
+                entry.path = entryCanonicalDir;
+            }
+        }
+
+        // inputDir is canonical
+        QString subPath = inputDir.relativeFilePath(entryCanonicalDir);
+        if (subPath != ".") {
+            // <folder> element(s) are needed
+            addFolder(config->inputFolder, subPath, gameEntries, added);
+        }
+    }
+
+    gameEntries.append(added);
+
+    int dots = -1;
+    int dotMod = 1 + gameEntries.length() * 0.1;
+
+    finalOutput.append("<?xml version=\"1.0\"?>\n");
+    finalOutput.append("<gameList>\n");
+
+    for (auto &entry : gameEntries) {
+        if (++dots % dotMod == 0) {
             printf(".");
             fflush(stdout);
         }
-        dots++;
-
-        QString entryType = "game";
-
-        QFileInfo entryInfo(entry.path);
-        if (entryInfo.isFile() && config->platform != "daphne") {
-            // Check if game is in subfolder. If so, change entry to <folder>
-            // type.
-            QString entryAbsolutePath = entryInfo.absolutePath();
-            // Check if path is exactly one subfolder beneath root platform
-            // folder (has one more '/')
-            if (entryAbsolutePath.count("/") ==
-                config->inputFolder.count("/") + 1) {
-                QString extensions = Platform::get().getFormats(
-                    config->platform, config->extensions,
-                    config->addExtensions);
-                // Check if the platform has both cue and bin extensions. Remove
-                // bin if it does to avoid count() below to be 2 I thought about
-                // removing bin extensions entirely from platform.cpp, but I
-                // assume I've added them per user request at some point.
-                if (extensions.contains("*.cue") &&
-                    extensions.contains("*.bin")) {
-                    extensions.replace("*.bin", "");
-                    extensions = extensions.simplified();
-                }
-                // Check is subfolder has more roms than one, in which case we
-                // stick with <game>
-                if (QDir(entryAbsolutePath, extensions).count() == 1) {
-                    entryType = "folder";
-                    entry.path = entryAbsolutePath;
-                }
-            }
-        } else if (entryInfo.isDir()) {
-            entryType = "folder";
-        }
-
         // Preserve certain data from old game list entry, but only for empty
         // data
         preserveFromOld(entry);
 
-        if (config->platform == "daphne") {
-            entry.path.replace("daphne/roms/", "daphne/")
-                .replace(".zip", ".daphne");
-            entryType = "game";
-        }
         if (config->relativePaths) {
             entry.path.replace(config->inputFolder, ".");
         }
+        finalOutput.append(createXml(entry));
+    }
+    finalOutput.append("</gameList>\n");
+}
 
-        finalOutput.append("  <" + entryType + ">\n");
-        finalOutput.append("    <path>" + StrTools::xmlEscape(entry.path) +
-                           "</path>\n");
-        finalOutput.append("    <name>" + StrTools::xmlEscape(entry.title) +
-                           "</name>\n");
-        if (entry.coverFile.isEmpty()) {
-            finalOutput.append("    <thumbnail />\n");
-        } else {
+void EmulationStation::addFolder(QString &base, QString sub,
+                                 QList<GameEntry> &gameEntries,
+                                 QList<GameEntry> &added) {
+    bool found = false;
+    QString absPath = base % "/" % sub;
+
+    for (auto &entry : added) {
+        if (entry.path == absPath) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        for (auto &entry : gameEntries) {
+            if (entry.isFolder && entry.path == absPath) {
+                found = true;
+                break;
+            }
+        }
+    }
+
+    if (!found) {
+        GameEntry fe;
+        fe.path = absPath;
+        fe.title = sub.mid(sub.lastIndexOf('/') + 1, sub.length());
+        fe.isFolder = true;
+        qDebug() << "addFolder() adding folder elem, path:" << fe.path
+                 << "with title/name:" << fe.title;
+        added.append(fe);
+    }
+
+    if (sub.contains('/')) {
+        // one folder up
+        sub = sub.left(sub.lastIndexOf('/'));
+        addFolder(base, sub, gameEntries, added);
+    }
+}
+
+QString EmulationStation::createXml(GameEntry &entry) {
+    QStringList l;
+    bool addEmptyElem = !entry.isFolder;
+
+    QString entryType = QString(entry.isFolder ? "folder" : "game");
+    l.append("  <" % entryType % ">");
+
+    l.append(elem("path", entry.path, addEmptyElem));
+    l.append(elem("name", entry.title, addEmptyElem));
+
+    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
+    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
+    l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
+    l.append(elem("texture", entry.textureFile, addEmptyElem, true));
+
+    QString vidFile = entry.videoFile;
+    if (!config->videos) {
+        vidFile = "";
+    }
+    l.append(elem("video", vidFile, addEmptyElem, true));
+
+    l.append(elem("rating", entry.rating, addEmptyElem));
+    l.append(elem("desc", entry.description, addEmptyElem));
+
+    QString released = entry.releaseDate;
+    QRegularExpressionMatch m = isoTimeRe().match(released);
+    if (!m.hasMatch()) {
+        released = released % "T000000";
+    }
+    l.append(elem("releasedate", released, addEmptyElem));
+
+    l.append(elem("developer", entry.developer, addEmptyElem));
+    l.append(elem("publisher", entry.publisher, addEmptyElem));
+    l.append(elem("genre", entry.tags, addEmptyElem));
+    l.append(elem("players", entry.players, addEmptyElem));
+
+    // non scraper elements
+    l.append(elem("sortname", entry.eSSortName, false));
+    l.append(elem("favorite", entry.eSFavorite, false));
+    l.append(elem("hidden", entry.eSHidden, false));
+    l.append(elem("lastplayed", entry.eSLastPlayed, false));
+    l.append(elem("playcount", entry.eSPlayCount, false));
+
+    QString kidGame = entry.eSKidGame;
+    if (entry.eSKidGame.isEmpty() && entry.ages.toInt() >= 1 &&
+        entry.ages.toInt() <= 10) {
+        kidGame = "true";
+    }
+    l.append(elem("kidgame", kidGame, false));
+
+    l.append("  </" % entryType % ">");
+    l.removeAll("");
+
+    return l.join("\n") % "\n";
+}
+
+QString EmulationStation::elem(QString elem, QString &data, bool addEmptyElem,
+                               bool isPath) {
+    QString e;
+    if (data.isEmpty()) {
+        if (addEmptyElem) {
+            e = QString("    <%1/>").arg(elem);
+        }
+    } else {
+        QString d = data;
+        if (isPath && config->relativePaths) {
             // The replace here IS supposed to be 'inputFolder' and not
             // 'mediaFolder' because we only want the path to be relative if
             // '-o' hasn't been set. So this will only make it relative if the
             // path is equal to inputFolder which is what we want.
-            finalOutput.append("    <thumbnail>" +
-                               (config->relativePaths
-                                    ? StrTools::xmlEscape(entry.coverFile)
-                                          .replace(config->inputFolder, ".")
-                                    : StrTools::xmlEscape(entry.coverFile)) +
-                               "</thumbnail>\n");
+            d = d.replace(config->inputFolder, ".");
         }
-        if (entry.screenshotFile.isEmpty()) {
-            finalOutput.append("    <image />\n");
-        } else {
-            finalOutput.append(
-                "    <image>" +
-                (config->relativePaths
-                     ? StrTools::xmlEscape(entry.screenshotFile)
-                           .replace(config->inputFolder, ".")
-                     : StrTools::xmlEscape(entry.screenshotFile)) +
-                "</image>\n");
-        }
-        if (entry.marqueeFile.isEmpty()) {
-            finalOutput.append("    <marquee />\n");
-        } else {
-            finalOutput.append("    <marquee>" +
-                               (config->relativePaths
-                                    ? StrTools::xmlEscape(entry.marqueeFile)
-                                          .replace(config->inputFolder, ".")
-                                    : StrTools::xmlEscape(entry.marqueeFile)) +
-                               "</marquee>\n");
-        }
-        if (entry.textureFile.isEmpty()) {
-            finalOutput.append("    <texture />\n");
-        } else {
-            finalOutput.append("    <texture>" +
-                               (config->relativePaths
-                                    ? StrTools::xmlEscape(entry.textureFile)
-                                          .replace(config->inputFolder, ".")
-                                    : StrTools::xmlEscape(entry.textureFile)) +
-                               "</texture>\n");
-        }
-        if (entry.videoFormat.isEmpty() || !config->videos) {
-            finalOutput.append("    <video />\n");
-        } else {
-            finalOutput.append("    <video>" +
-                               (config->relativePaths
-                                    ? StrTools::xmlEscape(entry.videoFile)
-                                          .replace(config->inputFolder, ".")
-                                    : StrTools::xmlEscape(entry.videoFile)) +
-                               "</video>\n");
-        }
-        if (entry.rating.isEmpty()) {
-            finalOutput.append("    <rating />\n");
-        } else {
-            finalOutput.append("    <rating>" +
-                               StrTools::xmlEscape(entry.rating) +
-                               "</rating>\n");
-        }
-        if (entry.description.isEmpty()) {
-            finalOutput.append("    <desc />\n");
-        } else {
-            finalOutput.append(
-                "    <desc>" +
-                StrTools::xmlEscape(entry.description.left(config->maxLength)) +
-                "</desc>\n");
-        }
-        if (entry.releaseDate.isEmpty()) {
-            finalOutput.append("    <releasedate />\n");
-        } else {
-            entry.releaseDate.replace("T000000", "");
-            finalOutput.append(
-                "    <releasedate>" +
-                StrTools::xmlEscape(entry.releaseDate +
-                                    (QRegularExpression("T[0-9]{6}$")
-                                             .match(entry.releaseDate)
-                                             .hasMatch()
-                                         ? ""
-                                         : "T000000")) +
-                "</releasedate>\n");
-        }
-        if (entry.developer.isEmpty()) {
-            finalOutput.append("    <developer />\n");
-        } else {
-            finalOutput.append("    <developer>" +
-                               StrTools::xmlEscape(entry.developer) +
-                               "</developer>\n");
-        }
-        if (entry.publisher.isEmpty()) {
-            finalOutput.append("    <publisher />\n");
-        } else {
-            finalOutput.append("    <publisher>" +
-                               StrTools::xmlEscape(entry.publisher) +
-                               "</publisher>\n");
-        }
-        if (entry.tags.isEmpty()) {
-            finalOutput.append("    <genre />\n");
-        } else {
-            finalOutput.append("    <genre>" + StrTools::xmlEscape(entry.tags) +
-                               "</genre>\n");
-        }
-        if (entry.players.isEmpty()) {
-            finalOutput.append("    <players />\n");
-        } else {
-            finalOutput.append("    <players>" +
-                               StrTools::xmlEscape(entry.players) +
-                               "</players>\n");
-        }
-        if (!entry.eSSortName.isEmpty()) {
-            finalOutput.append("    <sortname>" +
-                               StrTools::xmlEscape(entry.eSSortName) +
-                               "</sortname>\n");
-        }
-        if (!entry.eSFavorite.isEmpty()) {
-            finalOutput.append("    <favorite>" +
-                               StrTools::xmlEscape(entry.eSFavorite) +
-                               "</favorite>\n");
-        }
-        if (!entry.eSHidden.isEmpty()) {
-            finalOutput.append("    <hidden>" +
-                               StrTools::xmlEscape(entry.eSHidden) +
-                               "</hidden>\n");
-        }
-        if (!entry.eSLastPlayed.isEmpty()) {
-            finalOutput.append("    <lastplayed>" +
-                               StrTools::xmlEscape(entry.eSLastPlayed) +
-                               "</lastplayed>\n");
-        }
-        if (!entry.eSPlayCount.isEmpty()) {
-            finalOutput.append("    <playcount>" +
-                               StrTools::xmlEscape(entry.eSPlayCount) +
-                               "</playcount>\n");
-        }
-        if (entry.eSKidGame.isEmpty()) {
-            if (!entry.ages.isEmpty() &&
-                (entry.ages.toInt() >= 1 && entry.ages.toInt() <= 10)) {
-                finalOutput.append("    <kidgame>true</kidgame>\n");
-            }
-        } else {
-            finalOutput.append("    <kidgame>" +
-                               StrTools::xmlEscape(entry.eSKidGame) +
-                               "</kidgame>\n");
-        }
-        finalOutput.append("  </" + entryType + ">\n");
+        d = StrTools::xmlEscape(d);
+        e = QString("    <%1>%2</%1>").arg(elem, d);
     }
-    finalOutput.append("</gameList>");
+    return e;
 }
 
 bool EmulationStation::canSkip() { return true; }
@@ -343,31 +349,31 @@ QString EmulationStation::getGameListFileName() {
 }
 
 QString EmulationStation::getInputFolder() {
-    return QString(QDir::homePath() + "/RetroPie/roms/" + config->platform);
+    return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
 }
 
 QString EmulationStation::getGameListFolder() { return config->inputFolder; }
 
 QString EmulationStation::getCoversFolder() {
-    return config->mediaFolder + "/covers";
+    return config->mediaFolder % "/covers";
 }
 
 QString EmulationStation::getScreenshotsFolder() {
-    return config->mediaFolder + "/screenshots";
+    return config->mediaFolder % "/screenshots";
 }
 
 QString EmulationStation::getWheelsFolder() {
-    return config->mediaFolder + "/wheels";
+    return config->mediaFolder % "/wheels";
 }
 
 QString EmulationStation::getMarqueesFolder() {
-    return config->mediaFolder + "/marquees";
+    return config->mediaFolder % "/marquees";
 }
 
 QString EmulationStation::getTexturesFolder() {
-    return config->mediaFolder + "/textures";
+    return config->mediaFolder % "/textures";
 }
 
 QString EmulationStation::getVideosFolder() {
-    return config->mediaFolder + "/videos";
+    return config->mediaFolder % "/videos";
 }

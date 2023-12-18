@@ -54,14 +54,14 @@ QList<GameEntry> XmlReader::getEntries(QString inputFolder) {
     QDomNodeList pathNodes = elementsByTagName("folder");
 
     addEntries(gameNodes, gameEntries, inputFolder);
-    addEntries(pathNodes, gameEntries, inputFolder);
+    addEntries(pathNodes, gameEntries, inputFolder, true);
 
     return gameEntries;
 }
 
 void XmlReader::addEntries(const QDomNodeList &nodes,
                            QList<GameEntry> &gameEntries,
-                           const QString &inputFolder) {
+                           const QString &inputFolder, bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
         GameEntry entry;
         entry.path = makeAbsolute(nodes.at(a).firstChildElement("path").text(),
@@ -69,7 +69,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         // Do NOT get sqr and par notes here. They are not used by skipExisting
         entry.title = nodes.at(a).firstChildElement("name").text();
         entry.coverFile = makeAbsolute(
-            nodes.at(a).firstChildElement("cover").text(), inputFolder);
+            nodes.at(a).firstChildElement("thumbnail").text(), inputFolder);
         entry.screenshotFile = makeAbsolute(
             nodes.at(a).firstChildElement("image").text(), inputFolder);
         entry.marqueeFile = makeAbsolute(
@@ -94,6 +94,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         entry.eSLastPlayed = nodes.at(a).firstChildElement("lastplayed").text();
         entry.eSKidGame = nodes.at(a).firstChildElement("kidgame").text();
         entry.eSSortName = nodes.at(a).firstChildElement("sortname").text();
+        entry.isFolder = isFolder;
         gameEntries.append(entry);
     }
 }

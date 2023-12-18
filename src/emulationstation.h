@@ -27,6 +27,7 @@
 #define EMULATIONSTATION_H
 
 #include "abstractfrontend.h"
+#include "gameentry.h"
 
 class EmulationStation : public AbstractFrontend {
     Q_OBJECT
@@ -49,6 +50,13 @@ public:
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
+
+private:
+    void addFolder(QString &base, QString sub, QList<GameEntry> &gameEntries,
+                   QList<GameEntry> &added);
+    QString createXml(GameEntry &entry);
+    QString elem(QString elem, QString &data, bool addEmptyElem,
+                 bool isPath = false);
 };
 
 #endif // EMULATIONSTATION_H
