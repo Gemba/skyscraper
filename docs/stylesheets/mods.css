@@ -4,6 +4,10 @@
   --md-code-font: "DejaVu Sans Mono";
 }
 
+:root, [data-md-color-scheme="slate"] {
+  --md-default-fg-color--light: hsla(var(--md-hue),15%,90%,0.90);
+}
+
 .md-typeset .admonition.warning,
 .md-typeset details.warning {
   border-color: #ffd815;
@@ -31,6 +35,7 @@
   text-align: center;
   vertical-align: top;
 }
+
 
 .md-nav__link.md-nav__link--active:not(:hover) {
   color: #454e9a;
