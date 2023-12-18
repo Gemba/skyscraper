@@ -54,3 +54,7 @@ void AbstractFrontend::sortEntries(QList<GameEntry> &gameEntries) {
               });
     printf(" \033[1;32mDone!\033[0m\n");
 }
+
+QString AbstractFrontend::getFilename(const QString &path) {
+    return path.mid(path.lastIndexOf("/"), path.length());
+}

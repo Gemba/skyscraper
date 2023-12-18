@@ -247,25 +247,30 @@ bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
 }
 
 void Pegasus::preserveFromOld(GameEntry &entry) {
+    QString fn = getFilename(entry.path);
     for (const auto &oldEntry : oldEntries) {
-        QString oldFileName =
-            oldEntry.path.right(oldEntry.path.lastIndexOf("/"));
-        QString fileName = entry.path.right(entry.path.lastIndexOf("/"));
-        if (oldFileName == fileName) {
-            if (entry.developer.isEmpty())
+        if (getFilename(oldEntry.path) == fn) {
+            if (entry.developer.isEmpty()) {
                 entry.developer = oldEntry.developer;
-            if (entry.publisher.isEmpty())
+            }
+            if (entry.publisher.isEmpty()) {
                 entry.publisher = oldEntry.publisher;
-            if (entry.players.isEmpty())
+            }
+            if (entry.players.isEmpty()) {
                 entry.players = oldEntry.players;
-            if (entry.description.isEmpty())
+            }
+            if (entry.description.isEmpty()) {
                 entry.description = oldEntry.description;
-            if (entry.rating.isEmpty())
+            }
+            if (entry.rating.isEmpty()) {
                 entry.rating = oldEntry.rating;
-            if (entry.releaseDate.isEmpty())
+            }
+            if (entry.releaseDate.isEmpty()) {
                 entry.releaseDate = oldEntry.releaseDate;
-            if (entry.tags.isEmpty())
+            }
+            if (entry.tags.isEmpty()) {
                 entry.tags = oldEntry.tags;
+            }
             entry.pSValuePairs = oldEntry.pSValuePairs;
             break;
         }
@@ -370,14 +375,13 @@ void Pegasus::assembleList(QString &finalOutput,
         }
         finalOutput.append("\n");
     }
-    int dots = 0;
+    int dots = -1;
     int dotMod = gameEntries.length() * 0.1 + 1;
     for (auto &entry : gameEntries) {
-        if (dots % dotMod == 0) {
+        if (++dots % dotMod == 0) {
             printf(".");
             fflush(stdout);
         }
-        dots++;
 
         preserveFromOld(entry);
 

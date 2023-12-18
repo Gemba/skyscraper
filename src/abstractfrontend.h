@@ -63,6 +63,7 @@ public:
 protected:
     Settings *config;
     QList<GameEntry> oldEntries;
+    QString getFilename(const QString &path);
 };
 
 #endif // ABSTRACTFRONTEND_H
