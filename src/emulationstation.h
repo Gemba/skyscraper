@@ -52,7 +52,8 @@ public:
     QString getVideosFolder() override;
 
 private:
-    void addFolder(QString &base, QString sub, QList<GameEntry> &gameEntries);
+    void addFolder(QString &base, QString sub, QList<GameEntry> &gameEntries,
+                   QList<GameEntry> &added);
     QString createXml(GameEntry &entry);
     QString elem(QString elem, QString &data, bool addEmptyElem,
                  bool isPath = false);

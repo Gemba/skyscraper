@@ -1,5 +1,12 @@
 ## Changes of this Fork
 
+### TBA (Version 3.9.3)
+
+-   Feature: Preserve existing `<folder/>` nodes in gamelist or create skeleton
+    `<folder/>` nodes when ROMs are stored in subfolders within a system folder,
+    see [frontend documentation](FRONTENDS.md#metadata-preservation) and the [Gamelist
+    specification](https://github.com/RetroPie/EmulationStation/blob/master/GAMELISTS.md#folder).
+
 ### 2023-12-01 (Version 3.9.2)
 
 -   Feature: Import of data in XML format is now more lax (does not rely on

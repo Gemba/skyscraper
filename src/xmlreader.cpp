@@ -69,7 +69,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         // Do NOT get sqr and par notes here. They are not used by skipExisting
         entry.title = nodes.at(a).firstChildElement("name").text();
         entry.coverFile = makeAbsolute(
-            nodes.at(a).firstChildElement("cover").text(), inputFolder);
+            nodes.at(a).firstChildElement("thumbnail").text(), inputFolder);
         entry.screenshotFile = makeAbsolute(
             nodes.at(a).firstChildElement("image").text(), inputFolder);
         entry.marqueeFile = makeAbsolute(

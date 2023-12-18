@@ -167,6 +167,7 @@ void EmulationStation::assembleList(QString &finalOutput,
         }
     }
 
+    QList<GameEntry> added;
     QDir inputDir = QDir(config->inputFolder);
     for (auto &entry : gameEntries) {
         if (config->platform == "daphne") {
@@ -181,24 +182,26 @@ void EmulationStation::assembleList(QString &finalOutput,
 
         // Check if path is exactly one subfolder beneath root platform
         // folder (has one more '/') and uses *.cue suffix
-        QString entryCanonicalPath = entryInfo.canonicalPath();
-        if (cueSuffix && entryCanonicalPath.count("/") ==
+        QString entryCanonicalDir = entryInfo.canonicalPath();
+        if (cueSuffix && entryCanonicalDir.count("/") ==
                              config->inputFolder.count("/") + 1) {
             // Check if subfolder has exactly one ROM, in which case we
             // use <folder>
-            if (QDir(entryCanonicalPath, extensions).count() == 1) {
+            if (QDir(entryCanonicalDir, extensions).count() == 1) {
                 entry.isFolder = true;
-                entry.path = entryCanonicalPath;
+                entry.path = entryCanonicalDir;
             }
         }
 
         // inputDir is canonical
-        QString subPath = inputDir.relativeFilePath(entryCanonicalPath);
+        QString subPath = inputDir.relativeFilePath(entryCanonicalDir);
         if (subPath != ".") {
             // <folder> element(s) are needed
-            addFolder(config->inputFolder, subPath, gameEntries);
+            addFolder(config->inputFolder, subPath, gameEntries, added);
         }
     }
+
+    gameEntries.append(added);
 
     int dots = -1;
     int dotMod = 1 + gameEntries.length() * 0.1;
@@ -224,15 +227,24 @@ void EmulationStation::assembleList(QString &finalOutput,
 }
 
 void EmulationStation::addFolder(QString &base, QString sub,
-                                 QList<GameEntry> &gameEntries) {
+                                 QList<GameEntry> &gameEntries,
+                                 QList<GameEntry> &added) {
     bool found = false;
     QString absPath = base % "/" % sub;
-    qDebug() << "addFolder() called with:" << absPath;
 
-    for (auto &entry : gameEntries) {
-        if (entry.isFolder && entry.path == absPath) {
+    for (auto &entry : added) {
+        if (entry.path == absPath) {
             found = true;
             break;
+        }
+    }
+
+    if (!found) {
+        for (auto &entry : gameEntries) {
+            if (entry.isFolder && entry.path == absPath) {
+                found = true;
+                break;
+            }
         }
     }
 
@@ -243,13 +255,13 @@ void EmulationStation::addFolder(QString &base, QString sub,
         fe.isFolder = true;
         qDebug() << "addFolder() adding folder elem, path:" << fe.path
                  << "with title/name:" << fe.title;
-        gameEntries.append(fe);
+        added.append(fe);
     }
 
     if (sub.contains('/')) {
         // one folder up
         sub = sub.left(sub.lastIndexOf('/'));
-        addFolder(base, sub, gameEntries);
+        addFolder(base, sub, gameEntries, added);
     }
 }
 
@@ -305,6 +317,7 @@ QString EmulationStation::createXml(GameEntry &entry) {
 
     l.append("  </" % entryType % ">");
     l.removeAll("");
+
     return l.join("\n") % "\n";
 }
 

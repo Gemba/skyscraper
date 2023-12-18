@@ -19,7 +19,45 @@ This is the default frontend used when generating a game list with Skyscraper. I
 
 #### Metadata preservation
 
-Skyscraper will preserve the following metadata when re-generating a game list for EmulationStation: `favorite`, `hidden`, `kidgame`, `lastplayed`, `playcount`, `sortname`.
+Skyscraper will preserve the following metadata when re-generating a game list for EmulationStation: `favorite`, `hidden`, `kidgame`, `lastplayed`, `playcount`, `sortname`. Also existing `<folder/>` nodes of a Gamelist file will be preserved, if at least one ROM is within a subfolder and this subfolder is not yet part of the `gamelist.xml` file. It will be added with two mandatory subelements:
+
+-  `<path/>` reflects the relative subpath from the system folder and 
+-  `<name/>`, which represents the direct parent folder of a ROM by default. However, you may edit this to any name which should be shown in EmulationStation.
+
+Each parent of a folder, that is not yet present in the Gamelist file will be added until the system folder is reached. The user editable sub-XML elements for a folder are listed in the [`Metadata.cpp` of EmulationStation](https://github.com/RetroPie/EmulationStation/blob/01de7618d0d248fa2ff1eacde09a20d9d2af5f10/es-app/src/MetaData.cpp#L30).
+
+!!! example
+
+    Consider this folder structure below `snes`, whereas each lowest folder contains at least one ROM:
+    ```
+    snes
+    └── Retail
+        ├── EUR
+        ├── JP
+        └── USA
+    ```
+    Skyscraper will generate these <folder/> elements if not present in `gamelist.xml`:
+    ```xml
+    [...]
+        <folder>
+            <path>./Retail</path>
+            <name>Retail</name>
+        </folder>
+        <folder>
+            <path>./Retail/USA</path>
+            <name>USA</name>
+        </folder>
+        <folder>
+            <path>./Retail/JP</path>
+            <name>JP</name>
+        </folder>
+        <folder>
+            <path>./Retail/EUR</path>
+            <name>EUR</name>
+        </folder>
+    [...]
+    ```
+    Note that the `Retail` folder is added even if it does not contain a ROM because but is part of the path to the ROMs in the lowest folders.
 
 ### RetroBat
 
