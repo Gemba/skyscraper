@@ -40,7 +40,7 @@ AbstractScraper::AbstractScraper(Settings *config,
     connect(netComm, &NetComm::dataReady, &q, &QEventLoop::quit);
 }
 
-AbstractScraper::~AbstractScraper() { delete netComm; }
+AbstractScraper::~AbstractScraper() { netComm->deleteLater(); }
 
 void AbstractScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                        QString searchName, QString platform) {

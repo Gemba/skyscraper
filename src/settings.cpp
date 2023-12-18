@@ -24,6 +24,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QStringBuilder>
 #include <filesystem>
 
 RuntimeCfg::RuntimeCfg(Settings *config, const QCommandLineParser *parser) {
@@ -664,7 +665,7 @@ QSet<QString> RuntimeCfg::getKeys(CfgType type) {
 
 QString RuntimeCfg::concatPath(QString absPath, QString platformFolder) {
     if (absPath.right(1) != "/") {
-        return absPath + "/" + platformFolder;
+        return absPath % "/" % platformFolder;
     }
-    return absPath + platformFolder;
+    return absPath % platformFolder;
 }

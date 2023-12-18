@@ -461,7 +461,7 @@ void ScraperWorker::run() {
         }
     }
 
-    delete scraper;
+    scraper->deleteLater();
     emit allDone();
 }
 
