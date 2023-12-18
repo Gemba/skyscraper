@@ -1,11 +1,11 @@
-## Supported Platforms and how to add new Platforms for Scraping
+## Supported Platforms
 
 Get a list of supported platforms with `Skyscraper --help`.
 
 After the initial work from torresflo @ GitHub it is possible to add new
 platforms by editing the `platforms.json` file. However, since version 3.9.0 of
-Skyscraper this file is replaced by `peas.json` (short for platforms,
-extensions/formats, aliases and scrapers) in the same folder. The information in
+Skyscraper this file is replaced by `peas.json` (short for *p*latforms,
+*e*xtensions/formats, *a*liases and *s*crapers) in the same folder. The information in
 the file is the same as before.
 
 Take this example from the `peas.json` file:
@@ -67,7 +67,7 @@ megadrive,1,16,36
 
 You can display the number with their platform name on each of the three
 scraping sites with the script `peas_and_idmap_verify.py`. Find the script
-sibling to the Skyscraper executable. This is a part of the output:
+sibling to the Skyscraper executable. Below is a part of the output:
 
 ```
 [...]
@@ -78,25 +78,161 @@ sibling to the Skyscraper executable. This is a part of the output:
 [...]
 ```
 
-#### Updating `peas.json` and `platforms_idmap.csv`
+## How to Add Platforms For Scraping
+
+Outline:
+
+1. Create a new platform block in `peas.json`, or copy an existing one and adapt
+   to your needs. For RetroPie your chosen `<platform_name>` must match the
+   folder in `~/RetroPie/roms/<platform_name>`.
+2. Use `<platform_name>` also in `platforms_idmap.csv` (see below for details).
+3. If you use RetroPie do add the platform/system also to your `es_systems.cfg` as
+   documented
+   [here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/)
+
+There is also a an verbatim example, you may skip the next section initially and
+can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
+
+### Updating `peas.json` and `platforms_idmap.csv`
 
 These two files are ment to be locally edited and extended for additional
-platforms. Whenever you add a new segment to the `peas.json` do also lookup the
-corresponding platform ids and add them to `platforms_idmap.csv` for the
-scraping sites with an API.
+platforms. Whenever you add a new platform block to the `peas.json` do also
+lookup the corresponding platform ids and add them to `platforms_idmap.csv` for
+the scraping sites with an API.
 
 To find the platform ids for Screenscraper, Mobygames and The Games DB, please
 consult the files `screenscraper_platforms.json`, `mobygames_platforms.json` and
 `tgdb_platforms.json` which are located sibling to your `config.ini` of the
-Skyscraper installation. If you can not identify an id use `-1` as value in the CSV.
+Skyscraper installation. If you can not identify an id in these files use `-1`
+as value in the CSV. If you add `-1` to CSV, the `aliases` from peas are tried
+to find a match upon scraping. Edits in `screenscraper_platforms.json`,
+`mobygames_platforms.json` and `tgdb_platforms.json` are not needed and moreover
+they will be overwritten with each Skyscraper update, as these files are only a
+reference for finding the id values for the `platforms_idmap.csv`.
 
 For those scraping sites without an API or without exact id match do use the
-platform name which is used on the website and put it into the in the `aliases`
-list in the `peas.json` for the respective platform/system.
+platform name which is used on the scraping site and put it into the in the `aliases`
+list in the `peas.json` for the respective platform/system at `<platform_name>`.
 
-!!! example
+!!! example Use of Aliases
 
-    ScummVM or Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases"` in the `"scummvm"` or `"steam"` section of `peas.json`. Usually you find the platform information if you lookup the game manually on the website.
+    The platforms ScummVM or Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or `"steam": ...` section of `peas.json`. Usually you find the platform information if you lookup the game manually on the scraping website.
+
+### Sample Usecase: Adding Platform _Satellaview_ 
+
+Let the platform/systemname be `satellaview`. You may read about this SNES
+enhancing peripheral [here](https://en.wikipedia.org/wiki/Satellaview).
+
+#### Step 1: Add a Section to `peas.json`
+
+Actually, this is a copy of the [`"snes:
+..."`](https://github.com/Gemba/skyscraper/blob/4aff22586d848f9974d2464d5372b8986a0e64c0/peas.json#L1833-L1857)
+block, with slight modifications.
+
+```json linenums="1" hl_lines="2 4"
+...
+"satellaview": {
+	"aliases": [
+		"snes",
+		"nintendo power",
+		"snes - super mario world hacks",
+		"sufami turbo",
+		"super famicom",
+		"super nintendo",
+		"super nintendo (snes)",
+		"super nintendo entertainment system (snes)",
+		"super nintendo msu-1"
+	],
+	"formats": [
+		"*.bin",
+		"*.fig",
+		"*.mgd",
+		"*.sfc",
+		"*.smc",
+		"*.swc"
+	]
+}
+...
+```
+
+- Line 2 defines the platform name
+- Line 4 adds an alias to SNES as Satellaview is an hardware addon to a SNES
+- Note the absence of the `"scrapers":` section. It is not used by Skyscraper.
+
+#### Step 2: Lookup Values for _Satellaview_ and Update `platforms_idmap.csv`
+
+To fill in the values into the CSV file do consult the
+[`screenscraper_platforms.json`](https://github.com/Gemba/skyscraper/blob/master/screenscraper_platforms.json),
+[`mobygames_platforms.json`](https://github.com/Gemba/skyscraper/blob/master/mobygames_platforms.json)
+and
+[`tgdb_platforms.json`](https://github.com/Gemba/skyscraper/blob/master/tgdb_platforms.json)
+files. Try to find the ID for the platform in these files. For `satellaview`
+only Screenscraper has an exact match: [`107`](https://github.com/Gemba/skyscraper/blob/4aff22586d848f9974d2464d5372b8986a0e64c0/screenscraper_platforms.json#L1179-L1180). Use `-1` as ID when no exact
+match is provided for the scraping site. Whenever an `-1` is encountered
+Skyscraper tries the `"aliases":` from `peas.json` to find scraping data.
+
+Add this information at the end of the CSV file. Why at the end? On rare
+occasions the `platforms_idmap.csv` may be updated on a new release. On RetroPie
+the installed file is then named `platforms_idmap.csv.rp-dist` (the same
+mechanism works for `peas.json`), having changes at the end may be a less
+cumbersome manual merge with your local `platforms_idmap.csv`.
+
+Add this information:
+```csv
+satellaview,107,-1,-1
+```
+
+#### Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder
+
+This part should be added to your `~/.emulationstation/es_systems.cfg`. See
+[here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/) for
+additional information on this.
+
+!!! warning
+
+    Stop EmulationStation before editing the config file.
+
+```xml linenums="1" hl_lines="3 6 9"
+...
+<system>
+	<name>satellaview</name>
+	<fullname>Satellaview</fullname>
+	<path>/home/pi/RetroPie/roms/Nintendo - Satellaview</path>
+	<extension>.7z .bin .bs .smc .sfc .fig .swc .mgd .zip .7Z .BIN .BS .SMC .SFC .FIG .SWC .MGD .ZIP</extension>
+	<command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ snes %ROM%</command>
+	<platform>satellaview,snes</platform> <!--Not used by Screenscraper, but by built-in ES scraper and maybe others-->
+	<theme>satellaview</theme>
+</system>
+...
+```
+
+- Line 3 defines the platform name, respective the folder name for your ROMs.
+  Thus, Skyscraper expects to find ROMs in `/home/pi/RetroPie/roms/satellaview`.
+- Line 6 contains the extensions which are recognized by EmulationStation. These
+  extensions should be also be present in the `"formats":` block of `peas.json`.
+  However, Skyscraper uses case insensitive extension mapping. The
+  extensions `.7z` and `.zip` are added automagically by Skyscraper, thus the
+  `"formats":` list is usually shorter than the EmulationStation `<extension/>`
+  list.
+- Line 9: If your theme doesn't support Satellaview, you can also use `snes` as
+  <theme> value.
+
+!!! note
+
+    If you run a different frontend than EmulationStation, consult the documentation for your frontend on how to add additional systems.
+
+#### Step 4: Happy Scraping
+
+1. Scrape and generate the `satellaview/gamelist.xml` as in the [introductive
+   use case](USECASE.md) using `Skyscraper -p
+   satellaview -s screenscraper` and `Skyscraper -p satellaview`
+2. Restart EmulationStation, respective trigger reload of the Gamelist in your
+   frontend.
+3. Smile :)
+
+!!! success "Kudos"
+
+    Thanks to retrobit @ GitHub for contributing this usecase.
 
 ### Migrating `platforms.json` and `screenscraper.json`
 
