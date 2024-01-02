@@ -1,5 +1,6 @@
 win32 {
 
+  CONFIG += console
   CONFIG(release, debug|release) {
     BUILD_CFG=release
   } else {
@@ -12,6 +13,9 @@ win32 {
 
   WINDEPLOYQT_BIN="$$[QT_INSTALL_PREFIX]/bin/windeployqt.exe"
   QT_LIC_FOLDER="$$[QT_INSTALL_PREFIX]/../../Licenses"
+
+  # Avoid MinGW windres.exe hiccup in generated Skyscraper_resource.rc
+  VERSION=$$replace(VERSION, '-dev', '.999')
 
   # remove build artifacts
   QMAKE_POST_LINK += cmd /c del $$shell_quote($$shell_path($${DEST}\\\\*.cpp)) \

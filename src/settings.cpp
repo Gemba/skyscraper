@@ -25,7 +25,11 @@
 #include <QDebug>
 #include <QDir>
 #include <QStringBuilder>
+#ifdef __MINGW32__
+#include <experimental/filesystem>
+#else
 #include <filesystem>
+#endif
 
 RuntimeCfg::RuntimeCfg(Settings *config, const QCommandLineParser *parser) {
     this->config = config;
