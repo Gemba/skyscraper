@@ -57,13 +57,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
         } else {
             bool cacheHelp =
                 parser->isSet("cache") && parser->value("cache") == "help";
-            bool flagsHelp =
-                parser->isSet("flags") && parser->value("flags") == "help";
-            if (!cacheHelp && !flagsHelp) {
+            QStringList flags = parseFlags();
+            if (!cacheHelp && !flags.contains("help")) {
                 printf("\033[1;31mPlease set a valid platform with '-p "
-                       "<PLATFORM>'\nCheck "
-                       "'--help' for a list of supported platforms. "
-                       "Qutting.\n\033[0m");
+                       "<PLATFORM>'\nCheck '--help' for a list of supported "
+                       "platforms. Qutting.\n\033[0m");
                 exit(1);
             }
         }
@@ -513,23 +511,18 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     }
     if (parser->isSet("d")) {
         config->cacheFolder = parser->value("d");
-    } else {
-        if (config->cacheFolder.isEmpty())
-            config->cacheFolder = "cache/" + config->platform;
+    } else if (config->cacheFolder.isEmpty()) {
+        config->cacheFolder = "cache/" + config->platform;
     }
-    if (parser->isSet("flags")) {
-        if (parser->value("flags") == "help") {
-            Cli::subCommandUsage("flags");
-            exit(0);
-        } else {
-            QList<QString> flags =
-                parser->value("flags").replace(" ", "").split(",");
-            for (const auto &flag : flags) {
-                setFlag(flag);
-            }
+    QStringList flags = parseFlags();
+    if (flags.contains("help")) {
+        Cli::subCommandUsage("flags");
+        exit(0);
+    } else {
+        for (const auto &flag : flags) {
+            setFlag(flag);
         }
     }
-
     if (parser->isSet("addext")) {
         config->addExtensions = parser->value("addext");
     }
@@ -545,14 +538,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             exit(0);
         }
     }
-
     if (parser->isSet("startat")) {
         config->startAt = parser->value("startat");
     }
     if (parser->isSet("endat")) {
         config->endAt = parser->value("endat");
     }
-    // This option is DEPRECATDE, use includepattern
+    // This option is DEPRECATED, use includepattern
     if (parser->isSet("includefiles")) {
         config->includePattern = parser->value("includefiles");
     }
@@ -576,14 +568,12 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         parser->value("maxfails").toInt() <= 200) {
         config->maxFails = parser->value("maxfails").toInt();
     }
-
     if (parser->isSet("region")) {
         config->region = parser->value("region");
     }
     if (parser->isSet("lang")) {
         config->lang = parser->value("lang");
     }
-
     if (parser->isSet("verbosity")) {
         config->verbosity = parser->value("verbosity").toInt();
     }
@@ -672,4 +662,15 @@ QString RuntimeCfg::concatPath(QString absPath, QString platformFolder) {
         return absPath % "/" % platformFolder;
     }
     return absPath % platformFolder;
+}
+
+QStringList RuntimeCfg::parseFlags() {
+    QStringList _flags{};
+    if (parser->isSet("flags")) {
+        QStringList flagsCli = parser->values("flags");
+        for (QString f : flagsCli) {
+            _flags << f.replace(" ", "").split(",");
+        }
+    }
+    return _flags;
 }

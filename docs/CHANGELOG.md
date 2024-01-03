@@ -6,6 +6,13 @@
     `<folder/>` nodes when ROMs are stored in subfolders within a system folder,
     see [frontend documentation](FRONTENDS.md#metadata-preservation) and the [Gamelist
     specification](https://github.com/RetroPie/EmulationStation/blob/master/GAMELISTS.md#folder).
+-   Feature: [Bash Completion on Linux
+    installations](CLIHELP.md#programmable-completion). Use ++tab++ twice for
+    completion of Skyscraper options. On RetroPie the scriptmodule will handle
+    the installation. On non-RetroPie-Linux put the file
+    `supplementary/bash-completion/Skyscraper.bash` into
+    `$XDG_DATA_HOME/bash-completion/completions/` (`$XDG_DATA_HOME` is
+    equivalent to `$HOME/.local/share`). Open a new bash -- et voila!
 
 ### 2023-12-01 (Version 3.9.2)
 

@@ -9,7 +9,7 @@ repo_name: "Skyscraper"
 repo_url: "https://github.com/Gemba/Skyscraper/"
 
 # Copyright
-copyright: "Copyright &copy; 2017-2023 Lars Muldjord and contributors"
+copyright: "&copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors"
 
 # Plugins
 plugins:
@@ -90,3 +90,4 @@ nav:
   - Skyscraper Cache: CACHE.md
 - About:
   - Changelog: CHANGELOG.md
+  - Contributing: CONTRIBUTING.md

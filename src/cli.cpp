@@ -36,21 +36,19 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "frontends by combining all previously cached resources ('game list "
         "generation mode' is initiated by simply leaving out the '-s' option). "
         "While doing so it also composites game art for all files by following "
-        "the recipe at '/home/<USER>/.skyscraper/artwork.xml'.\n\nIn addition to "
-        "the command line options Skyscraper also provides a lot of "
+        "the recipe at '/home/<USER>/.skyscraper/artwork.xml'.\n\nIn addition "
+        "to the command line options Skyscraper also provides a lot of "
         "customizable options for configuration, artwork, game name aliases, "
         "resource priorities and much more. Please check the full "
-        "documentation at 'github.com/Gemba/skyscraper/tree/master/docs' for a "
+        "documentation at 'https://gemba.github.io/skyscraper/' for a "
         "detailed explanation of all features.\n\nRemember that most of the "
         "following options can also be set in the "
         "'/home/<USER>/.skyscraper/config.ini' file. All cli options and "
         "config.ini options are thoroughly documented at the above link.");
-    parser->addHelpOption();
-    parser->addVersionOption();
     QCommandLineOption pOption(
         "p",
-        "The platform you wish to scrape. Currently supports " + platforms + 
-        ".",
+        "The platform you wish to scrape. Currently supports " + platforms +
+            ".",
         "PLATFORM", "");
     QCommandLineOption fOption(
         "f",
@@ -225,8 +223,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "Default: 'en'",
         "CODE", "en");
     QCommandLineOption verbosityOption(
-        "verbosity", "Print more info while scraping. Default: 0", "0-3",
-        "0");
+        "verbosity", "Print more info while scraping. Default: 0", "0-3", "0");
 
 #if QT_VERSION >= 0x050800
     includefilesOption.setFlags(QCommandLineOption::HiddenFromHelp);
@@ -234,46 +231,50 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     fromfileOption.setFlags(QCommandLineOption::HiddenFromHelp);
 #endif
 
-    parser->addOption(pOption);
-    parser->addOption(sOption);
-    parser->addOption(uOption);
-    parser->addOption(iOption);
-    parser->addOption(gOption);
-    parser->addOption(oOption);
-    parser->addOption(fOption);
-    parser->addOption(eOption);
-    parser->addOption(tOption);
+    parser->addOption(addextOption);
     parser->addOption(aOption);
-    parser->addOption(mOption);
-    parser->addOption(lOption);
+    parser->addOption(cacheOption);
     parser->addOption(cOption);
     parser->addOption(dOption);
-    parser->addOption(flagsOption);
-    parser->addOption(verbosityOption);
-    parser->addOption(cacheOption);
-    parser->addOption(refreshOption);
-    parser->addOption(langOption);
-    parser->addOption(regionOption);
-    parser->addOption(queryOption);
-    parser->addOption(startatOption);
     parser->addOption(endatOption);
-    parser->addOption(includefilesOption);
-    parser->addOption(includepatternOption);
+    parser->addOption(eOption);
     parser->addOption(excludefilesOption);
-    parser->addOption(excludepatternOption);
-    parser->addOption(fromfileOption);
-    parser->addOption(includefromOption);
     parser->addOption(excludefromOption);
+    parser->addOption(excludepatternOption);
+    parser->addOption(flagsOption);
+    parser->addOption(fOption);
+    parser->addOption(fromfileOption);
+    parser->addOption(gOption);
+    parser->addHelpOption();
+    parser->addOption(includefilesOption);
+    parser->addOption(includefromOption);
+    parser->addOption(includepatternOption);
+    parser->addOption(iOption);
+    parser->addOption(langOption);
+    parser->addOption(lOption);
     parser->addOption(maxfailsOption);
-    parser->addOption(addextOption);
+    parser->addOption(mOption);
+    parser->addOption(oOption);
+    parser->addOption(pOption);
+    parser->addOption(queryOption);
+    parser->addOption(refreshOption);
+    parser->addOption(regionOption);
+    parser->addOption(sOption);
+    parser->addOption(startatOption);
+    parser->addOption(tOption);
+    parser->addOption(uOption);
+    parser->addOption(verbosityOption);
+    parser->addVersionOption();
+    parser->addPositionalArgument(
+        "romfile", "Specific ROM to scrape, optionally.", "[<romfile>]");
 }
 
 void Cli::subCommandUsage(const QString subCmd) {
 
     if (subCmd == "flags") {
-        printf("Use comma-separated flags (eg. '--flags FLAG1,FLAG2') to "
-               "enable multiple flags.\nThe following is a list of valid "
-               "flags and what they do.\n");
+        printf("Use comma-separated flags (eg. '--flags FLAG1,FLAG2') or use "
+               "--flags option\nmultiple times to enable multiple flags. The "
+               "following is a list of valid flags\nand what they do.\n");
     }
 
     printf("\nShowing '\033[1;33m--%s ...\033[0m' help:\n\n",
@@ -317,6 +318,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
     QMap<QString, QString> m;
     if (subCmd == "cache") {
         m = {
+            {"help", "Prints this help and exits."},
             {"show", "Prints a status of all cached resources for the selected "
                      "platform."},
             {"validate",
@@ -360,6 +362,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
         };
     } else {
         m = {
+            {"help", "Prints this help and exits."},
             {"forcefilename",
              "Use filename as game name instead of the returned game title "
              "when generating a game list. Consider using 'nameTemplate' "
@@ -389,7 +392,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"nosubdirs",
              "Do not include input folder subdirectories when scraping."},
             {"notidydesc", "Disables tidying common misformats in description "
-                         "text. See manual CLIHELP.md for details."},
+                           "text. See manual CLIHELP.md for details."},
             {"nowheels",
              "Disable wheels from being cached locally. Only do this if you do "
              "not plan to use the wheel artwork in 'artwork.xml'"},
