@@ -23,7 +23,7 @@ Nothing I (Gemba) have to add here.
 - Get "Git for Windows" and install with default values
 - Checkout Skyscraper from [1] into a folder. This folder is
   `<skyscraper_git>` in following.
-- Get Qt Creator from [2] (use Chrome/Edge as in FF the links may not work):
+- Get Qt Creator from [2]:
   Follow link "Download the Qt Online Installer", then select "Offline installer".
 - In Installer: Select _Developer and Designer Tools_, expand subtree and
   select _MinGW 7.3.0 64-Bit_, choose also from _Qt/Qt<version>/MinGW 7.3.0 64-Bit_
@@ -43,13 +43,13 @@ Nothing I (Gemba) have to add here.
 
 1. Open a command prompt
 2. Change to `<skyscraper_git>\build\release`
-3. Run `.\skyscraper --help`
+3. Run `.\Skyscraper.exe --help`
 4. Check that the available platforms are listed and are not empty
 5. Smile :)
 
 # Notes
 
-- Tested with Qt 5.12.12 Open Source Ed. on Windows 10 (64Bit)
+- Tested with Qt 5.12.12 Open Source Ed., MinGW 7.3.0 64-bit, Qt Creator 12.0.1 (Community) on Windows 10 and 11 Pro (64Bit)
 - Home Path is `%USERPROFILE%/.skyscraper` (instead of `/home/pi/.skyscraper`)
 
 # Refs
