@@ -36,9 +36,9 @@ win32 {
     $$escape_expand(\\n\\t)
 
   # create mandatory folders and deploy mandatory files
-  QMAKE_POST_LINK += powershell -Command 'md -Force $$shell_quote($$shell_path($$(USERPROFILE)/RetroPie/roms))' > NUL &
+  QMAKE_POST_LINK += powershell -Command "md -Force '$$shell_path($$(USERPROFILE)/RetroPie/roms)'" > NUL &
   QMAKE_POST_LINK += powershell -NoProfile -NoLogo -NonInteractive -ExecutionPolicy Bypass \
-    -File $${PWD}/deploy_mandatory_files.ps1 \
+    -File $$shell_quote($$shell_path($${PWD}/deploy_mandatory_files.ps1)) \
     $$shell_quote($${PWD}/..) $$shell_quote($$shell_path($$(USERPROFILE)/.skyscraper)) \
     $$escape_expand(\\n\\t)
 }
