@@ -67,11 +67,7 @@ $ brew install wget
 $ brew install qt@5
 $ brew link qt@5 --force
 ```
-If that went well, proceed to the default installation instructions below. It should work and give you a working installation of Skyscraper.
-
-NOTE 1! User 'davidmgrantham' reports that the `--with-default-names` above might be deprecated for some macOS installations. If you remove it, you also need to download the `update_skyscraper.sh` and edit the `tar` commands to be `gtar` before running it.
-
-NOTE 2! User 'trvrplk' reports numerous issues on MacOS 11.2+. Check [here](https://github.com/muldjord/skyscraper/issues/301) for potential fixes.
+If that went well, proceed to the default installation instructions in the next section. It should work and give you a working installation of Skyscraper.
 
 ### Download, compile and install
 When you've installed the prerequisites as described above, you can install Skyscraper by typing in the following commands:
@@ -81,7 +77,7 @@ $ mkdir skysource
 $ cd skysource
 $ wget -q -O - https://raw.githubusercontent.com/Gemba/skyscraper/master/update_skyscraper.sh | bash
 ```
-The last command will download and run the latest update script from Github. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.
+The last command will download and run the latest update script from Github. The script installs the latest release of Skyscraper. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.
 
 When the script has completed you are ready to run Skyscraper!
 
