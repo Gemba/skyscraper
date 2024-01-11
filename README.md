@@ -62,10 +62,10 @@ NOTE! From Ubuntu 21.04 and forward the `qt5-default` metapackage no longer exis
 Skyscraper works perfectly on macOS as well but is not officially supported as I don't own a Mac. But with the help of HoraceAndTheSpider and abritinthebay here's the commands needed to install the Qt5 and other prerequisites:
 ```
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-$ brew install gnu-tar --with-default-names
+$ brew install gnu-tar
 $ brew install wget
-$ brew install qt5
-$ brew link qt5 --force
+$ brew install qt@5
+$ brew link qt@5 --force
 ```
 If that went well, proceed to the default installation instructions below. It should work and give you a working installation of Skyscraper.
 
