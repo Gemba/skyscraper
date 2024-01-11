@@ -52,11 +52,9 @@ This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie
 Skyscraper needs Qt5.3 or later to compile. For a Retropie, Ubuntu or other Debian derived distro, you can install Qt5 using the following commands:
 ```
 $ sudo apt update
-$ sudo apt install build-essential qt5-default
+$ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools p7zip-full
 ```
 You might be asked for your sudo password. On RetroPie the default password is `raspberry`. To install Qt5 on other Linux distributions, please refer to their documentation.
-
-NOTE! From Ubuntu 21.04 and forward the `qt5-default` metapackage no longer exists. You will instead have to do `sudo apt install build-essential qtbase5-dev qt5-qmake qtbase5-dev-tools` which installs the same as the above command.
 
 #### macOS
 Skyscraper works perfectly on macOS as well but is not officially supported as I don't own a Mac. But with the help of HoraceAndTheSpider and abritinthebay here's the commands needed to install the Qt5 and other prerequisites:
@@ -90,6 +88,18 @@ $ ./update_skyscraper.sh
 ```
 You might be asked for your sudo password during the update. On RetroPie the default password is `raspberry`. If your version is older than 2.3.2 (check with `--help`) you need to follow the [installation instructions](#download-compile-and-install) instead.
 
+### Installing the Development Version
+If you want to build the latest `main/HEAD` version use the following commands. Make sure to have the before mentioned packages installed:
+```
+git clone --depth 1 https://github.com/Gemba/skyscraper.git
+cd skyscraper
+make --ignore-errors clean
+rm --force .qmake.stash
+QT_SELECT=5 qmake 
+make -j$(nproc)
+sudo make install
+```
+
 ### How to uninstall Skyscraper
 If you've installed Skyscraper using the instructions in this readme, you can uninstall it using the following commands:
 ```
@@ -98,7 +108,7 @@ $ cd skysource
 $ sudo make uninstall
 $ cd
 $ rm -Rf skysource
-$ rm -Rf .skyscraper
+$ rm -Rf ~/.skyscraper
 ```
 You might be asked for your sudo password during the processs. On RetroPie the default password is `raspberry`.
 
