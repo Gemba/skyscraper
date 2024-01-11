@@ -1,4 +1,22 @@
 #! /usr/bin/env bash
+
+# This file is part of skyscraper.
+# (c) Lars Muldjord and contributors
+#
+# skyscraper is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# skyscraper is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with skyscraper; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+
 {
 	LATEST=$(wget -q -O - "https://api.github.com/repos/Gemba/skyscraper/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 
@@ -10,8 +28,7 @@
 	handle_error() {
 		local EXITCODE=$?
 		local ACTION=$1
-		if [[ -f VERSION ]] ; then rm -f VERSION ; fi
-		if [[ -f VERSION.txt ]] ; then rm -f VERSION.txt ; fi
+		rm -f VERSION VERSION.txt
 		echo "--- Failed to $ACTION Skyscraper v${LATEST}, exiting with code $EXITCODE ---"
 		exit $EXITCODE
 	}
@@ -24,11 +41,11 @@
 
 		echo
 		echo "--- Unpacking ---"
+		tar_bin='tar'
 		if [[ "$OSTYPE" == "darwin"* ]]; then
-			gtar xzf "$tarball" --strip-components 1 --overwrite || handle_error "unpack"
-		else
-			tar xzf "$tarball" --strip-components 1 --overwrite || handle_error "unpack"
+			tar_bin='gtar'
 		fi
+  		$tar_bin xzf "$tarball" --strip-components 1 --overwrite || handle_error "unpack"
 		rm -f "$tarball"
 
 		echo
@@ -66,7 +83,7 @@
 	else
 		echo
 		echo "--- Skyscraper is already the latest version, exiting ---"
-		echo "Hint: You can force a reinstall by removing the VERSION file by" 
+		echo "Hint: You can force a reinstall by removing the VERSION file by"
 		echo "running 'rm VERSION'. Then run ./update_skyscraper.sh again."
 	fi
 	exit
