@@ -6,34 +6,37 @@ CONFIG += release
 QT += core network xml
 QMAKE_CXXFLAGS += -std=c++11
 
-unix:target.path=/usr/local/bin
+# Installation prefix folder for bin/Skyscraper and etc/skyscraper/*
+PREFIX = /usr/local
+
+unix:target.path=$${PREFIX}/bin
 unix:target.files=Skyscraper Skyscraper.app/Contents/MacOS/Skyscraper
 
-unix:supplementary.path=/usr/local/bin
+unix:supplementary.path=$${PREFIX}/bin
 unix:supplementary.files=\
   supplementary/scraperdata/check_screenscraper_json_to_idmap.py \
   supplementary/scraperdata/convert_platforms_json.py \
   supplementary/scraperdata/peas_and_idmap_verify.py
 
-unix:config.path=/usr/local/etc/skyscraper
+unix:config.path=$${PREFIX}/etc/skyscraper
 unix:config.files=aliasMap.csv hints.xml mameMap.csv \
   mobygames_platforms.json peas.json platforms_idmap.csv \
   screenscraper_platforms.json tgdb_developers.json \
   tgdb_genres.json tgdb_platforms.json tgdb_publishers.json
 
-unix:examples.path=/usr/local/etc/skyscraper
+unix:examples.path=$${PREFIX}/etc/skyscraper
 unix:examples.files=config.ini.example README.md artwork.xml \
   artwork.xml.example1 artwork.xml.example2 artwork.xml.example3 \
   artwork.xml.example4 docs/ARTWORK.md docs/CACHE.md
 
-unix:cacheexamples.path=/usr/local/etc/skyscraper/cache
+unix:cacheexamples.path=$${PREFIX}/etc/skyscraper/cache
 unix:cacheexamples.files=cache/priorities.xml.example docs/CACHE.md
 
-unix:impexamples.path=/usr/local/etc/skyscraper/import
+unix:impexamples.path=$${PREFIX}/etc/skyscraper/import
 unix:impexamples.files=docs/IMPORT.md import/definitions.dat.example1 \
   import/definitions.dat.example2
 
-unix:resexamples.path=/usr/local/etc/skyscraper/resources
+unix:resexamples.path=$${PREFIX}/etc/skyscraper/resources
 unix:resexamples.files=resources/maskexample.png resources/frameexample.png \
   resources/boxfront.png resources/boxside.png resources/scanlines1.png \
   resources/scanlines2.png
@@ -42,7 +45,13 @@ unix:INSTALLS += target config examples cacheexamples impexamples \
   resexamples supplementary
 
 include(./VERSION)
+unix:dev=$$find(VERSION, "-dev")
+unix:count(dev, 1) {
+  rev=$$system(git describe --always)
+  VERSION=$$replace(VERSION, "dev", $$rev)
+}
 DEFINES+=VERSION=\\\"$$VERSION\\\"
+DEFINES+=PREFIX=\\\"$$PREFIX\\\"
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 

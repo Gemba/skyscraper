@@ -33,14 +33,6 @@ _skyscraper_parse_subhelp() {
 	"$skyscraper_bin" "$prev" help | awk '/  [a-z](.+)\x1b\[[0-9;]*m/ {print $2}' | sed -e 's/\x1b\[[0-9;]*m//g'
 }
 
-_skyscraper_compgen_fn() {
-	local cur="$1"
-	# files, excluding directories
-	grep -v -F -f <(compgen -d -P ^ -S '$' -- "$cur") <(compgen -f -P ^ -S '$' -- "$cur") | sed -e 's/^\^//' -e 's/\$$/ /'
-	# append output with directories
-	compgen -d -S / -- "$cur"
-}
-
 _skyscraper() {
 	local cur prev
 	COMPREPLY=()
@@ -95,12 +87,12 @@ _skyscraper() {
 		;;
 	'-d' | '-g' | '-i' | '-o')
 		compopt -o nospace
-		mapfile -t COMPREPLY < <(compgen -d -S / -- "$cur")
+		_filedir -d
 		return 0
 		;;
 	'-a' | '-c' | '--excludefrom' | '--includefrom' | '--endat' | '--startat')
 		compopt -o nospace
-		mapfile -t COMPREPLY < <(_skyscraper_compgen_fn "$cur" -- "$cur")
+		_filedir
 		return 0
 		;;
 	'-h' | '--help' | '--help-all' | '-v' | '--version')
@@ -131,6 +123,7 @@ _skyscraper() {
 		return 0
 	fi
 	# complete filename (aka rom name)
-	mapfile -t COMPREPLY < <(_skyscraper_compgen_fn "$cur" -- "$cur")
+	compopt -o nospace
+	_filedir
 } &&
 	complete -F _skyscraper -o default Skyscraper

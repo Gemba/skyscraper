@@ -138,13 +138,10 @@ void Skyscraper::run() {
         cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
         if (cache->createFolders(config.scraper)) {
             if (!cache->read() && config.scraper == "cache") {
-                printf(
-                    "No resources for this platform found in the resource "
-                    "cache. Please specify a scraping module with '-s' to "
-                    "gather some resources before trying to generate a game "
-                    "list. Check all available modules with '--help'. You can "
-                    "also run Skyscraper in simple mode by typing 'Skyscraper' "
-                    "and follow the instructions on screen.\n\n");
+                printf("No resources for this platform found in the resource "
+                       "cache. Please specify a scraping module with '-s' to "
+                       "gather some resources before trying to generate a game "
+                       "list. Check all available modules with '--help'.\n");
                 exit(1);
             }
         } else {
@@ -734,7 +731,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (parser.isSet("f") && frontends.contains(parser.value("f"))) {
         config.frontend = parser.value("f");
     }
-    if (config.frontend == "emulationstation" || config.frontend == "retrobat") {
+    if (config.frontend == "emulationstation" ||
+        config.frontend == "retrobat") {
         frontend = new EmulationStation;
     } else if (config.frontend == "attractmode") {
         frontend = new AttractMode;
@@ -752,14 +750,14 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // 1. Main config, overrides defaults
     settings.beginGroup("main");
-    rtConf->applyConfigIni(RuntimeCfg::CfgType::MAIN, &settings, inputFolderSet, gameListFolderSet,
-                          mediaFolderSet);
+    rtConf->applyConfigIni(RuntimeCfg::CfgType::MAIN, &settings, inputFolderSet,
+                           gameListFolderSet, mediaFolderSet);
     settings.endGroup();
 
     // 2. Platform specific configs, overrides main and defaults
     settings.beginGroup(config.platform);
-    rtConf->applyConfigIni(RuntimeCfg::CfgType::PLATFORM, &settings, inputFolderSet, gameListFolderSet,
-                              mediaFolderSet);
+    rtConf->applyConfigIni(RuntimeCfg::CfgType::PLATFORM, &settings,
+                           inputFolderSet, gameListFolderSet, mediaFolderSet);
     settings.endGroup();
 
     // Check for command line scraping module here
@@ -771,16 +769,18 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.scraper = parser.value("s");
     }
 
-    // 3. Frontend specific configs, overrides main, platform, module and defaults
+    // 3. Frontend specific configs, overrides main, platform, module and
+    // defaults
     settings.beginGroup(config.frontend);
-    rtConf->applyConfigIni(RuntimeCfg::CfgType::FRONTEND, &settings, inputFolderSet, gameListFolderSet,
-                          mediaFolderSet);
+    rtConf->applyConfigIni(RuntimeCfg::CfgType::FRONTEND, &settings,
+                           inputFolderSet, gameListFolderSet, mediaFolderSet);
     settings.endGroup();
 
-    // 4. Scraping module specific configs, overrides main, platform and defaults
+    // 4. Scraping module specific configs, overrides main, platform and
+    // defaults
     settings.beginGroup(config.scraper);
-    rtConf->applyConfigIni(RuntimeCfg::CfgType::SCRAPER, &settings,inputFolderSet, gameListFolderSet,
-                          mediaFolderSet);
+    rtConf->applyConfigIni(RuntimeCfg::CfgType::SCRAPER, &settings,
+                           inputFolderSet, gameListFolderSet, mediaFolderSet);
     settings.endGroup();
 
     // 5. Command line configs, overrides main, platform, module and defaults
@@ -818,7 +818,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // If platform subfolder exists for import path, use it
     QDir importFolder(config.importFolder);
     if (importFolder.exists(config.platform)) {
-        config.importFolder = rtConf->concatPath(config.importFolder, config.platform);
+        config.importFolder =
+            rtConf->concatPath(config.importFolder, config.platform);
     }
 
     // Set minMatch to 0 for cache, arcadedb and screenscraper
@@ -950,7 +951,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     while (resDirIt.hasNext()) {
         QString resFile = resDirIt.next();
         // Also cut off 'resources/'
-        resFile = resFile.remove(0, resFile.indexOf("resources/") + 10); 
+        resFile = resFile.remove(0, resFile.indexOf("resources/") + 10);
         config.resources[resFile] = QImage("resources/" + resFile);
     }
 }
@@ -1057,8 +1058,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
     if (config.user.isEmpty() || config.password.isEmpty()) {
         printf("The IGDB scraping module requires free user credentials to "
                "work. Read more about that here: "
-               "'https://github.com/Gemba/skyscraper/blob/master/docs/"
-               "SCRAPINGMODULES.md#igdb'\n");
+               "'https://gemba.github.io/skyscraper/SCRAPINGMODULES#igdb'\n");
         exit(1);
     }
     printf("Fetching IGDB authentication token status, just a sec...\n");
@@ -1112,8 +1112,8 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
                    "can be caused by server issues or maybe you entered "
                    "your credentials incorrectly in the Skyscraper "
                    "configuration. Read more about that here: "
-                   "'https://github.com/Gemba/skyscraper/blob/master/docs/"
-                   "SCRAPINGMODULES.md#igdb'\033[0m\n");
+                   "'https://gemba.github.io/skyscraper/"
+                   "SCRAPINGMODULES#igdb'\033[0m\n");
             exit(1);
         }
     } else {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This is the default artwork.xml provided by Skyscraper. More examples can be found in '~/.skyscraper'. Be sure to check the full artwork documentation here: https://github.com/Gemba/skyscraper/blob/master/docs/ARTWORK.md -->
+<!-- This is the default artwork.xml provided by Skyscraper. More examples can be found in '~/.skyscraper'. Be sure to check the full artwork documentation here: https://gemba.github.io/skyscraper/ARTWORK -->
 <artwork>
   <output type="screenshot" width="640" height="480">
     <layer resource="screenshot" x="20" width="520" height="390" align="center" valign="middle">

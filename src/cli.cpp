@@ -27,8 +27,7 @@
 
 void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 
-    parser->setApplicationDescription(
-        StrTools::getVersionHeader() +
+    QString h =
         "Skyscraper looks for compatible game files for the chosen platform "
         "(set with '-p'). It allows you to gather and cache media and game "
         "information for the files using various scraping modules (set with "
@@ -43,8 +42,28 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "documentation at 'https://gemba.github.io/skyscraper/' for a "
         "detailed explanation of all features.\n\nRemember that most of the "
         "following options can also be set in the "
-        "'/home/<USER>/.skyscraper/config.ini' file. All cli options and "
-        "config.ini options are thoroughly documented at the above link.");
+        "'/home/<USER>/.skyscraper/config.ini' file. All command line options "
+        "and config.ini options are thoroughly documented at the above link.";
+
+    QString ht = "";
+    int csr = 0;
+    for (auto w : h.split(QRegExp("\\s"))) {
+        if (csr + w.length() >= 80 || w.isEmpty()) {
+            csr = 0;
+            ht.append('\n');
+            if (w.isEmpty()) {
+                ht.append("\n");
+                continue;
+            }
+        }
+        csr += w.length() + 1;
+        ht.append(w);
+        ht.append(' ');
+    }
+    ht.chop(1);
+
+    parser->setApplicationDescription(StrTools::getVersionHeader() + ht);
+
     QCommandLineOption pOption(
         "p",
         "The platform you wish to scrape. Currently supports " + platforms +
@@ -114,11 +133,10 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "artwork compositing when in gamelist generation mode. Default: "
         "'/home/<USER>/.skyscraper/artwork.xml'",
         "FILENAME", "");
-    QCommandLineOption dOption(
-        "d",
-        "Set custom resource cache folder. Default: "
-        "'/home/<USER>/.skyscraper/cache/PLATFORM'",
-        "FOLDER", "");
+    QCommandLineOption dOption("d",
+                               "Set custom resource cache folder. Default: "
+                               "'/home/<USER>/.skyscraper/cache/PLATFORM'",
+                               "FOLDER", "");
     QCommandLineOption addextOption(
         "addext",
         "Add this or these file extension(s) to accepted file extensions "

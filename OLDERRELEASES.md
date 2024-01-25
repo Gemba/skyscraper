@@ -1,6 +1,6 @@
 
 #### Version 3.5.9 (24th October 2020)
-* Implemented the new IGDB v4 authentication method. IGDB will now work again, and requires free credentials. Read more about that [here](https://github.com/Gemba/skyscraper/blob/master/docs/SCRAPINGMODULES.md#igdb)
+* Implemented the new IGDB v4 authentication method. IGDB will now work again, and requires free credentials. Read more about that [here](https://gemba.github.io/skyscraper/SCRAPINGMODULES#igdb)
 * Improved memory consumption when handing entries back to main thread
 * Added '.au3' file extension to id script exception list (Thank you to 'o0alucard0o' for reporting this)
 

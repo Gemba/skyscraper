@@ -336,7 +336,8 @@ QString StrTools::conformTags(const QString str) {
 }
 
 QString StrTools::getVersionHeader() {
-    QString headerString = "Running Skyscraper v" VERSION " by Lars Muldjord";
+    QString headerString =
+        "Running Skyscraper v" VERSION " by Lars Muldjord and contributors";
     QString dashesString = "";
     for (int a = 0; a < headerString.length(); ++a) {
         dashesString = dashesString % "-";
@@ -350,18 +351,19 @@ QString StrTools::getVersionHeader() {
 QString StrTools::getVersionBanner() {
     QStringList g = {"62", "60", "95", "132", "131", "167", "203"};
     int idx = 0;
+    QString ver = VERSION;
     QStringList b = {
         // clang-format off
          g[idx++] % "m _______ __                                                     ___",
          g[idx++] % "m|   _   |  |--.--.--.-----.----.----.---.-.-----.-----.----.   |\"\"\"|",
          g[idx++] % "m|   1___|    <|  |  |__ --|  __|   _|  _  |  _  |  -__|   _|   |\"\"\"|",
          g[idx++] % "m|____   |__|__|___  |_____|____|__| |___._|   __|_____|__|     |\"\"\"|",
-        (g[idx++] + "m|:  1   |     |_____|                     |__|  %1     |\"\"\"|").arg(VERSION, 10),
+        (g[idx++] + "m|:  1   |     |_____|                     |__| %1   %2|\"\"\"|").arg(ver, 12).arg(ver.contains("-") ? "" : " "),
          g[idx++] % "m|::.. . |                                                      |\"\"\"|",
          g[idx++] % "m`-------' by Lars Muldjord and contributors                   \"\"''''\"",
         // clang-format on
     };
-    QString bs= "\b\b\b\b\b\b\b\b\b\b\b";
+    QString bs = "\b\b\b\b\b\b\b\b\b\b\b";
     return bs % "\033[38;5;" % b.join("\n\033[38;5;") % "\033[0m \n";
 }
 
@@ -384,13 +386,12 @@ QString StrTools::getMd5Sum(const QByteArray &data) {
     return md5.result().toHex();
 }
 
-
 QString StrTools::tidyText(QString text, bool ignoreBangs) {
     // remove and replace some artifacts from description text
-    text = text.replace("…","...");
-    text = text.replace(".  ",". ");
-    text = text.replace("!  ","! ");
-    text = text.replace("?  ","? ");
+    text = text.replace("…", "...");
+    text = text.replace(".  ", ". ");
+    text = text.replace("!  ", "! ");
+    text = text.replace("?  ", "? ");
     if (!ignoreBangs) {
         QRegularExpression re("\\!+");
         text = text.replace(re, "!");

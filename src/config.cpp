@@ -86,7 +86,7 @@ void Config::setupUserConfig() {
     QDir::setCurrent(skyDir.absolutePath());
 
     // copy configs
-    QString localEtcPath = QString("/usr/local/etc/skyscraper/");
+    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
 
     if (!QFileInfo::exists(localEtcPath)) {
         // RetroPie installation type

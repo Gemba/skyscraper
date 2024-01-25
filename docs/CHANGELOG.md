@@ -13,6 +13,8 @@
     `supplementary/bash-completion/Skyscraper.bash` into
     `$XDG_DATA_HOME/bash-completion/completions/` (`$XDG_DATA_HOME` is
     equivalent to `$HOME/.local/share`). Open a new bash -- et voila!
+-   Feature: Customizable installation folder when running `make install`. See
+    `PREFIX` in `skyscraper.pro`.
 
 ### 2023-12-01 (Version 3.9.2)
 
