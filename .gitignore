@@ -63,3 +63,9 @@ packages
 *-packages
 target
 build
+
+# macOS
+.DS_Store
+
+# VS Code
+*.code-workspace
