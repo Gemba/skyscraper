@@ -19,7 +19,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-azuretools.vscode-docker"
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.cpptools-extension-pack",
+				"mechatroner.rainbow-csv",
+				"ryu1kn.partial-diff"
 			]
 		}
 	},
@@ -28,5 +31,5 @@
 	// "remoteUser": "root"
 
 	// Actions that are run after the container is created
-	"postCreateCommand": "qmake && make -j$(nproc) && sudo make install"
+	"postCreateCommand": "./.devcontainer/postCreateCommand.sh"
 }
