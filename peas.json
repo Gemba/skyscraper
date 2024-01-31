@@ -1702,6 +1702,7 @@
             "sony playstation portable"
         ],
         "formats": [
+            "*.chd",
             "*.cso",
             "*.iso",
             "*.pbp"
