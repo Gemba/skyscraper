@@ -73,6 +73,7 @@ struct Settings {
     int maxLength = 2500;
     bool brackets = true;
     bool refresh = false;
+    int includeMedia = 0; // 0 = default, 1 = yes, 2 = no
     QString cacheOptions = "";
     bool cacheResize = true;
     int jpgQuality = 95;
@@ -201,6 +202,7 @@ private:
         {"importFolder",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"includeFiles",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"includeFrom",           QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
+        {"includeMedia",          QPair<QString, int>("bool", CfgType::MAIN |                                         CfgType::SCRAPER )},
         {"includePattern",        QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"inputFolder",           QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"interactive",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},

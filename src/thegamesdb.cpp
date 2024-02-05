@@ -47,10 +47,12 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(DEVELOPER);
     fetchOrder.append(PUBLISHER);
     // fetchOrder.append(RATING);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(COVER);
+        fetchOrder.append(SCREENSHOT);
+        fetchOrder.append(WHEEL);
+        fetchOrder.append(MARQUEE);
+    }
 }
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,

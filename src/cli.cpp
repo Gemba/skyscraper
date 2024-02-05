@@ -154,6 +154,14 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "'--cache help' for a full description of all functions.",
         "COMMAND[:OPTIONS]", "");
     QCommandLineOption refreshOption("refresh", "Same as '--cache refresh'.");
+    QCommandLineOption includemediaOption(
+        "includemedia", 
+        "Should Skyscraper include media files?. The default behaviour excludes media "
+        "from sources which are not guaranteed to be the right platform.");
+    QCommandLineOption excludemediaOption(
+        "excludemedia", 
+        "Should Skyscraper exclude all media files?. The default behaviour includes media "
+        "from sources which are guaranteed to be the right platform.");
     QCommandLineOption startatOption(
         "startat",
         "Tells Skyscraper which file to start at. Forces '--refresh' and "
@@ -258,6 +266,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(eOption);
     parser->addOption(excludefilesOption);
     parser->addOption(excludefromOption);
+    parser->addOption(excludemediaOption);
     parser->addOption(excludepatternOption);
     parser->addOption(flagsOption);
     parser->addOption(fOption);
@@ -266,6 +275,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addHelpOption();
     parser->addOption(includefilesOption);
     parser->addOption(includefromOption);
+    parser->addOption(includemediaOption);
     parser->addOption(includepatternOption);
     parser->addOption(iOption);
     parser->addOption(langOption);

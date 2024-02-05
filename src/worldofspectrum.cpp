@@ -64,8 +64,10 @@ WorldOfSpectrum::WorldOfSpectrum(Settings *config,
     coverPost = "\" TARGET";
     screenshotPost = "\" BORDER";
 
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(COVER);
+        fetchOrder.append(SCREENSHOT);
+    }
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(PUBLISHER);
     fetchOrder.append(DEVELOPER);

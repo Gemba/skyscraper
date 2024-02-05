@@ -85,6 +85,7 @@ This is an alphabetical index of all configuration options including the section
 | [hints](CONFIGINI.md#hints)                                 |    Y     |                |                |               |
 | [importFolder](CONFIGINI.md#importfolder)                   |    Y     |       Y        |                |               |
 | [includeFrom](CONFIGINI.md#includefrom)                     |    Y     |       Y        |                |               |
+| [includeMedia](CONFIGINI.md#includemedia)                   |    Y     |       Y        |                |               |
 | [includePattern](CONFIGINI.md#includepattern)               |    Y     |       Y        |       Y        |               |
 | [inputFolder](CONFIGINI.md#inputfolder)                     |    Y     |       Y        |                |               |
 | [interactive](CONFIGINI.md#interactive)                     |    Y     |       Y        |                |       Y       |
@@ -923,3 +924,18 @@ Allows you to set a platform, which is applied when no command line switch `-p` 
 
 Default value: unset  
 Allowed in sections: `[main]`
+
+---
+
+#### includeMedia
+
+By default, Skyscraper will only include media from scrapers which don't guarantee relevance to the current platform.
+With this setting set to `true` then it will include media for the relevant scrapers.
+With this setting set to `false`, no media will be included.
+
+!!! note
+
+    Setting this to `true` is currently only relevant for the Igdb scraper.
+
+Default value: unset  
+Allowed in sections: `[main]`, `[<SCRAPER>]`

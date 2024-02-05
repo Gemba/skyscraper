@@ -53,8 +53,10 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(DESCRIPTION);
     fetchOrder.append(AGES);
     fetchOrder.append(RATING);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(COVER);
+        fetchOrder.append(SCREENSHOT);
+    }
 }
 
 void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,

@@ -324,6 +324,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->hints = v;
                 continue;
             }
+            if (k == "includeMedia") {
+                config->includeMedia = v == true ? 1 : 2;
+                continue;
+            }
             if (k == "interactive") {
                 config->interactive = v;
                 continue;
@@ -543,6 +547,12 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     }
     if (parser->isSet("endat")) {
         config->endAt = parser->value("endat");
+    }
+    if (parser->isSet("includemedia")) {
+        config->includeMedia = 1;
+    }
+    if (parser->isSet("excludemedia")) {
+        config->includeMedia = 2;
     }
     // This option is DEPRECATED, use includepattern
     if (parser->isSet("includefiles")) {

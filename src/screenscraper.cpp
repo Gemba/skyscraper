@@ -56,12 +56,14 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(DESCRIPTION);
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(TAGS);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(TEXTURE);
-    fetchOrder.append(VIDEO);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(SCREENSHOT);
+        fetchOrder.append(COVER);
+        fetchOrder.append(WHEEL);
+        fetchOrder.append(MARQUEE);
+        fetchOrder.append(TEXTURE);
+        fetchOrder.append(VIDEO);
+    }
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,

@@ -65,9 +65,11 @@ Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(PLAYERS);
     fetchOrder.append(TAGS);
     fetchOrder.append(AGES);
-    fetchOrder.append(COVER);       // covers api
-    fetchOrder.append(MARQUEE);     // artworks api
-    fetchOrder.append(SCREENSHOT);  // screenshots api
+    if (config->includeMedia == 1) {
+        fetchOrder.append(COVER);       // covers api
+        fetchOrder.append(MARQUEE);     // artworks api
+        fetchOrder.append(SCREENSHOT);  // screenshots api
+    }
 }
 
 void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
