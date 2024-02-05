@@ -30,6 +30,8 @@
 
 #include <QJsonArray>
 
+constexpr int MINARTSIZE = 256;
+
 Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager) {
     QPair<QString, QString> clientIdHeader;
@@ -63,6 +65,9 @@ Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(PLAYERS);
     fetchOrder.append(TAGS);
     fetchOrder.append(AGES);
+    fetchOrder.append(COVER);       // covers api
+    fetchOrder.append(MARQUEE);     // artworks api
+    fetchOrder.append(SCREENSHOT);  // screenshots api
 }
 
 void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
@@ -117,12 +122,11 @@ void Igdb::getGameData(GameEntry &game) {
     netComm->request(
         baseUrl + "/games/",
         "fields "
-        "age_ratings.rating,age_ratings.category,total_rating,cover.url,game_"
-        "modes.slug,genres.name,screenshots.url,summary,release_dates.date,"
-        "release_dates.region,release_dates.platform,involved_companies."
-        "company.name,involved_companies.developer,involved_companies."
-        "publisher; where id = " +
-            game.id.split(";").first() + ";",
+        "age_ratings.rating,age_ratings.category,total_rating,game_modes.slug,"
+        "genres.name,summary,release_dates.date,release_dates.region,release_dates.platform,"
+        "involved_companies.company.name,involved_companies.developer,involved_companies.publisher,"
+        "artworks.url,artworks.animated,cover.url,cover.animated,screenshots.url,screenshots.animated; "
+        "where id = " + game.id.split(";").first() + ";",
         headers);
     q.exec();
     data = netComm->getData();
@@ -297,4 +301,85 @@ QList<QString> Igdb::getSearchNames(const QFileInfo &info) {
     QList<QString> searchNames;
     searchNames.append(baseName);
     return searchNames;
+}
+
+QString parseUrl(QString url) {
+    if (url.isEmpty())
+        return url;
+
+    if (url.startsWith("//")) {
+        url.prepend("https:");
+    }
+
+    // Make sure we get the full-size image
+    url.replace(QRegularExpression("/t_[^/]+/", QRegularExpression::CaseInsensitiveOption), "/t_original/");
+
+    return url;
+}
+
+void Igdb::getMarquee(GameEntry &game) {
+    QJsonArray jsonImgArr = jsonObj["artworks"].toArray();
+    for (const auto &jsonImg : jsonImgArr) {
+        QString url = parseUrl(jsonImg.toObject()["url"].toString());
+        
+        if (jsonImg.toObject()["animated"].toBool() != true &&
+            !url.isEmpty()) {
+            limiter.exec();
+            netComm->request(url);
+            q.exec();
+            
+            QImage image;
+            if (netComm->getError(config->verbosity) ==
+                    QNetworkReply::NoError &&
+                netComm->getData().size() >= MINARTSIZE &&
+                image.loadFromData(netComm->getData())) {
+                game.marqueeData = netComm->getData();
+                return;
+            }
+        }
+    }
+}
+
+void Igdb::getCover(GameEntry &game) {
+    const auto &jsonImg = jsonObj["cover"];
+    QString url = parseUrl(jsonImg.toObject()["url"].toString());
+
+    if (jsonImg.toObject()["animated"].toBool() != true &&
+        !url.isEmpty()) {
+        limiter.exec();
+        netComm->request(url);
+        q.exec();
+        
+        QImage image;
+        if (netComm->getError(config->verbosity) ==
+                QNetworkReply::NoError &&
+            netComm->getData().size() >= MINARTSIZE &&
+            image.loadFromData(netComm->getData())) {
+            game.coverData = netComm->getData();
+            return;
+        }
+    }
+}
+
+void Igdb::getScreenshot(GameEntry &game) {
+    QJsonArray jsonImgArr = jsonObj["screenshots"].toArray();
+    for (const auto &jsonImg : jsonImgArr) {
+        QString url = parseUrl(jsonImg.toObject()["url"].toString());
+
+        if (jsonImg.toObject()["animated"].toBool() != true &&
+            !url.isEmpty()) {
+            limiter.exec();
+            netComm->request(url);
+            q.exec();
+            
+            QImage image;
+            if (netComm->getError(config->verbosity) ==
+                    QNetworkReply::NoError &&
+                netComm->getData().size() >= MINARTSIZE &&
+                image.loadFromData(netComm->getData())) {
+                game.screenshotData = netComm->getData();
+                return;
+            }
+        }
+    }
 }
