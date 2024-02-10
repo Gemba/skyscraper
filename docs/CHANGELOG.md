@@ -1,6 +1,6 @@
-## Changes of this Fork
+## Changes
 
-### TBA (Version 3.9.3)
+### Version 3.10.0 (2024-02-10)
 
 -   Feature: Preserve existing `<folder/>` nodes in gamelist or create skeleton
     `<folder/>` nodes when ROMs are stored in subfolders within a system folder,
@@ -15,6 +15,11 @@
     equivalent to `$HOME/.local/share`). Open a new bash -- et voila!
 -   Feature: Customizable installation folder when running `make install`. See
     `PREFIX` in `skyscraper.pro`.
+-   Feature: Improved MacOS support. Unified update script
+    `update_skyscraper.sh` (thanks, @jeantichoc) and Docker support via Dev
+    Container (kudos, @retrobit).
+-   Fix: Various minor fixes reported from the community on different setups,
+    thanks!
 
 ### 2023-12-01 (Version 3.9.2)
 
