@@ -272,8 +272,8 @@ QString EmulationStation::createXml(GameEntry &entry) {
     l.append(elem("path", entry.path, addEmptyElem));
     l.append(elem("name", entry.title, addEmptyElem));
 
-    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
-    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
+    l.append(elem("thumbnail", entry.screenshotFile, addEmptyElem, true));
+    l.append(elem("image", entry.coverFile, addEmptyElem, true));
     l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
     l.append(elem("texture", entry.textureFile, addEmptyElem, true));
 
