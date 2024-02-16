@@ -101,6 +101,17 @@
             "screenscraper"
         ]
     },
+    "apple2gs": {
+        "aliases": [
+            "apple iigs"
+        ],
+        "formats": [
+            "*.2mg"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "arcade": {
         "aliases": [
             "acclaim",
@@ -185,6 +196,17 @@
             "emerson arcadia 2001"
         ],
         "formats": [],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "arduboy": {
+        "aliases": [
+            "arduboy"
+        ],
+        "formats": [
+            "*.hex"
+        ],
         "scrapers": [
             "screenscraper"
         ]
@@ -734,6 +756,17 @@
             "screenscraper"
         ]
     },
+    "gamecom": {
+        "aliases": [
+            "tiger - game.com"
+        ],
+        "formats": [
+            "*.tgc"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "gamegear": {
         "aliases": [
             "game gear",
@@ -800,6 +833,18 @@
             "screenscraper"
         ]
     },
+    "gmaster": {
+        "aliases": [
+            "game master",
+            "hartung game gear"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "intellivision": {
         "aliases": [],
         "formats": [
@@ -809,6 +854,15 @@
         "scrapers": [
             "screenscraper"
         ]
+    },
+    "j2me": {
+        "aliases": [
+            "mobile - j2me"
+        ],
+        "formats": [
+            "*.jar"
+        ],
+        "scrapers": []
     },
     "love": {
         "aliases": [
@@ -1168,6 +1222,17 @@
             "screenscraper"
         ]
     },
+    "megaduck": {
+        "aliases": [
+            "welback - mega duck"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "moto": {
         "aliases": [
             "thomson",
@@ -1230,6 +1295,20 @@
         ],
         "formats": [
             "*.n64",
+            "*.v64",
+            "*.z64"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "n64dd": {
+        "aliases": [
+            "nintendo 64dd"
+        ],
+        "formats": [
+            "*.n64",
+            "*.ndd",
             "*.v64",
             "*.z64"
         ],
@@ -1436,6 +1515,19 @@
         "formats": [
             "*.dsk",
             "*.tap"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "palm": {
+        "aliases": [
+            "palmos"
+        ],
+        "formats": [
+            "*.img",
+            "*.prc",
+            "*.pqa"
         ],
         "scrapers": [
             "screenscraper"
@@ -1711,6 +1803,18 @@
             "screenscraper"
         ]
     },
+    "psvita": {
+        "aliases": [
+            "playstation vita",
+            "vita"
+        ],
+        "formats": [
+            "*.psvita"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "psx": {
         "aliases": [
             "playstation",
@@ -1732,6 +1836,18 @@
         "scrapers": [
             "screenscraper",
             "thegamesdb"
+        ]
+    },
+    "pv1000": {
+        "aliases": [
+            "casio - pv-1000",
+            "pv-1000"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "screenscraper"
         ]
     },
     "samcoupe": {
@@ -1786,6 +1902,18 @@
         "scrapers": [
             "screenscraper",
             "thegamesdb"
+        ]
+    },
+    "scv": {
+        "aliases": [
+            "super cassette vision"
+        ],
+        "formats": [
+            "*.0",
+            "*.bin"
+        ],
+        "scrapers": [
+            "screenscraper"
         ]
     },
     "sega32x": {
@@ -1889,6 +2017,18 @@
         ],
         "scrapers": []
     },
+    "supervision": {
+        "aliases": [
+            "watara - supervision"
+        ],
+        "formats": [
+            "*.bin",
+            "*.sv"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "switch": {
         "aliases": [
             "nintendo switch"
@@ -1897,6 +2037,19 @@
             "*.nca",
             "*.nsp",
             "*.xci"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "symbian": {
+        "aliases": [
+            "symbian"
+        ],
+        "formats": [
+            "*.sis",
+            "*.sisx",
+            "*.symbian"
         ],
         "scrapers": [
             "screenscraper"
@@ -1990,6 +2143,17 @@
         ],
         "formats": [
             "*.vb"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "vsmile": {
+        "aliases": [
+            "vtech - v.smile"
+        ],
+        "formats": [
+            "*.bin"
         ],
         "scrapers": [
             "screenscraper"
