@@ -208,7 +208,9 @@
             "*.hex"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "astrocade": {
@@ -764,7 +766,9 @@
             "*.tgc"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "gamegear": {
@@ -842,7 +846,9 @@
             "*.bin"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "intellivision": {
@@ -862,7 +868,9 @@
         "formats": [
             "*.jar"
         ],
-        "scrapers": []
+        "scrapers": [
+            "thegamesdb"
+        ]
     },
     "love": {
         "aliases": [
@@ -1230,7 +1238,8 @@
             "*.bin"
         ],
         "scrapers": [
-            "screenscraper"
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "moto": {
@@ -1530,6 +1539,7 @@
             "*.pqa"
         ],
         "scrapers": [
+            "mobygames",
             "screenscraper"
         ]
     },
@@ -1812,7 +1822,9 @@
             "*.psvita"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "psx": {
@@ -1847,7 +1859,9 @@
             "*.bin"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "samcoupe": {
@@ -1913,7 +1927,9 @@
             "*.bin"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "sega32x": {
@@ -2026,7 +2042,9 @@
             "*.sv"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "switch": {
@@ -2052,7 +2070,7 @@
             "*.symbian"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames"
         ]
     },
     "ti99": {
@@ -2156,7 +2174,9 @@
             "*.bin"
         ],
         "scrapers": [
-            "screenscraper"
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "wii": {
