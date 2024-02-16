@@ -101,6 +101,17 @@
             "screenscraper"
         ]
     },
+    "apple2gs": {
+        "aliases": [
+            "apple iigs"
+        ],
+        "formats": [
+            "*.2mg"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
     "arcade": {
         "aliases": [
             "acclaim",
@@ -187,6 +198,19 @@
         "formats": [],
         "scrapers": [
             "screenscraper"
+        ]
+    },
+    "arduboy": {
+        "aliases": [
+            "arduboy"
+        ],
+        "formats": [
+            "*.hex"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "astrocade": {
@@ -734,6 +758,19 @@
             "screenscraper"
         ]
     },
+    "gamecom": {
+        "aliases": [
+            "tiger - game.com"
+        ],
+        "formats": [
+            "*.tgc"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
     "gamegear": {
         "aliases": [
             "game gear",
@@ -800,6 +837,20 @@
             "screenscraper"
         ]
     },
+    "gmaster": {
+        "aliases": [
+            "game master",
+            "hartung game gear"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
     "intellivision": {
         "aliases": [],
         "formats": [
@@ -808,6 +859,17 @@
         ],
         "scrapers": [
             "screenscraper"
+        ]
+    },
+    "j2me": {
+        "aliases": [
+            "mobile - j2me"
+        ],
+        "formats": [
+            "*.jar"
+        ],
+        "scrapers": [
+            "thegamesdb"
         ]
     },
     "love": {
@@ -1168,6 +1230,18 @@
             "screenscraper"
         ]
     },
+    "megaduck": {
+        "aliases": [
+            "welback - mega duck"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
     "moto": {
         "aliases": [
             "thomson",
@@ -1230,6 +1304,20 @@
         ],
         "formats": [
             "*.n64",
+            "*.v64",
+            "*.z64"
+        ],
+        "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "n64dd": {
+        "aliases": [
+            "nintendo 64dd"
+        ],
+        "formats": [
+            "*.n64",
+            "*.ndd",
             "*.v64",
             "*.z64"
         ],
@@ -1438,6 +1526,20 @@
             "*.tap"
         ],
         "scrapers": [
+            "screenscraper"
+        ]
+    },
+    "palm": {
+        "aliases": [
+            "palmos"
+        ],
+        "formats": [
+            "*.img",
+            "*.prc",
+            "*.pqa"
+        ],
+        "scrapers": [
+            "mobygames",
             "screenscraper"
         ]
     },
@@ -1711,6 +1813,20 @@
             "screenscraper"
         ]
     },
+    "psvita": {
+        "aliases": [
+            "playstation vita",
+            "vita"
+        ],
+        "formats": [
+            "*.psvita"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
     "psx": {
         "aliases": [
             "playstation",
@@ -1730,6 +1846,20 @@
             "*.znx"
         ],
         "scrapers": [
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
+    "pv1000": {
+        "aliases": [
+            "casio - pv-1000",
+            "pv-1000"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "mobygames",
             "screenscraper",
             "thegamesdb"
         ]
@@ -1784,6 +1914,20 @@
             "*.svm"
         ],
         "scrapers": [
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
+    "scv": {
+        "aliases": [
+            "super cassette vision"
+        ],
+        "formats": [
+            "*.0",
+            "*.bin"
+        ],
+        "scrapers": [
+            "mobygames",
             "screenscraper",
             "thegamesdb"
         ]
@@ -1889,6 +2033,20 @@
         ],
         "scrapers": []
     },
+    "supervision": {
+        "aliases": [
+            "watara - supervision"
+        ],
+        "formats": [
+            "*.bin",
+            "*.sv"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
+        ]
+    },
     "switch": {
         "aliases": [
             "nintendo switch"
@@ -1900,6 +2058,19 @@
         ],
         "scrapers": [
             "screenscraper"
+        ]
+    },
+    "symbian": {
+        "aliases": [
+            "symbian"
+        ],
+        "formats": [
+            "*.sis",
+            "*.sisx",
+            "*.symbian"
+        ],
+        "scrapers": [
+            "mobygames"
         ]
     },
     "ti99": {
@@ -1993,6 +2164,19 @@
         ],
         "scrapers": [
             "screenscraper"
+        ]
+    },
+    "vsmile": {
+        "aliases": [
+            "vtech - v.smile"
+        ],
+        "formats": [
+            "*.bin"
+        ],
+        "scrapers": [
+            "mobygames",
+            "screenscraper",
+            "thegamesdb"
         ]
     },
     "wii": {

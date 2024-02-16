@@ -101,6 +101,8 @@ zxspectrum,76,41,4913
 
 3ds,17,101,4912
 actionmax,81,-1,4976
+apple2gs,217,-1,-1
+arduboy,263,215,-1
 astrocade,44,160,4968
 atarijaguarcd,171,-1,29
 atomiswave,53,-1,23
@@ -108,15 +110,27 @@ cd32,130,56,4947
 cdi,133,73,4917
 cdtv,129,83,-1
 easyrpg,231,-1,-1
+gamecom,121,50,4940
+gmaster,103,-1,-1
+j2me,-1,-1,5018
+megaduck,90,-1,4948
 msx2,116,-1,-1
+n64dd,122,-1,-1
 naomi,56,-1,23
 neogeocd,70,54,4956
+palm,219,65,-1
 pcenginecd,114,45,4955
 plus4,99,115,5007
 ps3,59,81,12
 ps4,60,141,4919
+psvita,62,105,39
+pv1000,74,125,4964
+scv,67,138,4966
+supervision,207,109,4959
 switch,225,203,4971
+symbian,-1,67,-1
 vic20,73,43,4945
+vsmile,120,42,4988
 wiiu,18,132,38
 xbox,32,13,14
 xbox360,33,69,15
