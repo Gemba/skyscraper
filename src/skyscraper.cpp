@@ -715,6 +715,19 @@ void Skyscraper::checkThreads() {
     emit finished();
 }
 
+bool Skyscraper::validateFrontend(const QString &providedFrontend) {
+    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
+                             "pegasus"};
+    if (!frontends.contains(providedFrontend)) {
+        printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "
+               "%s.\033[0m\n",
+               providedFrontend.toStdString().c_str(),
+               frontends.join(", ").toStdString().c_str());
+        return false;
+    }
+    return true;
+}
+
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     QSettings settings(parser.isSet("c") ? parser.value("c") : "config.ini",
                        QSettings::IniFormat);
@@ -722,15 +735,23 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // Start by setting frontend, since we need it to set default for game list
     // and so on
     settings.beginGroup("main");
-    if (settings.contains("frontend")) {
-        config.frontend = settings.value("frontend").toString();
+
+    // config.frontend is emulationstation by default
+    if (parser.isSet("f")) {
+        QString fe = parser.value("f");
+        if (!validateFrontend(fe)) {
+            exit(1);
+        }
+        config.frontend = fe;
+    } else if (settings.contains("frontend")) {
+        QString fe = settings.value("frontend").toString();
+        if (!validateFrontend(fe)) {
+            exit(1);
+        }
+        config.frontend = fe;
     }
     settings.endGroup();
-    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus"};
-    if (parser.isSet("f") && frontends.contains(parser.value("f"))) {
-        config.frontend = parser.value("f");
-    }
+
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {
         frontend = new EmulationStation;
