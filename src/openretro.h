@@ -35,7 +35,7 @@ public:
     OpenRetro(Settings *config, QSharedPointer<NetManager> manager);
 
 private:
-    QList<QString> getSearchNames(const QFileInfo &info) override;
+    QList<QString> getSearchNames(const QFileInfo &info, QString &debug) override;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
     void getGameData(GameEntry &game) override;

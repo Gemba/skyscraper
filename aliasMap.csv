@@ -3,13 +3,13 @@
 #
 # Note 1! This file is global and will be used when scraping ANY platform.
 #
-# Note 2! All bracket info in these titles are ignored. This is a search name alias
-#         NOT a title alias. It merely provides a different base name for Skyscraper
-#         when it creates the search query. It is meant to help scrape files that have
-#         abstract file names where the search based scraping modules have a hard time
-#         finding good results.
+# Note 2! All bracket info in the search name alias is ignored.
+#         It merely provides a different base name for Skyscraper when it creates
+#         the search query. It is meant to help scrape files that have abstract filenames
+#         where the search-based scraping modules have a hard time finding good 
+#         results, or you know the specific entry in direct-match scraping modules.
 #         If you wish to keep or add brackets to a title you can still do so by adding
-#         them to the actual file instead.
+#         them to the actual filename instead.
 #
 # Format (without the quotes):
 # "Rom Filename (Europe);Use This Name Instead"

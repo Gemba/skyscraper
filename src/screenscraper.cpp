@@ -494,7 +494,22 @@ void ScreenScraper::getVideo(GameEntry &game) {
     }
 }
 
-QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info) {
+QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info, QString &debug) {
+    QString baseName = info.baseName();
+    QList<QString> searchNames;
+    QString searchName = baseName;
+
+    debug.append("Base name: '" + baseName + "'\n");
+
+    if (!config->aliasMap[baseName].isEmpty()) {
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasName + "'\n");
+        searchName = "romnom=" + QUrl::toPercentEncoding(aliasName, "()");
+        searchNames.append(searchName);
+        return searchNames;
+    }
+
     QList<QString> hashList;
     QCryptographicHash md5(QCryptographicHash::Md5);
     QCryptographicHash sha1(QCryptographicHash::Sha1);
@@ -596,7 +611,7 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info) {
     hashList.append(md5Result.toUpper());
     hashList.append(sha1Result.toUpper());
 
-    QList<QString> searchNames;
+    // Only one searchName, but direct match query
     if (info.size() != 0) {
         searchNames.append("crc=" + hashList.at(1) + "&md5=" + hashList.at(2) +
                            "&sha1=" + hashList.at(3) +

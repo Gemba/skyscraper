@@ -76,6 +76,12 @@ private:
                        const int &lowestDistance);
 
     bool limitReached(QString &output);
+
+    QStringList const directMatchScrapers = {"cache", "import", "arcadedb",
+                                            "screenscraper", "esgamelist"};
+    QStringList const searchBasedScrapers = {"thegamesdb", "mobygames",
+                                            "igdb", "worldofspectrum"};
+    QStringList const variableScrapers = {"openretro"};
 };
 
 #endif // SCRAPERWORKER_H
