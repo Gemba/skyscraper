@@ -340,9 +340,13 @@ void OpenRetro::getMarquee(GameEntry &game) {
     }
 }
 
-QList<QString> OpenRetro::getSearchNames(const QFileInfo &info) {
+QList<QString> OpenRetro::getSearchNames(const QFileInfo &info, QString &debug) {
     QString baseName = info.completeBaseName();
     QList<QString> searchNames;
+    QString searchName = baseName;
+
+    debug.append("Base name: '" + baseName + "'\n");
+
     bool isAga = false;
     // Look for '_aga_' or '[aga]' with the last char optional
     if (QRegularExpression("[_[]{1}(Aga|AGA)[_\\]]{0,1}")
@@ -351,49 +355,54 @@ QList<QString> OpenRetro::getSearchNames(const QFileInfo &info) {
         isAga = true;
     }
 
-    if (config->scraper != "import") {
-        if (!config->aliasMap[baseName].isEmpty()) {
-            baseName = config->aliasMap[baseName];
-        } else if (info.suffix() == "lha") {
-            // Pass 1 is uuid from whdload_db.xml
-            if (!config->whdLoadMap[baseName].second.isEmpty()) {
-                searchNames.append("/game/" +
-                                   config->whdLoadMap[baseName].second);
-            }
-            // Pass 2 is either from <name> tag in whdload_db.xml or by adding
-            // spaces
-            QString nameWithSpaces = config->whdLoadMap[baseName].first;
-            if (nameWithSpaces.isEmpty()) {
-                baseName = NameTools::getNameWithSpaces(baseName);
-            } else {
-                baseName = nameWithSpaces;
-            }
-        } else if (config->platform == "scummvm") {
-            baseName = NameTools::getScummName(baseName, config->scummIni);
-        } else if ((config->platform == "neogeo" ||
-                    config->platform == "arcade" ||
-                    config->platform == "mame-advmame" ||
-                    config->platform == "mame-libretro" ||
-                    config->platform == "mame-mame4all" ||
-                    config->platform == "fba") &&
-                   !config->mameMap[baseName].isEmpty()) {
-            baseName = config->mameMap[baseName];
+    if (!config->aliasMap[baseName].isEmpty()) {
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasName + "'\n");
+        searchName = aliasName;
+    } else if (info.suffix() == "lha") {
+        // Pass 1 is uuid from whdload_db.xml
+        if (!config->whdLoadMap[baseName].second.isEmpty()) {
+            searchName = "/game/" + config->whdLoadMap[baseName].second;
+            searchNames.append(searchName);
         }
+        // Pass 2 is either from <name> tag in whdload_db.xml or by adding
+        // spaces
+        QString nameWithSpaces = config->whdLoadMap[baseName].first;
+        if (nameWithSpaces.isEmpty()) {
+            searchName = NameTools::getNameWithSpaces(baseName);
+        } else {
+            debug.append("'whdload_db.xml' entry found\n");
+            searchName = nameWithSpaces;
+            debug.append("Entry name: '" + searchName + "'\n");
+        }
+    } else if (config->platform == "scummvm") {
+        searchName = NameTools::getScummName(baseName, config->scummIni);
+    } else if ((config->platform == "neogeo" ||
+                config->platform == "arcade" ||
+                config->platform == "mame-advmame" ||
+                config->platform == "mame-libretro" ||
+                config->platform == "mame-mame4all" ||
+                config->platform == "fba") &&
+                !config->mameMap[baseName].isEmpty()) {
+        debug.append("'mameMap.csv' entry found\n");
+        searchName = config->mameMap[baseName];
+        debug.append("Entry name: '" + searchName + "'\n");
     }
 
-    baseName = NameTools::getUrlQueryName(baseName, 2);
+    searchName = NameTools::getUrlQueryName(searchName, 2);
 
-    if (!baseName.isEmpty()) {
+    if (!searchName.isEmpty()) {
         if (isAga) {
-            searchNames.append("/browse?q=" + baseName + "+aga");
+            searchNames.append("/browse?q=" + searchName + "+aga");
         }
-        searchNames.append("/browse?q=" + baseName);
+        searchNames.append("/browse?q=" + searchName);
     }
 
-    if (baseName.indexOf(":") != -1 || baseName.indexOf("-") != -1) {
-        baseName = baseName.left(baseName.indexOf(":")).simplified();
-        baseName = baseName.left(baseName.indexOf("-")).simplified();
-        searchNames.append("/browse?q=" + baseName);
+    if (searchName.indexOf(":") != -1 || searchName.indexOf("-") != -1) {
+        searchName = searchName.left(searchName.indexOf(":")).simplified();
+        searchName = searchName.left(searchName.indexOf("-")).simplified();
+        searchNames.append("/browse?q=" + searchName);
     }
 
     return searchNames;

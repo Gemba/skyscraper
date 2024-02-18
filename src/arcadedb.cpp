@@ -179,8 +179,20 @@ void ArcadeDB::getVideo(GameEntry &game) {
     }
 }
 
-QList<QString> ArcadeDB::getSearchNames(const QFileInfo &info) {
+QList<QString> ArcadeDB::getSearchNames(const QFileInfo &info, QString &debug) {
+    QString baseName = info.baseName();
     QList<QString> searchNames;
-    searchNames.append(info.baseName());
+    QString searchName = baseName;
+
+    debug.append("Base name: '" + baseName + "'\n");
+
+    if (!config->aliasMap[baseName].isEmpty()) {
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasName + "'\n");
+        searchName = aliasName;
+    }
+
+    searchNames.append(searchName);
     return searchNames;
 }

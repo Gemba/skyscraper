@@ -104,7 +104,10 @@ void ScraperWorker::run() {
             cacheId = NameTools::getCacheId(info);
             cache->addQuickId(info, cacheId);
         }
+
+        // compareTitle is what SkyScraper uses as the title internally and with cache, distinctly separate from search query and/or result from a scraping module
         QString compareTitle = scraper->getCompareTitle(info);
+        debug.append("Compare title: '" + compareTitle + "'\n");
 
         // For Amiga platform, change to subplatforms if detected as such
         if (config.platform == "amiga") {
@@ -538,9 +541,7 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
                                       int &lowestDistance) {
     GameEntry game;
 
-    // If scraper isn't filename search based, always return first entry
-    QStringList const directMatchScrapers = {"cache", "import", "arcadedb",
-                                             "screenscraper", "esgamelist"};
+    // If scraper isn't filename/hash search based, always return first entry
     if (directMatchScrapers.contains(config.scraper) ||
         (config.scraper == "openretro" && gameEntries.first().url.isEmpty())) {
         lowestDistance = 0;

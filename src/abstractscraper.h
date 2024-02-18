@@ -43,7 +43,7 @@ public:
     AbstractScraper(Settings *config, QSharedPointer<NetManager> manager);
     virtual ~AbstractScraper();
     virtual void getGameData(GameEntry &game);
-    virtual QList<QString> getSearchNames(const QFileInfo &info);
+    virtual QList<QString> getSearchNames(const QFileInfo &info, QString &debug);
     virtual QString getCompareTitle(QFileInfo info);
     virtual void runPasses(QList<GameEntry> &gameEntries, const QFileInfo &info,
                            QString &output, QString &debug);

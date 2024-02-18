@@ -271,30 +271,43 @@ void Igdb::getRating(GameEntry &game) {
     }
 }
 
-QList<QString> Igdb::getSearchNames(const QFileInfo &info) {
+QList<QString> Igdb::getSearchNames(const QFileInfo &info, QString &debug) {
     QString baseName = info.completeBaseName();
+    QString searchName = baseName;
+
+    debug.append("Base name: '" + baseName + "'\n");
 
     if (!config->aliasMap[baseName].isEmpty()) {
-        baseName = config->aliasMap[baseName];
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasName + "'\n");
+        searchName = aliasName;
     } else if (info.suffix() == "lha") {
         QString nameWithSpaces = config->whdLoadMap[baseName].first;
         if (nameWithSpaces.isEmpty()) {
-            baseName = NameTools::getNameWithSpaces(baseName);
+            searchName = NameTools::getNameWithSpaces(baseName);
         } else {
-            baseName = nameWithSpaces;
+            debug.append("'whdload_db.xml' entry found\n");
+            searchName = nameWithSpaces;
+            debug.append("Entry name: '" + searchName + "'\n");
         }
     } else if (config->platform == "scummvm") {
-        baseName = NameTools::getScummName(baseName, config->scummIni);
-    } else if ((config->platform == "neogeo" || config->platform == "arcade" ||
+        searchName = NameTools::getScummName(baseName, config->scummIni);
+    } else if ((config->platform == "neogeo" ||
+                config->platform == "arcade" ||
                 config->platform == "mame-advmame" ||
                 config->platform == "mame-libretro" ||
                 config->platform == "mame-mame4all" ||
                 config->platform == "fba") &&
-               !config->mameMap[baseName].isEmpty()) {
-        baseName = config->mameMap[baseName];
+                !config->mameMap[baseName].isEmpty()) {
+        debug.append("'mameMap.csv' entry found\n");
+        searchName = config->mameMap[baseName];
+        debug.append("Entry name: '" + searchName + "'\n");
     }
-    baseName = StrTools::stripBrackets(baseName);
+
     QList<QString> searchNames;
-    searchNames.append(baseName);
+
+    searchName = StrTools::stripBrackets(searchName);
+    searchNames.append(searchName);
     return searchNames;
 }

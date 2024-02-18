@@ -1312,10 +1312,8 @@ void Skyscraper::loadWhdLoadMap() {
                     QDomNode gameNode = gameNodes.at(a);
                     QPair<QString, QString> gamePair;
                     gamePair.first = gameNode.firstChildElement("name").text();
-                    gamePair.second =
-                        gameNode.firstChildElement("variant_uuid").text();
-                    config.whdLoadMap[gameNode.toElement().attribute(
-                        "filename")] = gamePair;
+                    gamePair.second = gameNode.firstChildElement("variant_uuid").text();
+                    config.whdLoadMap[gameNode.toElement().attribute("filename")] = gamePair;
                 }
             }
         }
