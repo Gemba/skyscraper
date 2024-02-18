@@ -57,6 +57,7 @@ private:
     QString createXml(GameEntry &entry);
     QString elem(QString elem, QString &data, bool addEmptyElem,
                  bool isPath = false);
+    bool isGameLauncher(QString &sub);
 };
 
 #endif // EMULATIONSTATION_H

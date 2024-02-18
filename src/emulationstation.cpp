@@ -173,6 +173,19 @@ void EmulationStation::assembleList(QString &finalOutput,
                 .replace(".zip", ".daphne");
             continue;
         }
+        if (config->platform == "scummvm") {
+            // entry.path is file folder on fs with valid extension -> keep as
+            // game entry
+            // RetroPie/roms/scummvm/blarf.svm/ -> as <game/>
+            QFileInfo entryInfo(entry.path);
+            if (entryInfo.isDir() &&
+                extensions.contains("*." % entryInfo.suffix().toLower())) {
+                qDebug()
+                    << entry.path
+                    << "marked as <game/> albeit being a filesystem folder";
+                continue;
+            }
+        }
         QFileInfo entryInfo(entry.path);
         // always use canonical file path to ROM
         entry.path = entryInfo.canonicalFilePath();
@@ -229,7 +242,13 @@ void EmulationStation::addFolder(QString &base, QString sub,
     bool found = false;
     QString absPath = base % "/" % sub;
 
+    // RetroPie/roms/scummvm/blarf.svm/blarf.svm -> leaf (fs-file) is <game/>
+    // and RetroPie/roms/scummvm/blarf.svm/blarf.svm -> parent fs-folder also
+    // <game/> RetroPie/roms/scummvm/blarf.svm/yadda/blarf.svm -> yadda as
+    // <folder/>, blarf.svm (fs-file and fs-folder) both as <game/>
+
     for (auto &entry : added) {
+        // check the to-be-added folder entries
         if (entry.path == absPath) {
             found = true;
             break;
@@ -238,6 +257,7 @@ void EmulationStation::addFolder(QString &base, QString sub,
 
     if (!found) {
         for (auto &entry : gameEntries) {
+            // check in existing folder entries
             if (entry.isFolder && entry.path == absPath) {
                 found = true;
                 break;
@@ -245,7 +265,7 @@ void EmulationStation::addFolder(QString &base, QString sub,
         }
     }
 
-    if (!found) {
+    if (!found && !isGameLauncher(sub)) {
         GameEntry fe;
         fe.path = absPath;
         fe.title = sub.mid(sub.lastIndexOf('/') + 1, sub.length());
@@ -260,6 +280,27 @@ void EmulationStation::addFolder(QString &base, QString sub,
         sub = sub.left(sub.lastIndexOf('/'));
         addFolder(base, sub, gameEntries, added);
     }
+}
+
+bool EmulationStation::isGameLauncher(QString &sub) {
+    bool folderIsGameLauncher = false;
+    if (config->platform == "scummvm") {
+        QString extensions = Platform::get().getFormats(
+            config->platform, config->extensions, config->addExtensions);
+        QStringList exts = extensions.split(" ");
+        for (auto ext : exts) {
+            QRegExp re(ext);
+            re.setPatternSyntax(QRegExp::Wildcard);
+            if (re.exactMatch(sub.toLower())) {
+                qDebug() << "Match: " << sub;
+                // do not add if .svm or other extension is used in
+                // fs-folder
+                folderIsGameLauncher = true;
+                break;
+            }
+        }
+    }
+    return folderIsGameLauncher;
 }
 
 QString EmulationStation::createXml(GameEntry &entry) {

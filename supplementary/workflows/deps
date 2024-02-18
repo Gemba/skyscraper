@@ -32,8 +32,8 @@ _install() {
 
    case "$PLATFORM" in
       "osx") brew install "${deps[@]}" ;;
-      "termux") pkg add "${deps[@]}" ;;
-      "linux") sudo apt-get install -y "${deps[@]}" ;;
+      "termux") pkg upgrade && pkg add "${deps[@]}" ;;
+      "linux") sudo apt update && sudo apt install -y "${deps[@]}" ;;
    esac
 } 
 
