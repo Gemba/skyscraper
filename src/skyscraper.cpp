@@ -208,10 +208,16 @@ void Skyscraper::run() {
     }
     cache->readPriorities();
 
+    QDir::Filters filter = QDir::Files;
+    // special case scummvm: user do use .svm in folder name to work around the
+    // limitation of the ScummVM / lr-scummvm launch integration in ES/RetroPie
+    if (config.platform == "scummvm") {
+        filter |= QDir::Dirs;
+    }
     QDir inputDir(config.inputFolder,
                   Platform::get().getFormats(config.platform, config.extensions,
                                              config.addExtensions),
-                  QDir::Name, QDir::Files);
+                  QDir::Name, filter);
     if (!inputDir.exists()) {
         printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
                "seen by current user. Please check path and permissions.\n",
