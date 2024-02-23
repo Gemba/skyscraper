@@ -188,23 +188,23 @@ void EmulationStation::assembleList(QString &finalOutput,
         }
         QFileInfo entryInfo(entry.path);
         // always use canonical file path to ROM
-        entry.path = entryInfo.canonicalFilePath();
+        entry.path = entryInfo.absoluteFilePath();
 
         // Check if path is exactly one subfolder beneath root platform
         // folder (has one more '/') and uses *.cue suffix
-        QString entryCanonicalDir = entryInfo.canonicalPath();
-        if (cueSuffix && entryCanonicalDir.count("/") ==
+        QString entryAbsoluteDir = entryInfo.absolutePath();
+        if (cueSuffix && entryAbsoluteDir.count("/") ==
                              config->inputFolder.count("/") + 1) {
             // Check if subfolder has exactly one ROM, in which case we
             // use <folder>
-            if (QDir(entryCanonicalDir, extensions).count() == 1) {
+            if (QDir(entryAbsoluteDir, extensions).count() == 1) {
                 entry.isFolder = true;
-                entry.path = entryCanonicalDir;
+                entry.path = entryAbsoluteDir;
             }
         }
 
         // inputDir is canonical
-        QString subPath = inputDir.relativeFilePath(entryCanonicalDir);
+        QString subPath = inputDir.relativeFilePath(entryAbsoluteDir);
         if (subPath != ".") {
             // <folder> element(s) are needed
             addFolder(config->inputFolder, subPath, gameEntries, added);
