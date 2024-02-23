@@ -187,7 +187,7 @@ void EmulationStation::assembleList(QString &finalOutput,
             }
         }
         QFileInfo entryInfo(entry.path);
-        // always use canonical file path to ROM
+        // always use absolute file path to ROM
         entry.path = entryInfo.absoluteFilePath();
 
         // Check if path is exactly one subfolder beneath root platform
