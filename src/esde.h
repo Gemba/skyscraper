@@ -32,12 +32,6 @@ public:
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
-    QString getCoversFolder() override;
-    QString getScreenshotsFolder() override;
-    QString getWheelsFolder() override;
-    QString getMarqueesFolder() override;
-    QString getTexturesFolder() override;
-    QString getVideosFolder() override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry);

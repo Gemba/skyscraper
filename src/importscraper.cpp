@@ -40,6 +40,7 @@ ImportScraper::ImportScraper(Settings *config,
     fetchOrder.append(MARQUEE);
     fetchOrder.append(TEXTURE);
     fetchOrder.append(VIDEO);
+    fetchOrder.append(MANUAL);
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(TAGS);
     fetchOrder.append(PLAYERS);
@@ -65,6 +66,9 @@ ImportScraper::ImportScraper(Settings *config,
     videos = QDir(config->importFolder + "/videos", "*.*", QDir::Name,
                   QDir::Files | QDir::NoDotAndDotDot)
                  .entryInfoList();
+    manuals = QDir(config->importFolder + "/manuals", "*.*", QDir::Name,
+                   QDir::Files | QDir::NoDotAndDotDot)
+                  .entryInfoList();
     textual = QDir(config->importFolder + "/textual", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
@@ -89,20 +93,21 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     wheelFile = "";
     marqueeFile = "";
     videoFile = "";
+    manualFile = "";
     GameEntry game;
-    bool textualFound =
+    bool any =
         checkType(info.completeBaseName(), textual, textualFile);
-    bool screenshotFound =
+    any |=
         checkType(info.completeBaseName(), screenshots, screenshotFile);
-    bool coverFound = checkType(info.completeBaseName(), covers, coverFile);
-    bool wheelFound = checkType(info.completeBaseName(), wheels, wheelFile);
-    bool marqueeFound =
+    any |= checkType(info.completeBaseName(), covers, coverFile);
+    any |= checkType(info.completeBaseName(), wheels, wheelFile);
+    any |=
         checkType(info.completeBaseName(), marquees, marqueeFile);
-    bool textureFound =
+    any |=
         checkType(info.completeBaseName(), textures, textureFile);
-    bool videoFound = checkType(info.completeBaseName(), videos, videoFile);
-    if (textualFound || screenshotFound || coverFound || wheelFound ||
-        marqueeFound || textureFound || videoFound) {
+    any |= checkType(info.completeBaseName(), videos, videoFile);
+    any |= checkType(info.completeBaseName(), manuals, manualFile);
+    if (any) {
         game.title = info.completeBaseName();
         game.platform = config->platform;
         gameEntries.append(game);
@@ -113,6 +118,7 @@ QString ImportScraper::getCompareTitle(const QFileInfo &info) {
     return info.completeBaseName();
 }
 
+// TODO: Refactor
 void ImportScraper::getCover(GameEntry &game) {
     if (!coverFile.isEmpty()) {
         QFile f(coverFile);
@@ -175,6 +181,17 @@ void ImportScraper::getVideo(GameEntry &game) {
     }
 }
 
+void ImportScraper::getManual(GameEntry &game) {
+    if (!manualFile.isEmpty()) {
+        QFile f(manualFile);
+        if (f.open(QIODevice::ReadOnly)) {
+            game.manualData = f.readAll();
+            f.close();
+        }
+    }
+}
+
+// TODO: Refactor
 void ImportScraper::getAges(GameEntry &game) {
     if (isXml) {
         game.ages = getElementText(agesPre);

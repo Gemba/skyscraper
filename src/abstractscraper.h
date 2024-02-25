@@ -82,6 +82,7 @@ protected:
     virtual void getTexture(GameEntry &game);
     virtual void getTitle(GameEntry &);
     virtual void getVideo(GameEntry &game);
+    virtual void getManual(GameEntry &game) { (void)game; };
 
     virtual void nomNom(const QString nom, bool including = true);
     bool checkNom(const QString nom);

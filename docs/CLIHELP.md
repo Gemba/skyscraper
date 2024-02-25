@@ -442,6 +442,10 @@ This flag forces Skyscraper to use the filename (excluding extension) instead of
 
 When gathering data from any of the scraping modules many potential entries will be returned. Normally Skyscraper chooses the best entry for you. But should you wish to choose the best entry yourself, you can enable this flag. Skyscraper will then list the returned entries and let you choose which one is the best one.
 
+#### manuals
+
+By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#manuals) instead.
+
 #### nobrackets
 
 Use this flag to disable any bracket notes when generating the game list. It will disable notes such as `(Europe)` and `[AGA]` completely. This flag is only relevant when generating the game list. It makes no difference when gathering data into the resource cache. Consider setting this in [`config.ini`](CONFIGINI.md#brackets) instead.
@@ -517,6 +521,10 @@ Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game 
 #### skipexistingcovers
 
 When generating gamelists, skip processing covers that already exist in the media output folder.
+
+#### skipexistingmanuals
+
+When generating gamelists, skip copying manuals that already exist in the media output folder.
 
 #### skipexistingmarquees
 

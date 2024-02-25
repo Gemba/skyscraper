@@ -54,13 +54,14 @@ struct Settings {
     QString mediaFolder = "";
     // Next two only relevant for EmulationStation/ES-DE
     bool mediaFolderHidden = false; // EmulationStation only
-    bool addFolders = false; // EmulationStation and ES-DE
+    bool addFolders = false;        // EmulationStation and ES-DE
     QString screenshotsFolder = "";
     QString coversFolder = "";
     QString wheelsFolder = "";
     QString marqueesFolder = "";
     QString texturesFolder = "";
     QString videosFolder = "";
+    QString manualsFolder = "";
     QString importFolder = "import";
     QString nameTemplate = "";
     int doneThreads = 0;
@@ -112,6 +113,8 @@ struct Settings {
     int romLimit = -1;
 
     bool videos = false;
+    bool manuals = false;
+    QString gameListVariants = "";
     bool videoPreferNormalized = true;
     int videoSizeLimit = 100 * 1000 * 1000;
     QString videoConvertCommand = "";
@@ -130,6 +133,7 @@ struct Settings {
     bool skipExistingMarquees = false;
     bool skipExistingTextures = false;
     bool cacheTextures = true;
+    bool skipExistingManuals = false;
 
     QString user = "";
     QString password = "";
@@ -201,6 +205,7 @@ private:
         {"gameListBackup",        QPair<QString, int>("bool", CfgType::MAIN |                     CfgType::FRONTEND                    )},
         {"gamelistFolder",        QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"gameListFolder",        QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
+        {"gameListVariants",      QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
         {"hints",                 QPair<QString, int>("bool", CfgType::MAIN                                                            )},
         {"importFolder",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"includeFiles",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
@@ -212,6 +217,7 @@ private:
         {"lang",                  QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"langPrios",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"launch",                QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
+        {"manuals",               QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"maxFails",              QPair<QString, int>("int",  CfgType::MAIN                                                            )},
         {"maxLength",             QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND | CfgType::SCRAPER )},
         {"mediaFolder",           QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},

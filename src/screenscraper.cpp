@@ -63,6 +63,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(MARQUEE);
     fetchOrder.append(TEXTURE);
     fetchOrder.append(VIDEO);
+    fetchOrder.append(MANUAL);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -352,6 +353,44 @@ QByteArray ScreenScraper::downloadMedia(const QString &url) {
     return QByteArray();
 }
 
+void ScreenScraper::downloadBinary(const QString &url, const QString &type,
+                                   GameEntry &game) {
+    bool isVideoType = type == "video";
+    for (int retries = 0; retries < RETRIESMAX; ++retries) {
+        limiter.exec();
+        netComm->request(url);
+        q.exec();
+        if (isVideoType) {
+            game.videoData = netComm->getData();
+        } else {
+            game.manualData = netComm->getData();
+        }
+        QByteArray contentType = netComm->getContentType();
+        if (netComm->getError(config->verbosity) == QNetworkReply::NoError) {
+            // Make sure received data is actually a video file/pdf file
+            if (isVideoType) {
+                if (contentType.contains("video/") &&
+                    game.videoData.size() > 4096) {
+                    game.videoFormat = contentType.mid(
+                        contentType.indexOf("/") + 1,
+                        contentType.length() - contentType.indexOf("/") + 1);
+                    break;
+                }
+            } else {
+                if (contentType.contains("application/pdf")) {
+                    break;
+                }
+            }
+        } else {
+            if (isVideoType) {
+                game.videoData = QByteArray();
+            } else {
+                game.manualData = QByteArray();
+            }
+        }
+    }
+}
+
 void ScreenScraper::getCover(GameEntry &game) {
     QString url = "";
     if (config->platform == "arcade" || config->platform == "fba" ||
@@ -400,28 +439,16 @@ void ScreenScraper::getVideo(GameEntry &game) {
     types.append("video");
     QString url = getJsonText(jsonObj["medias"].toArray(), NONE, types);
     if (!url.isEmpty()) {
-        bool moveOn = true;
-        for (int retries = 0; retries < RETRIESMAX; ++retries) {
-            limiter.exec();
-            netComm->request(url);
-            q.exec();
-            game.videoData = netComm->getData();
-            // Make sure received data is actually a video file
-            QByteArray contentType = netComm->getContentType();
-            if (netComm->getError(config->verbosity) ==
-                    QNetworkReply::NoError &&
-                contentType.contains("video/") &&
-                game.videoData.size() > 4096) {
-                game.videoFormat = contentType.mid(
-                    contentType.indexOf("/") + 1,
-                    contentType.length() - contentType.indexOf("/") + 1);
-            } else {
-                game.videoData = "";
-                moveOn = false;
-            }
-            if (moveOn)
-                break;
-        }
+        downloadBinary(url, types.last(), game);
+    }
+}
+
+void ScreenScraper::getManual(GameEntry &game) {
+    QStringList types;
+    types.append("manuel");
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION, types);
+    if (!url.isEmpty()) {
+        downloadBinary(url, types.last(), game);
     }
 }
 

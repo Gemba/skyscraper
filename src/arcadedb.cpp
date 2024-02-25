@@ -173,7 +173,7 @@ void ArcadeDB::getVideo(GameEntry &game) {
         game.videoData.length() > 4096) {
         game.videoFormat = "mp4";
     } else {
-        game.videoData = "";
+        game.videoData = QByteArray();
     }
 }
 

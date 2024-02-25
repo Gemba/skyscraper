@@ -427,6 +427,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"skipexistingcovers",
              "When generating gamelists, skip processing covers that already "
              "exist in the media output folder."},
+            {"skipexistingmanuals",
+             "When generating gamelists, skip processing manuals that already "
+             "exist in the media output folder."},
             {"skipexistingmarquees",
              "When generating gamelists, skip processing marquees that already "
              "exist in the media output folder."},
@@ -466,6 +469,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"videos",
              "Enables scraping and caching of videos for the scraping modules "
              "that support them. Beware, this takes up a lot of disk space!"},
+            {"manuals",
+             "Enables scraping and caching of manuals for the scraping modules "
+             "that support them."},
         };
     }
     return m;

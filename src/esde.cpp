@@ -53,19 +53,3 @@ QString Esde::getGameListFolder() {
 QString Esde::getMediaFolder() {
     return baseFolder() % "/downloaded_media/" % config->platform;
 }
-
-QString Esde::getCoversFolder() { return config->mediaFolder % "/covers"; }
-
-QString Esde::getScreenshotsFolder() {
-    return config->mediaFolder % "/screenshots";
-}
-
-QString Esde::getWheelsFolder() { return config->mediaFolder % "/wheels"; }
-
-QString Esde::getMarqueesFolder() { return config->mediaFolder % "/marquees"; }
-
-QString Esde::getVideosFolder() { return config->mediaFolder % "/videos"; }
-
-QString Esde::getTexturesFolder() {
-    return config->mediaFolder % "/textures"; /* not used in esde */
-}

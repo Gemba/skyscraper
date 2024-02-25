@@ -532,6 +532,7 @@ void Compositor::processChildLayers(GameEntry &game, Layer &layer) {
 
 QString Compositor::getSubpath(const QString &absPath) {
     QString subPath = ".";
+    // only esde expects media files in same subpath as game file
     if (config->frontend == "esde") {
         QDir inputDir = QDir(config->inputFolder);
         QFileInfo entryInfo(absPath);

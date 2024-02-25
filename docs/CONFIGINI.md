@@ -83,6 +83,7 @@ This is an alphabetical index of all configuration options including the section
 | [frontend](CONFIGINI.md#frontend)                           |    Y     |                |                |               |
 | [gameListBackup](CONFIGINI.md#gamelistbackup)               |    Y     |                |       Y        |               |
 | [gameListFolder](CONFIGINI.md#gamelistfolder)               |    Y     |       Y        |       Y        |               |
+| [gameListVariants](CONFIGINI.md#gamelistvariants)           |          |                |       Y        |               |
 | [hints](CONFIGINI.md#hints)                                 |    Y     |                |                |               |
 | [importFolder](CONFIGINI.md#importfolder)                   |    Y     |       Y        |                |               |
 | [includeFrom](CONFIGINI.md#includefrom)                     |    Y     |       Y        |                |               |
@@ -93,6 +94,7 @@ This is an alphabetical index of all configuration options including the section
 | [lang](CONFIGINI.md#lang)                                   |    Y     |       Y        |                |               |
 | [langPrios](CONFIGINI.md#langprios)                         |    Y     |       Y        |                |               |
 | [launch](CONFIGINI.md#launch)                               |    Y     |       Y        |       Y        |               |
+| [manuals](CONFIGINI.md#manuals)                             |    Y     |       Y        |                |               |
 | [maxFails](CONFIGINI.md#maxfails)                           |    Y     |                |                |               |
 | [maxLength](CONFIGINI.md#maxlength)                         |    Y     |       Y        |       Y        |       Y       |
 | [mediaFolder](CONFIGINI.md#mediafolder)                     |    Y     |       Y        |       Y        |               |
@@ -959,3 +961,28 @@ However, folder data is not cached by Skyscraper, which means if you delete your
 
 Default value: false  
 Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retrobat]`
+
+---
+
+#### manuals
+
+By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. If enabled Skyscraper will collect game manuals for the scraping modules that provide this data. For frontend ES-DE no further option must be set to enable the output of the PDF manuals to the appropriate folder. For other EmulationStation forks see also option [gameListVariants](CONFIGINI.md#gamelistvariants).
+
+Default value: false  
+Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
+#### gameListVariants
+
+This is a comma separated list of options for the different gamelist variants used by the various EmulationStation forks. Currently only `enable-manuals` is evaluated as variant: It generates `<manual/>` entries in the gamelist for the game manuals scraped or found in the cache, if also the manuals configuration option is enabled. This option is not needed for the ES-DE frontend to output game manuals.
+
+**Example(s)**
+
+```ini
+[emulationstation]
+gameListVariants="enable-manuals"
+```
+
+Default value: unset  
+Allowed in sections: Only for frontend `[emulationstation]`

@@ -107,6 +107,8 @@ void TestSettings::configIniMain() {
     QCOMPARE(config.lang, exp);
     exp = settings.value("langPrios");
     QCOMPARE(config.langPriosStr, exp);
+    exp = settings.value("manuals");
+    QCOMPARE(config.manuals, exp);
     exp = settings.value("maxFails");
     QCOMPARE(config.maxFails, exp);
     exp = settings.value("maxLength");
@@ -258,6 +260,8 @@ void TestSettings::configIniPlatform() {
     QCOMPARE(config.lang, exp);
     exp = settings.value("langPrios");
     QCOMPARE(config.langPriosStr, exp);
+    exp = settings.value("manuals");
+    QCOMPARE(config.manuals, exp);
     exp = settings.value("maxLength");
     QCOMPARE(config.maxLength, exp);
     exp = settings.value("mediaFolder");
@@ -369,6 +373,8 @@ void TestSettings::configIniFrontend() {
     QCOMPARE(config.includePattern, exp);
     exp = settings.value("maxLength");
     QCOMPARE(config.maxLength, exp);
+    exp = settings.value("manuals");
+    QCOMPARE(config.manuals, exp);
     exp = settings.value("mediaFolder");
     QCOMPARE(config.mediaFolder, exp);
     exp = settings.value("mediaFolderHidden");
@@ -458,6 +464,8 @@ void TestSettings::configIniScraper() {
     QCOMPARE(config.interactive, exp);
     exp = settings.value("jpgQuality");
     QCOMPARE(config.jpgQuality, exp);
+    exp = settings.value("manuals");
+    QCOMPARE(config.manuals, exp);
     exp = settings.value("maxLength");
     QCOMPARE(config.maxLength, exp);
     QCOMPARE(config.minMatch, 65);

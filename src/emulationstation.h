@@ -54,10 +54,11 @@ public:
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
+    QString getManualsFolder() override;
 
 protected:
     virtual QStringList createEsVariantXml(const GameEntry &entry);
-    virtual QStringList extraGamelistTags(bool isFolder);
+    virtual QStringList extraGamelistTags(bool isFolder /* ignored on RP ES */);
     virtual GameEntry::Format gamelistFormat() {
         return GameEntry::Format::RETROPIE;
     };

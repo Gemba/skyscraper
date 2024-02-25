@@ -128,6 +128,7 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
                 entry.marqueeFile = oldEntry.marqueeFile;
                 entry.textureFile = oldEntry.textureFile;
                 entry.videoFile = oldEntry.videoFile;
+                // entry.manualFile on type folder does not make sense
             }
             break;
         }
@@ -225,7 +226,8 @@ void EmulationStation::assembleList(QString &finalOutput,
         if (entry.isFolder && !config->addFolders &&
             !existingInGamelist(entry)) {
             qDebug() << "addFolders is false, directory not added (but may be "
-                        "preserved): " << entry.path;
+                        "preserved): "
+                     << entry.path;
             continue;
         }
 
@@ -386,6 +388,10 @@ QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
         vidFile = "";
     }
     l.append(elem("video", vidFile, addEmptyElem, true));
+
+    if (config->manuals && config->gameListVariants.contains("enable-manuals") && !entry.manualSrc.isEmpty()) {
+        l.append(elem("manual", entry.manualFile, false, true));
+    }
     return l;
 }
 
@@ -423,4 +429,8 @@ QString EmulationStation::getTexturesFolder() {
 
 QString EmulationStation::getVideosFolder() {
     return config->mediaFolder % "/videos";
+}
+
+QString EmulationStation::getManualsFolder() {
+    return config->mediaFolder % "/manuals";
 }

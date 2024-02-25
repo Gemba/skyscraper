@@ -10,12 +10,13 @@ The following describes how to import your own custom textual, artwork and / or 
 
     Be sure to also check the `--cache edit` option [here](CLIHELP.md#--cache-editnewtype).
 
-### Images and Videos
+### Images, Videos and Game Manuals
 
 To import videos or images into the resource cache, use the following procedure:
 
 -   Name your image or video file with the _exact_ base name of the rom you wish to connect it to. Example: `Bubble Bobble.nes` will import images with a filename of `Bubble Bobble.jpg` or `Bubble Bobble.png` or other well-known image formats. As long as the base name is an _exact_ match. Same goes for video files. I recommend only making use of well-known video formats since Skyscraper imports them directly without conversion (unless you convert them as described [here](CONFIGINI.md#videoconvertcommand)), so they need to be supported directly by the frontend you plan to use.
--   Place all of your images or videos in the `/home/<USER>/.skyscraper/import/screenshots`, `covers`, `wheels`, `marquees` or `videos` folders.
+-   Game manuals are expected to use PDF format and have the extension `.pdf`. The base name must match the ROM file, thus the game manual of the example is `Bubble Bobble.pdf`.
+-   Place all of your images, videos or game manuals in the `/home/<USER>/.skyscraper/import/<PLATFORM>/screenshots`, `covers`, `wheels`, `marquees`, `videos` or `manuals` folders.
 -   Now run Skyscraper with `Skyscraper -p <PLATFORM> -s import`. If you named your files correctly, they will now be imported. Look for the green 'YES' in the output at the rom(s) you've placed files for. This will tell you if it succeeded or not.
 -   The data is now imported into the resource cache. To make use of if read [here](#how-to-actually-use-the-data).
 

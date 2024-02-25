@@ -65,10 +65,13 @@ private:
     void getMarquee(GameEntry &game) override;
     void getTexture(GameEntry &game) override;
     void getVideo(GameEntry &game) override;
+    void getManual(GameEntry &game) override;
 
     QString getJsonText(QJsonArray array, int attr,
                         QList<QString> types = QList<QString>());
     QByteArray downloadMedia(const QString &url);
+    void downloadBinary(const QString &url, const QString &type,
+                        GameEntry &game);
     QString getUrlOrTextPropertyValue(const QJsonObject &jsonVal,
                                       const QString &key,
                                       const QString &matchValue);

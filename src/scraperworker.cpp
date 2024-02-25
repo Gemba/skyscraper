@@ -28,6 +28,7 @@
 #include "arcadedb.h"
 #include "compositor.h"
 #include "esgamelist.h"
+#include "gameentry.h"
 #include "igdb.h"
 #include "importscraper.h"
 #include "localscraper.h"
@@ -265,43 +266,11 @@ void ScraperWorker::run() {
         if (!config.pretend && config.scraper == "cache") {
             // Process all artwork
             compositor.saveAll(game, info.completeBaseName());
-            if (config.videos && game.videoFormat != "" &&
-                !game.videoFile.isEmpty() && QFile::exists(game.videoFile)) {
-
-                QString videoDst =
-                    info.completeBaseName() % "." % game.videoFormat;
-                QString subPath = compositor.getSubpath(game.path);
-                if (subPath != ".") {
-                    videoDst = subPath % "/" % videoDst;
-                    QFileInfo fi =
-                        QFileInfo(config.videosFolder % "/" % videoDst);
-                    if (!QDir().mkpath(fi.absolutePath())) {
-                        qWarning()
-                            << "Path could not be created" << fi.absolutePath()
-                            << " Check file permissions, gamelist binary data "
-                               "maybe incomplete.";
-                    }
-                }
-                videoDst = config.videosFolder % "/" % videoDst;
-
-                if (!(config.skipExistingVideos && QFile::exists(videoDst))) {
-                    // Copy or symlink videos as requested
-                    QFile::remove(videoDst);
-                    if (config.symlink) {
-                        if (!QFile::link(game.videoFile, videoDst)) {
-                            game.videoFormat = "";
-                        }
-                    } else {
-                        QFile videoFile(videoDst);
-                        if (videoFile.open(QIODevice::WriteOnly)) {
-                            videoFile.write(game.videoData);
-                            videoFile.close();
-                        } else {
-                            game.videoFormat = "";
-                        }
-                    }
-                }
-            }
+            // extra media files (not part of compositor)
+            const QString baseName = info.completeBaseName();
+            const QString subPath = compositor.getSubpath(game.path);
+            copyMedia("video", baseName, subPath, game);
+            copyMedia("manual", baseName, subPath, game);
         }
 
         // Add all resources to the cache
@@ -338,6 +307,8 @@ void ScraperWorker::run() {
         game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
                                                info.completeBaseName() + "." +
                                                game.videoFormat);
+        game.manualFile = StrTools::xmlUnescape(
+            config.manualsFolder + "/" + info.completeBaseName() + ".pdf");
         game.description = StrTools::xmlUnescape(game.description);
         if (config.tidyDesc) {
             bool skipBangs = game.title.contains("!!");
@@ -467,6 +438,13 @@ void ScraperWorker::run() {
                              : " (size exceeded, uncached)")) +
                 " (" + game.videoSrc + ")\n");
         }
+        if (config.manuals) {
+            output.append(
+                "Manual:         " +
+                QString((game.manualData.isEmpty() ? "\033[1;31mNO"
+                                                   : "\033[1;32mYES")) +
+                "\033[0m (" + game.manualSrc + ")\n");
+        }
         output.append("\nDescription: (" + game.descriptionSrc +
                       ")\n'\033[1;32m" +
                       game.description.left(config.maxLength) + "\033[0m'\n");
@@ -477,7 +455,7 @@ void ScraperWorker::run() {
         if (!forceEnd) {
             forceEnd = limitReached(output);
         }
-        game.calculateCompleteness();
+        game.calculateCompleteness(config.videos, config.manuals);
         game.resetMedia();
         emit entryReady(game, output, debug);
         if (forceEnd) {
@@ -785,6 +763,62 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
     return suggestedGame;
 }
 
+void ScraperWorker::copyMedia(const QString &mediaType,
+                              const QString &completeBaseName,
+                              const QString &subPath, GameEntry &game) {
+
+    const bool isVideoType = mediaType == "video";
+
+    const QString fmt = isVideoType ? game.videoFormat : "pdf";
+    const QString fn = isVideoType ? game.videoFile : game.manualFile;
+    const QByteArray data = isVideoType ? game.videoData : game.manualData;
+    const bool mediaTypeEnabled = isVideoType ? config.videos : config.manuals;
+    const bool skipExisting =
+        isVideoType ? config.skipExistingVideos : config.skipExistingManuals;
+    const QString mediaTypeFolder =
+        isVideoType ? config.videosFolder : config.manualsFolder;
+
+    bool noCopy = true;
+    if (mediaTypeEnabled && fmt != "" && !fn.isEmpty() && QFile::exists(fn)) {
+        QString absMediaFn = completeBaseName % "." % fmt;
+        if (subPath != ".") {
+            absMediaFn = subPath % "/" % absMediaFn;
+            QFileInfo fi = QFileInfo(mediaTypeFolder % "/" % absMediaFn);
+            if (!QDir().mkpath(fi.absolutePath())) {
+                qWarning() << "Path could not be created" << fi.absolutePath()
+                           << " Check file permissions, gamelist binary data "
+                              "maybe incomplete.";
+            }
+        }
+        absMediaFn = mediaTypeFolder % "/" % absMediaFn;
+
+        if (!(skipExisting && QFile::exists(absMediaFn))) {
+            QFile::remove(absMediaFn);
+            if (config.symlink && isVideoType) {
+                // symlink
+                if (QFile::link(fn, absMediaFn)) {
+                    noCopy = false;
+                }
+            } else {
+                // copy
+                QFile fh(absMediaFn);
+                if (fh.open(QIODevice::WriteOnly)) {
+                    fh.write(data);
+                    fh.close();
+                    noCopy = false;
+                }
+            }
+        }
+    }
+    if (noCopy) {
+        if (isVideoType) {
+            game.videoFormat = "";
+        } else {
+            game.manualData = QByteArray();
+            game.manualFile = "";
+        }
+    }
+}
 // --- Console colors ---
 // Black        0;30     Dark Gray     1;30
 // Red          0;31     Light Red     1;31

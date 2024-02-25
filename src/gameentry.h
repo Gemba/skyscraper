@@ -47,7 +47,8 @@ enum : int {
     MARQUEE,
     AGES,
     TITLE,
-    TEXTURE
+    TEXTURE,
+    MANUAL
 };
 
 class GameEntry {
@@ -56,7 +57,7 @@ public:
 
     GameEntry();
 
-    void calculateCompleteness(bool videoEnabled = false);
+    void calculateCompleteness(bool videoEnabled = false, bool manualEnabled = false);
     int getCompleteness() const;
     void resetMedia();
 
@@ -100,9 +101,12 @@ public:
     QByteArray textureData = QByteArray();
     QString textureFile = "";
     QString textureSrc = "";
-    QByteArray videoData = ""; // TODO: change to QByteArray()
+    QByteArray videoData = QByteArray();
     QString videoFile = "";
     QString videoSrc = "";
+    QByteArray manualData = QByteArray();
+    QString manualFile = "";
+    QString manualSrc = "";
 
     // internal
     int searchMatch = 0;

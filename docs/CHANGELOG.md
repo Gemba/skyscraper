@@ -1,13 +1,20 @@
 ## Changes
 
+### Version 3.12.0 (TBA)
+
+- Added: Support for scraping of PDF manuals (Modules screenscraper, import and
+  esgamelist) and gamelist output with these manuals for frontends (ES-DE
+  Frontend, some EmulationStation variants). See configurations options
+  [`manuals=true`](CONFIGINI.md#manuals) and
+  [`gameListVariants=enable-manuals`](CONFIGINI.md#gamelistvariants). Thanks for
+  the initial PR, @pandino
+
 ### Version 3.11.0 (2024-04-15)
 
 - Added: Support for EmulationStation Desktop Edition (ES-DE Frontend). Use
-  [`frontend=esde`](http://localhost:8000/skyscraper/CONFIGINI/#frontend) in
-  `config.ini` and see
-  [documentation](http://localhost:8000/skyscraper/FRONTENDS/#emulationstation-desktop-edition-es-de)
-  on the default settings. Thanks for the hints and for testing, @maxexcloo,
-  @Nargash
+  [`frontend=esde`](CONFIGINI.md#frontend) in `config.ini` and see
+  [documentation](FRONTENDS.md#emulationstation-desktop-edition-es-de) on the
+  default settings. Thanks for the hints and for testing, @maxexcloo, @Nargash
 - Added: Entries in
   [`aliasMap.csv`](https://github.com/Gemba/skyscraper/blob/master/aliasMap.csv)
   are now also applicable for Screenscraper. Thanks, @retrobit.

@@ -81,43 +81,39 @@ void ESGameList::getGameData(GameEntry &game) {
     game.description = gameNode.firstChildElement("desc").text();
     if (config->cacheMarquees) {
         game.marqueeData =
-            loadImageData(gameNode.firstChildElement("marquee").text());
+            loadBinaryData(gameNode.firstChildElement("marquee").text());
     }
     if (config->cacheCovers) {
         game.coverData =
-            loadImageData(gameNode.firstChildElement("thumbnail").text());
+            loadBinaryData(gameNode.firstChildElement("thumbnail").text());
     }
     if (config->cacheScreenshots) {
         game.screenshotData =
-            loadImageData(gameNode.firstChildElement("image").text());
+            loadBinaryData(gameNode.firstChildElement("image").text());
+    }
+    if (config->manuals) {
+        game.manualData =
+            loadBinaryData(gameNode.firstChildElement("manual").text());
     }
     if (config->videos) {
         loadVideoData(game, gameNode.firstChildElement("video").text());
     }
 }
 
-QByteArray ESGameList::loadImageData(const QString fileName) {
-    QFile imageFile(getAbsoluteFileName(fileName));
-    if (imageFile.open(QIODevice::ReadOnly)) {
-        QByteArray imageData = imageFile.readAll();
-        imageFile.close();
-        return imageData;
+QByteArray ESGameList::loadBinaryData(const QString fileName) {
+    QFile binFile(getAbsoluteFileName(fileName));
+    if (binFile.open(QIODevice::ReadOnly)) {
+        QByteArray data = binFile.readAll();
+        binFile.close();
+        return data;
     }
     return QByteArray();
 }
 
 void ESGameList::loadVideoData(GameEntry &game, const QString fileName) {
-    QString absoluteFileName = getAbsoluteFileName(fileName);
-    if (absoluteFileName.isEmpty())
-        return;
-
-    QFile videoFile(absoluteFileName);
-    if (videoFile.open(QIODevice::ReadOnly)) {
-        game.videoData = videoFile.readAll();
-        if (game.videoData.size() > 4096) {
-            game.videoFormat = QFileInfo(absoluteFileName).suffix();
-        }
-        videoFile.close();
+    game.videoData = loadBinaryData(fileName);
+    if (game.videoData.size() > 4096) {
+        game.videoFormat = QFileInfo(getAbsoluteFileName(fileName)).suffix();
     }
 }
 

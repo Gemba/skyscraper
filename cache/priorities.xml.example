@@ -106,4 +106,9 @@
     <source>esgamelist</source>
     <source>screenscraper</source>
   </order>
+  <order type="manual">
+    <source>import</source>
+    <source>esgamelist</source>
+    <source>screenscraper</source>
+  </order>
 </priorities>

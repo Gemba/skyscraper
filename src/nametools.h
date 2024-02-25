@@ -33,7 +33,8 @@
 
 class NameTools : public QObject {
 public:
-    static QString getScummName(const QFileInfo &info, const QString baseName, const QString scummIni);
+    static QString getScummName(const QFileInfo &info, const QString baseName,
+                                const QString scummIni);
     static QString getNameWithSpaces(const QString baseName);
     static QString getUrlQueryName(const QString baseName, const int words = -1,
                                    const QString spaceChar = "+");

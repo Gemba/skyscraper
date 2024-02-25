@@ -97,6 +97,8 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
+        entry.manualFile =
+            makeAbsolute(node.firstChildElement("manual").text(), inputFolder);
 
         for (const auto &t : gamelistExtraTags) {
             entry.setEsExtra(t, node.firstChildElement(t).text());

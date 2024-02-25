@@ -63,6 +63,7 @@ struct ResCounts {
     int marquees;
     int textures;
     int videos;
+    int manuals;
 };
 
 class Cache {

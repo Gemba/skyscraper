@@ -72,6 +72,7 @@ void Config::setupUserConfig() {
     skyDir.mkpath("import/marquees");
     skyDir.mkpath("import/textures");
     skyDir.mkpath("import/videos");
+    skyDir.mkpath("import/manuals");
 
     // Create resources folder
     skyDir.mkpath("resources");
@@ -141,8 +142,7 @@ void Config::setupUserConfig() {
         {"artwork.xml", QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"peas.json", QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"platforms_idmap.csv",
-         QPair<QString, FileOp>("", FileOp::CREATE_DIST)}
-    };
+         QPair<QString, FileOp>("", FileOp::CREATE_DIST)}};
 
     for (auto src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;

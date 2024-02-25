@@ -76,12 +76,17 @@ private:
                        const int &lowestDistance);
 
     bool limitReached(QString &output);
+    void copyMedia(const QString &mediaType, const QString &completeBaseName,
+                   const QString &subPath, GameEntry &game);
 
+    // TODO: Remove, replaced with AbstractScraper::MatchType
+    /*
     QStringList const directMatchScrapers = {"cache", "import", "arcadedb",
                                             "screenscraper", "esgamelist"};
     QStringList const searchBasedScrapers = {"thegamesdb", "mobygames",
                                             "igdb", "worldofspectrum"};
     QStringList const variableScrapers = {"openretro"};
+    */
 };
 
 #endif // SCRAPERWORKER_H

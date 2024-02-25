@@ -102,6 +102,10 @@ void Skyscraper::run() {
         printf("Videos folder:      '\033[1;32m%s\033[0m'\n",
                config.videosFolder.toStdString().c_str());
     }
+    if (config.manuals) {
+        printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
+               config.manualsFolder.toStdString().c_str());
+    }
     printf("Cache folder:       '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
     if (config.scraper == "import") {
@@ -229,8 +233,9 @@ void Skyscraper::run() {
     }
     config.inputFolder = inputDir.absolutePath();
 
-    bool isCacheScraper = config.scraper == "cache" && !config.pretend;
+    const bool isCacheScraper = config.scraper == "cache" && !config.pretend;
 
+    // TODO: Repeating code: refactor &config.gameListFolder, isCacheScraper
     QDir gameListDir(config.gameListFolder);
     if (isCacheScraper) {
         checkForFolder(gameListDir);
@@ -273,6 +278,13 @@ void Skyscraper::run() {
             checkForFolder(videosDir);
         }
         config.videosFolder = videosDir.absolutePath();
+    }
+    if (config.manuals) {
+        QDir manualsDir(config.manualsFolder);
+        if (isCacheScraper) {
+            checkForFolder(manualsDir);
+        }
+        config.manualsFolder = manualsDir.absolutePath();
     }
 
     QDir importDir(config.importFolder);
@@ -815,16 +827,18 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             config.mediaFolder = rtConf->concatPath(config.gameListFolder, mf);
         }
     }
+    // only resolve after config.mediaFolder is set
     config.coversFolder = frontend->getCoversFolder();
     config.screenshotsFolder = frontend->getScreenshotsFolder();
     config.wheelsFolder = frontend->getWheelsFolder();
     config.marqueesFolder = frontend->getMarqueesFolder();
     config.texturesFolder = frontend->getTexturesFolder();
     config.videosFolder = frontend->getVideosFolder();
+    config.manualsFolder = frontend->getManualsFolder();
 
     // Choose default scraper for chosen platform if none has been set yet
     if (config.scraper.isEmpty()) {
-        // TODO: is always "cache"
+        // TODO: is always "cache", set hardwired
         config.scraper = Platform::get().getDefaultScraper();
     }
 

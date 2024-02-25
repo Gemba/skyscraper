@@ -212,6 +212,17 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->importFolder = v;
                 continue;
             }
+            if (k == "gameListVariants") {
+                if (config->frontend == "emulationstation") {
+                    config->gameListVariants = v;
+                } else {
+                    printf(
+                        "\033[1;33mParameter %s is ignored. Only "
+                        "applicable with frontend=emulationstation.\n\033[0m",
+                        k.toUtf8().constData());
+                }
+                continue;
+            }
             if (k == "includeFiles" || k == "includePattern") {
                 if (k == "includeFiles") {
                     printf("\033[1;33mParameter %s is deprecated! "
@@ -428,6 +439,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->videos = v;
                 continue;
             }
+            if (k == "manuals") {
+                config->manuals = v;
+                continue;
+            }
         } else if (conv == "int") {
             bool intOk;
             int v = ss.toInt(&intOk);
@@ -642,6 +657,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->relativePaths = true;
     } else if (flag == "skipexistingcovers") {
         config->skipExistingCovers = true;
+    } else if (flag == "skipexistingmanuals") {
+        config->skipExistingManuals = true;
     } else if (flag == "skipexistingmarquees") {
         config->skipExistingMarquees = true;
     } else if (flag == "skipexistingscreenshots") {
@@ -666,6 +683,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->unpack = true;
     } else if (flag == "videos") {
         config->videos = true;
+    } else if (flag == "manuals") {
+        config->manuals = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
     } else {
