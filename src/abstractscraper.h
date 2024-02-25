@@ -73,6 +73,7 @@ protected:
     virtual void getTexture(GameEntry &game);
     virtual void getTitle(GameEntry &);
     virtual void getVideo(GameEntry &game);
+    virtual void getManual(GameEntry &game);
 
     virtual void nomNom(const QString nom, bool including = true);
     bool checkNom(const QString nom);
@@ -125,6 +126,8 @@ protected:
     QString texturePost;
     QList<QString> videoPre;
     QString videoPost;
+    QList<QString> manualPre;
+    QString manualPost;
 
     // This is used when file names have a region in them. The original
     // regionPrios is in Settings

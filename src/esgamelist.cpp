@@ -94,6 +94,9 @@ void ESGameList::getGameData(GameEntry &game) {
     if (config->videos) {
         loadVideoData(game, gameNode.firstChildElement("video").text());
     }
+    if (config->manuals) {
+        loadManualData(game, gameNode.firstChildElement("manual").text());
+    }
 }
 
 QByteArray ESGameList::loadImageData(const QString fileName) {
@@ -118,6 +121,21 @@ void ESGameList::loadVideoData(GameEntry &game, const QString fileName) {
             game.videoFormat = QFileInfo(absoluteFileName).suffix();
         }
         videoFile.close();
+    }
+}
+
+void ESGameList::loadManualData(GameEntry &game, const QString fileName) {
+    QString absoluteFileName = getAbsoluteFileName(fileName);
+    if (absoluteFileName.isEmpty())
+        return;
+
+    QFile manualFile(absoluteFileName);
+    if (manualFile.open(QIODevice::ReadOnly)) {
+        game.manualData = manualFile.readAll();
+        if (game.manualData.size() > 4096) {
+            game.manualFormat = QFileInfo(absoluteFileName).suffix();
+        }
+        manualFile.close();
     }
 }
 

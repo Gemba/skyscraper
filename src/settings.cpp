@@ -341,7 +341,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "mediaFolderHidden") {
-                QStringList allowedFe({"emulationstation", "retrobat"});
+                QStringList allowedFe({"emulationstation",
+                                       "emulationstation-jelos"
+                                       "retrobat"});
                 if (allowedFe.contains(config->frontend)) {
                     config->mediaFolderHidden = v;
                 } else {
@@ -408,6 +410,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "videos") {
                 config->videos = v;
+                continue;
+            }
+            if (k == "manuals") {
+                config->manuals = v;
                 continue;
             }
         } else if (conv == "int") {
@@ -648,6 +654,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->unpack = true;
     } else if (flag == "videos") {
         config->videos = true;
+    } else if (flag == "manuals") {
+        config->manuals = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
     } else {

@@ -47,11 +47,15 @@ static inline QStringList txtTypes(bool useGenres = true) {
     return txtTypes;
 }
 
-static inline QStringList binTypes(bool withVideo = true) {
+static inline QStringList binTypes(bool withVideo = true,
+                                   bool withManual = true) {
     QStringList binTypes = {"cover", "screenshot", "wheel", "marquee",
                             "texture"};
     if (withVideo) {
         binTypes.append("video");
+    }
+    if (withManual) {
+        binTypes.append("manual");
     }
     return binTypes;
 };
@@ -275,6 +279,13 @@ void Cache::printPriorities(QString cacheId) {
     } else {
         printf("\033[1;32mYES\033[0m' (%s)\n",
                game.videoSrc.toStdString().c_str());
+    }
+    printf("Manual:         '");
+    if (game.manualSrc.isEmpty()) {
+        printf("\033[1;31mNO\033[0m' ()\n");
+    } else {
+        printf("\033[1;32mYES\033[0m' (%s)\n",
+               game.manualSrc.toStdString().c_str());
     }
     printf("Description: (%s)\n'\033[1;32m%s\033[0m'",
            (game.descriptionSrc.isEmpty() ? QString("\033[1;31mmissing\033[0m")
@@ -898,7 +909,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         } else if (missingOption == "textual") {
             resTypeList += txtTypes(false);
         } else if (missingOption == "artwork") {
-            resTypeList += binTypes(false); // w/o 'video'
+            resTypeList += binTypes(false, false); // w/o 'video' or 'manual'
         } else if (missingOption == "media") {
             resTypeList += binTypes();
         } else {
@@ -942,6 +953,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             printf("  \033[1;32mmarquee\033[0m\n");
             printf("  \033[1;32mtexture\033[0m\n");
             printf("  \033[1;32mvideo\033[0m\n");
+            printf("  \033[1;32mmanual\033[0m\n");
             printf("\n");
             return;
         }
@@ -1149,6 +1161,7 @@ void Cache::showStats(int verbosity) {
         int marquees = 0;
         int textures = 0;
         int videos = 0;
+        int manuals = 0;
         for (QMap<QString, ResCounts>::iterator it = resCountsMap.begin();
              it != resCountsMap.end(); ++it) {
             titles += it.value().titles;
@@ -1167,6 +1180,7 @@ void Cache::showStats(int verbosity) {
             marquees += it.value().marquees;
             textures += it.value().textures;
             videos += it.value().videos;
+            manuals += it.value().manuals;
         }
         printf("  Titles       : %d\n", titles);
         printf("  Platforms    : %d\n", platforms);
@@ -1184,6 +1198,7 @@ void Cache::showStats(int verbosity) {
         printf("  Marquees     : %d\n", marquees);
         printf("  textures     : %d\n", textures);
         printf("  Videos       : %d\n", videos);
+        printf("  Manuals      : %d\n", manuals);
     } else if (verbosity > 1) {
         for (QMap<QString, ResCounts>::iterator it = resCountsMap.begin();
              it != resCountsMap.end(); ++it) {
@@ -1204,6 +1219,7 @@ void Cache::showStats(int verbosity) {
             printf("  Marquees     : %d\n", it.value().marquees);
             printf("  textures     : %d\n", it.value().textures);
             printf("  Videos       : %d\n", it.value().videos);
+            printf("  Manuals      : %d\n", it.value().manuals);
         }
     }
     printf("\n");
@@ -1242,6 +1258,8 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].textures++;
     } else if (type == "video") {
         resCountsMap[source].videos++;
+    } else if (type == "manual") {
+        resCountsMap[source].manuals++;
     }
 }
 
@@ -1378,6 +1396,8 @@ void Cache::validate() {
                      QDir::Files);
     QDir videosDir(cacheDir.absolutePath() + "/videos", "*.*", QDir::Name,
                    QDir::Files);
+    QDir manualsDir(cacheDir.absolutePath() + "/manuals", "*.*", QDir::Name,
+                    QDir::Files);
 
     QDirIterator coversDirIt(coversDir.absolutePath(),
                              QDir::Files | QDir::NoDotAndDotDot,
@@ -1403,6 +1423,10 @@ void Cache::validate() {
                              QDir::Files | QDir::NoDotAndDotDot,
                              QDirIterator::Subdirectories);
 
+    QDirIterator manualsDirIt(manualsDir.absolutePath(),
+                              QDir::Files | QDir::NoDotAndDotDot,
+                              QDirIterator::Subdirectories);
+
     int filesDeleted = 0;
     int filesNoDelete = 0;
 
@@ -1412,6 +1436,7 @@ void Cache::validate() {
     verifyFiles(marqueesDirIt, filesDeleted, filesNoDelete, "marquee");
     verifyFiles(texturesDirIt, filesDeleted, filesNoDelete, "texture");
     verifyFiles(videosDirIt, filesDeleted, filesNoDelete, "video");
+    verifyFiles(manualsDirIt, filesDeleted, filesNoDelete, "manual");
 
     if (filesDeleted == 0 && filesNoDelete == 0) {
         printf("No inconsistencies found in the database. :)\n\n");
@@ -1585,6 +1610,12 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
                              "." + entry.videoFormat;
             addResource(resource, entry, cacheAbsolutePath, config, output);
         }
+        if (entry.manualData != "") {
+            resource.type = "manual";
+            resource.value =
+                "manuals/" + entry.source + "/" + entry.cacheId + ".pdf";
+            addResource(resource, entry, cacheAbsolutePath, config, output);
+        }
         if (!entry.coverData.isNull() && config.cacheCovers) {
             resource.type = "cover";
             resource.value = "covers/" + entry.source + "/" + entry.cacheId;
@@ -1637,7 +1668,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
     if (notFound) {
         bool okToAppend = true;
         QString cacheFile = cacheAbsolutePath + "/" + resource.value;
-        if (binTypes(false).contains(resource.type)) {
+        if (binTypes(false, false).contains(resource.type)) {
             QByteArray *imageData = nullptr;
             if (resource.type == "cover") {
                 imageData = &entry.coverData;
@@ -1730,10 +1761,30 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     "in '/home/<USER>/.skyscraper/config.ini.'");
                 okToAppend = false;
             }
+        } else if (resource.type == "manual") {
+            if (entry.manualData.size() <= config.manualSizeLimit) {
+                QFile f(cacheFile);
+                if (f.open(QIODevice::WriteOnly)) {
+                    f.write(entry.manualData);
+                    f.close();
+                } else {
+                    output.append("Error writing file: '" + f.fileName() +
+                                  "' to cache. Please check permissions.");
+                    okToAppend = false;
+                }
+            } else {
+                output.append(
+                    "Manual exceeds maximum size of " +
+                    QString::number(config.manualSizeLimit / 1024 / 1024) +
+                    " MB. Adjust this limit with the 'manualSizeLimit' "
+                    "variable "
+                    "in '/home/<USER>/.skyscraper/config.ini.'");
+                okToAppend = false;
+            }
         }
 
         if (okToAppend) {
-            if (binTypes(false).contains(resource.type)) {
+            if (binTypes(false, false).contains(resource.type)) {
                 // Remove old style cache image if it exists
                 if (QFile::exists(cacheFile + ".png")) {
                     QFile::remove(cacheFile + ".png");
@@ -1946,6 +1997,17 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
                     entry.videoFormat = info.suffix();
                     entry.videoFile = info.absoluteFilePath();
                     entry.videoSrc = source;
+                }
+                continue;
+            }
+            if (type == "manual") {
+                QFileInfo info(cacheDir.absolutePath() + "/" + result);
+                QFile f(info.absoluteFilePath());
+                if (f.open(QIODevice::ReadOnly)) {
+                    entry.manualData = f.readAll();
+                    f.close();
+                    entry.manualFile = info.absoluteFilePath();
+                    entry.manualSrc = source;
                 }
                 continue;
             }

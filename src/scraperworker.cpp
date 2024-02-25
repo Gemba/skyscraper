@@ -287,6 +287,22 @@ void ScraperWorker::run() {
                     }
                 }
             }
+            if (config.manuals && !game.manualFile.isEmpty() &&
+                QFile::exists(game.manualFile)) {
+                QString manualDst = config.manualsFolder + "/" +
+                                    info.completeBaseName() + ".pdf";
+                if (config.skipExistingManuals && QFile::exists(manualDst)) {
+                } else {
+                    if (QFile::exists(manualDst)) {
+                        QFile::remove(manualDst);
+                    }
+                    QFile manualFile(manualDst);
+                    if (manualFile.open(QIODevice::WriteOnly)) {
+                        manualFile.write(game.manualData);
+                        manualFile.close();
+                    }
+                }
+            }
         }
 
         // Add all resources to the cache
@@ -323,6 +339,8 @@ void ScraperWorker::run() {
         game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
                                                info.completeBaseName() + "." +
                                                game.videoFormat);
+        game.manualFile = StrTools::xmlUnescape(
+            config.manualsFolder + "/" + info.completeBaseName() + ".pdf");
         game.description = StrTools::xmlUnescape(game.description);
         if (config.tidyDesc) {
             bool skipBangs = game.title.contains("!!");
@@ -451,6 +469,17 @@ void ScraperWorker::run() {
                              ? ""
                              : " (size exceeded, uncached)")) +
                 " (" + game.videoSrc + ")\n");
+        }
+        if (config.manuals) {
+            output.append(
+                "Manual:         " +
+                QString((game.manualData.isEmpty() ? "\033[1;31mNO"
+                                                   : "\033[1;32mYES")) +
+                "\033[0m" +
+                QString((game.manualData.size() <= config.manualSizeLimit
+                             ? ""
+                             : " (size exceeded, uncached)")) +
+                " (" + game.manualSrc + ")\n");
         }
         output.append("\nDescription: (" + game.descriptionSrc +
                       ")\n'\033[1;32m" +

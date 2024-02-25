@@ -46,6 +46,7 @@
 
 #include "attractmode.h"
 #include "emulationstation.h"
+#include "emulationstationjelos.h"
 #include "pegasus.h"
 #include "skyscraper.h"
 #include "strtools.h"
@@ -99,6 +100,10 @@ void Skyscraper::run() {
     if (config.videos) {
         printf("Videos folder:      '\033[1;32m%s\033[0m'\n",
                config.videosFolder.toStdString().c_str());
+    }
+    if (config.manuals) {
+        printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
+               config.manualsFolder.toStdString().c_str());
     }
     printf("Cache folder:       '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
@@ -271,6 +276,14 @@ void Skyscraper::run() {
             checkForFolder(videosDir);
         }
         config.videosFolder = videosDir.absolutePath();
+    }
+
+    if (config.manuals) {
+        QDir manualsDir(config.manualsFolder);
+        if (isCacheScraper) {
+            checkForFolder(manualsDir);
+        }
+        config.manualsFolder = manualsDir.absolutePath();
     }
 
     QDir importDir(config.importFolder);
@@ -723,8 +736,8 @@ void Skyscraper::checkThreads() {
 }
 
 bool Skyscraper::validateFrontend(const QString &providedFrontend) {
-    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus"};
+    QStringList frontends = {"emulationstation", "emulationstation-jelos",
+                             "retrobat", "attractmode", "pegasus"};
     if (!frontends.contains(providedFrontend)) {
         printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "
                "%s.\033[0m\n",
@@ -762,6 +775,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {
         frontend = new EmulationStation;
+    } else if (config.frontend == "emulationstation-jelos") {
+        frontend = new EmulationStationJelos;
     } else if (config.frontend == "attractmode") {
         frontend = new AttractMode;
     } else if (config.frontend == "pegasus") {
@@ -837,6 +852,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     config.marqueesFolder = frontend->getMarqueesFolder();
     config.texturesFolder = frontend->getTexturesFolder();
     config.videosFolder = frontend->getVideosFolder();
+    config.manualsFolder = frontend->getManualsFolder();
 
     // Choose default scraper for chosen platform if none has been set yet
     if (config.scraper.isEmpty()) {

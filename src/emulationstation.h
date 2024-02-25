@@ -50,12 +50,12 @@ public:
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
+    QString elem(QString elem, QString &data, bool addEmptyElem,
+                 bool isPath = false);
 
 private:
     void addFolder(QString &base, QString sub, QList<GameEntry> &added);
     QString createXml(GameEntry &entry);
-    QString elem(QString elem, QString &data, bool addEmptyElem,
-                 bool isPath = false);
     bool isGameLauncher(QString &sub);
     bool existingInGamelist(GameEntry &entry);
 };

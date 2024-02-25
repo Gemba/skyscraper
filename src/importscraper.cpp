@@ -40,6 +40,7 @@ ImportScraper::ImportScraper(Settings *config,
     fetchOrder.append(MARQUEE);
     fetchOrder.append(TEXTURE);
     fetchOrder.append(VIDEO);
+    fetchOrder.append(MANUAL);
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(TAGS);
     fetchOrder.append(PLAYERS);
@@ -65,6 +66,9 @@ ImportScraper::ImportScraper(Settings *config,
     videos = QDir(config->importFolder + "/videos", "*.*", QDir::Name,
                   QDir::Files | QDir::NoDotAndDotDot)
                  .entryInfoList();
+    manuals = QDir(config->importFolder + "/manuals", "*.*", QDir::Name,
+                   QDir::Files | QDir::NoDotAndDotDot)
+                  .entryInfoList();
     textual = QDir(config->importFolder + "/textual", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
@@ -89,6 +93,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     wheelFile = "";
     marqueeFile = "";
     videoFile = "";
+    manualFile = "";
     GameEntry game;
     bool textualFound =
         checkType(info.completeBaseName(), textual, textualFile);
@@ -101,8 +106,9 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     bool textureFound =
         checkType(info.completeBaseName(), textures, textureFile);
     bool videoFound = checkType(info.completeBaseName(), videos, videoFile);
+    bool manualFound = checkType(info.completeBaseName(), manuals, manualFile);
     if (textualFound || screenshotFound || coverFound || wheelFound ||
-        marqueeFound || textureFound || videoFound) {
+        marqueeFound || textureFound || videoFound || manualFound) {
         game.title = info.completeBaseName();
         game.platform = config->platform;
         gameEntries.append(game);
@@ -170,6 +176,18 @@ void ImportScraper::getVideo(GameEntry &game) {
             QFileInfo i(videoFile);
             game.videoData = f.readAll();
             game.videoFormat = i.suffix();
+            f.close();
+        }
+    }
+}
+
+void ImportScraper::getManual(GameEntry &game) {
+    if (!manualFile.isEmpty()) {
+        QFile f(manualFile);
+        if (f.open(QIODevice::ReadOnly)) {
+            QFileInfo i(manualFile);
+            game.manualData = f.readAll();
+            game.manualFormat = i.suffix();
             f.close();
         }
     }

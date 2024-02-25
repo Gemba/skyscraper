@@ -76,6 +76,7 @@ HEADERS += src/skyscraper.h \
            src/abstractscraper.h \
            src/abstractfrontend.h \
            src/emulationstation.h \
+           src/emulationstationjelos.h \
            src/attractmode.h \
            src/pegasus.h \
            src/openretro.h \
@@ -127,6 +128,7 @@ SOURCES += src/main.cpp \
            src/abstractscraper.cpp \
            src/abstractfrontend.cpp \
            src/emulationstation.cpp \
+           src/emulationstationjelos.cpp \
            src/attractmode.cpp \
            src/pegasus.cpp \
            src/openretro.cpp \

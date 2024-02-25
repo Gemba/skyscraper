@@ -62,6 +62,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(MARQUEE);
     fetchOrder.append(TEXTURE);
     fetchOrder.append(VIDEO);
+    fetchOrder.append(MANUAL);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -163,12 +164,13 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
             if (jsonErrorFile.open(QIODevice::WriteOnly)) {
                 if (data.length() > 64) {
                     jsonErrorFile.write(data);
-                    printf("The erroneous answer was written to "
-                           "'/home/<USER>/.skyscraper/screenscraper_error.json'. "
-                           "If this file contains game data, please consider "
-                           "filing a bug report at "
-                           "'https://github.com/Gemba/skyscraper/issues' and "
-                           "attach that file.\n");
+                    printf(
+                        "The erroneous answer was written to "
+                        "'/home/<USER>/.skyscraper/screenscraper_error.json'. "
+                        "If this file contains game data, please consider "
+                        "filing a bug report at "
+                        "'https://github.com/Gemba/skyscraper/issues' and "
+                        "attach that file.\n");
                 }
                 jsonErrorFile.close();
             }
@@ -258,9 +260,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         gameEntries.append(game);
 }
 
-void ScreenScraper::getGameData(GameEntry &game) {
-    populateGameEntry(game);
-}
+void ScreenScraper::getGameData(GameEntry &game) { populateGameEntry(game); }
 
 void ScreenScraper::getReleaseDate(GameEntry &game) {
     game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
@@ -486,6 +486,33 @@ void ScreenScraper::getVideo(GameEntry &game) {
                     contentType.length() - contentType.indexOf("/") + 1);
             } else {
                 game.videoData = "";
+                moveOn = false;
+            }
+            if (moveOn)
+                break;
+        }
+    }
+}
+
+void ScreenScraper::getManual(GameEntry &game) {
+    QStringList types;
+    types.append("manuel");
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION, types);
+    if (!url.isEmpty()) {
+        bool moveOn = true;
+        for (int retries = 0; retries < RETRIESMAX; ++retries) {
+            limiter.exec();
+            netComm->request(url);
+            q.exec();
+            game.manualData = netComm->getData();
+            QByteArray contentType = netComm->getContentType();
+            if (netComm->getError(config->verbosity) ==
+                    QNetworkReply::NoError &&
+                contentType.contains("application/") &&
+                game.manualData.size() > 4096) {
+                game.manualFormat = "pdf";
+            } else {
+                game.manualData = "";
                 moveOn = false;
             }
             if (moveOn)

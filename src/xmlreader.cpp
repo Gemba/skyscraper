@@ -90,6 +90,11 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
+        entry.manualFile = makeAbsolute(
+            nodes.at(a).firstChildElement("manual").text(), inputFolder);
+        if (!entry.manualFile.isEmpty()) {
+            entry.manualFormat = "fromxml";
+        }
         entry.description = nodes.at(a).firstChildElement("desc").text();
         entry.releaseDate = nodes.at(a).firstChildElement("releasedate").text();
         entry.developer = nodes.at(a).firstChildElement("developer").text();

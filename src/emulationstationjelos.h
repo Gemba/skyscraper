@@ -1,8 +1,8 @@
 /***************************************************************************
- *            esgamelist.h
+ *            emulationstation.h
  *
- *  Mon Dec 17 08:00:00 CEST 2018
- *  Copyright 2018 Lars Muldjord & Martin Gerhardy
+ *  Wed Jun 18 12:00:00 CEST 2017
+ *  Copyright 2017 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
 /*
@@ -23,31 +23,20 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef ESGAMELIST_H
-#define ESGAMELIST_H
+#ifndef EMULATIONSTATIONJELOS_H
+#define EMULATIONSTATIONJELOS_H
 
-#include "abstractscraper.h"
+#include "emulationstation.h"
+#include "gameentry.h"
 
-#include <QDomDocument>
-
-class ESGameList : public AbstractScraper {
-    Q_OBJECT
+class EmulationStationJelos : public EmulationStation {
 
 public:
-    ESGameList(Settings *config, QSharedPointer<NetManager> manager);
+    void preserveFromOld(GameEntry &entry) override;
+    QString getManualsFolder() override;
 
 private:
-    QList<QString> getSearchNames(const QFileInfo &info) override;
-    void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
-                          QString platform) override;
-    void getGameData(GameEntry &game) override;
-    QByteArray loadImageData(const QString fileName);
-    void loadVideoData(GameEntry &game, const QString fileName);
-    void loadManualData(GameEntry &game, const QString fileName);
-    QString getAbsoluteFileName(const QString fileName);
-
-    QDomNodeList games;
-    QDomNode gameNode;
+    QString createXml(GameEntry &entry);
 };
 
-#endif // ESGAMELIST_H
+#endif // EMULATIONSTATIONJELOS_H

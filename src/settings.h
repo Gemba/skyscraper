@@ -60,6 +60,7 @@ struct Settings {
     QString marqueesFolder = "";
     QString texturesFolder = "";
     QString videosFolder = "";
+    QString manualsFolder = "";
     QString importFolder = "import";
     QString nameTemplate = "";
     int doneThreads = 0;
@@ -111,6 +112,7 @@ struct Settings {
     int romLimit = -1;
 
     bool videos = false;
+    bool manuals = false;
     bool videoPreferNormalized = true;
     int videoSizeLimit = 100 * 1000 * 1000;
     QString videoConvertCommand = "";
@@ -129,6 +131,8 @@ struct Settings {
     bool skipExistingMarquees = false;
     bool skipExistingTextures = false;
     bool cacheTextures = true;
+    bool skipExistingManuals = false;
+    int manualSizeLimit = 100 * 1000 * 1000;
 
     QString user = "";
     QString password = "";
@@ -210,6 +214,8 @@ private:
         {"lang",                  QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"langPrios",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"launch",                QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
+        {"manuals",               QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND | CfgType::SCRAPER )},
+        {"manualSizeLimit",       QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"maxFails",              QPair<QString, int>("int",  CfgType::MAIN                                                            )},
         {"maxLength",             QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND | CfgType::SCRAPER )},
         {"mediaFolder",           QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},

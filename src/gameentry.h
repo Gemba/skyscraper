@@ -41,6 +41,7 @@ constexpr int MARQUEE = 11;
 constexpr int AGES = 12;
 constexpr int TITLE = 13;
 constexpr int TEXTURE = 14;
+constexpr int MANUAL = 15;
 
 #include <QByteArray>
 #include <QList>
@@ -95,6 +96,9 @@ public:
     QString textureSrc = "";
     QString videoFile = "";
     QString videoSrc = "";
+    QByteArray manualData = "";
+    QString manualFile = "";
+    QString manualSrc = "";
 
     int searchMatch = 0;
     QString cacheId = "";
@@ -103,6 +107,7 @@ public:
     QString sqrNotes = "";
     QString parNotes = "";
     QString videoFormat = "";
+    QString manualFormat = "";
     QString baseName = "";
     QString absoluteFilePath = "";
     bool found = true;

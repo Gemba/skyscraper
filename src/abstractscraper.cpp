@@ -149,6 +149,11 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
                 getVideo(game);
             }
             break;
+        case MANUAL:
+            if (config->manuals) {
+                getManual(game);
+            }
+            break;
         default:;
         }
     }
@@ -446,6 +451,30 @@ void AbstractScraper::getVideo(GameEntry &game) {
     }
 }
 
+void AbstractScraper::getManual(GameEntry &game) {
+    if (manualPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : manualPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : manualPre) {
+        nomNom(nom);
+    }
+    QString manualUrl =
+        data.left(data.indexOf(manualPost.toUtf8())).replace("&amp;", "&");
+    if (manualUrl.left(4) != "http") {
+        manualUrl.prepend(baseUrl + (manualUrl.left(1) == "/" ? "" : "/"));
+    }
+    netComm->request(manualUrl);
+    q.exec();
+    if (netComm->getError() == QNetworkReply::NoError) {
+        game.manualData = netComm->getData();
+        game.manualFormat = manualUrl.right(3);
+    }
+}
 void AbstractScraper::nomNom(const QString nom, bool including) {
     data.remove(0, data.indexOf(nom.toUtf8()) + (including ? nom.length() : 0));
 }

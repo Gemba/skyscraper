@@ -64,6 +64,7 @@ private:
     void getMarquee(GameEntry &game) override;
     void getTexture(GameEntry &game) override;
     void getVideo(GameEntry &game) override;
+    void getManual(GameEntry &game) override;
 
     QString getJsonText(QJsonArray array, int attr,
                         QList<QString> types = QList<QString>());

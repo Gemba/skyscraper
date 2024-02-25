@@ -18,14 +18,14 @@ Below follows a description of all scraping modules.
 -   API request limit: _20k per day for registered users_
 -   Thread limit: _1 or more depending on user credentials_
 -   Platform support: _[Check list under "Systémes"](https://www.screenscraper.fr)_ or see `screenscraper_platforms.json` sibling to your `config.ini`
--   Media support: _`cover`, `screenshot`, `wheel`, `marquee`, `video`_
+-   Media support: _`cover`, `screenshot`, `wheel`, `manual`, `marquee`, `video`_
 -   Example use: `Skyscraper -p snes -s screenscraper`
 
 ScreenScraper is probably the most versatile and complete retro gaming database out there. It searches for games using either the checksums of the files or by comparing the _exact_ file name to entries in their database.
 
 It can be used for gathering data for pretty much all platforms, but it does have issues with platforms that are ISO based. Still, even for those platforms, it does locate some games.
 
-It has the best support for the `wheel` and `marquee` artwork types of any of the databases, and also contains videos for a lot of the games.
+It has the best support for the `wheel` and `marquee` artwork types of any of the databases, and also contains videos and manuals for a lot of the games.
 
 I strongly recommend supporting them by contributing data to the database, or by supporting them with a bit of money. This can also give you more threads to scrape with.
 

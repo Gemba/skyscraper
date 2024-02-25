@@ -74,8 +74,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "The frontend you wish to generate a gamelist for. Remember to leave "
         "out the '-s' option when using this in order to enable Skyscraper's "
         "gamelist generation mode.\n(Currently supports 'emulationstation', "
-        "'retrobat', 'attractmode' and 'pegasus'. Default: "
-        "'emulationstation'",
+        "'emulationstation-jelos', 'retrobat', 'attractmode' and 'pegasus'. "
+        "Default: 'emulationstation'",
         "FRONTEND", "");
     QCommandLineOption eOption(
         "e",
@@ -465,6 +465,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "'screenscraper' scraping module."},
             {"videos",
              "Enables scraping and caching of videos for the scraping modules "
+             "that support them. Beware, this takes up a lot of disk space!"},
+            {"manuals",
+             "Enables scraping and caching of manuals for the scraping modules "
              "that support them. Beware, this takes up a lot of disk space!"},
         };
     }
