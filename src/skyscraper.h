@@ -77,6 +77,7 @@ private:
     void loadWhdLoadMap();
     void setRegionPrios();
     void setLangPrios();
+    QString normalizePath(QFileInfo fileInfo);
     // void migrate(QString filename);
 
     AbstractFrontend *frontend;

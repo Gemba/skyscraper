@@ -31,6 +31,7 @@
 #include <QMutexLocker>
 #include <QProcess>
 #include <QSettings>
+#include <QStringBuilder>
 #include <QThread>
 #include <QTimer>
 #include <iostream>
@@ -898,20 +899,26 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             requestedFileInfo.setFile(config.inputFolder + "/" + requestedFile);
         }
         if (requestedFileInfo.exists()) {
-            cliFiles.append(requestedFileInfo.absoluteFilePath());
-            // Always set refresh and unattend true if user has supplied
-            // filenames on command line. That way they are cached, but game
-            // list is not changed and user isn't asked about skipping and
-            // overwriting.
-            config.refresh = true;
-            config.unattend = true;
-        } else {
-            printf("Filename: '\033[1;32m%s\033[0m' requested either on "
-                   "command line or with '--includefrom' not found!\n\nPlease "
-                   "verify the filename and try again...\n",
-                   requestedFile.toStdString().c_str());
-            exit(1);
+            QString romPath = requestedFileInfo.absoluteFilePath();
+            if (config.frontend == "emulationstation") {
+                romPath = normalizePath(requestedFileInfo);
+            }
+            if (!romPath.isEmpty()) {
+                cliFiles.append(romPath);
+                // Always set refresh and unattend true if user has supplied
+                // filenames on command line. That way they are cached, but game
+                // list is not changed and user isn't asked about skipping and
+                // overwriting.
+                config.refresh = true;
+                config.unattend = true;
+                continue;
+            }
         }
+        printf("Filename: '\033[1;32m%s\033[0m' requested either on "
+               "command line or with '--includefrom' not found!\n\nPlease "
+               "verify the filename and try again...\n",
+               requestedFile.toStdString().c_str());
+        exit(1);
     }
 
     // Add query only if a single filename was passed on command line
@@ -981,6 +988,29 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         resFile = resFile.remove(0, resFile.indexOf("resources/") + 10);
         config.resources[resFile] = QImage("resources/" + resFile);
     }
+}
+
+QString Skyscraper::normalizePath(QFileInfo fileInfo) {
+    // normalize paths for single romfiles provided at the CLI.
+    // format will be: config.inputFolder + relative-path-of-romfile
+    QString canonicalRomPath = fileInfo.canonicalFilePath();
+    // for Windows
+    QString cleanRomPath = QDir::cleanPath(canonicalRomPath);
+    QListIterator<QString> iter(cleanRomPath.split("/"));
+    iter.toBack();
+    QString relativeRomPath;
+    while (iter.hasPrevious()) {
+        relativeRomPath = iter.previous() %
+                          (relativeRomPath.isEmpty() ? "" : "/") %
+                          relativeRomPath;
+        QFileInfo normRom(config.inputFolder % "/" % relativeRomPath);
+        if (normRom.exists()) {
+            qDebug() << "CLI romfilepath normalized to: "
+                     << normRom.absoluteFilePath();
+            return normRom.absoluteFilePath();
+        }
+    }
+    return "";
 }
 
 void Skyscraper::showHint() {

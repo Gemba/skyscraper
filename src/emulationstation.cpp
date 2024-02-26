@@ -166,6 +166,7 @@ void EmulationStation::assembleList(QString &finalOutput,
 
     QList<GameEntry> added;
     QDir inputDir = QDir(config->inputFolder);
+
     for (auto &entry : gameEntries) {
         if (config->platform == "daphne") {
             // 'daphne/roms/yadda_yadda.zip' -> 'daphne/yadda_yadda.daphne'
@@ -187,24 +188,24 @@ void EmulationStation::assembleList(QString &finalOutput,
             }
         }
         QFileInfo entryInfo(entry.path);
-        // always use canonical file path to ROM
-        entry.path = entryInfo.canonicalFilePath();
+        // always use absolute file path to ROM
+        entry.path = entryInfo.absoluteFilePath();
 
         // Check if path is exactly one subfolder beneath root platform
         // folder (has one more '/') and uses *.cue suffix
-        QString entryCanonicalDir = entryInfo.canonicalPath();
-        if (cueSuffix && entryCanonicalDir.count("/") ==
-                             config->inputFolder.count("/") + 1) {
+        QString entryDir = entryInfo.absolutePath();
+        if (cueSuffix &&
+            entryDir.count("/") == config->inputFolder.count("/") + 1) {
             // Check if subfolder has exactly one ROM, in which case we
             // use <folder>
-            if (QDir(entryCanonicalDir, extensions).count() == 1) {
+            if (QDir(entryDir, extensions).count() == 1) {
                 entry.isFolder = true;
-                entry.path = entryCanonicalDir;
+                entry.path = entryDir;
             }
         }
 
-        // inputDir is canonical
-        QString subPath = inputDir.relativeFilePath(entryCanonicalDir);
+        // inputDir is absolute (cf. Skyscraper::run())
+        QString subPath = inputDir.relativeFilePath(entryDir);
         if (subPath != ".") {
             // <folder> element(s) are needed
             addFolder(config->inputFolder, subPath, gameEntries, added);
@@ -242,11 +243,14 @@ void EmulationStation::addFolder(QString &base, QString sub,
     bool found = false;
     QString absPath = base % "/" % sub;
 
-    // RetroPie/roms/scummvm/blarf.svm/blarf.svm -> leaf (fs-file) is <game/>
-    // and RetroPie/roms/scummvm/blarf.svm/blarf.svm -> parent fs-folder also
-    // <game/> RetroPie/roms/scummvm/blarf.svm/yadda/blarf.svm -> yadda as
-    // <folder/>, blarf.svm (fs-file and fs-folder) both as <game/>
+    /*
+     RetroPie/roms/scummvm/blarf.svm/blarf.svm -> leaf (fs-file) is <game/> and
 
+     RetroPie/roms/scummvm/blarf.svm/blarf.svm -> parent fs-folder also <game/>
+
+     RetroPie/roms/scummvm/blarf.svm/yadda/blarf.svm -> yadda as
+       <folder/>, blarf.svm (fs-file and fs-folder) both as <game/>
+    */
     for (auto &entry : added) {
         // check the to-be-added folder entries
         if (entry.path == absPath) {
