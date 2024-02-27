@@ -123,12 +123,12 @@ Please use this module sparingly. And only ever use it to scrape those last few 
 -   API request limit: _A maximum of 4 requests per seconds is allowed_
 -   Thread limit: _4 (each being limited to 1 request per second)_
 -   Platform support: _[List](https://www.igdb.com/platforms)_
--   Media support: _None_
+-   Media support*: _`cover`, `screenshot`, `marquee`_
 -   Example use:
     -   `Skyscraper -p fba -s igdb <SINGLE FILE TO SCRAPE>`
     -   `Skyscraper -p fba -s igdb --startat <FILE TO START AT> --endat <FILE TO END AT>`
 
-IGDB is a relatively new database on the market. But absolutely not a bad one at that. It has a couple caveats though, as the database doesn't distinguish between platform versions of the same game when it comes to any artwork resources (they are working to implement this at some point). This makes it less usable in a retro game scraping context as many of the games differ drastically visually between the old platforms. For that reason alone, this module will only provide textual data for your roms for the time being.
+IGDB is a relatively new database on the market. But absolutely not a bad one at that. It has a couple caveats though, as the database doesn't distinguish between platform versions of the same game when it comes to any artwork resources (they are working to implement this at some point). This makes it less usable in a retro game scraping context as many of the games differ drastically visually between the old platforms. For that reason alone, this module will only include media if `includeMedia=true` is set in your config.ini for the time being.
 
 It is _required_ to register with the Twitch dev program (IGDB is owned by Twitch) and create a free client-id and secret-key pair for use with Skyscraper. The process of getting this free client-id and secret-key pair is quite easy. Just follow the following steps:
 
@@ -143,6 +143,7 @@ It is _required_ to register with the Twitch dev program (IGDB is owned by Twitc
 ```
 [igdb]
 userCreds="CLIENTID:SECRETKEY"
+includeMedia=false  # set to true to include media for the potentially incorrect platform
 ```
 
 Substitute CLIENTID and SECRETKEY with your own details. And that's it, you should now be able to use the IGDB module.

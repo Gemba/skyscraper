@@ -42,11 +42,14 @@ ArcadeDB::ArcadeDB(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(TAGS);
     fetchOrder.append(PLAYERS);
     fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(VIDEO);
+    
+    if (config->includeMedia != 2) {
+        fetchOrder.append(SCREENSHOT);
+        fetchOrder.append(COVER);
+        fetchOrder.append(WHEEL);
+        fetchOrder.append(MARQUEE);
+        fetchOrder.append(VIDEO);
+    }
 }
 
 void ArcadeDB::getSearchResults(QList<GameEntry> &gameEntries,

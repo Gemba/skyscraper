@@ -34,12 +34,14 @@ ImportScraper::ImportScraper(Settings *config,
     fetchOrder.append(TITLE);
     fetchOrder.append(DEVELOPER);
     fetchOrder.append(PUBLISHER);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(TEXTURE);
-    fetchOrder.append(VIDEO);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(COVER);
+        fetchOrder.append(SCREENSHOT);
+        fetchOrder.append(WHEEL);
+        fetchOrder.append(MARQUEE);
+        fetchOrder.append(TEXTURE);
+        fetchOrder.append(VIDEO);
+    }
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(TAGS);
     fetchOrder.append(PLAYERS);

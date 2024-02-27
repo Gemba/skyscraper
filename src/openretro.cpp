@@ -80,13 +80,19 @@ OpenRetro::OpenRetro(Settings *config, QSharedPointer<NetManager> manager)
     ratingPre.append("<div class='score'>Score: ");
     ratingPost = "</";
 
-    fetchOrder.append(MARQUEE);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(MARQUEE);
+    }
     fetchOrder.append(DESCRIPTION);
     fetchOrder.append(DEVELOPER);
-    fetchOrder.append(COVER);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(COVER);
+    }
     fetchOrder.append(PLAYERS);
     fetchOrder.append(PUBLISHER);
-    fetchOrder.append(SCREENSHOT);
+    if (config->includeMedia != 2) {
+        fetchOrder.append(SCREENSHOT);
+    }
     fetchOrder.append(TAGS);
     fetchOrder.append(RELEASEDATE);
     fetchOrder.append(RATING);
