@@ -33,16 +33,16 @@ void Config::copyFile(const QString &src, const QString &dest, FileOp fileOp) {
             if (fileOp == FileOp::OVERWRITE) {
                 QFile::remove(dest);
                 QFile::copy(src, dest);
-                qDebug() << "Overwritten file" << dest << "\n";
+                qDebug() << "Overwritten file" << dest;
             } else if (fileOp == FileOp::CREATE_DIST) {
                 QString d = QString(dest + ".dist");
                 QFile::remove(d);
                 QFile::copy(src, d);
-                qDebug() << "Created original dist file as" << d << "\n";
+                qDebug() << "Created original dist file as" << d;
             }
         } else {
             QFile::copy(src, dest);
-            qDebug() << "Created file" << dest << "\n";
+            qDebug() << "Created file" << dest;
         }
     } else {
         printf("\033[1;31mSource config file not found '%s'. Please check "

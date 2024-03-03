@@ -128,7 +128,7 @@ QString Platform::getFormats(QString platform, QString extensions,
     QList<QString> l = formats.values();
     std::sort(l.begin(), l.end());
     QString ret = l.join(" ");
-    qDebug() << "getFormats()" << ret << "\n";
+    qDebug() << "getFormats()" << ret;
     return ret;
 }
 
@@ -139,7 +139,7 @@ QStringList Platform::getAliases(QString platform) const {
     // Platform name itself is always appended as the first alias
     aliases.append(platform);
     aliases.append(peas[platform].toHash()["aliases"].toStringList());
-    qDebug() << "getAliases():" << aliases << "\n";
+    qDebug() << "getAliases():" << aliases;
     return aliases;
 }
 
@@ -208,7 +208,7 @@ int Platform::getPlatformIdOnScraper(const QString platform,
     int id = -1;
     if (platformIdsMap.contains(platform)) {
         QVector<int> ids = platformIdsMap[platform];
-        qDebug() << "platform ids" << ids << "\n";
+        qDebug() << "platform ids" << ids;
         if (scraper == "screenscraper") {
             id = ids[0];
         } else if (scraper == "mobygames") {
@@ -218,7 +218,7 @@ int Platform::getPlatformIdOnScraper(const QString platform,
         }
     }
     qDebug() << "Got platform id" << id << "for platform" << platform
-             << "and scraper" << scraper << "\n";
+             << "and scraper" << scraper;
     return id;
 }
 

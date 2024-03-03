@@ -339,7 +339,7 @@ void TestSettings::configIniFrontend() {
                            inputFolderSet, gameListFolderSet, mediaFolderSet);
     QVariant exp;
 
-    qDebug() << "From test, frontend: " << config.frontend << "\n";
+    qDebug() << "From test, frontend: " << config.frontend;
     if (config.frontend == "attractmode") {
         exp = settings.value("emulator");
         QCOMPARE(config.frontendExtra, exp);
@@ -429,7 +429,7 @@ void TestSettings::configIniScraper() {
                            inputFolderSet, gameListFolderSet, mediaFolderSet);
     QVariant exp;
 
-    qDebug() << "From test, frontend: " << config.frontend << "\n";
+    qDebug() << "From test, frontend: " << config.frontend;
     if (config.frontend == "attractmode") {
         exp = settings.value("emulator");
         QCOMPARE(config.frontendExtra, exp);

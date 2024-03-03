@@ -111,8 +111,7 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         bool matchPlafId = gamePlafId == platformId;
         if (platformMatch(game.platform, platform) || matchPlafId) {
             if (matchPlafId) {
-                qDebug() << "platforms_id match " << QString::number(gamePlafId)
-                         << "\n";
+                qDebug() << "platforms_id match " << QString::number(gamePlafId);
             }
             gameEntries.append(game);
         }
@@ -121,7 +120,7 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
 }
 
 void TheGamesDb::getGameData(GameEntry &game) {
-    qDebug() << "Per game url:" << game.url << "\n";
+    qDebug() << "Per game url:" << game.url;
     netComm->request(game.url);
     q.exec();
     data = netComm->getData();
@@ -188,7 +187,7 @@ void TheGamesDb::getTags(GameEntry &game) {
         while (!genres.isEmpty()) {
             QString id = QString::number(genres.first().toInt());
             QString g = genreMap[id].toString();
-            qDebug() << "getTags():" << id << g << "\n";
+            qDebug() << "getTags():" << id << g;
             game.tags.append(g + ", ");
             genres.removeFirst();
         }
@@ -232,7 +231,7 @@ void TheGamesDb::getScreenshot(GameEntry &game) {
     if (netComm->getError() == QNetworkReply::NoError &&
         image.loadFromData(netComm->getData())) {
         game.screenshotData = netComm->getData();
-        qDebug() << "tgdb: got screenshot from " << req << "\n";
+        qDebug() << "tgdb: got screenshot from " << req;
     }
 }
 

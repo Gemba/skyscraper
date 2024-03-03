@@ -56,9 +56,9 @@
 
 		if [[ "$OSTYPE" == "darwin"* ]]; then
 			echo
-			echo "--- MacOS : Pre-Building adjustment ---"
+			echo "--- MacOS : Pre-building adjustment ---"
 			mv VERSION VERSION.txt
-			sed -i '' "s|CC *= .*|CC            = /usr/bin/gcc|" Makefile
+			sed -i '' "s|CC *= .*|CC             = /usr/bin/gcc|" Makefile
 			sed -i '' "s|CXX *= .*|CXX           = /usr/bin/g++|" Makefile
 		fi
 

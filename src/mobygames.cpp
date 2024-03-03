@@ -83,7 +83,7 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
                            : "&platform=" + QString::number(platformId)));
         queryGameId = 0;
     }
-    qDebug() << "Request: " << req << "\n";
+    qDebug() << "Request: " << req;
     netComm->request(req);
     q.exec();
     data = netComm->getData();
@@ -169,11 +169,11 @@ void MobyGames::getTags(GameEntry &game) {
     for (auto gg : jsonGenres) {
         QJsonObject jg = gg.toObject();
         int genreCatId = jg["genre_category_id"].toInt();
-        qDebug() << "Got genre cat id" << genreCatId << "\n";
+        qDebug() << "Got genre cat id" << genreCatId;
         if (/*Basic Genres*/ 1 == genreCatId || /*Gameplay*/ 4  == genreCatId) {
             QString gs = jg["genre_name"].toString();
             game.tags.append(gs + ", ");
-            qDebug() << "Using" << gs << "\n";
+            qDebug() << "Using" << gs;
         }
     }
     game.tags.chop(2);
@@ -302,7 +302,7 @@ void MobyGames::getCover(GameEntry &game) {
         game.url.left(game.url.indexOf("?api_key=")) + "/covers" +
         game.url.mid(game.url.indexOf("?api_key="),
                      game.url.length() - game.url.indexOf("?api_key=")));
-    qDebug() << "Covers " << req << "\n";
+    qDebug() << "Covers " << req;
     netComm->request(req);
     q.exec();
     data = netComm->getData();
@@ -424,7 +424,7 @@ int MobyGames::getPlatformId(const QString platform) {
 
 QString MobyGames::getRegionShort(const QString &region) {
     if (regionMap.contains(region)) {
-        qDebug() << "Got region" << regionMap[region] << "\n";
+        qDebug() << "Got region" << regionMap[region];
         return regionMap[region];
     }
     return "na";
