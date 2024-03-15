@@ -507,7 +507,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### brackets
 
-Disable this option to remove any bracket notes when generating the game list. It will disable notes such as `(Europe)` and `[AGA]` completely. This option is only relevant when generating the game list. It makes no difference when gathering data into the resource cache.
+Disable this option to remove any bracket notes when generating the game list. It will disable notes such as `(Europe)` and `[AGA]` completely. This option is only relevant when generating the game list. It makes no difference when gathering data into the resource cache. Default (true) will keep brackets in the game title.
 
 Default value: `true`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
@@ -592,7 +592,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### verbosity
 
-Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running.
+Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Anything higher than 3 does not further increase the verbosity of the output.
 
 Default value: `0`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
@@ -601,7 +601,11 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### skipped
 
-If a rom has no resources attached to it in the cache, it will be left out when generating a game list file. It will still show up in the frontend (at least it does for EmulationStation) but it won't exist in the game list file. You can safely leave out / disable this option unless you need the empty entries for some reason.
+Only has an effect if a rom has no resources attached to it in the cache. If false (default) the rom will be left out when generating a game list file. However, it will still show up in the frontend (at least it does for EmulationStation), but it won't exist in the game list file. If unsure leave it to false, unless you need generic gamelist entries, consisting of `<path/>` and `<name/>`, for some reason. In other words: If skipped is set to false and no entry for a rom is found in the cache _nothing_ will be added to the gamelist for that rom. If skipped is true and no entry for a rom is found in the cache a _generic_ entry will be added to the gamelist file for that rom. If a rom has data in Skyscraper's cache then this flag has no effect.
+
+!!! note
+
+    When skipped is set true, any generic added game entry is not eligible for formatting with a [nameTemplate](CONFIGINI.md#nametemplate).
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`

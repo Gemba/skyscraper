@@ -184,7 +184,12 @@ void ScraperWorker::run() {
 
         int lowestDistance = 666;
         if (gameEntries.isEmpty()) {
-            game.title = compareTitle;
+            if (config.brackets) {
+                // fix for issue #47
+                game.title = info.completeBaseName();
+            } else {
+                game.title = compareTitle;
+            }
             game.found = false;
         } else {
             game = getBestEntry(gameEntries, compareTitle, lowestDistance);
@@ -291,7 +296,7 @@ void ScraperWorker::run() {
         // manipulate game resources to better suit game list creation from here
         // on out.
 
-        // Strip any brackets from the title as they will be readded when
+        // Strip any brackets from the title as they will be re-added when
         // assembling gamelist
         game.title = StrTools::stripBrackets(game.title);
 
