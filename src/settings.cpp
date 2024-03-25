@@ -104,9 +104,15 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
 #endif
     retained.sort();
 
-    if (frontendKey) {
-        // have this first as it drives other allowed options
-        retained.insert(0, "frontend");
+    if (type == CfgType::MAIN && config->frontend.isEmpty()) {
+        if (frontendKey) {
+            // get from config.ini
+            retained.insert(0, "frontend");
+        } else {
+            // not present in config.ini and not yet set with -f
+            // set default
+            config->frontend = "emulationstation";
+        }
     }
 
     // check if config.ini has not-applicable keys in section
@@ -196,6 +202,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "frontend") {
+                if (!validateFrontend(v)) {
+                    exit(1);
+                }
                 config->frontend = v;
                 continue;
             }
@@ -322,14 +331,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "addFolders") {
-                QStringList allowedFe({"emulationstation", "retrobat"});
+                QStringList allowedFe({"emulationstation", "esde", "retrobat"});
                 if (allowedFe.contains(config->frontend)) {
                     config->addFolders = v;
                 } else {
                     printf("\033[1;33mParameter %s is ignored. Only applicable "
                            "with frontend %s.\n\033[0m",
                            k.toUtf8().constData(),
-                           allowedFe.join(" or ").toUtf8().constData());
+                           allowedFe.join(", ").toUtf8().constData());
                 }
                 continue;
             }
@@ -694,4 +703,18 @@ QStringList RuntimeCfg::parseFlags() {
         }
     }
     return _flags;
+}
+
+bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
+    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
+                             "pegasus", "esde"};
+    frontends.sort();
+    if (!frontends.contains(providedFrontend)) {
+        printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "
+               "%s.\033[0m\n",
+               providedFrontend.toStdString().c_str(),
+               frontends.join(", ").toStdString().c_str());
+        return false;
+    }
+    return true;
 }

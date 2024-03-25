@@ -32,12 +32,7 @@
 
 #include <QDebug>
 #include <QDir>
-#include <QRegularExpression>
 #include <QStringBuilder>
-
-static inline QRegularExpression isoTimeRe() {
-    return QRegularExpression("(^$|T[0-9]{6}$)");
-}
 
 EmulationStation::EmulationStation() {}
 
@@ -46,11 +41,17 @@ bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // assembling xml
     XmlReader gameListReader;
     if (gameListReader.setFile(gameListFileString)) {
-        oldEntries = gameListReader.getEntries(config->inputFolder);
+        oldEntries = gameListReader.getEntries(config->inputFolder,
+                                               extraGamelistTags(true));
         return true;
     }
-
     return false;
+}
+
+QStringList EmulationStation::extraGamelistTags(bool isFolder) {
+    (void)isFolder;
+    GameEntry g;
+    return g.extraTagNames(GameEntry::Format::RETROPIE);
 }
 
 bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
@@ -93,23 +94,10 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
 void EmulationStation::preserveFromOld(GameEntry &entry) {
     for (const auto &oldEntry : oldEntries) {
         if (entry.path == oldEntry.path) {
-            if (entry.eSFavorite.isEmpty()) {
-                entry.eSFavorite = oldEntry.eSFavorite;
-            }
-            if (entry.eSHidden.isEmpty()) {
-                entry.eSHidden = oldEntry.eSHidden;
-            }
-            if (entry.eSPlayCount.isEmpty()) {
-                entry.eSPlayCount = oldEntry.eSPlayCount;
-            }
-            if (entry.eSLastPlayed.isEmpty()) {
-                entry.eSLastPlayed = oldEntry.eSLastPlayed;
-            }
-            if (entry.eSKidGame.isEmpty()) {
-                entry.eSKidGame = oldEntry.eSKidGame;
-            }
-            if (entry.eSSortName.isEmpty() || entry.isFolder) {
-                entry.eSSortName = oldEntry.eSSortName;
+            for (const auto &t : extraGamelistTags(entry.isFolder)) {
+                if (entry.getEsExtra(t).isEmpty()) {
+                    entry.setEsExtra(t, oldEntry.getEsExtra(t));
+                }
             }
             if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
@@ -236,8 +224,8 @@ void EmulationStation::assembleList(QString &finalOutput,
 
         if (entry.isFolder && !config->addFolders &&
             !existingInGamelist(entry)) {
-            qDebug() << "addFolders is false, directory not added: "
-                     << entry.path;
+            qDebug() << "addFolders is false, directory not added (but may be "
+                        "preserved): " << entry.path;
             continue;
         }
 
@@ -279,7 +267,8 @@ void EmulationStation::addFolder(QString &base, QString sub,
         fe.title = sub.mid(sub.lastIndexOf('/') + 1, sub.length());
         fe.isFolder = true;
         qDebug() << "addFolder() adding folder elem, path:" << fe.path
-                 << "with title/name:" << fe.title;
+                 << "with title/name:" << fe.title << ", addFolders flag is"
+                 << config->addFolders;
         added.append(fe);
     }
 
@@ -313,24 +302,19 @@ bool EmulationStation::isGameLauncher(QString &sub) {
 
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem = !entry.isFolder;
-
+    bool addEmptyElem;
+    if (gamelistFormat() == GameEntry::Format::ESDE) {
+        addEmptyElem = false;
+    } else {
+        addEmptyElem = !entry.isFolder;
+    }
     QString entryType = QString(entry.isFolder ? "folder" : "game");
     l.append("  <" % entryType % ">");
 
     l.append(elem("path", entry.path, addEmptyElem));
     l.append(elem("name", entry.title, addEmptyElem));
 
-    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
-    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
-    l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
-    l.append(elem("texture", entry.textureFile, addEmptyElem, true));
-
-    QString vidFile = entry.videoFile;
-    if (!config->videos) {
-        vidFile = "";
-    }
-    l.append(elem("video", vidFile, addEmptyElem, true));
+    l += createEsVariantXml(entry);
 
     l.append(elem("rating", entry.rating, addEmptyElem));
     l.append(elem("desc", entry.description, addEmptyElem));
@@ -348,17 +332,17 @@ QString EmulationStation::createXml(GameEntry &entry) {
     l.append(elem("players", entry.players, addEmptyElem));
 
     // non scraper elements
-    l.append(elem("sortname", entry.eSSortName, false));
-    l.append(elem("favorite", entry.eSFavorite, false));
-    l.append(elem("hidden", entry.eSHidden, false));
-    l.append(elem("lastplayed", entry.eSLastPlayed, false));
-    l.append(elem("playcount", entry.eSPlayCount, false));
-
-    QString kidGame = entry.eSKidGame;
-    if (entry.eSKidGame.isEmpty() && entry.ages.toInt() >= 1 &&
+    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+        if (t != "kidgame") {
+            l.append(elem(t, entry.getEsExtra(t), false));
+        }
+    }
+    QString kidGame = entry.getEsExtra("kidgame");
+    if (kidGame.isEmpty() && entry.ages.toInt() >= 1 &&
         entry.ages.toInt() <= 10) {
         kidGame = "true";
     }
+
     l.append(elem("kidgame", kidGame, false));
 
     l.append("  </" % entryType % ">");
@@ -367,8 +351,8 @@ QString EmulationStation::createXml(GameEntry &entry) {
     return l.join("\n") % "\n";
 }
 
-QString EmulationStation::elem(QString elem, QString &data, bool addEmptyElem,
-                               bool isPath) {
+QString EmulationStation::elem(const QString &elem, const QString &data,
+                               bool addEmptyElem, bool isPath) {
     QString e;
     if (data.isEmpty()) {
         if (addEmptyElem) {
@@ -387,6 +371,22 @@ QString EmulationStation::elem(QString elem, QString &data, bool addEmptyElem,
         e = QString("    <%1>%2</%1>").arg(elem, d);
     }
     return e;
+}
+
+QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
+    QStringList l;
+    bool addEmptyElem = !entry.isFolder;
+    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
+    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
+    l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
+    l.append(elem("texture", entry.textureFile, addEmptyElem, true));
+
+    QString vidFile = entry.videoFile;
+    if (!config->videos) {
+        vidFile = "";
+    }
+    l.append(elem("video", vidFile, addEmptyElem, true));
+    return l;
 }
 
 bool EmulationStation::canSkip() { return true; }

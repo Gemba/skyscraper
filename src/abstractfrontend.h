@@ -52,6 +52,7 @@ public:
     virtual QString getGameListFileName() { return QString(); };
     virtual QString getInputFolder() { return QString(); };
     virtual QString getGameListFolder() { return QString(); };
+    virtual QString getMediaFolder() { return QString(); };
     virtual QString getCoversFolder() { return QString(); };
     virtual QString getScreenshotsFolder() { return QString(); };
     virtual QString getWheelsFolder() { return QString(); };

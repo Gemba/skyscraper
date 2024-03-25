@@ -74,7 +74,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "The frontend you wish to generate a gamelist for. Remember to leave "
         "out the '-s' option when using this in order to enable Skyscraper's "
         "gamelist generation mode.\n(Currently supports 'emulationstation', "
-        "'retrobat', 'attractmode' and 'pegasus'. Default: "
+        "'esde', 'retrobat', 'attractmode' and 'pegasus'. Default: "
         "'emulationstation'",
         "FRONTEND", "");
     QCommandLineOption eOption(

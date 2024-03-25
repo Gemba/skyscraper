@@ -23,6 +23,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
+#include <iostream>
+#include <QDebug>
 #include <QDirIterator>
 #include <QDomDocument>
 #include <QJsonArray>
@@ -34,7 +36,6 @@
 #include <QStringBuilder>
 #include <QThread>
 #include <QTimer>
-#include <iostream>
 
 #if QT_VERSION >= 0x050400
 #include <QStorageInfo>
@@ -46,6 +47,7 @@
 
 #include "attractmode.h"
 #include "emulationstation.h"
+#include "esde.h"
 #include "pegasus.h"
 #include "skyscraper.h"
 #include "strtools.h"
@@ -221,7 +223,7 @@ void Skyscraper::run() {
                   QDir::Name, filter);
     if (!inputDir.exists()) {
         printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
-               "seen by current user. Please check path and permissions.\n",
+               "accessed by current user. Please check path and permissions.\n",
                inputDir.absolutePath().toStdString().c_str());
         exit(1);
     }
@@ -722,59 +724,24 @@ void Skyscraper::checkThreads() {
     emit finished();
 }
 
-bool Skyscraper::validateFrontend(const QString &providedFrontend) {
-    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus"};
-    if (!frontends.contains(providedFrontend)) {
-        printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "
-               "%s.\033[0m\n",
-               providedFrontend.toStdString().c_str(),
-               frontends.join(", ").toStdString().c_str());
-        return false;
-    }
-    return true;
-}
-
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     QSettings settings(parser.isSet("c") ? parser.value("c") : "config.ini",
                        QSettings::IniFormat);
 
+    RuntimeCfg *rtConf = new RuntimeCfg(&config, &parser);
     // Start by setting frontend, since we need it to set default for game list
     // and so on
-    settings.beginGroup("main");
-
-    // config.frontend is emulationstation by default
     if (parser.isSet("f")) {
         QString fe = parser.value("f");
-        if (!validateFrontend(fe)) {
-            exit(1);
-        }
-        config.frontend = fe;
-    } else if (settings.contains("frontend")) {
-        QString fe = settings.value("frontend").toString();
-        if (!validateFrontend(fe)) {
+        if (!rtConf->validateFrontend(fe)) {
             exit(1);
         }
         config.frontend = fe;
     }
-    settings.endGroup();
-
-    if (config.frontend == "emulationstation" ||
-        config.frontend == "retrobat") {
-        frontend = new EmulationStation;
-    } else if (config.frontend == "attractmode") {
-        frontend = new AttractMode;
-    } else if (config.frontend == "pegasus") {
-        frontend = new Pegasus;
-    }
-
-    frontend->setConfig(&config);
 
     bool inputFolderSet = false;
     bool gameListFolderSet = false;
     bool mediaFolderSet = false;
-
-    RuntimeCfg *rtConf = new RuntimeCfg(&config, &parser);
 
     // 1. Main config, overrides defaults
     settings.beginGroup("main");
@@ -814,6 +781,18 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // 5. Command line configs, overrides all
     rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
 
+    if (config.frontend == "emulationstation" ||
+        config.frontend == "retrobat") {
+        frontend = new EmulationStation;
+    } else if (config.frontend == "attractmode") {
+        frontend = new AttractMode;
+    } else if (config.frontend == "pegasus") {
+        frontend = new Pegasus;
+    } else if (config.frontend == "esde") {
+        frontend = new Esde;
+    }
+
+    frontend->setConfig(&config);
     frontend->checkReqs();
 
     // Change config defaults if they aren't already set, find the rest in
@@ -824,12 +803,17 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (!gameListFolderSet) {
         config.gameListFolder = frontend->getGameListFolder();
     }
-    if (!mediaFolderSet) {
-        QString mf = "media";
-        if (config.mediaFolderHidden) {
-            mf = "." + mf;
+        if (!mediaFolderSet) {
+        if (config.frontend == "esde") {
+            config.mediaFolder = frontend->getMediaFolder();
+        } else {
+            // defaults to <gamelistfolder>/[.]media/
+            QString mf = "media";
+            if (config.mediaFolderHidden) {
+                mf = "." + mf;
+            }
+            config.mediaFolder = rtConf->concatPath(config.gameListFolder, mf);
         }
-        config.mediaFolder = rtConf->concatPath(config.gameListFolder, mf);
     }
     config.coversFolder = frontend->getCoversFolder();
     config.screenshotsFolder = frontend->getScreenshotsFolder();
@@ -840,6 +824,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // Choose default scraper for chosen platform if none has been set yet
     if (config.scraper.isEmpty()) {
+        // TODO: is always "cache"
         config.scraper = Platform::get().getDefaultScraper();
     }
 
@@ -900,7 +885,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         }
         if (requestedFileInfo.exists()) {
             QString romPath = requestedFileInfo.absoluteFilePath();
-            if (config.frontend == "emulationstation") {
+            if (config.frontend == "emulationstation" ||
+                config.frontend == "esde") {
                 romPath = normalizePath(requestedFileInfo);
             }
             if (!romPath.isEmpty()) {

@@ -41,13 +41,16 @@
 #include "fxscanlines.h"
 #include "fxshadow.h"
 #include "fxstroke.h"
+#include "gameentry.h"
 #include "imgtools.h"
 #include "strtools.h"
 
+#include <QDebug>
 #include <QDomDocument>
 #include <QFileInfo>
 #include <QPainter>
 #include <QSettings>
+#include <QStringBuilder>
 #include <cmath>
 
 Compositor::Compositor(Settings *config) { this->config = config; }
@@ -290,8 +293,16 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
 }
 
 void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
+    bool createSubfolder = false;
+    QString fn = "/" % completeBaseName % ".png";
+    QString subPath = getSubpath(game.path);
+    if (subPath != ".") {
+        fn.prepend("/" % subPath);
+        createSubfolder = true;
+    }
+
     for (auto &output : outputs.getLayers()) {
-        QString filename = "/" + completeBaseName + ".png";
+        QString filename = fn;
         if (output.resType == "cover") {
             filename.prepend(config->coversFolder);
             if (config->skipExistingCovers && QFileInfo::exists(filename)) {
@@ -350,6 +361,15 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
             output.makeTransparent();
             // Initiate recursive compositing
             processChildLayers(game, output);
+        }
+
+        if (createSubfolder) {
+            QFileInfo fi = QFileInfo(filename);
+            if (!QDir().mkpath(fi.absolutePath())) {
+                qWarning() << "Path could not be created" << fi.absolutePath()
+                           << " Check file permissions, gamelist binary data "
+                              "maybe incomplete.";
+            }
         }
 
         if (output.resType == "cover" && output.save(filename)) {
@@ -508,4 +528,15 @@ void Compositor::processChildLayers(GameEntry &game, Layer &layer) {
             layer.updateSize();
         }
     }
+}
+
+QString Compositor::getSubpath(const QString &absPath) {
+    QString subPath = ".";
+    if (config->frontend == "esde") {
+        QDir inputDir = QDir(config->inputFolder);
+        QFileInfo entryInfo(absPath);
+        QString entryDir = entryInfo.absolutePath();
+        subPath = inputDir.relativeFilePath(entryDir);
+    }
+    return subPath;
 }

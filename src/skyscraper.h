@@ -66,7 +66,6 @@ private:
     void loadConfig(const QCommandLineParser &parser);
     QString secsToString(const int &seconds);
     void checkForFolder(QDir &folder, bool create = true);
-    bool validateFrontend(const QString &providedFrontend);
     void showHint();
     void prepareScraping();
     void updateWhdloadDb(NetComm &netComm, QEventLoop &q);

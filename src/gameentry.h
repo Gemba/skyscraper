@@ -26,34 +26,41 @@
 #ifndef GAMEENTRY_H
 #define GAMEENTRY_H
 
-constexpr int DESCRIPTION = 0;
-constexpr int DEVELOPER = 1;
-constexpr int PUBLISHER = 2;
-constexpr int PLAYERS = 3;
-constexpr int TAGS = 4;
-constexpr int RELEASEDATE = 5;
-constexpr int COVER = 6;
-constexpr int SCREENSHOT = 7;
-constexpr int VIDEO = 8;
-constexpr int RATING = 9;
-constexpr int WHEEL = 10;
-constexpr int MARQUEE = 11;
-constexpr int AGES = 12;
-constexpr int TITLE = 13;
-constexpr int TEXTURE = 14;
-
 #include <QByteArray>
 #include <QList>
+#include <QMap>
 #include <QPair>
 #include <QString>
 
+enum : int {
+    DESCRIPTION = 0,
+    DEVELOPER,
+    PUBLISHER,
+    PLAYERS,
+    TAGS,
+    RELEASEDATE,
+    COVER,
+    SCREENSHOT,
+    VIDEO,
+    RATING,
+    WHEEL,
+    MARQUEE,
+    AGES,
+    TITLE,
+    TEXTURE
+};
+
 class GameEntry {
 public:
+    enum Format { RETROPIE, ESDE };
+
     GameEntry();
+
     void calculateCompleteness(bool videoEnabled = false);
     int getCompleteness() const;
     void resetMedia();
 
+    // textual data
     QString id = "";
     QString path = "";
     QString title = "";
@@ -77,6 +84,7 @@ public:
     QString rating = "";
     QString ratingSrc = "";
 
+    // binary data
     QByteArray coverData = QByteArray();
     QString coverFile = "";
     QString coverSrc = "";
@@ -89,13 +97,14 @@ public:
     QByteArray marqueeData = QByteArray();
     QString marqueeFile = "";
     QString marqueeSrc = "";
-    QByteArray videoData = "";
     QByteArray textureData = QByteArray();
     QString textureFile = "";
     QString textureSrc = "";
+    QByteArray videoData = ""; // TODO: change to QByteArray()
     QString videoFile = "";
     QString videoSrc = "";
 
+    // internal
     int searchMatch = 0;
     QString cacheId = "";
     QString source = "";
@@ -107,15 +116,13 @@ public:
     QString absoluteFilePath = "";
     bool found = true;
 
+    // used by mobygames
     QByteArray miscData = "";
 
-    // EmulationStation specific metadata for preservation
-    QString eSFavorite = "";
-    QString eSHidden = "";
-    QString eSPlayCount = "";
-    QString eSLastPlayed = "";
-    QString eSKidGame = "";
-    QString eSSortName = "";
+    // Holds EmulationStation (RetroPie and derivates) specific metadata
+    // for preservation. (metadata = anything which is not scrapable)
+    QMap<QString, QString> esExtras;
+
     bool isFolder = false;
 
     // AttractMode specific metadata for preservation
@@ -133,6 +140,29 @@ public:
 
     // Pegasus specific metadata for preservation
     QList<QPair<QString, QString>> pSValuePairs;
+
+    QString getEsExtra(const QString &tagName) const {
+        return esExtras[tagName];
+    };
+
+    void setEsExtra(const QString &tagName, QString value) {
+        esExtras[tagName] = value;
+    };
+
+    inline const QStringList extraTagNames(Format type, bool isFolder = false) {
+        QStringList tagNames = {"favorite",   "hidden",  "playcount",
+                                "lastplayed", "kidgame", "sortname"};
+        if (type == Format::RETROPIE) {
+            return tagNames;
+        }
+        tagNames +=
+            {"collectionsortname", "completed",    "broken",     "nogamecount",
+             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
+        if (isFolder) {
+            tagNames.append("folderlink");
+        }
+        return tagNames;
+    };
 
 private:
     double completeness = 0;

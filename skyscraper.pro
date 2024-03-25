@@ -7,7 +7,10 @@ QT += core network xml
 QMAKE_CXXFLAGS += -std=c++17
 
 # Installation prefix folder for bin/Skyscraper and etc/skyscraper/*
-PREFIX = /usr/local
+PREFIX=$$(PREFIX)
+isEmpty(PREFIX) {
+  PREFIX = /usr/local
+}
 
 unix:target.path=$${PREFIX}/bin
 unix:target.files=Skyscraper Skyscraper.app/Contents/MacOS/Skyscraper
@@ -76,6 +79,7 @@ HEADERS += src/skyscraper.h \
            src/abstractscraper.h \
            src/abstractfrontend.h \
            src/emulationstation.h \
+           src/esde.h \
            src/attractmode.h \
            src/pegasus.h \
            src/openretro.h \
@@ -127,6 +131,7 @@ SOURCES += src/main.cpp \
            src/abstractscraper.cpp \
            src/abstractfrontend.cpp \
            src/emulationstation.cpp \
+           src/esde.cpp \
            src/attractmode.cpp \
            src/pegasus.cpp \
            src/openretro.cpp \

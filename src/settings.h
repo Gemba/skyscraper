@@ -41,7 +41,7 @@ struct Settings {
     QString gameListFileString = "";
     QString skippedFileString = "";
     QString configFile = "";
-    QString frontend = "emulationstation";
+    QString frontend = "";
     // For use with 'emulator' with Attractmode and 'command' for Pegasus
     QString frontendExtra = "";
     QString platform = "";
@@ -52,9 +52,9 @@ struct Settings {
     QString inputFolder = "";
     QString gameListFolder = "";
     QString mediaFolder = "";
-    // Next two only relevant for EmulationStation
-    bool mediaFolderHidden = false;
-    bool addFolders = false;
+    // Next two only relevant for EmulationStation/ES-DE
+    bool mediaFolderHidden = false; // EmulationStation only
+    bool addFolders = false; // EmulationStation and ES-DE
     QString screenshotsFolder = "";
     QString coversFolder = "";
     QString wheelsFolder = "";
@@ -165,6 +165,7 @@ public:
                   bool &mediaFolderSet);
 
     QString concatPath(QString absPath, QString platformFolder);
+    bool validateFrontend(const QString &providedFrontend);
 
 private:
     void setFlag(const QString flag);

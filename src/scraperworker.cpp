@@ -41,6 +41,7 @@
 #include "worldofspectrum.h"
 
 #include <QRegularExpression>
+#include <QStringBuilder>
 #include <QTimer>
 #include <iostream>
 
@@ -264,20 +265,29 @@ void ScraperWorker::run() {
         if (!config.pretend && config.scraper == "cache") {
             // Process all artwork
             compositor.saveAll(game, info.completeBaseName());
-            // Copy or symlink videos as requested
             if (config.videos && game.videoFormat != "" &&
                 !game.videoFile.isEmpty() && QFile::exists(game.videoFile)) {
-                QString videoDst = config.videosFolder + "/" +
-                                   info.completeBaseName() + "." +
-                                   game.videoFormat;
-                if (config.skipExistingVideos && QFile::exists(videoDst)) {
-                } else {
-                    if (QFile::exists(videoDst)) {
-                        QFile::remove(videoDst);
+
+                QString videoDst =
+                    info.completeBaseName() % "." % game.videoFormat;
+                QString subPath = compositor.getSubpath(game.path);
+                if (subPath != ".") {
+                    videoDst = subPath % "/" % videoDst;
+                    QFileInfo fi =
+                        QFileInfo(config.videosFolder % "/" % videoDst);
+                    if (!QDir().mkpath(fi.absolutePath())) {
+                        qWarning()
+                            << "Path could not be created" << fi.absolutePath()
+                            << " Check file permissions, gamelist binary data "
+                               "maybe incomplete.";
                     }
+                }
+                videoDst = config.videosFolder % "/" % videoDst;
+
+                if (!(config.skipExistingVideos && QFile::exists(videoDst))) {
+                    // Copy or symlink videos as requested
+                    QFile::remove(videoDst);
                     if (config.symlink) {
-                        // Try to remove existing video destination file before
-                        // linking
                         if (!QFile::link(game.videoFile, videoDst)) {
                             game.videoFormat = "";
                         }

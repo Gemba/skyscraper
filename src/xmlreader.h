@@ -35,12 +35,16 @@ public:
     XmlReader();
     ~XmlReader();
     bool setFile(QString filename);
-    QList<GameEntry> getEntries(QString inputFolder);
+    QList<GameEntry> getEntries(QString inputFolder,
+                                const QStringList &gamelistExtraTags);
 
 private:
     void addEntries(const QDomNodeList &nodes, QList<GameEntry> &gameEntries,
-                    const QString &inputFolder, bool isFolder = false);
+                    const QString &inputFolder,
+                    const QStringList &gamelistExtraTags,
+                    bool isFolder = false);
     QString makeAbsolute(QString filePath, const QString &inputFolder);
+    void addTextual(GameEntry &entry, const QDomNode &node);
 };
 
 #endif // XMLREADER_H

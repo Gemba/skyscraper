@@ -24,6 +24,7 @@
  */
 #include "xmlreader.h"
 
+#include "gameentry.h"
 #include "nametools.h"
 #include "strtools.h"
 
@@ -48,24 +49,28 @@ bool XmlReader::setFile(QString filename) {
     return result;
 }
 
-QList<GameEntry> XmlReader::getEntries(QString inputFolder) {
+QList<GameEntry> XmlReader::getEntries(QString inputFolder,
+                                       const QStringList &gamelistExtraTags) {
     QList<GameEntry> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
     QDomNodeList pathNodes = elementsByTagName("folder");
 
-    addEntries(gameNodes, gameEntries, inputFolder);
-    addEntries(pathNodes, gameEntries, inputFolder, true);
+    addEntries(gameNodes, gameEntries, inputFolder, gamelistExtraTags);
+    addEntries(pathNodes, gameEntries, inputFolder, gamelistExtraTags, true);
 
     return gameEntries;
 }
 
 void XmlReader::addEntries(const QDomNodeList &nodes,
                            QList<GameEntry> &gameEntries,
-                           const QString &inputFolder, bool isFolder) {
+                           const QString &inputFolder,
+                           const QStringList &gamelistExtraTags,
+                           bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
         GameEntry entry;
-        QString p = nodes.at(a).firstChildElement("path").text();
+        const QDomNode node = nodes.at(a);
+        QString p = node.firstChildElement("path").text();
         if (isFolder) {
             // Workaround for EmulationStation 2.11.2rp and earlier:
             // Relative <folder><path> is saved from ES without trailing "./"
@@ -75,37 +80,43 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             }
         }
         entry.path = makeAbsolute(p, inputFolder);
-        // Do NOT get sqr and par notes here. They are not used by skipExisting
-        entry.title = nodes.at(a).firstChildElement("name").text();
+
+        addTextual(entry, node);
+
+        // only for ES
         entry.coverFile = makeAbsolute(
-            nodes.at(a).firstChildElement("thumbnail").text(), inputFolder);
-        entry.screenshotFile = makeAbsolute(
-            nodes.at(a).firstChildElement("image").text(), inputFolder);
-        entry.marqueeFile = makeAbsolute(
-            nodes.at(a).firstChildElement("marquee").text(), inputFolder);
-        entry.textureFile = makeAbsolute(
-            nodes.at(a).firstChildElement("texture").text(), inputFolder);
-        entry.videoFile = makeAbsolute(
-            nodes.at(a).firstChildElement("video").text(), inputFolder);
+            node.firstChildElement("thumbnail").text(), inputFolder);
+        entry.screenshotFile =
+            makeAbsolute(node.firstChildElement("image").text(), inputFolder);
+        entry.marqueeFile =
+            makeAbsolute(node.firstChildElement("marquee").text(), inputFolder);
+        entry.textureFile =
+            makeAbsolute(node.firstChildElement("texture").text(), inputFolder);
+        entry.videoFile =
+            makeAbsolute(node.firstChildElement("video").text(), inputFolder);
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
-        entry.description = nodes.at(a).firstChildElement("desc").text();
-        entry.releaseDate = nodes.at(a).firstChildElement("releasedate").text();
-        entry.developer = nodes.at(a).firstChildElement("developer").text();
-        entry.publisher = nodes.at(a).firstChildElement("publisher").text();
-        entry.tags = nodes.at(a).firstChildElement("genre").text();
-        entry.rating = nodes.at(a).firstChildElement("rating").text();
-        entry.players = nodes.at(a).firstChildElement("players").text();
-        entry.eSFavorite = nodes.at(a).firstChildElement("favorite").text();
-        entry.eSHidden = nodes.at(a).firstChildElement("hidden").text();
-        entry.eSPlayCount = nodes.at(a).firstChildElement("playcount").text();
-        entry.eSLastPlayed = nodes.at(a).firstChildElement("lastplayed").text();
-        entry.eSKidGame = nodes.at(a).firstChildElement("kidgame").text();
-        entry.eSSortName = nodes.at(a).firstChildElement("sortname").text();
+
+        for (const auto &t : gamelistExtraTags) {
+            entry.setEsExtra(t, node.firstChildElement(t).text());
+        }
+
         entry.isFolder = isFolder;
         gameEntries.append(entry);
     }
+}
+
+void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
+    // Do NOT get sqr and par notes here. They are not used by skipExisting
+    entry.title = node.firstChildElement("name").text();
+    entry.description = node.firstChildElement("desc").text();
+    entry.releaseDate = node.firstChildElement("releasedate").text();
+    entry.developer = node.firstChildElement("developer").text();
+    entry.publisher = node.firstChildElement("publisher").text();
+    entry.tags = node.firstChildElement("genre").text();
+    entry.rating = node.firstChildElement("rating").text();
+    entry.players = node.firstChildElement("players").text();
 }
 
 QString XmlReader::makeAbsolute(QString filePath, const QString &inputFolder) {

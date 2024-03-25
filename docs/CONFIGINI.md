@@ -377,7 +377,7 @@ If exporting for the `attractmode` frontend, please also take note of the requir
 
 If exporting for the `pegasus` frontend, please also take note of the optional `launch=""` option that allows you to set the launch parameter used by Pegasus.
 
-Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `pegasus`, `retrobat`, `attractmode`, aso. Check all supported frontends with '--help' and read a more about the details concerning each of them [here](FRONTENDS.md).
+Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`, aso. Check all supported frontends with '--help' and read a more about the details concerning each of them [here](FRONTENDS.md).
 
 Default value: `emulationstation`  
 Allowed in sections: `[main]`
@@ -958,4 +958,4 @@ However, folder data is not cached by Skyscraper, which means if you delete your
     EmulationStation 2.11.2 (RetroPie) and earlier have a bug that adds a `<folder/>` element everytime you edit and save metadata for the _same_ folder within EmulationStation. The last edit will be the latest folder element in the gamelist file. Skyscraper in contrast expects in maximum one `<folder/>` element per each path. If you regenerate a gamelist with Skyscraper, you will lose the latest edit of the folder metadata. This bug is [described here](https://retropie.org.uk/forum/post/295367) and fixed in the next release of EmulationStation respective is fixed already in the EmulationStation-dev version.
 
 Default value: false  
-Allowed in sections: Only for frontends `[emulationstation]` or `[retrobat]`
+Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retrobat]`

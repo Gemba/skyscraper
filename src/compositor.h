@@ -40,6 +40,7 @@ public:
     Compositor(Settings *config);
     bool processXml();
     void saveAll(GameEntry &game, QString completeBaseName);
+    QString getSubpath(const QString &absPath);
 
 private:
     void addChildLayers(Layer &layer, QXmlStreamReader &xml);

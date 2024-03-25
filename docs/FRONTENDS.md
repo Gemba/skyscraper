@@ -2,7 +2,7 @@
 
 When generating a game list with Skyscraper you have the option of generating it for several different frontends. A frontend is the graphical interface that lists and launches your games.
 
-Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [here](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [here](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
+Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [here](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [here](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
 
 !!! warning
 
@@ -12,10 +12,10 @@ When generating a game list for any frontend, Skyscraper will try to preserve ce
 
 ### EmulationStation (default)
 
--   Default game list location: `/home/pi/<USER>/RetroPie/roms/<PLATFORM>`
+-   Default game list location: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 -   Default game list filename: `gamelist.xml`
 
-This is the default frontend used when generating a game list with Skyscraper. If no frontend is defined on command-line or in `config.ini` it will fall back to generating for EmulationStation.
+This is the default frontend used when generating a game list with Skyscraper. If no frontend is defined on command-line or in `config.ini` it will fall back to generating for EmulationStation. By default the `<USER>` is `pi` on RetroPie setups.
 
 #### Metadata preservation
 
@@ -64,16 +64,45 @@ If at least one ROM is within a subfolder and this subfolder is not yet part of 
     ```
     Note that the `Retail` folder is added even if it does not contain a ROM because it is part of the path to the ROMs in the lowest folders.
 
+### EmulationStation Desktop Edition (ES-DE)
+
+This is very similar to the default EmulationStation. This section only
+highlights the differences.
+
+-   Default game list location: `/home/<USER>/ES-DE/gamelists/<PLATFORM>`
+-   Default game list filename: `gamelist.xml`
+
+ROMs are expected to be in the input folder `/home/<USER>/ROMs/<PLATFORM>` for
+every `<PLATFORM>` you scrape.
+
+Media filepaths (screenshots, marquees, videos, aso.) are not explicitly stored
+in the gamelist file. This is ES-DE default. However, Skyscraper will put the
+media files into the `downloaded_media` folder (e.g.
+`~/ES-DE/downloaded_media/<PLATFORM>/screenshots/` for screenshots) from where
+ES-DE will pick them up. Note that ES-DE does not support textures currently.
+
+All the gory details of ES-DE's gamelist file format you can find in the section
+"Gamelist Reference"
+[here](https://gitlab.com/es-de/emulationstation-de/-/blob/master/INSTALL.md?ref_type=heads#gamelistxml).
+
+#### Metadata preservation
+
+Skyscraper will, additionally to EmulationStation preserved metadata, retain the
+following metadata when re-generating a game list for ES-DE: `altemulator`,
+`broken`, `collectionsortname`, `completed`, `controller`, `hidemetadata`,
+`nogamecount`, `nomultiscrape`. Also existing `<folder/>` elements of a gamelist
+file will be preserved: For these on top is the `folderlink` element is preserved.
+
 ### RetroBat
 
--   Default game list location: `/home/pi/<USER>/RetroPie/roms/<PLATFORM>`
+-   Default game list location: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 -   Default game list filename: `gamelist.xml`
 
 This is modeled after EmualtionStation as it uses it with slight differences.
 
 ### Attract-Mode
 
--   Default game list location: `/home/pi/<USER>/.attract/romlists`
+-   Default game list location: `/home/<USER>/.attract/romlists`
 -   Default game list filename: `<EMULATOR/PLATFORM>.txt`
 
 Attract-Mode is a bit more abstract when it comes to how it saves its game lists and media. To export for Attract-Mode you need to, in addition to setting the frontend, set `-e <EMULATOR>` on command-line or in `config.ini`. The `<EMULATOR>` is a file that describes the platform / emulator you are generating a game list for. The file contains everything needed to tell Attract-Mode how to launch games for the platform, and even where to find the media files for the games (such as screenshots and videos).
@@ -86,7 +115,7 @@ Skyscraper will preserve the following metadata when re-generating a game list f
 
 ### Pegasus
 
--   Default game list location: `/home/pi/<USER>/RetroPie/roms/<PLATFORM>`
+-   Default game list location: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 -   Default game list filename: `metadata.pegasus.txt`
 
 Pegasus is easy and simple to generate a game list for. Simply do `Skyscraper -p <PLATFORM> -f pegasus`. If you want to specify a custom launch command (if you are using RetroPie you don't have to, a default one will be used), you can set it on command-line with `-e "<COMMAND>"` or in `config.ini` with:

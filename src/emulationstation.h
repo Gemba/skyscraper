@@ -29,11 +29,14 @@
 #include "abstractfrontend.h"
 #include "gameentry.h"
 
+#include <QRegularExpression>
+
 class EmulationStation : public AbstractFrontend {
     Q_OBJECT
 
 public:
     EmulationStation();
+
     void assembleList(QString &finalOutput,
                       QList<GameEntry> &gameEntries) override;
     bool skipExisting(QList<GameEntry> &gameEntries,
@@ -41,6 +44,7 @@ public:
     bool canSkip() override;
     bool loadOldGameList(const QString &gameListFileString) override;
     void preserveFromOld(GameEntry &entry) override;
+
     QString getGameListFileName() override;
     QString getInputFolder() override;
     QString getGameListFolder() override;
@@ -51,13 +55,24 @@ public:
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
 
+protected:
+    virtual QStringList createEsVariantXml(const GameEntry &entry);
+    virtual QStringList extraGamelistTags(bool isFolder);
+    virtual GameEntry::Format gamelistFormat() {
+        return GameEntry::Format::RETROPIE;
+    };
+
 private:
-    void addFolder(QString &base, QString sub, QList<GameEntry> &added);
     QString createXml(GameEntry &entry);
-    QString elem(QString elem, QString &data, bool addEmptyElem,
-                 bool isPath = false);
     bool isGameLauncher(QString &sub);
+    void addFolder(QString &base, QString sub, QList<GameEntry> &added);
     bool existingInGamelist(GameEntry &entry);
+    QString elem(const QString &elem, const QString &data, bool addEmptyElem,
+                 bool isPath = false);
+
+    const inline QRegularExpression isoTimeRe() const {
+        return QRegularExpression("(^$|T[0-9]{6}$)");
+    }
 };
 
 #endif // EMULATIONSTATION_H
