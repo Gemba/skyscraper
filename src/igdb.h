@@ -55,7 +55,8 @@ private:
     void getDescription(GameEntry &game) override;
     void getRating(GameEntry &game) override;
 
-    QList<QString> getSearchNames(const QFileInfo &info, QString &debug) override;
+    QList<QString> getSearchNames(const QFileInfo &info,
+                                  QString &debug) override;
 
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;

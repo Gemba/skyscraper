@@ -552,7 +552,7 @@ QString NameTools::getCacheId(const QFileInfo &info) {
         info.suffix() == "dsk" || info.suffix() == "nib") {
         cacheIdFromData = false;
     }
-    // If file is larger than 50 MBs, use filename checksum for cache id for
+    // If file is larger than 50 MiBs, use filename checksum for cache id for
     // optimization reasons
     if (info.size() > 52428800) {
         cacheIdFromData = false;

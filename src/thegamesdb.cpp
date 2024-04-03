@@ -111,7 +111,8 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         bool matchPlafId = gamePlafId == platformId;
         if (platformMatch(game.platform, platform) || matchPlafId) {
             if (matchPlafId) {
-                qDebug() << "platforms_id match " << QString::number(gamePlafId);
+                qDebug() << "platforms_id match "
+                         << QString::number(gamePlafId);
             }
             gameEntries.append(game);
         }

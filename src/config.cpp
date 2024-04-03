@@ -89,7 +89,7 @@ void Config::setupUserConfig() {
     QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
 
     if (!QFileInfo::exists(localEtcPath)) {
-        // Non-Windows installation type
+        // RetroPie or Windows installation type: handled externally
         return;
     }
 

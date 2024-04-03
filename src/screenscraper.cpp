@@ -163,12 +163,13 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
             if (jsonErrorFile.open(QIODevice::WriteOnly)) {
                 if (data.length() > 64) {
                     jsonErrorFile.write(data);
-                    printf("The erroneous answer was written to "
-                           "'/home/<USER>/.skyscraper/screenscraper_error.json'. "
-                           "If this file contains game data, please consider "
-                           "filing a bug report at "
-                           "'https://github.com/Gemba/skyscraper/issues' and "
-                           "attach that file.\n");
+                    printf(
+                        "The erroneous answer was written to "
+                        "'/home/<USER>/.skyscraper/screenscraper_error.json'. "
+                        "If this file contains game data, please consider "
+                        "filing a bug report at "
+                        "'https://github.com/Gemba/skyscraper/issues' and "
+                        "attach that file.\n");
                 }
                 jsonErrorFile.close();
             }
@@ -258,9 +259,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         gameEntries.append(game);
 }
 
-void ScreenScraper::getGameData(GameEntry &game) {
-    populateGameEntry(game);
-}
+void ScreenScraper::getGameData(GameEntry &game) { populateGameEntry(game); }
 
 void ScreenScraper::getReleaseDate(GameEntry &game) {
     game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
@@ -494,8 +493,9 @@ void ScreenScraper::getVideo(GameEntry &game) {
     }
 }
 
-QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info, QString &debug) {
-    QString baseName = info.baseName();
+QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
+                                             QString &debug) {
+    const QString baseName = info.baseName();
     QList<QString> searchNames;
     QString searchName = baseName;
 

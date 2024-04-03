@@ -169,8 +169,8 @@ void MobyGames::getTags(GameEntry &game) {
     for (auto gg : jsonGenres) {
         QJsonObject jg = gg.toObject();
         int genreCatId = jg["genre_category_id"].toInt();
-        qDebug() << "Got genre cat id" << genreCatId;
-        if (/*Basic Genres*/ 1 == genreCatId || /*Gameplay*/ 4  == genreCatId) {
+        qDebug() << "Got genre cat id" << genreCatId << "\n";
+        if (/*Basic Genres*/ 1 == genreCatId || /*Gameplay*/ 4 == genreCatId) {
             QString gs = jg["genre_name"].toString();
             game.tags.append(gs + ", ");
             qDebug() << "Using" << gs;

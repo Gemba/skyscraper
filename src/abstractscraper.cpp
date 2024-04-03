@@ -512,7 +512,8 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
 
     // If search name has a subtitle, also search without subtitle
     if (searchName.contains(":") || searchName.contains(" - ")) {
-        QString noSubtitle = searchName.left(searchName.indexOf(":")).simplified();
+        QString noSubtitle =
+            searchName.left(searchName.indexOf(":")).simplified();
         noSubtitle = noSubtitle.left(noSubtitle.indexOf(" - ")).simplified();
         // Only add if longer than 3. We don't want to search for "the" for
         // instance
@@ -520,12 +521,13 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
             searchNames.append(NameTools::getUrlQueryName(noSubtitle));
     }
 
-    // If the search name has a Roman numeral, also search for an integer numeral version, vice-versa
+    // If the search name has a Roman numeral, also search for an integer
+    // numeral version, vice-versa
     if (NameTools::hasRomanNumeral(searchName) ||
         NameTools::hasIntegerNumeral(searchName)) {
         if (NameTools::hasRomanNumeral(searchName)) {
             searchName = NameTools::convertToIntegerNumeral(searchName);
-        } else if (NameTools::hasIntegerNumeral(searchName)) {
+        } else {
             searchName = NameTools::convertToRomanNumeral(searchName);
         }
         searchNames.append(NameTools::getUrlQueryName(searchName));
@@ -536,10 +538,11 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
                 searchName.left(searchName.indexOf(":")).simplified();
             noSubtitle =
                 noSubtitle.left(noSubtitle.indexOf(" - ")).simplified();
-            // Only add if longer than 3. We don't want to search for "the" for
-            // instance
-            if (noSubtitle.length() > 3)
+            if (noSubtitle.length() > 3) {
+                // Only add if longer than 3. We don't want to search for "the"
+                // for instance
                 searchNames.append(NameTools::getUrlQueryName(noSubtitle));
+            }
         }
     }
 
@@ -569,10 +572,8 @@ QString AbstractScraper::getCompareTitle(QFileInfo info) {
     }
 
     // Now create actual compareTitle
-    compareTitle = compareTitle.replace("_", " ")
-                   .left(compareTitle.indexOf("("))
-                   .left(compareTitle.indexOf("["))
-                   .simplified();
+    compareTitle = compareTitle.replace("_", " ");
+    compareTitle = StrTools::stripBrackets(compareTitle);
 
     QRegularExpressionMatch match;
 
@@ -580,7 +581,7 @@ QString AbstractScraper::getCompareTitle(QFileInfo info) {
     match = QRegularExpression(", [Tt]he").match(compareTitle);
     if (match.hasMatch()) {
         compareTitle = compareTitle.replace(match.captured(0), "")
-                       .prepend(match.captured(0).right(3) + " ");
+                           .prepend(match.captured(0).right(3) + " ");
     }
 
     // Remove "vX.XXX" versioning string if one is found
@@ -671,16 +672,22 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
         return;
     }
 
-    for (int i = 0; i < searchNames.size(); i++) {
-        debug.append(QString("Search name #%1: '" + searchNames.at(i) + "'\n").arg(i+1));
+    if (config->verbosity >= 3) {
+        int i = 0;
+        for (const auto &sn : searchNames) {
+            debug.append(QString("Search name #%1: '%2'\n")
+                             .arg(QString::number(++i), sn));
+        }
     }
 
-    for (int pass = 1; pass <= searchNames.size(); ++pass) {
-        output.append("\033[1;35mPass " + QString::number(pass) + "\033[0m ");
-        getSearchResults(gameEntries, searchNames.at(pass - 1),
-                         config->platform);
-        debug.append("Tried with: '" + searchNames.at(pass - 1) + "'\n");
-        debug.append("Platform: " + config->platform + "\n");
+    int pass = 0;
+    for (const auto &sn : searchNames) {
+        output.append("\033[1;35mPass " + QString::number(++pass) + "\033[0m ");
+        getSearchResults(gameEntries, sn, config->platform);
+        if (config->verbosity >= 3) {
+            debug.append("Tried with: '" + sn + "'\n");
+            debug.append("Platform: " + config->platform + "\n");
+        }
         if (!gameEntries.isEmpty()) {
             break;
         }

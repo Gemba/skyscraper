@@ -105,7 +105,7 @@ QString Platform::getFormats(QString platform, QString extensions,
     }
 
     QSet<QString> formats({"*.zip", "*.7z", "*.ml"});
-    QStringList addExts; 
+    QStringList addExts;
 
 #if QT_VERSION >= 0x050e00
     addExts = addExtensions.split(" ", Qt::SkipEmptyParts);

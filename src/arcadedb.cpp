@@ -75,9 +75,7 @@ void ArcadeDB::getSearchResults(QList<GameEntry> &gameEntries,
     gameEntries.append(game);
 }
 
-void ArcadeDB::getGameData(GameEntry &game) {
-    populateGameEntry(game);
-}
+void ArcadeDB::getGameData(GameEntry &game) { populateGameEntry(game); }
 
 void ArcadeDB::getReleaseDate(GameEntry &game) {
     game.releaseDate = jsonObj.value("year").toString();
@@ -180,7 +178,7 @@ void ArcadeDB::getVideo(GameEntry &game) {
 }
 
 QList<QString> ArcadeDB::getSearchNames(const QFileInfo &info, QString &debug) {
-    QString baseName = info.baseName();
+    const QString baseName = info.baseName();
     QList<QString> searchNames;
     QString searchName = baseName;
 
