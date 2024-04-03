@@ -1245,77 +1245,76 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
 }
 
 void Skyscraper::loadAliasMap() {
-    if (!QFileInfo::exists("aliasMap.csv"))
-        return;
     QFile aliasMapFile("aliasMap.csv");
     if (aliasMapFile.open(QIODevice::ReadOnly)) {
         while (!aliasMapFile.atEnd()) {
             QByteArray line = aliasMapFile.readLine();
-            if (line.left(1) == "#")
+            if (line.left(1) == "#") {
                 continue;
+            }
             QList<QByteArray> pair = line.split(';');
-            if (pair.size() != 2)
-                continue;
-            QString baseName = pair.at(0);
-            QString aliasName = pair.at(1);
-            baseName = baseName.replace("\"", "").simplified();
-            aliasName = aliasName.replace("\"", "").simplified();
-            config.aliasMap[baseName] = aliasName;
+            if (pair.size() == 2) {
+                QString baseName = pair.at(0);
+                QString aliasName = pair.at(1);
+                baseName = baseName.replace("\"", "").simplified();
+                aliasName = aliasName.replace("\"", "").simplified();
+                config.aliasMap[baseName] = aliasName;
+            }
         }
         aliasMapFile.close();
     }
 }
 
 void Skyscraper::loadMameMap() {
-    if (config.scraper != "import" &&
-        (config.platform == "neogeo" || config.platform == "arcade" ||
-         config.platform == "mame-advmame" ||
-         config.platform == "mame-libretro" ||
-         config.platform == "mame-mame4all" || config.platform == "fba")) {
-        QFile mameMapFile("mameMap.csv");
-        if (mameMapFile.open(QIODevice::ReadOnly)) {
-            while (!mameMapFile.atEnd()) {
-                QList<QByteArray> pair = mameMapFile.readLine().split(';');
-                if (pair.size() != 2)
-                    continue;
-                QString mameName = pair.at(0);
-                QString realName = pair.at(1);
-                mameName = mameName.replace("\"", "").simplified();
-                realName = realName.replace("\"", "").simplified();
-                config.mameMap[mameName] = realName;
-            }
-            mameMapFile.close();
+    QFile mameMapFile("mameMap.csv");
+    if (config.arcadePlatform && mameMapFile.open(QIODevice::ReadOnly)) {
+        while (!mameMapFile.atEnd()) {
+            QList<QByteArray> pair = mameMapFile.readLine().split(';');
+            if (pair.size() != 2)
+                continue;
+            QString mameName = pair.at(0);
+            QString realName = pair.at(1);
+            mameName = mameName.replace("\"", "").simplified();
+            realName = realName.replace("\"", "").simplified();
+            config.mameMap[mameName] = realName;
         }
+        mameMapFile.close();
     }
 }
 
 void Skyscraper::loadWhdLoadMap() {
-    if (config.platform == "amiga") {
-        QDomDocument doc;
+    if (config.platform != "amiga") {
+        return;
+    }
 
-        QFile whdLoadFile;
-        if (QFileInfo::exists("whdload_db.xml"))
-            whdLoadFile.setFileName("whdload_db.xml");
-        else if (QFileInfo::exists("/opt/retropie/emulators/amiberry/whdboot/"
-                                   "game-data/whdload_db.xml"))
-            whdLoadFile.setFileName("/opt/retropie/emulators/amiberry/whdboot/"
-                                    "game-data/whdload_db.xml");
-        else
-            return;
+    QFile whdLoadFile;
+    QStringList paths = {
+        "whdload_db.xml",
+        "/opt/retropie/emulators/amiberry/whdboot/game-data/whdload_db.xml"};
+    bool found = false;
+    for (const auto &p : paths) {
+        if (QFileInfo::exists(p)) {
+            whdLoadFile.setFileName(p);
+            found = true;
+            break;
+        }
+    }
+    if (!found || !whdLoadFile.open(QIODevice::ReadOnly)) {
+        return;
+    }
 
-        if (whdLoadFile.open(QIODevice::ReadOnly)) {
-            QByteArray rawXml = whdLoadFile.readAll();
-            whdLoadFile.close();
-            if (doc.setContent(rawXml)) {
-                QDomNodeList gameNodes = doc.elementsByTagName("game");
-                for (int a = 0; a < gameNodes.length(); ++a) {
-                    QDomNode gameNode = gameNodes.at(a);
-                    QPair<QString, QString> gamePair;
-                    gamePair.first = gameNode.firstChildElement("name").text();
-                    gamePair.second = gameNode.firstChildElement("variant_uuid").text();
-                    config.whdLoadMap[gameNode.toElement().attribute("filename")] = gamePair;
-                }
-            }
+    QDomDocument doc;
+    QByteArray rawXml = whdLoadFile.readAll();
+    whdLoadFile.close();
+    if (doc.setContent(rawXml)) {
+        QDomNodeList gameNodes = doc.elementsByTagName("game");
+        for (int a = 0; a < gameNodes.length(); ++a) {
+            QDomNode gameNode = gameNodes.at(a);
+            QPair<QString, QString> gamePair;
+            gamePair.first = gameNode.firstChildElement("name").text();
+            gamePair.second = gameNode.firstChildElement("variant_uuid").text();
+            config.whdLoadMap[gameNode.toElement().attribute("filename")] =
+                gamePair;
         }
     }
 }

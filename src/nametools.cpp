@@ -28,6 +28,7 @@
 #include "strtools.h"
 
 #include <QCryptographicHash>
+#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QRegularExpression>
@@ -35,35 +36,22 @@
 
 QString NameTools::getScummName(const QString baseName,
                                 const QString scummIni) {
-    // Set to global for RetroPie
-    QString scummIniStr = "/opt/retropie/configs/scummvm/scummvm.ini";
 
-    // If local exists, use that one instead
-    if (QFileInfo::exists(QDir::homePath() + "/.scummvmrc")) {
-        scummIniStr = QDir::homePath() + "/.scummvmrc";
-    }
-
-    // If set in config, use that one instead
-    if (!scummIni.isEmpty()) {
-        scummIniStr = scummIni;
-    }
-
-    QFile scummIniFile(scummIniStr);
-    if (scummIniFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        int state = 0;
-        while (!scummIniFile.atEnd()) {
-            QByteArray line = scummIniFile.readLine();
-            if (line.contains("[")) {
-                state = 0; // Always reset if traversing into a new game
-            }
-            if (state == 0 && line.contains("[" + baseName.toUtf8() + "]")) {
-                state = 1;
-            }
-            if (state == 1 && line.contains("description=")) {
-                return line.split('=').last();
-            }
+    QStringList paths = {scummIni, QDir::homePath() + "/.scummvmrc",
+                         "/opt/retropie/configs/scummvm/scummvm.ini"};
+    QString scummIniPath;
+    for (QString const &p : paths) {
+        if (QFileInfo::exists(p) && QFileInfo(p).isFile()) {
+            scummIniPath = p;
+            break;
         }
-        scummIniFile.close();
+    }
+    if (!scummIniPath.isEmpty()) {
+        QSettings *settings = new QSettings(scummIniPath, QSettings::IniFormat);
+        settings->beginGroup(baseName);
+        if (settings->contains("description")) {
+            return settings->value("description").toString();
+        }
     }
     return baseName;
 }
@@ -120,8 +108,7 @@ QString NameTools::getUrlQueryName(const QString baseName, const int words,
                                    const QString spaceChar) {
     QString newName = baseName;
     // Remove everything in brackets
-    newName = newName.left(newName.indexOf("(")).simplified();
-    newName = newName.left(newName.indexOf("[")).simplified();
+    newName = StrTools::stripBrackets(newName);
     // The following is mostly, if not only, used when getting the name from
     // mameMap
     newName = newName.left(newName.indexOf(" / ")).simplified();
