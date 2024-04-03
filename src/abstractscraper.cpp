@@ -536,30 +536,25 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info, QString &d
 }
 
 QString AbstractScraper::getCompareTitle(QFileInfo info) {
-    QString baseName = info.baseName();
+    const QString baseName = info.completeBaseName();
     QString compareTitle;
 
-    if (config->scraper != "import") {
-        if (!config->aliasMap[baseName].isEmpty()) {
-            compareTitle = config->aliasMap[baseName];
-        } else if (info.suffix() == "lha") {
-            QString nameWithSpaces = config->whdLoadMap[baseName].first;
-            if (nameWithSpaces.isEmpty()) {
-                compareTitle = NameTools::getNameWithSpaces(baseName);
-            } else {
-                compareTitle = nameWithSpaces;
-            }
-        } else if (config->platform == "scummvm") {
-            compareTitle = NameTools::getScummName(baseName, config->scummIni);
-        } else if ((config->platform == "neogeo" ||
-                    config->platform == "arcade" ||
-                    config->platform == "mame-advmame" ||
-                    config->platform == "mame-libretro" ||
-                    config->platform == "mame-mame4all" ||
-                    config->platform == "fba") &&
-                   !config->mameMap[baseName].isEmpty()) {
-            compareTitle = config->mameMap[baseName];
+    if (!config->aliasMap[baseName].isEmpty()) {
+        compareTitle = config->aliasMap[baseName];
+    } else if (info.suffix() == "lha") {
+        if (QString whdTitle = config->whdLoadMap[baseName].first;
+            !whdTitle.isEmpty()) {
+            compareTitle = whdTitle;
+        } else {
+            compareTitle = NameTools::getNameWithSpaces(baseName);
         }
+    } else if (config->platform == "scummvm") {
+        compareTitle = NameTools::getScummName(baseName, config->scummIni);
+    } else if (QString romTitle = lookupArcadeTitle(baseName);
+                !romTitle.isEmpty()) {
+        compareTitle = romTitle;
+    } else {
+        compareTitle = baseName;
     }
 
     // Now create actual compareTitle
