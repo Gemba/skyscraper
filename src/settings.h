@@ -45,6 +45,7 @@ struct Settings {
     // For use with 'emulator' with Attractmode and 'command' for Pegasus
     QString frontendExtra = "";
     QString platform = "";
+    bool arcadePlatform;
     QString scraper = "";
     QString userCreds = "";
     QString igdbToken = "";

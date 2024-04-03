@@ -85,6 +85,9 @@ protected:
     virtual bool platformMatch(QString found, QString platform);
     virtual int getPlatformId(const QString);
 
+    QString lookupSearchName(const QFileInfo &info, const QString &baseName,
+                             QString &debug);
+
     MatchType type = {ABSTRACT};
 
     QList<int> fetchOrder;
@@ -139,6 +142,9 @@ protected:
 
     NetComm *netComm;
     QEventLoop q; // Event loop for use when waiting for data from NetComm.
+
+private:
+    QString lookupArcadeTitle(const QString &baseName);
 };
 
 #endif // ABSTRACTSCRAPER_H

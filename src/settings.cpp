@@ -31,6 +31,13 @@
 #include <filesystem>
 #endif
 
+static inline bool isArcadePlatform(const QString &platform) {
+    const QStringList arcadePlaforms = {"arcade",        "fba",
+                                        "mame-advmame",  "mame-libretro",
+                                        "mame-mame4all", "neogeo"};
+    return arcadePlaforms.contains(platform);
+}
+
 RuntimeCfg::RuntimeCfg(Settings *config, const QCommandLineParser *parser) {
     this->config = config;
     this->parser = parser;
@@ -66,6 +73,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
         }
     }
+
+    config->arcadePlatform = isArcadePlatform(config->platform);
 
     // get all enabled/set keys of this section
     QStringList keys = settings->childKeys();

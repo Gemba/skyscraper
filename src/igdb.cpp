@@ -272,42 +272,12 @@ void Igdb::getRating(GameEntry &game) {
 }
 
 QList<QString> Igdb::getSearchNames(const QFileInfo &info, QString &debug) {
-    QString baseName = info.completeBaseName();
+    const QString baseName = info.completeBaseName();
     QString searchName = baseName;
 
     debug.append("Base name: '" + baseName + "'\n");
 
-    if (!config->aliasMap[baseName].isEmpty()) {
-        debug.append("'aliasMap.csv' entry found\n");
-        QString aliasName = config->aliasMap[baseName];
-        debug.append("Alias name: '" + aliasName + "'\n");
-        searchName = aliasName;
-    } else if (info.suffix() == "lha") {
-        QString nameWithSpaces = config->whdLoadMap[baseName].first;
-        if (nameWithSpaces.isEmpty()) {
-            searchName = NameTools::getNameWithSpaces(baseName);
-        } else {
-            debug.append("'whdload_db.xml' entry found\n");
-            searchName = nameWithSpaces;
-            debug.append("Entry name: '" + searchName + "'\n");
-        }
-    } else if (config->platform == "scummvm") {
-        searchName = NameTools::getScummName(baseName, config->scummIni);
-    } else if ((config->platform == "neogeo" ||
-                config->platform == "arcade" ||
-                config->platform == "mame-advmame" ||
-                config->platform == "mame-libretro" ||
-                config->platform == "mame-mame4all" ||
-                config->platform == "fba") &&
-                !config->mameMap[baseName].isEmpty()) {
-        debug.append("'mameMap.csv' entry found\n");
-        searchName = config->mameMap[baseName];
-        debug.append("Entry name: '" + searchName + "'\n");
-    }
-
-    QList<QString> searchNames;
-
+    searchName = lookupSearchName(info, baseName, debug);
     searchName = StrTools::stripBrackets(searchName);
-    searchNames.append(searchName);
-    return searchNames;
+    return QList<QString>{searchName};
 }

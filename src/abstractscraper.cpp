@@ -458,45 +458,55 @@ bool AbstractScraper::checkNom(const QString nom) {
     return false;
 }
 
-QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info, QString &debug) {
-    QString baseName = info.completeBaseName();
+QString AbstractScraper::lookupArcadeTitle(const QString &baseName) {
+    if (config->arcadePlatform) {
+        return config->mameMap[baseName];
+    }
+    return "";
+}
+
+QString AbstractScraper::lookupSearchName(const QFileInfo &info,
+                                          const QString &baseName,
+                                          QString &debug) {
+    QString searchName = baseName;
+    if (!config->aliasMap[baseName].isEmpty()) {
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasName + "'\n");
+        searchName = aliasName;
+    } else if (info.suffix() == "lha") {
+        if (QString whdTitle = config->whdLoadMap[baseName].first;
+            !whdTitle.isEmpty()) {
+            debug.append("'whdload_db.xml' entry found\n");
+            searchName = whdTitle;
+            debug.append("Entry name: '" + searchName + "'\n");
+        } else {
+            searchName = NameTools::getNameWithSpaces(baseName);
+        }
+    } else if (config->platform == "scummvm") {
+        searchName = NameTools::getScummName(baseName, config->scummIni);
+    } else if (QString romTitle = lookupArcadeTitle(baseName);
+               !romTitle.isEmpty()) {
+        debug.append("'mameMap.csv' entry found\n");
+        searchName = romTitle;
+        debug.append("Entry name: '" + searchName + "'\n");
+    }
+    return searchName;
+}
+
+QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
+                                               QString &debug) {
+    const QString baseName = info.completeBaseName();
     QList<QString> searchNames;
     QString searchName = baseName;
 
     debug.append("Base name: '" + baseName + "'\n");
 
     if (config->scraper != "import") {
-        if (!config->aliasMap[baseName].isEmpty()) {
-            debug.append("'aliasMap.csv' entry found\n");
-            QString aliasName = config->aliasMap[baseName];
-            debug.append("Alias name: '" + aliasName + "'\n");
-            searchName = aliasName;
-        } else if (info.suffix() == "lha") {
-            QString nameWithSpaces = config->whdLoadMap[baseName].first;
-            if (nameWithSpaces.isEmpty()) {
-                searchName = NameTools::getNameWithSpaces(baseName);
-            } else {
-                debug.append("'whdload_db.xml' entry found\n");
-                searchName = nameWithSpaces;
-                debug.append("Entry name: '" + searchName + "'\n");
-            }
-        } else if (config->platform == "scummvm") {
-            searchName = NameTools::getScummName(baseName, config->scummIni);
-        } else if ((config->platform == "neogeo" ||
-                    config->platform == "arcade" ||
-                    config->platform == "mame-advmame" ||
-                    config->platform == "mame-libretro" ||
-                    config->platform == "mame-mame4all" ||
-                    config->platform == "fba") &&
-                    !config->mameMap[baseName].isEmpty()) {
-            debug.append("'mameMap.csv' entry found\n");
-            searchName = config->mameMap[baseName];
-            debug.append("Entry name: '" + searchName + "'\n");
-        }
+        searchName = lookupSearchName(info, baseName, debug);
     }
 
-    if (searchName.isEmpty())
-        return searchNames;
+    Q_ASSERT(!searchName.isEmpty());
 
     searchNames.append(NameTools::getUrlQueryName(searchName));
 
