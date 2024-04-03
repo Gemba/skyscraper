@@ -30,7 +30,7 @@
 #include <QJsonArray>
 
 ArcadeDB::ArcadeDB(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
     baseUrl = "http://adb.arcadeitalia.net";
 
     searchUrlPre =

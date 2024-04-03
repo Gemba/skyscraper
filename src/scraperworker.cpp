@@ -541,8 +541,9 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
                                       int &lowestDistance) {
     GameEntry game;
 
-    // If scraper isn't filename/hash search based, always return first entry
-    if (directMatchScrapers.contains(config.scraper) ||
+    // If scraper provides only one match, always return that match
+    if (scraper->getType() == scraper->MatchType::MATCH_ONE ||
+        config.scraper == "cache" ||
         (config.scraper == "openretro" && gameEntries.first().url.isEmpty())) {
         lowestDistance = 0;
         game = gameEntries.first();

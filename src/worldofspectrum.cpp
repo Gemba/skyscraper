@@ -29,7 +29,7 @@
 
 WorldOfSpectrum::WorldOfSpectrum(Settings *config,
                                  QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
     baseUrl = "https://www.worldofspectrum.org";
 
     searchResultPre =

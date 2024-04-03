@@ -32,7 +32,7 @@
 #include <QJsonArray>
 
 TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
     loadMaps();
 
     baseUrl = "https://api.thegamesdb.net/v1";

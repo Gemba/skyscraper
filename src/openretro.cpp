@@ -31,7 +31,7 @@
 #include <QRegularExpression>
 
 OpenRetro::OpenRetro(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
     baseUrl = "https://openretro.org";
 
     searchUrlPre = "https://openretro.org";

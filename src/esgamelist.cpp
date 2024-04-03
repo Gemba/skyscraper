@@ -30,7 +30,7 @@
 #include <QDir>
 
 ESGameList::ESGameList(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
     baseUrl = config->gameListFolder +
               (config->gameListFolder.right(1) != "/" ? "/" : "");
     QString gameListXml = baseUrl + "gamelist.xml";

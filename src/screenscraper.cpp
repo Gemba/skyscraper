@@ -38,7 +38,7 @@ constexpr int MINARTSIZE = 256;
 
 ScreenScraper::ScreenScraper(Settings *config,
                              QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
     connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
     limitTimer.setInterval(
         1200); // 1.2 second request limit set a bit above 1.0 as requested by

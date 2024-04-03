@@ -31,7 +31,7 @@
 #include <QJsonArray>
 
 Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
     QPair<QString, QString> clientIdHeader;
     clientIdHeader.first = "Client-ID";
     clientIdHeader.second = config->user;

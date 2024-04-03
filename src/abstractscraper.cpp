@@ -34,8 +34,9 @@
 #include <QRegularExpression>
 
 AbstractScraper::AbstractScraper(Settings *config,
-                                 QSharedPointer<NetManager> manager)
-    : config(config) {
+                                 QSharedPointer<NetManager> manager,
+                                 MatchType type)
+    : config(config), type(type) {
     netComm = new NetComm(manager);
     connect(netComm, &NetComm::dataReady, &q, &QEventLoop::quit);
 }

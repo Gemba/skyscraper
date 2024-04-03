@@ -30,7 +30,7 @@
 
 ImportScraper::ImportScraper(Settings *config,
                              QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
     fetchOrder.append(TITLE);
     fetchOrder.append(DEVELOPER);
     fetchOrder.append(PUBLISHER);

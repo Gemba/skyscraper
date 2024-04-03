@@ -40,10 +40,14 @@ class AbstractScraper : public QObject {
     Q_OBJECT
 
 public:
-    AbstractScraper(Settings *config, QSharedPointer<NetManager> manager);
+    enum MatchType { ABSTRACT, MATCH_ONE, MATCH_MANY };
+
+    AbstractScraper(Settings *config, QSharedPointer<NetManager> manager,
+                    MatchType type = {ABSTRACT});
     virtual ~AbstractScraper();
     virtual void getGameData(GameEntry &game);
-    virtual QList<QString> getSearchNames(const QFileInfo &info, QString &debug);
+    virtual QList<QString> getSearchNames(const QFileInfo &info,
+                                          QString &debug);
     virtual QString getCompareTitle(QFileInfo info);
     virtual void runPasses(QList<GameEntry> &gameEntries, const QFileInfo &info,
                            QString &output, QString &debug);
@@ -51,6 +55,7 @@ public:
     // void setConfig(Settings *config);
 
     int reqRemaining = -1;
+    MatchType getType() const { return type; };
 
 protected:
     Settings *config;
@@ -79,6 +84,8 @@ protected:
 
     virtual bool platformMatch(QString found, QString platform);
     virtual int getPlatformId(const QString);
+
+    MatchType type = {ABSTRACT};
 
     QList<int> fetchOrder;
 
