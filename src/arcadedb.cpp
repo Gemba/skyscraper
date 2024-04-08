@@ -178,7 +178,7 @@ void ArcadeDB::getVideo(GameEntry &game) {
 }
 
 QList<QString> ArcadeDB::getSearchNames(const QFileInfo &info, QString &debug) {
-    const QString baseName = info.baseName();
+    const QString baseName = info.completeBaseName();
     QList<QString> searchNames;
     QString searchName = baseName;
 
