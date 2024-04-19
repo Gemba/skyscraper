@@ -155,15 +155,24 @@ private:
     const inline QList<QPair<QString, QString>> regionMap() {
         // use list of pairs to maintain order
         return QList<QPair<QString, QString>>{
-            QPair("europe|(e)", "eu"), QPair("usa|(u)", "us"),
-            QPair("world", "wor"),     QPair("japan|(j)", "jp"),
-            QPair("brazil", "br"),     QPair("korea", "kr"),
-            QPair("taiwan", "tw"),     QPair("france", "fr"),
-            QPair("germany", "de"),    QPair("italy", "it"),
-            QPair("spain", "sp"),      QPair("china", "cn"),
-            QPair("australia", "au"),  QPair("sweden", "se"),
-            QPair("canada", "ca"),     QPair("netherlands", "nl"),
-            QPair("denmark", "dk"),    QPair("asia", "asi")};
+            QPair<QString, QString>("europe|(e)", "eu"),
+            QPair<QString, QString>("usa|(u)", "us"),
+            QPair<QString, QString>("world", "wor"),
+            QPair<QString, QString>("japan|(j)", "jp"),
+            QPair<QString, QString>("brazil", "br"),
+            QPair<QString, QString>("korea", "kr"),
+            QPair<QString, QString>("taiwan", "tw"),
+            QPair<QString, QString>("france", "fr"),
+            QPair<QString, QString>("germany", "de"),
+            QPair<QString, QString>("italy", "it"),
+            QPair<QString, QString>("spain", "sp"),
+            QPair<QString, QString>("china", "cn"),
+            QPair<QString, QString>("australia", "au"),
+            QPair<QString, QString>("sweden", "se"),
+            QPair<QString, QString>("canada", "ca"),
+            QPair<QString, QString>("netherlands", "nl"),
+            QPair<QString, QString>("denmark", "dk"),
+            QPair<QString, QString>("asia", "asi")};
     }
 };
 
