@@ -41,10 +41,13 @@
 #include "thegamesdb.h"
 #include "worldofspectrum.h"
 
+#include <QDate>
 #include <QRegularExpression>
 #include <QStringBuilder>
 #include <QTimer>
 #include <iostream>
+
+constexpr int UNDEF_YEAR = -1;
 
 ScraperWorker::ScraperWorker(QSharedPointer<Queue> queue,
                              QSharedPointer<Cache> cache,
@@ -201,7 +204,18 @@ void ScraperWorker::run() {
             }
             game.found = false;
         } else {
-            game = getBestEntry(gameEntries, compareTitle, lowestDistance);
+            int compareYear = UNDEF_YEAR;
+            QString baseParNotes =
+                NameTools::getParNotes(info.completeBaseName());
+            // If baseParNotes matches (NNNN), compareYear = NNNN
+            QRegularExpressionMatch match =
+                QRegularExpression("\\((\\d{4})\\)").match(baseParNotes);
+            if (match.hasMatch()) {
+                QString yyyy = match.captured(1);
+                compareYear = yyyy.toInt();
+            }
+            game = getBestEntry(gameEntries, compareTitle, compareYear,
+                                lowestDistance);
             if (config.interactive && !fromCache) {
                 game = getEntryFromUser(gameEntries, game, compareTitle,
                                         lowestDistance);
@@ -527,13 +541,30 @@ unsigned int ScraperWorker::editDistance(const std::string &s1,
 }
 
 GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
-                                      QString compareTitle,
+                                      QString compareTitle, int compareYear,
                                       int &lowestDistance) {
     GameEntry game;
 
-    // If scraper provides only one match, always return that match
-    if (scraper->getType() == scraper->MatchType::MATCH_ONE ||
-        config.scraper == "cache" ||
+    // If scraper provides only one match, always return that match unless we're
+    // comparing years.
+    int releaseYear = UNDEF_YEAR;
+    if (scraper->getType() == scraper->MatchType::MATCH_ONE) {
+        GameEntry entry = gameEntries.first();
+        // If year was specified, and doesn't match, return null game.
+        if (compareYear != -1) { // Year was specified in title - "(NNNN)"
+            releaseYear = getReleaseYear(entry.releaseDate);
+            if (releaseYear != -1) { // We got year from releaseDate
+                if (compareYear != releaseYear) {
+                    return game; // Null game
+                }
+            }
+        }
+        lowestDistance = 0;
+        game = gameEntries.first();
+        game.title = StrTools::xmlUnescape(game.title);
+        return game;
+    }
+    if (config.scraper == "cache" ||
         (config.scraper == "openretro" && gameEntries.first().url.isEmpty())) {
         lowestDistance = 0;
         game = gameEntries.first();
@@ -557,6 +588,15 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
             if (!compareTitle.toLower().contains("day of the tentacle") &&
                 !compareTitle.toLower().contains("curse of monkey island")) {
                 continue;
+            }
+        }
+        // If year was specified, and doesn't match, skip.
+        if (compareYear != -1) { // Year was specified in title - "(NNNN)"
+            releaseYear = getReleaseYear(entry.releaseDate);
+            if (releaseYear != -1) { // We got year from releaseDate
+                if (compareYear != releaseYear) {
+                    continue;
+                }
             }
         }
         if (config.scraper != "openretro") {
@@ -728,17 +768,18 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
     bool suggestedShown = false;
     for (int a = 1; a <= gameEntries.length(); ++a) {
         QString suggested = "";
-        if (gameEntries.at(a - 1).title == suggestedGame.title &&
-            !suggestedShown) {
+        if (gameEntries.at(a - 1).id == suggestedGame.id && !suggestedShown) {
             suggested = " <-- Skyscraper's choice";
             suggestedShown = true;
         }
         printf("\033[1;32m%d%s\033[0m: Title:    '\033[1;32m%s\033[0m'%s\n    "
-               "platform: '\033[1;33m%s\033[0m'\n",
+               "platform: '\033[1;33m%s\033[0m'\n    "
+               "release date: '\033[1;33m%s\033[0m'\n",
                a, QString((a <= 9 ? " " : "")).toStdString().c_str(),
                gameEntries.at(a - 1).title.toStdString().c_str(),
                suggested.toStdString().c_str(),
-               gameEntries.at(a - 1).platform.toStdString().c_str());
+               gameEntries.at(a - 1).platform.toStdString().c_str(),
+               gameEntries.at(a - 1).releaseDate.toStdString().c_str());
     }
     printf("\033[1;32m-1\033[0m: \033[1;33mNONE OF THE ABOVE!\033[0m\n");
     printf("\033[1;34mPlease choose the preferred entry\033[0m (Or press enter "
@@ -819,6 +860,21 @@ void ScraperWorker::copyMedia(const QString &mediaType,
         }
     }
 }
+
+int ScraperWorker::getReleaseYear(const QString releaseDateString) {
+    // Most scrapers use "yyyy-MM-dd" format
+    QDate releaseDate = QDate::fromString(releaseDateString, Qt::ISODate);
+    if (releaseDate.isValid()) {
+        return releaseDate.year();
+    }
+    // Some scrapers just give us the year
+    releaseDate = QDate::fromString(releaseDateString, "yyyy");
+    if (releaseDate.isValid()) {
+        return releaseDate.year();
+    }
+    return UNDEF_YEAR;
+}
+
 // --- Console colors ---
 // Black        0;30     Dark Gray     1;30
 // Red          0;31     Light Red     1;31

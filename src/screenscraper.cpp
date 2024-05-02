@@ -254,6 +254,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 
     game.url = gameUrl;
     game.platform = jsonObj["systeme"].toObject()["text"].toString();
+    game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
 
     // Only check if platform is empty, it's always correct when using
     // ScreenScraper

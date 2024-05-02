@@ -106,6 +106,9 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         // Remove anything at the end with a parentheses. 'thegamesdb' has a
         // habit of adding for instance '(1993)' to the name.
         game.title = game.title.left(game.title.indexOf("(")).simplified();
+        if (jsonGame["release_date"] != QJsonValue::Undefined) {
+            game.releaseDate = jsonGame["release_date"].toString();
+        }
         int gamePlafId = jsonGame["platform"].toInt();
         game.platform = platformMap[QString::number(gamePlafId)].toString();
         bool matchPlafId = gamePlafId == platformId;

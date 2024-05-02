@@ -71,7 +71,9 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
     // null")
     limiter.exec();
     netComm->request(baseUrl + "/search/",
-                     "fields game.name,game.platforms.name; search \"" +
+                     "fields "
+                     "game.name,game.platforms.name,game.release_dates.date,"
+                     "game.release_dates.platform; search \"" +
                          searchName +
                          "\"; where game != null & game.version_parent = null;",
                      headers);
@@ -102,10 +104,24 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
         QJsonArray jsonPlatforms =
             jsonGame.toObject()["game"].toObject()["platforms"].toArray();
         for (const auto &jsonPlatform : jsonPlatforms) {
-            game.id.append(
-                ";" + QString::number(jsonPlatform.toObject()["id"].toInt()));
+            int platformId = jsonPlatform.toObject()["id"].toInt();
+            game.id.append(";" + QString::number(platformId));
             game.platform = jsonPlatform.toObject()["name"].toString();
             if (platformMatch(game.platform, platform)) {
+                QJsonArray jsonReleaseDates = jsonGame.toObject()["game"]
+                                                  .toObject()["release_dates"]
+                                                  .toArray();
+                for (const auto &releaseDate : jsonReleaseDates) {
+                    if (releaseDate.toObject()["platform"].toInt() ==
+                        platformId) {
+                        game.releaseDate =
+                            QDateTime::fromMSecsSinceEpoch(
+                                (qint64)releaseDate.toObject()["date"].toInt() *
+                                1000)
+                                .date()
+                                .toString(Qt::ISODate);
+                    }
+                }
                 gameEntries.append(game);
             }
         }
@@ -165,7 +181,7 @@ void Igdb::getReleaseDate(GameEntry &game) {
                 game.releaseDate =
                     QDateTime::fromMSecsSinceEpoch(
                         (qint64)jsonDate.toObject()["date"].toInt() * 1000)
-                        .toString("yyyyMMdd");
+                        .toString("yyyy-MM-dd");
                 regionMatch = true;
                 break;
             }

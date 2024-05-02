@@ -67,13 +67,15 @@ private:
     unsigned int editDistance(const std::string &s1, const std::string &s2);
 
     GameEntry getBestEntry(const QList<GameEntry> &gameEntries,
-                           QString compareTitle, int &lowestDistance);
+                           QString compareTitle, int compareYear,
+                           int &lowestDistance);
     GameEntry getEntryFromUser(const QList<GameEntry> &gameEntries,
                                const GameEntry &suggestedGame,
                                const QString &compareTitle,
                                int &lowestDistance);
     int getSearchMatch(const QString &title, const QString &compareTitle,
                        const int &lowestDistance);
+    int getReleaseYear(const QString releaseDateString);
 
     bool limitReached(QString &output);
     void copyMedia(const QString &mediaType, const QString &completeBaseName,
@@ -82,9 +84,9 @@ private:
     // TODO: Remove, replaced with AbstractScraper::MatchType
     /*
     QStringList const directMatchScrapers = {"cache", "import", "arcadedb",
-                                            "screenscraper", "esgamelist"};
-    QStringList const searchBasedScrapers = {"thegamesdb", "mobygames",
-                                            "igdb", "worldofspectrum"};
+                                             "screenscraper", "esgamelist"};
+    QStringList const searchBasedScrapers = {"thegamesdb", "mobygames", "igdb",
+                                             "worldofspectrum"};
     QStringList const variableScrapers = {"openretro"};
     */
 };
