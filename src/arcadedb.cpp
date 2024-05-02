@@ -72,6 +72,7 @@ void ArcadeDB::getSearchResults(QList<GameEntry> &gameEntries,
 
     game.title = jsonObj.value("title").toString();
     game.platform = platform;
+    game.releaseDate = jsonObj.value("year").toString();
     gameEntries.append(game);
 }
 

@@ -121,6 +121,7 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
                        StrTools::unMagic(
                            "175;229;170;189;188;202;211;117;164;165;185;209;"
                            "164;234;180;155;199;209;224;231;193;190;173;175");
+            game.releaseDate = jsonPlatform["first_release_date"].toString();
             game.platform = jsonPlatform["platform_name"].toString();
             bool matchPlafId = gamePlafId == platformId;
             if (platformMatch(game.platform, platform) || matchPlafId) {
