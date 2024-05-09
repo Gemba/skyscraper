@@ -625,10 +625,8 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
             QStringList keys = e.first.split("|");
             for (const auto &k : keys) {
                 if (regionString.contains(k, Qt::CaseInsensitive)) {
-                    // TODO: if more than one regionString is matched this
-                    // reverses the order of the regions present in the
-                    // filename. E.g. "Blarf (u) japan.zip" results in
-                    // "japan", "(u)", "<existing regionprios>"
+                    // regionMap is sorted from bigger regions to smaller
+                    // prepend() assures smaller regions get higher priority
                     regionPrios.prepend(e.second);
                     if (keys.size() > 1) {
                         // append only one: "europe" or "(e)"

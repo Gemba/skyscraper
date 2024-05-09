@@ -35,6 +35,11 @@
 #include <QSettings>
 
 struct Settings {
+    bool isMatchOneScraper() {
+        const QStringList matchOneScraper = QStringList(
+            {"cache", "screenscraper", "arcadedb", "esgamelist", "import"});
+        return matchOneScraper.contains(scraper);
+    }
     QString currentDir = "";
 
     QString cacheFolder = "";
@@ -112,9 +117,9 @@ struct Settings {
 
     int romLimit = -1;
 
-    bool videos = false;
     bool manuals = false;
     QString gameListVariants = "";
+    bool videos = false;
     bool videoPreferNormalized = true;
     int videoSizeLimit = 100 * 1000 * 1000;
     QString videoConvertCommand = "";

@@ -114,55 +114,40 @@ QString ImportScraper::getCompareTitle(const QFileInfo &info) {
     return info.completeBaseName();
 }
 
-// TODO: Refactor
-void ImportScraper::getCover(GameEntry &game) {
-    if (!coverFile.isEmpty()) {
-        QFile f(coverFile);
+QByteArray ImportScraper::readFile(const QString &fn) {
+    QByteArray data = QByteArray();
+    if (!fn.isEmpty()) {
+        QFile f(fn);
         if (f.open(QIODevice::ReadOnly)) {
-            game.coverData = f.readAll();
+            data = f.readAll();
             f.close();
         }
     }
+    return data;
+}
+
+void ImportScraper::getCover(GameEntry &game) {
+    game.coverData = readFile(coverFile);
 }
 
 void ImportScraper::getScreenshot(GameEntry &game) {
-    if (!screenshotFile.isEmpty()) {
-        QFile f(screenshotFile);
-        if (f.open(QIODevice::ReadOnly)) {
-            game.screenshotData = f.readAll();
-            f.close();
-        }
-    }
+    game.screenshotData = readFile(screenshotFile);
 }
 
 void ImportScraper::getWheel(GameEntry &game) {
-    if (!wheelFile.isEmpty()) {
-        QFile f(wheelFile);
-        if (f.open(QIODevice::ReadOnly)) {
-            game.wheelData = f.readAll();
-            f.close();
-        }
-    }
+    game.wheelData = readFile(wheelFile);
 }
 
 void ImportScraper::getMarquee(GameEntry &game) {
-    if (!marqueeFile.isEmpty()) {
-        QFile f(marqueeFile);
-        if (f.open(QIODevice::ReadOnly)) {
-            game.marqueeData = f.readAll();
-            f.close();
-        }
-    }
+    game.marqueeData = readFile(marqueeFile);
 }
 
 void ImportScraper::getTexture(GameEntry &game) {
-    if (!textureFile.isEmpty()) {
-        QFile f(textureFile);
-        if (f.open(QIODevice::ReadOnly)) {
-            game.textureData = f.readAll();
-            f.close();
-        }
-    }
+    game.textureData = readFile(textureFile);
+}
+
+void ImportScraper::getManual(GameEntry &game) {
+    game.manualData = readFile(manualFile);
 }
 
 void ImportScraper::getVideo(GameEntry &game) {
@@ -177,17 +162,6 @@ void ImportScraper::getVideo(GameEntry &game) {
     }
 }
 
-void ImportScraper::getManual(GameEntry &game) {
-    if (!manualFile.isEmpty()) {
-        QFile f(manualFile);
-        if (f.open(QIODevice::ReadOnly)) {
-            game.manualData = f.readAll();
-            f.close();
-        }
-    }
-}
-
-// TODO: Refactor
 void ImportScraper::getAges(GameEntry &game) {
     if (isXml) {
         game.ages = getElementText(agesPre);

@@ -80,15 +80,10 @@ private:
     bool limitReached(QString &output);
     void copyMedia(const QString &mediaType, const QString &completeBaseName,
                    const QString &subPath, GameEntry &game);
-
-    // TODO: Remove, replaced with AbstractScraper::MatchType
-    /*
-    QStringList const directMatchScrapers = {"cache", "import", "arcadedb",
-                                             "screenscraper", "esgamelist"};
-    QStringList const searchBasedScrapers = {"thegamesdb", "mobygames", "igdb",
-                                             "worldofspectrum"};
-    QStringList const variableScrapers = {"openretro"};
-    */
+    bool matchTitles(const QString &thiz, const QString &that);
+    QList<QString> splitTitle(const QString &title);
+    bool matchWords(const QList<QString> theseWords,
+                    const QList<QString> thoseWords);
 };
 
 #endif // SCRAPERWORKER_H

@@ -146,8 +146,7 @@ bool EmulationStation::existingInGamelist(GameEntry &entry) {
 
 void EmulationStation::assembleList(QString &finalOutput,
                                     QList<GameEntry> &gameEntries) {
-    QString extensions = Platform::get().getFormats(
-        config->platform, config->extensions, config->addExtensions);
+    QString extensions = platformFileExtensions();
     // Check if the platform has both cue and bin extensions. Remove
     // bin if it does to avoid count() below to be 2. I thought
     // about removing bin extensions entirely from platform.cpp, but
@@ -284,16 +283,14 @@ void EmulationStation::addFolder(QString &base, QString sub,
 bool EmulationStation::isGameLauncher(QString &sub) {
     bool folderIsGameLauncher = false;
     if (config->platform == "scummvm") {
-        QString extensions = Platform::get().getFormats(
-            config->platform, config->extensions, config->addExtensions);
-        QStringList exts = extensions.split(" ");
+        QStringList exts = platformFileExtensions().split(" ");
         for (auto ext : exts) {
             QRegExp re(ext);
             re.setPatternSyntax(QRegExp::Wildcard);
             if (re.exactMatch(sub.toLower())) {
                 qDebug() << "Match: " << sub;
                 // do not add if .svm or other extension is used in
-                // fs-folder
+                // fs-foldername
                 folderIsGameLauncher = true;
                 break;
             }

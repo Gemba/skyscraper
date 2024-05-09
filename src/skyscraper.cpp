@@ -49,6 +49,7 @@
 #include "emulationstation.h"
 #include "esde.h"
 #include "pegasus.h"
+#include "settings.h"
 #include "skyscraper.h"
 #include "strtools.h"
 
@@ -72,11 +73,12 @@ Skyscraper::Skyscraper(const QCommandLineParser &parser,
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 
 void Skyscraper::run() {
+    bool useCacheScraper = config.scraper == "cache";
     printf("Platform:           '\033[1;32m%s\033[0m'\n",
            config.platform.toStdString().c_str());
     printf("Scraping module:    '\033[1;32m%s\033[0m'\n",
            config.scraper.toStdString().c_str());
-    if (config.scraper == "cache") {
+    if (useCacheScraper) {
         printf("Frontend:           '\033[1;32m%s\033[0m'\n",
                config.frontend.toStdString().c_str());
         if (!config.frontendExtra.isEmpty()) {
@@ -144,7 +146,7 @@ void Skyscraper::run() {
     if (!config.cacheFolder.isEmpty()) {
         cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
         if (cache->createFolders(config.scraper)) {
-            if (!cache->read() && config.scraper == "cache") {
+            if (!cache->read() && useCacheScraper) {
                 printf("No resources for this platform found in the resource "
                        "cache. Please specify a scraping module with '-s' to "
                        "gather some resources before trying to generate a game "
@@ -169,10 +171,8 @@ void Skyscraper::run() {
             success = cache->purgeAll(config.unattend || config.unattendSkip);
         } else if (config.cacheOptions == "vacuum") {
             success = cache->vacuumResources(
-                config.inputFolder,
-                Platform::get().getFormats(config.platform, config.extensions,
-                                           config.addExtensions),
-                config.verbosity, config.unattend || config.unattendSkip);
+                config.inputFolder, platformFileExtensions(), config.verbosity,
+                config.unattend || config.unattendSkip);
         } else if (config.cacheOptions.contains("purge:m=") ||
                    config.cacheOptions.contains("purge:t=")) {
             success = cache->purgeResources(config.cacheOptions);
@@ -185,9 +185,7 @@ void Skyscraper::run() {
         exit(0);
     }
     if (config.cacheOptions.contains("report:")) {
-        cache->assembleReport(config, Platform::get().getFormats(
-                                          config.platform, config.extensions,
-                                          config.addExtensions));
+        cache->assembleReport(config, platformFileExtensions());
         exit(0);
     }
     if (config.cacheOptions == "validate") {
@@ -221,10 +219,8 @@ void Skyscraper::run() {
     if (config.platform == "scummvm") {
         filter |= QDir::Dirs;
     }
-    QDir inputDir(config.inputFolder,
-                  Platform::get().getFormats(config.platform, config.extensions,
-                                             config.addExtensions),
-                  QDir::Name, filter);
+    QDir inputDir(config.inputFolder, platformFileExtensions(), QDir::Name,
+                  filter);
     if (!inputDir.exists()) {
         printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
                "accessed by current user. Please check path and permissions.\n",
@@ -233,73 +229,32 @@ void Skyscraper::run() {
     }
     config.inputFolder = inputDir.absolutePath();
 
-    const bool isCacheScraper = config.scraper == "cache" && !config.pretend;
+    const bool isCacheScraping = useCacheScraper && !config.pretend;
 
-    // TODO: Repeating code: refactor &config.gameListFolder, isCacheScraper
-    QDir gameListDir(config.gameListFolder);
-    if (isCacheScraper) {
-        checkForFolder(gameListDir);
-    }
-    config.gameListFolder = gameListDir.absolutePath();
-
-    QDir coversDir(config.coversFolder);
-    if (isCacheScraper) {
-        checkForFolder(coversDir);
-    }
-    config.coversFolder = coversDir.absolutePath();
-
-    QDir screenshotsDir(config.screenshotsFolder);
-    if (isCacheScraper) {
-        checkForFolder(screenshotsDir);
-    }
-    config.screenshotsFolder = screenshotsDir.absolutePath();
-
-    QDir wheelsDir(config.wheelsFolder);
-    if (isCacheScraper) {
-        checkForFolder(wheelsDir);
-    }
-    config.wheelsFolder = wheelsDir.absolutePath();
-
-    QDir marqueesDir(config.marqueesFolder);
-    if (isCacheScraper) {
-        checkForFolder(marqueesDir);
-    }
-    config.marqueesFolder = marqueesDir.absolutePath();
-
-    QDir texturesDir(config.texturesFolder);
-    if (isCacheScraper) {
-        checkForFolder(texturesDir);
-    }
-    config.texturesFolder = texturesDir.absolutePath();
-
+    setFolder(isCacheScraping, config.gameListFolder);
+    setFolder(isCacheScraping, config.coversFolder);
+    setFolder(isCacheScraping, config.screenshotsFolder);
+    setFolder(isCacheScraping, config.wheelsFolder);
+    setFolder(isCacheScraping, config.marqueesFolder);
+    setFolder(isCacheScraping, config.texturesFolder);
     if (config.videos) {
-        QDir videosDir(config.videosFolder);
-        if (isCacheScraper) {
-            checkForFolder(videosDir);
-        }
-        config.videosFolder = videosDir.absolutePath();
+        setFolder(isCacheScraping, config.videosFolder);
     }
     if (config.manuals) {
-        QDir manualsDir(config.manualsFolder);
-        if (isCacheScraper) {
-            checkForFolder(manualsDir);
-        }
-        config.manualsFolder = manualsDir.absolutePath();
+        setFolder(isCacheScraping, config.manualsFolder);
     }
 
-    QDir importDir(config.importFolder);
-    checkForFolder(importDir, false);
-    config.importFolder = importDir.absolutePath();
+    setFolder(isCacheScraping, config.importFolder, false);
 
     gameListFileString =
-        gameListDir.absolutePath() + "/" + frontend->getGameListFileName();
+        config.gameListFolder + "/" + frontend->getGameListFileName();
 
     QFile gameListFile(gameListFileString);
 
     // Create shared queue with files to process
     queue = QSharedPointer<Queue>(new Queue());
     QList<QFileInfo> infoList = inputDir.entryInfoList();
-    if (config.scraper != "cache" &&
+    if (!useCacheScraper &&
         QFileInfo::exists(config.inputFolder + "/.skyscraperignore")) {
         infoList.clear();
     }
@@ -341,7 +296,7 @@ void Skyscraper::run() {
         QString exclude = "";
         while (dirIt.hasNext()) {
             QString subdir = dirIt.next();
-            if (config.scraper != "cache" &&
+            if (!useCacheScraper &&
                 QFileInfo::exists(subdir + "/.skyscraperignoretree")) {
                 exclude = subdir;
             }
@@ -353,7 +308,7 @@ void Skyscraper::run() {
             } else {
                 exclude.clear();
             }
-            if (config.scraper != "cache" &&
+            if (!useCacheScraper &&
                 QFileInfo::exists(subdir + "/.skyscraperignore")) {
                 continue;
             }
@@ -431,7 +386,7 @@ void Skyscraper::run() {
     }
     state = SINGLE;
 
-    if (!config.pretend && config.scraper == "cache" && config.gameListBackup) {
+    if (isCacheScraping && config.gameListBackup) {
         QString gameListBackup =
             gameListFile.fileName() + "-" +
             QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
@@ -440,8 +395,8 @@ void Skyscraper::run() {
         gameListFile.copy(gameListBackup);
     }
 
-    if (!config.pretend && config.scraper == "cache" && !config.unattend &&
-        !config.unattendSkip && gameListFile.exists()) {
+    if (isCacheScraping && !config.unattend && !config.unattendSkip &&
+        gameListFile.exists()) {
         std::string userInput = "";
         printf("\033[1;34m'\033[0m\033[1;33m%s\033[0m\033[1;34m' already "
                "exists, do you want to overwrite it\033[0m (y/N)? ",
@@ -465,7 +420,7 @@ void Skyscraper::run() {
         }
         printf("\n");
     }
-    if (config.pretend && config.scraper == "cache") {
+    if (config.pretend && useCacheScraper) {
         printf("Pretend set! Not changing any files, just showing output.\n\n");
     }
 
@@ -564,6 +519,15 @@ void Skyscraper::run() {
         thread->start();
         state = THREADED;
     }
+}
+
+void Skyscraper::setFolder(const bool isCacheScraping, QString &outFolder,
+                           const bool createMissingFolder) {
+    QDir dir(outFolder);
+    if (isCacheScraping) {
+        checkForFolder(dir, createMissingFolder);
+    }
+    outFolder = dir.absolutePath();
 }
 
 void Skyscraper::checkForFolder(QDir &folder, bool create) {
@@ -855,8 +819,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // Choose default scraper for chosen platform if none has been set yet
     if (config.scraper.isEmpty()) {
-        // TODO: is always "cache", set hardwired
-        config.scraper = Platform::get().getDefaultScraper();
+        config.scraper = "cache";
     }
 
     // If platform subfolder exists for import path, use it
@@ -868,10 +831,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // Set minMatch to 0 for cache, arcadedb and screenscraper
     // We know these results are always accurate
-    if (config.minMatchSet == false &&
-        (config.scraper == "cache" || config.scraper == "screenscraper" ||
-         config.scraper == "arcadedb" || config.scraper == "esgamelist" ||
-         config.scraper == "import")) {
+    if (config.minMatchSet == false && config.isMatchOneScraper()) {
         config.minMatch = 0;
     }
 
@@ -957,10 +917,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     // If interactive is set, force 1 thread and always accept the chosen result
+    // but only on selected scrape modules
     if (config.interactive) {
-        if (config.scraper == "cache" || config.scraper == "import" ||
-            config.scraper == "arcadedb" || config.scraper == "esgamelist" ||
-            config.scraper == "screenscraper") {
+        if (config.isMatchOneScraper()) {
             config.interactive = false;
         } else {
             config.threads = 1;

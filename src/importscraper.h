@@ -65,6 +65,7 @@ private:
     bool checkForTag(QList<QString> &pre, QString &post, QString &tag,
                      QString &line);
     QString getElementText(QStringList e);
+    QByteArray readFile(const QString &fn);
 
     QString titleTag = "###TITLE###";
     QString descriptionTag = "###DESCRIPTION###";

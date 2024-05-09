@@ -78,6 +78,12 @@ private:
     void setLangPrios();
     QString normalizePath(QFileInfo fileInfo);
     // void migrate(QString filename);
+    const inline QString platformFileExtensions() {
+        return Platform::get().getFormats(config.platform, config.extensions,
+                                          config.addExtensions);
+    }
+    void setFolder(const bool isCacheScraping, QString &outFolder,
+                   const bool createMissingFolder = true);
 
     AbstractFrontend *frontend;
 

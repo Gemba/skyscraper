@@ -26,7 +26,7 @@
 #include "localscraper.h"
 
 LocalScraper::LocalScraper(Settings *config, QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager) {}
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {}
 
 void LocalScraper::getGameData(GameEntry &) {}
 

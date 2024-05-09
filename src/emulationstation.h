@@ -28,6 +28,7 @@
 
 #include "abstractfrontend.h"
 #include "gameentry.h"
+#include "platform.h"
 
 #include <QRegularExpression>
 
@@ -73,6 +74,10 @@ private:
 
     const inline QRegularExpression isoTimeRe() const {
         return QRegularExpression("(^$|T[0-9]{6}$)");
+    }
+    const inline QString platformFileExtensions() {
+        return Platform::get().getFormats(config->platform, config->extensions,
+                                          config->addExtensions);
     }
 };
 

@@ -35,6 +35,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QStringBuilder>
 #include <QXmlStreamAttributes>
 #include <QXmlStreamReader>
 #include <iostream>
@@ -64,7 +65,7 @@ Cache::Cache(const QString &cacheFolder) { cacheDir = QDir(cacheFolder); }
 
 bool Cache::createFolders(const QString &scraper) {
     if (scraper != "cache") {
-        for (auto f : binTypes()) {
+        for (auto const &f : binTypes()) {
             if (!cacheDir.mkpath(
                     QString("%1/%2s/%3") // plural 's'
                         .arg(cacheDir.absolutePath(), f, scraper))) {
@@ -1384,60 +1385,17 @@ void Cache::validate() {
         return;
     }
 
-    // TODO: refactor
-    QDir coversDir(cacheDir.absolutePath() + "/covers", "*.*", QDir::Name,
-                   QDir::Files);
-    QDir screenshotsDir(cacheDir.absolutePath() + "/screenshots", "*.*",
-                        QDir::Name, QDir::Files);
-    QDir wheelsDir(cacheDir.absolutePath() + "/wheels", "*.*", QDir::Name,
-                   QDir::Files);
-    QDir marqueesDir(cacheDir.absolutePath() + "/marquees", "*.*", QDir::Name,
-                     QDir::Files);
-    QDir texturesDir(cacheDir.absolutePath() + "/textures", "*.*", QDir::Name,
-                     QDir::Files);
-    QDir videosDir(cacheDir.absolutePath() + "/videos", "*.*", QDir::Name,
-                   QDir::Files);
-    QDir manualsDir(cacheDir.absolutePath() + "/manuals", "*.*", QDir::Name,
-                    QDir::Files);
-
-    QDirIterator coversDirIt(coversDir.absolutePath(),
-                             QDir::Files | QDir::NoDotAndDotDot,
-                             QDirIterator::Subdirectories);
-
-    QDirIterator screenshotsDirIt(screenshotsDir.absolutePath(),
-                                  QDir::Files | QDir::NoDotAndDotDot,
-                                  QDirIterator::Subdirectories);
-
-    QDirIterator wheelsDirIt(wheelsDir.absolutePath(),
-                             QDir::Files | QDir::NoDotAndDotDot,
-                             QDirIterator::Subdirectories);
-
-    QDirIterator marqueesDirIt(marqueesDir.absolutePath(),
-                               QDir::Files | QDir::NoDotAndDotDot,
-                               QDirIterator::Subdirectories);
-
-    QDirIterator texturesDirIt(texturesDir.absolutePath(),
-                               QDir::Files | QDir::NoDotAndDotDot,
-                               QDirIterator::Subdirectories);
-
-    QDirIterator videosDirIt(videosDir.absolutePath(),
-                             QDir::Files | QDir::NoDotAndDotDot,
-                             QDirIterator::Subdirectories);
-
-    QDirIterator manualsDirIt(manualsDir.absolutePath(),
-                              QDir::Files | QDir::NoDotAndDotDot,
-                              QDirIterator::Subdirectories);
-
     int filesDeleted = 0;
     int filesNoDelete = 0;
 
-    verifyFiles(coversDirIt, filesDeleted, filesNoDelete, "cover");
-    verifyFiles(screenshotsDirIt, filesDeleted, filesNoDelete, "screenshot");
-    verifyFiles(wheelsDirIt, filesDeleted, filesNoDelete, "wheel");
-    verifyFiles(marqueesDirIt, filesDeleted, filesNoDelete, "marquee");
-    verifyFiles(texturesDirIt, filesDeleted, filesNoDelete, "texture");
-    verifyFiles(videosDirIt, filesDeleted, filesNoDelete, "video");
-    verifyFiles(manualsDirIt, filesDeleted, filesNoDelete, "manual");
+    for (auto const &t : binTypes()) {
+        QDir dir(cacheDir.absolutePath() % "/" % t % "s", "*.*", QDir::Name,
+                 QDir::Files);
+        QDirIterator iter(dir.absolutePath(),
+                          QDir::Files | QDir::NoDotAndDotDot,
+                          QDirIterator::Subdirectories);
+        verifyFiles(iter, filesDeleted, filesNoDelete, t);
+    }
 
     if (filesDeleted == 0 && filesNoDelete == 0) {
         printf("No inconsistencies found in the database. :)\n\n");
@@ -1605,44 +1563,25 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
             resource.value = entry.releaseDate;
             addResource(resource, entry, cacheAbsolutePath, config, output);
         }
-        // TODO: refactoring (check if file extensions are needed at all,
-        // backward comppability)
-        if (!entry.videoData.isEmpty() && entry.videoFormat != "") {
-            resource.type = "video";
-            resource.value = "videos/" + entry.source + "/" + entry.cacheId +
-                             "." + entry.videoFormat;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.manualData.isEmpty()) {
-            resource.type = "manual";
-            resource.value = "manuals/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.coverData.isNull() && config.cacheCovers) {
-            resource.type = "cover";
-            resource.value = "covers/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.screenshotData.isNull() && config.cacheScreenshots) {
-            resource.type = "screenshot";
-            resource.value =
-                "screenshots/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.wheelData.isNull() && config.cacheWheels) {
-            resource.type = "wheel";
-            resource.value = "wheels/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.marqueeData.isNull() && config.cacheMarquees) {
-            resource.type = "marquee";
-            resource.value = "marquees/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
-        }
-        if (!entry.textureData.isNull() && config.cacheTextures) {
-            resource.type = "texture";
-            resource.value = "textures/" + entry.source + "/" + entry.cacheId;
-            addResource(resource, entry, cacheAbsolutePath, config, output);
+
+        QMap<QString, bool> cacheTypes = {
+            {"cover", !entry.coverData.isEmpty()},
+            {"screenshot", !entry.screenshotData.isEmpty()},
+            {"wheel", !entry.wheelData.isEmpty()},
+            {"marquee", !entry.marqueeData.isEmpty()},
+            {"texture", !entry.textureData.isEmpty()},
+            {"manual", !entry.manualData.isEmpty()},
+            {"video", !entry.videoData.isEmpty() && entry.videoFormat != ""}};
+
+        for (auto const &t : binTypes()) {
+            if (cacheTypes.value(t)) {
+                resource.type = t;
+                resource.value = t % "s/" % entry.source % "/" % entry.cacheId;
+                if (t == "video") {
+                    resource.value += "." % entry.videoFormat;
+                }
+                addResource(resource, entry, cacheAbsolutePath, config, output);
+            }
         }
     }
 }
@@ -1975,7 +1914,7 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
         }
     }
 
-    for (auto type : binTypes()) {
+    for (auto const &type : binTypes()) {
         QString result = "";
         QString source = "";
         QByteArray data;
@@ -2020,7 +1959,7 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
     }
 }
 
-bool Cache::fillType(QString &type, QList<Resource> &matchingResources,
+bool Cache::fillType(const QString &type, QList<Resource> &matchingResources,
                      QString &result, QString &source) {
     QList<Resource> typeResources;
     for (const auto &resource : matchingResources) {
