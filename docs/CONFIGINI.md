@@ -101,6 +101,7 @@ This is an alphabetical index of all configuration options including the section
 | [mediaFolderHidden](CONFIGINI.md#mediafolderhidden)         |          |                |       Y        |               |
 | [minMatch](CONFIGINI.md#minmatch)                           |    Y     |       Y        |                |       Y       |
 | [nameTemplate](CONFIGINI.md#nametemplate)                   |    Y     |       Y        |                |               |
+| [onlyMissing](CONFIGINI.md#onlymissing)                     |    Y     |       Y        |                |       Y       |
 | [platform](CONFIGINI.md#platform)                           |    Y     |                |                |               |
 | [pretend](CONFIGINI.md#pretend)                             |    Y     |       Y        |                |               |
 | [region](CONFIGINI.md#region)                               |    Y     |       Y        |                |               |
@@ -790,6 +791,19 @@ By default Skyscraper will include roms located in subfolders. By disabling this
 
 Default value: `true`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
+#### onlyMissing
+
+This flag, when set true, will only scrape game information for ROMs that do not have any data in Skyscraper's cache. The cache information of a ROM that has a cache hit will not be updated or extended when 'only missing' is true. A use case could be that you want to exclude already scraped games from a scraping process and you are using a scraping module which has a limit on how many ROMs may be scraped: With 'only missing' enabled the ROMs with cache data are subtracted from all ROMs to be scraped for a platform, thus the remaining ROM count may be below the scrape module's limit.
+
+!!! tip
+
+    Please consider using the command line flag option `--flags onlymissing` instead. It makes little sense to set this permanently in your configuration unless you _always_ want to use the cached data for already cached game entries. Also when 'only missing' is set and the cache has any data for a game entry, the refresh option has no effect. But you still can use the 'only missing' in the config file if you absolutely want to.
+
+Default value: false  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 ---
 

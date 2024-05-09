@@ -500,14 +500,31 @@ void Skyscraper::run() {
     totalFiles = queue->length();
 
     if (config.romLimit != -1 && totalFiles > config.romLimit) {
-        printf(
-            "\n\033[1;33mRestriction overrun!\033[0m This scraping module only "
-            "allows for scraping up to %d roms at a time. You can either "
-            "supply a few rom filenames on command line, or make use of the "
-            "'--startat' and / or '--endat' command line options to adhere to "
-            "this. Please check '--help' for more info.\n\nNow quitting...\n",
-            config.romLimit);
-        exit(0);
+        int inCache = 0;
+        if (config.onlyMissing) {
+            // check queue on existing in cache and count
+            for (int b = 0; b < queue->length(); ++b) {
+                QFileInfo info = queue->at(b);
+                QString cacheId = cache->getQuickId(info);
+                if (!cacheId.isEmpty() && cache->hasEntries(cacheId)) {
+                    // in cache from any scraping source
+                    inCache++;
+                }
+            }
+            qDebug() << "Only missing applied. Found" << inCache
+                     << "existing game entries";
+        }
+        if (totalFiles - inCache > config.romLimit) {
+            printf(
+                "\n\033[1;33mRestriction overrun!\033[0m This scraping module "
+                "only allows for scraping up to %d roms at a time. You can "
+                "either supply a few rom filenames on command line, apply the "
+                "--flags onlymissing option, or make use of the '--startat' "
+                "and / or '--endat' command line options to adhere to this. "
+                "Please check '--help' for more info.\n\nNow quitting...\n",
+                config.romLimit);
+            exit(0);
+        }
     }
     printf("\n");
     if (totalFiles > 0) {

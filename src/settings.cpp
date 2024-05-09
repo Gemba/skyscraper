@@ -381,6 +381,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 }
                 continue;
             }
+            if (k == "onlyMissing") {
+                config->onlyMissing = v;
+                continue;
+            }
             if (k == "pretend") {
                 config->pretend = v;
                 continue;
