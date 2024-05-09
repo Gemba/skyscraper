@@ -66,6 +66,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 parser->isSet("cache") && parser->value("cache") == "help";
             QStringList flags = parseFlags();
             if (!cacheHelp && !flags.contains("help")) {
+                if (parser->isSet("p")) {
+                    printf("\033[1;31mUnknown platform '%s' provided. \033[0m",
+                           parser->value("p").toUtf8().constData());
+                }
                 printf("\033[1;31mPlease set a valid platform with '-p "
                        "<PLATFORM>'\nCheck '--help' for a list of supported "
                        "platforms. Qutting.\n\033[0m");
