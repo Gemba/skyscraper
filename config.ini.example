@@ -74,6 +74,7 @@
 ;spaceCheck="true"
 ;scummIni="/full/path/to/scummvm.ini"
 ;tidyDesc="true"
+;onlyMissing="false"
 
 ; The following is an example of configs that only affect the 'snes' platform.
 ;[snes]
