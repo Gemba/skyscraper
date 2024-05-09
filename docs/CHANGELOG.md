@@ -8,6 +8,15 @@
   [`manuals=true`](CONFIGINI.md#manuals) and
   [`gameListVariants=enable-manuals`](CONFIGINI.md#gamelistvariants). Thanks for
   the initial PR, @pandino
+- Added: Present also release year as hint. This is useful when in interactive
+  mode and more than one game with the same name is found. Skyscraper can be
+  guided to prefer a specific game when the release year is added in parenthesis
+  as part of the ROM name (or alias in `aliasMap.csv`). Thanks @mjkaye
+- Changed: Persistent config option for counting and scraping only games which
+  have no game data in the cache. This is a commodity to the already existing
+  flag with the same name. If you use a scraper with a scraping limit for games
+  to be scraped at once (e.g. MobyGames). Documentation
+  [here](CONFIGINI.md#onlymissing). Thanks for the suggestion, @sleve_mcdichael
 
 ### Version 3.11.0 (2024-04-15)
 
