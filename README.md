@@ -118,7 +118,7 @@ If you want to build the latest `main/HEAD` version use the following commands. 
 ```
 git clone --depth 1 https://github.com/Gemba/skyscraper.git
 cd skyscraper
-make --ignore-errors clean
+[[ -f Makefile ]] && make --ignore-errors clean
 rm --force .qmake.stash
 QT_SELECT=5 qmake 
 make -j$(nproc)
