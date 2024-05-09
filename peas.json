@@ -63,12 +63,15 @@
         "formats": [
             "*.adf",
             "*.adz",
+            "*.chd",
             "*.cue",
             "*.dms",
             "*.hdf",
             "*.img",
+            "*.ipf",
             "*.iso",
             "*.lha",
+            "*.m3u",
             "*.rp9",
             "*.uae"
         ],
@@ -83,8 +86,12 @@
             "cpc"
         ],
         "formats": [
+            "*.cdt",
             "*.cpc",
-            "*.dsk"
+            "*.cpr",
+            "*.dsk",
+            "*.m3u",
+            "*.tap"
         ],
         "scrapers": [
             "screenscraper"
@@ -95,7 +102,9 @@
             "apple ii"
         ],
         "formats": [
-            "*.dsk"
+            "*.dsk",
+            "*.nib",
+            "*.po"
         ],
         "scrapers": [
             "screenscraper"
@@ -183,7 +192,10 @@
         ],
         "formats": [
             "*.bin",
-            "*.dat"
+            "*.cue",
+            "*.dat",
+            "*.fba",
+            "*.iso"
         ],
         "scrapers": [
             "arcadedb",
@@ -195,7 +207,9 @@
             "arcadia 2001",
             "emerson arcadia 2001"
         ],
-        "formats": [],
+        "formats": [
+            "*.bin"
+        ],
         "scrapers": [
             "screenscraper"
         ]
@@ -280,10 +294,14 @@
             "*.a52",
             "*.atr",
             "*.atr.gz",
+            "*.atx",
             "*.bas",
             "*.bin",
             "*.car",
+            "*.cas",
+            "*.com",
             "*.dcm",
+            "*.rom",
             "*.xex",
             "*.xfd",
             "*.xfd.gz"
@@ -343,6 +361,7 @@
             "*.ctr",
             "*.img",
             "*.ipf",
+            "*.m3u",
             "*.raw",
             "*.rom",
             "*.st",
@@ -444,9 +463,14 @@
             "commodore c64/128"
         ],
         "formats": [
+            "*.cmd",
             "*.crt",
             "*.d64",
+            "*.d71",
+            "*.d80",
+            "*.d81",
             "*.g64",
+            "*.m3u",
             "*.prg",
             "*.t64",
             "*.tap",
@@ -572,7 +596,9 @@
         "aliases": [
             "CreatiVision"
         ],
-        "formats": [],
+        "formats": [
+            "*.rom"
+        ],
         "scrapers": [
             "mobygames",
             "screenscraper",
@@ -586,7 +612,8 @@
             "pioneer laseractive"
         ],
         "formats": [
-            "*.daphne"
+            "*.daphne",
+            "*.ogv"
         ],
         "scrapers": [
             "screenscraper"
@@ -709,7 +736,11 @@
             "video system co.",
             "visco"
         ],
-        "formats": [],
+        "formats": [
+            "*.cue",
+            "*.fba",
+            "*.iso"
+        ],
         "scrapers": [
             "arcadedb",
             "screenscraper"
@@ -777,7 +808,9 @@
             "sega game gear"
         ],
         "formats": [
-            "*.gg"
+            "*.bin",
+            "*.gg",
+            "*.sms"
         ],
         "scrapers": [
             "screenscraper"
@@ -826,6 +859,7 @@
             "nintendo gamecube"
         ],
         "formats": [
+            "*.ciso",
             "*.cso",
             "*.gcm",
             "*.gcz",
@@ -855,7 +889,9 @@
         "aliases": [],
         "formats": [
             "*.bin",
-            "*.int"
+            "*.int",
+            "*.itv",
+            "*.rom"
         ],
         "scrapers": [
             "screenscraper"
@@ -886,7 +922,8 @@
         "formats": [
             "*.dsk",
             "*.img",
-            "*.rom"
+            "*.rom",
+            "*.txt"
         ],
         "scrapers": [
             "mobygames",
@@ -1204,6 +1241,7 @@
             "sega master system"
         ],
         "formats": [
+            "*.bin",
             "*.sms"
         ],
         "scrapers": [
@@ -1270,8 +1308,10 @@
             "msx2+"
         ],
         "formats": [
+            "*.cas",
             "*.col",
             "*.dsk",
+            "*.m3u",
             "*.mx1",
             "*.mx2",
             "*.rom"
@@ -1438,7 +1478,12 @@
             "neo-geo",
             "neo-geo cd"
         ],
-        "formats": [],
+        "formats": [
+            "*.chd",
+            "*.cue",
+            "*.fba",
+            "*.iso"
+        ],
         "scrapers": [
             "arcadedb",
             "openretro",
@@ -1535,8 +1580,8 @@
         ],
         "formats": [
             "*.img",
-            "*.prc",
-            "*.pqa"
+            "*.pqa",
+            "*.prc"
         ],
         "scrapers": [
             "mobygames",
@@ -1558,8 +1603,17 @@
             "*.bat",
             "*.com",
             "*.conf",
+            "*.cue",
+            "*.dosz",
             "*.exe",
-            "*.sh"
+            "*.ima",
+            "*.img",
+            "*.ins",
+            "*.iso",
+            "*.m3u",
+            "*.m3u8",
+            "*.sh",
+            "*.vhd"
         ],
         "scrapers": [
             "thegamesdb"
@@ -1574,6 +1628,7 @@
             "*.88d",
             "*.cmt",
             "*.d88",
+            "*.m3u",
             "*.t88"
         ],
         "scrapers": [
@@ -1620,6 +1675,7 @@
             "turbografx-16/pc engine cd"
         ],
         "formats": [
+            "*.ccd",
             "*.chd",
             "*.cue",
             "*.pce"
@@ -1660,7 +1716,8 @@
             "*.chd",
             "*.cue",
             "*.img",
-            "*.iso"
+            "*.iso",
+            "*.pce"
         ],
         "scrapers": [
             "screenscraper"
@@ -1739,6 +1796,7 @@
             "sony playstation 2"
         ],
         "formats": [
+            "*.bin",
             "*.bz2",
             "*.chd",
             "*.cso",
@@ -1989,6 +2047,7 @@
         ],
         "formats": [
             "*.bin",
+            "*.bs",
             "*.fig",
             "*.mgd",
             "*.sfc",
@@ -2185,9 +2244,12 @@
             "wiiware"
         ],
         "formats": [
+            "*.ciso",
             "*.cso",
+            "*.gcm",
             "*.gcz",
             "*.iso",
+            "*.m3u",
             "*.rvz",
             "*.wad",
             "*.wbfs"
@@ -2262,8 +2324,13 @@
             "sharp x68000"
         ],
         "formats": [
+            "*.2hd",
+            "*.d88",
             "*.dim",
-            "*.m3u"
+            "*.hdf",
+            "*.hdm",
+            "*.m3u",
+            "*.xdf"
         ],
         "scrapers": [
             "screenscraper"
@@ -2333,6 +2400,7 @@
             "*.gz",
             "*.img",
             "*.mgt",
+            "*.rzx",
             "*.scl",
             "*.sna",
             "*.szx",
