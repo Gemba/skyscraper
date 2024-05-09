@@ -33,8 +33,8 @@ private slots:
         scraper = new AbstractScraper(&settings, NULL);
         QFileInfo info("Gametitle (j) world.zip");
         QList<QString> regionPriosExp;
-        regionPriosExp.prepend("wor");
-        regionPriosExp.prepend("jp");
+        regionPriosExp.append("jp");
+        regionPriosExp.append("wor");
         match(info, regionPriosExp);
     }
 
@@ -42,9 +42,9 @@ private slots:
         scraper = new AbstractScraper(&settings, NULL);
         QFileInfo info("Gametitle (france) wOrLD (j).zip");
         QList<QString> regionPriosExp;
-        regionPriosExp.prepend("wor");
-        regionPriosExp.prepend("jp");
-        regionPriosExp.prepend("fr");
+        regionPriosExp.append("fr");
+        regionPriosExp.append("jp");
+        regionPriosExp.append("wor");
         match(info, regionPriosExp);
         qDebug() << info.completeBaseName();
         qDebug() << regionPriosExp;
