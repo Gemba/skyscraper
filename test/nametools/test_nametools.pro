@@ -3,7 +3,7 @@ TARGET = test_nametools
 DEPENDPATH += .
 INCLUDEPATH += ../../src
 CONFIG += debug
-QT += core network xml
+QT += core network xml testlib
 QMAKE_CXXFLAGS += -std=c++17
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT

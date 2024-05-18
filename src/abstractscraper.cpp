@@ -542,9 +542,9 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
     // If the search name has a Roman numeral, also search for an integer
     // numeral version, vice-versa
     if (NameTools::hasRomanNumeral(searchName) ||
-        NameTools::hasIntegerNumeral(searchName)) {
+        NameTools::hasArabicNumeral(searchName)) {
         if (NameTools::hasRomanNumeral(searchName)) {
-            searchName = NameTools::convertToIntegerNumeral(searchName);
+            searchName = NameTools::convertToArabicNumeral(searchName);
         } else {
             searchName = NameTools::convertToRomanNumeral(searchName);
         }

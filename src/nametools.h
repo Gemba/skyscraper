@@ -3,7 +3,7 @@
  *
  *  Tue Feb 20 12:00:00 CEST 2018
  *  Copyright 2018 Lars Muldjord
- *  muldjordlars@gmail.com
+ *  Copyright 2024 Gemba @ GitHub
  ****************************************************************************/
 /*
  *  This file is part of skyscraper.
@@ -38,9 +38,9 @@ public:
     static QString getNameWithSpaces(const QString baseName);
     static QString getUrlQueryName(const QString baseName, const int words = -1,
                                    const QString spaceChar = "+");
-    static bool hasIntegerNumeral(const QString baseName);
+    static bool hasArabicNumeral(const QString baseName);
     static bool hasRomanNumeral(const QString baseName);
-    static QString convertToIntegerNumeral(const QString baseName);
+    static QString convertToArabicNumeral(const QString baseName);
     static QString convertToRomanNumeral(const QString baseName);
     static int getNumeral(const QString baseName);
     static QString getSqrNotes(QString baseName);
@@ -49,6 +49,17 @@ public:
     static QString getCacheId(const QFileInfo &info);
     static QString getNameFromTemplate(const GameEntry &game,
                                        const QString &nameTemplate);
+
+private:
+    static QString notesByRegex(const QString &baseName, const QString &re);
+    static const inline QMap<QString, QString> arabicRomanNumerals() {
+        return QMap<QString, QString>{
+            {"1", "I"},     {"2", "II"},     {"3", "III"},  {"4", "IV"},
+            {"5", "V"},     {"6", "VI"},     {"7", "VII"},  {"8", "VIII"},
+            {"9", "IX"},    {"10", "X"},     {"11", "XI"},  {"12", "XII"},
+            {"13", "XIII"}, {"14", "XIV"},   {"15", "XV"},  {"16", "XVI"},
+            {"17", "XVII"}, {"18", "XVIII"}, {"19", "XIX"}, {"20", "XX"}};
+    }
 };
 
 #endif // NAMETOOLS_H

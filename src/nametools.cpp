@@ -3,7 +3,7 @@
  *
  *  Tue Feb 20 12:00:00 CEST 2018
  *  Copyright 2018 Lars Muldjord
- *  muldjordlars@gmail.com
+ *  Copyright 2024 Gemba @ GitHub
  ****************************************************************************/
 /*
  *  This file is part of skyscraper.
@@ -181,192 +181,64 @@ QString NameTools::getUrlQueryName(const QString baseName, const int words,
     newName = newName.simplified().replace(" ", spaceChar);
 
     // Implement special cases here
-    if (newName == "ik") {
-        newName = "international+karate";
-    }
-    if (newName == "arkanoid+revenge+of+doh") {
-        newName = "arkanoid%3A+revenge+of+doh";
-    }
-    if (newName == "lemmings+3") {
-        newName = "all+new+world+of+lemmings";
-    }
+    QMap<QString, QString> special = {
+        {"ik", "international+karate"},
+        {"arkanoid+revenge+of+doh", "arkanoid%3A+revenge+of+doh"},
+        {"lemmings+3", "all+new+world+of+lemmings"}};
+    newName = special.value(newName, newName);
 
-    if (words != -1) {
+    if (words > 0) {
         QList<QString> wordList = newName.split(spaceChar);
         if (wordList.size() > words) {
             newName.clear();
             for (int a = 0; a < words; ++a) {
                 newName.append(wordList.at(a) + spaceChar);
             }
-            newName = newName.left(newName.length() - spaceChar.length());
+            newName = newName.chopped(spaceChar.length());
         }
     }
     return newName;
 }
 
-bool NameTools::hasIntegerNumeral(const QString baseName) {
-    if (QRegularExpression(" [0-9]{1,2}([: ]+|$)").match(baseName).hasMatch())
-        return true;
-    return false;
+bool NameTools::hasArabicNumeral(const QString baseName) {
+    return QRegularExpression(" [0-9]{1,2}([: ]+|$)")
+        .match(baseName)
+        .hasMatch();
 }
 
 bool NameTools::hasRomanNumeral(const QString baseName) {
-    if (QRegularExpression(" [IVX]{1,5}([: ]+|$)").match(baseName).hasMatch())
-        return true;
-    return false;
+    return QRegularExpression(" [IVX]{1,5}([: ]+|$)")
+        .match(baseName)
+        .hasMatch();
 }
 
 QString NameTools::convertToRomanNumeral(const QString baseName) {
     QRegularExpressionMatch match;
     QString newName = baseName;
 
-    match = QRegularExpression(" [0-9]{1,2}([: ]+|$)").match(baseName);
-    // Match is either " 2" or " 2: yada yada"
+    match = QRegularExpression(" ([0-9]{1,2})([: ]+|$)").match(baseName);
+    // Match like " 2" or " 2: yada yada"
     if (match.hasMatch()) {
-        QString integer = match.captured(0);
-        if (integer.contains(":")) {
-            integer = integer.left(integer.indexOf(":")).simplified();
-        } else {
-            integer = integer.simplified();
-        }
-        if (integer == "1") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "I"));
-        } else if (integer == "2") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "II"));
-        } else if (integer == "3") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "III"));
-        } else if (integer == "4") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "IV"));
-        } else if (integer == "5") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "V"));
-        } else if (integer == "6") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "VI"));
-        } else if (integer == "7") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "VII"));
-        } else if (integer == "8") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "VIII"));
-        } else if (integer == "9") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "IX"));
-        } else if (integer == "10") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "X"));
-        } else if (integer == "11") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XI"));
-        } else if (integer == "12") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XII"));
-        } else if (integer == "13") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XIII"));
-        } else if (integer == "14") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XIV"));
-        } else if (integer == "15") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XV"));
-        } else if (integer == "16") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XVI"));
-        } else if (integer == "17") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XVII"));
-        } else if (integer == "18") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XVIII"));
-        } else if (integer == "19") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XIX"));
-        } else if (integer == "20") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(integer, "XX"));
+        QString arabicNumeral = match.captured(1);
+        QString r = arabicRomanNumerals().value(arabicNumeral, "");
+        if (!r.isEmpty()) {
+            newName = newName.replace(arabicNumeral, r);
         }
     }
     return newName;
 }
 
-QString NameTools::convertToIntegerNumeral(const QString baseName) {
+QString NameTools::convertToArabicNumeral(const QString baseName) {
     QRegularExpressionMatch match;
     QString newName = baseName;
 
-    match = QRegularExpression(" [IVX]{1,5}([: ]+|$)").match(baseName);
-    // Match is either " X" or " X: yada yada"
+    match = QRegularExpression(" ([IVX]{1,5})([: ]+|$)").match(baseName);
+    // Match like " X" or " X: yada yada"
     if (match.hasMatch()) {
-        QString roman = match.captured(0);
-        if (roman.contains(":")) {
-            roman = roman.left(roman.indexOf(":")).simplified();
-        } else {
-            roman = roman.simplified();
-        }
-        if (roman == "I") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "1"));
-        } else if (roman == "II") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "2"));
-        } else if (roman == "III") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "3"));
-        } else if (roman == "IV") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "4"));
-        } else if (roman == "V") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "5"));
-        } else if (roman == "VI") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "6"));
-        } else if (roman == "VII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "7"));
-        } else if (roman == "VIII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "8"));
-        } else if (roman == "IX") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "9"));
-        } else if (roman == "X") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "10"));
-        } else if (roman == "XI") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "11"));
-        } else if (roman == "XII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "12"));
-        } else if (roman == "XIII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "13"));
-        } else if (roman == "XIV") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "14"));
-        } else if (roman == "XV") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "15"));
-        } else if (roman == "XVI") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "16"));
-        } else if (roman == "XVII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "17"));
-        } else if (roman == "XVIII") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "18"));
-        } else if (roman == "XIX") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "19"));
-        } else if (roman == "XX") {
-            return newName.replace(match.captured(0),
-                                   match.captured(0).replace(roman, "20"));
+        QString romanNumeral = match.captured(1);
+        QString a = arabicRomanNumerals().key(romanNumeral, "");
+        if (!a.isEmpty()) {
+            newName = newName.replace(romanNumeral, a);
         }
     }
     return newName;
@@ -377,151 +249,78 @@ int NameTools::getNumeral(const QString baseName) {
     int numeral = 1;
 
     // Check for roman numerals
-    match = QRegularExpression(" [IVX]{1,5}([: ]+|$)").match(baseName);
+    match = QRegularExpression(" ([IVX]{1,5})([: ]+|$)").match(baseName);
     if (match.hasMatch()) {
-        QString roman =
-            match.captured(0).replace(":", "").replace(" ", "").simplified();
-        if (roman == "I") {
-            numeral = 1;
-        } else if (roman == "II") {
-            numeral = 2;
-        } else if (roman == "III") {
-            numeral = 3;
-        } else if (roman == "IV") {
-            numeral = 4;
-        } else if (roman == "V") {
-            numeral = 5;
-        } else if (roman == "VI") {
-            numeral = 6;
-        } else if (roman == "VII") {
-            numeral = 7;
-        } else if (roman == "VIII") {
-            numeral = 8;
-        } else if (roman == "IX") {
-            numeral = 9;
-        } else if (roman == "X") {
-            numeral = 10;
-        } else if (roman == "XI") {
-            numeral = 11;
-        } else if (roman == "XII") {
-            numeral = 12;
-        } else if (roman == "XIII") {
-            numeral = 13;
-        } else if (roman == "XIV") {
-            numeral = 14;
-        } else if (roman == "XV") {
-            numeral = 15;
-        } else if (roman == "XVI") {
-            numeral = 16;
-        } else if (roman == "XVII") {
-            numeral = 17;
-        } else if (roman == "XVIII") {
-            numeral = 18;
-        } else if (roman == "XIX") {
-            numeral = 19;
-        } else if (roman == "XX") {
-            numeral = 20;
-        }
+        QString roman = match.captured(1);
+        numeral =
+            arabicRomanNumerals().key(roman, QString::number(numeral)).toInt();
     }
 
-    // Check for digit numerals
-    match = QRegularExpression("\\d+([: ]+|$)").match(baseName);
+    // Check for european digits
+    match = QRegularExpression("([1-9]\\d*)([: ]+|$)").match(baseName);
     if (match.hasMatch()) {
-        QString intStr = match.captured(0).replace(":", "").simplified();
-        if (intStr.toInt() != 0) {
-            numeral = intStr.toInt();
-        }
+        numeral = match.captured(1).toInt();
     }
-
     return numeral;
 }
 
-QString NameTools::getSqrNotes(QString baseName) {
-    QString sqrNotes = "";
-
-    // Get square notes
-    while (baseName.contains("[") && baseName.contains("]") &&
-           baseName.indexOf("[") < baseName.indexOf("]")) {
-        if (baseName.indexOf("[") != -1 && baseName.indexOf("]") != -1) {
-            sqrNotes.append(baseName.mid(baseName.indexOf("["),
-                                         baseName.indexOf("]") -
-                                             baseName.indexOf("[") + 1));
+QString NameTools::notesByRegex(const QString &baseName, const QString &re) {
+    QString notes;
+    QRegularExpressionMatchIterator iterMatch =
+        QRegularExpression(re).globalMatch(baseName);
+    while (iterMatch.hasNext()) {
+        QRegularExpressionMatch match = iterMatch.next();
+        if (match.hasMatch()) {
+            notes.append(match.captured(0));
         }
-        baseName.remove(baseName.indexOf("["),
-                        baseName.indexOf("]") - baseName.indexOf("[") + 1);
     }
+    return notes;
+}
+
+QString NameTools::getSqrNotes(QString baseName) {
+    // Get square notes: Pattern to match text in brackets
+    QString sqrNotes = notesByRegex(baseName, "\\[([^[\\]]+)\\]");
 
     // Look for '_tag_' or '[tag]' with the last char optional
-    if (QRegularExpression("[_[]{1}(Aga|AGA)[_\\]]{0,1}")
-            .match(baseName)
-            .hasMatch())
-        sqrNotes.append("[AGA]");
-    if (QRegularExpression("[_[]{1}(Cd32|cd32|CD32)[_\\]]{0,1}")
-            .match(baseName)
-            .hasMatch())
-        sqrNotes.append("[CD32]");
-    if (QRegularExpression("[_[]{1}(Cdtv|cdtv|CDTV)[_\\]]{0,1}")
-            .match(baseName)
-            .hasMatch())
-        sqrNotes.append("[CDTV]");
-    if (QRegularExpression("[_[]{1}(Ntsc|ntsc|NTSC)[_\\]]{0,1}")
-            .match(baseName)
-            .hasMatch())
-        sqrNotes.append("[NTSC]");
-    if (QRegularExpression("(Demo|demo|DEMO)[_\\]]{1}")
-            .match(baseName)
-            .hasMatch())
-        sqrNotes.append("[Demo]");
+    QMap<QString, QString> replacements = {
+        {"[_[]{1}(Aga|AGA)[_\\]]{0,1}", "AGA"},
+        {"[_[]{1}(Cd32|cd32|CD32)[_\\]]{0,1}", "CD32"},
+        {"[_[]{1}(Cdtv|cdtv|CDTV)[_\\]]{0,1}", "CDTV"},
+        {"[_[]{1}(Ntsc|ntsc|NTSC)[_\\]]{0,1}", "NTSC"},
+        {"(Demo|demo|DEMO)[_\\]]{1}", "Demo"}};
     // Don't add PAL detection as it will also match with "_Palace" and such
-    sqrNotes = sqrNotes.simplified();
-
-    return sqrNotes;
+    QMapIterator<QString, QString> i(replacements);
+    while (i.hasNext()) {
+        i.next();
+        if (QRegularExpression(i.key()).match(baseName).hasMatch()) {
+            sqrNotes.append("[" + i.value() + "]");
+        }
+    }
+    return sqrNotes.simplified();
 }
 
 QString NameTools::getParNotes(QString baseName) {
-    QString parNotes = "";
-
-    // Get parentheses notes
-    while (baseName.contains("(") && baseName.contains(")") &&
-           baseName.indexOf("(") < baseName.indexOf(")")) {
-        if (baseName.indexOf("(") != -1 && baseName.indexOf(")") != -1) {
-            parNotes.append(baseName.mid(baseName.indexOf("("),
-                                         baseName.indexOf(")") -
-                                             baseName.indexOf("(") + 1));
-        }
-        baseName.remove(baseName.indexOf("("),
-                        baseName.indexOf(")") - baseName.indexOf("(") + 1);
-    }
+    // Pattern to match text in parenthesis
+    QString parNotes = notesByRegex(baseName, "\\(([^()]+)\\)");
 
     QRegularExpressionMatch match;
-
     // Add "nDisk" detection
-    match = QRegularExpression("[0-9]{1,2}[ ]{0,1}Disk").match(baseName);
+    match = QRegularExpression("([0-9]{1,2})[ ]{0,1}Disk").match(baseName);
     if (match.hasMatch()) {
-        parNotes.append("(" +
-                        match.captured(0)
-                            .left(match.captured(0).indexOf("Disk"))
-                            .trimmed() +
-                        " Disk)");
+        parNotes.append("(" + match.captured(1) + " Disk)");
     }
     // Add "CD" detection that DON'T match CD32 and CDTV
-    if (QRegularExpression("[_[]{1}CD(?!32|TV)").match(baseName).hasMatch())
+    if (QRegularExpression("[_[]{1}CD(?!32|TV)").match(baseName).hasMatch()) {
         parNotes.append("(CD)");
+    }
     // Look for language and add it
     match = QRegularExpression(
-                "[_[]{1}(De|It|Pl|Fr|Es|Fi|Dk|Gr|Cz){1,10}[_\\]]{0,1}")
+                "([_[]){1}(De|It|Pl|Fr|Es|Fi|Dk|Gr|Cz){1,10}([_\\]]){0,1}")
                 .match(baseName);
     if (match.hasMatch()) {
-        parNotes.append(
-            "(" +
-            match.captured(0).replace("_", "").replace("[", "").replace("]",
-                                                                        "") +
-            ")");
+        parNotes.append("(" + match.captured(2) + ")");
     }
-
-    parNotes = parNotes.simplified();
-
-    return parNotes;
+    return parNotes.simplified();
 }
 
 QString NameTools::getUniqueNotes(const QString &notes, QChar delim) {
@@ -530,23 +329,19 @@ QString NameTools::getUniqueNotes(const QString &notes, QChar delim) {
 #else
     QList<QString> notesList = notes.split(delim, QString::SkipEmptyParts);
 #endif
-    QList<QString> uniqueList;
-    for (const auto &note : notesList) {
-        bool found = false;
-        for (const auto &unique : uniqueList) {
-            if (note.toLower() == unique.toLower()) {
-                found = true;
-            }
-        }
-        if (!found) {
-            uniqueList.append(delim + note);
+    QStringList uniqueList;
+    QListIterator<QString> i(notesList);
+    while (i.hasNext()) {
+        QString txt = i.next().chopped(1);
+        if (!uniqueList.contains(txt, Qt::CaseInsensitive)) {
+            uniqueList.append(txt);
         }
     }
-    QString uniqueNotes;
-    for (const auto &note : uniqueList) {
-        uniqueNotes.append(note);
+    if (!uniqueList.isEmpty()) {
+        return (delim == '[') ? "[" + uniqueList.join("][") + "]"
+                              : "(" + uniqueList.join(")(") + ")";
     }
-    return uniqueNotes;
+    return "";
 }
 
 QString NameTools::getCacheId(const QFileInfo &info) {
