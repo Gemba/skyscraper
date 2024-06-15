@@ -56,7 +56,7 @@ QString NameTools::getScummName(const QFileInfo &info, const QString baseName,
         // test the other way around: ROM name is custom but may contain
         // game id
         if (info.isFile()) {
-            QFile romFile = QFile(info.absoluteFilePath());
+            QFile romFile(info.absoluteFilePath());
             if (romFile.open(QIODevice::ReadOnly) && !romFile.atEnd()) {
                 QString gameId = romFile.readLine();
                 settings->beginGroup(gameId.trimmed());
