@@ -52,7 +52,7 @@
 		echo "--- Cleaning out old build if one exists ---"
 		make --ignore-errors clean
 		rm -f .qmake.stash
-		qmake || handle_error "clean old"
+		QT_SELECT=5 qmake || handle_error "clean old"
 
 		if [[ "$OSTYPE" == "darwin"* ]]; then
 			echo

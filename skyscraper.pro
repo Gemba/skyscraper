@@ -3,6 +3,7 @@ TARGET = Skyscraper
 DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += release
+CONFIG += c++1z
 QT += core network xml
 QMAKE_CXXFLAGS += -std=c++17
 
