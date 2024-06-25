@@ -23,12 +23,21 @@
 #include "gameentry.h"
 
 #include <QDir>
+#include <QProcessEnvironment>
 #include <QStringBuilder>
 #include <QStringList>
 
 Esde::Esde() {}
 
 inline const QString baseFolder() {
+#if !(defined Q_OS_WIN || defined Q_OS_ANDROID)
+    // https://gitlab.com/es-de/emulationstation-de/-/blob/v3.0.2/INSTALL.md#changing-the-application-data-directory
+    QString appdata =
+        QProcessEnvironment::systemEnvironment().value("ESDE_APPDATA_DIR", "");
+    if (!appdata.isEmpty()) {
+        return appdata;
+    }
+#endif
     return QString(QDir::homePath() % "/ES-DE");
 }
 

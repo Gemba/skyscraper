@@ -81,6 +81,12 @@ media files into the `downloaded_media` folder (e.g.
 `~/ES-DE/downloaded_media/<PLATFORM>/screenshots/` for screenshots) from where
 ES-DE will pick them up. Note that ES-DE does not support textures currently.
 
+!!! tip
+
+    You may override the default storage folder of ES-DE (`/home/<USER>/ES-DE`)
+    on a non-Windows build by setting the environment variable `ESDE_APPDATA_DIR`
+    to a different folder as documented in the ES-DE documentation [here](https://gitlab.com/es-de/emulationstation-de/-/blob/v3.0.2/INSTALL.md#changing-the-application-data-directory).
+
 All the gory details of ES-DE's gamelist file format you can find in the section
 "Gamelist Reference"
 [here](https://gitlab.com/es-de/emulationstation-de/-/blob/master/INSTALL.md?ref_type=heads#gamelistxml).
