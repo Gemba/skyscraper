@@ -60,6 +60,7 @@
 			mv VERSION VERSION.txt
 			sed -i '' "s|CC *= .*|CC             = /usr/bin/gcc|" Makefile
 			sed -i '' "s|CXX *= .*|CXX           = /usr/bin/g++|" Makefile
+   			nproc="sysctl -n hw.physicalcpu"
 		fi
 
 		echo
