@@ -44,7 +44,7 @@ public:
     enum MatchType { ABSTRACT, MATCH_ONE, MATCH_MANY };
 
     AbstractScraper(Settings *config, QSharedPointer<NetManager> manager,
-                    MatchType type = {ABSTRACT});
+                    MatchType type = ABSTRACT);
     virtual ~AbstractScraper();
     virtual void getGameData(GameEntry &game);
     virtual QList<QString> getSearchNames(const QFileInfo &info,
@@ -93,7 +93,7 @@ protected:
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);
 
-    MatchType type = {ABSTRACT};
+    MatchType type = ABSTRACT;
 
     QList<int> fetchOrder;
 
