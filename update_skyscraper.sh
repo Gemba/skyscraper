@@ -64,7 +64,8 @@
 
 		echo
 		echo "--- Building Skyscraper v$LATEST ---"
-		make -j$(nproc) || handle_error "build"
+		jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
+		make -j "$jobs" || handle_error "build"
 
 		echo
 		echo "--- Installing Skyscraper v$LATEST ---"
@@ -72,7 +73,7 @@
 
 		if [[ "$OSTYPE" == "darwin"* ]]; then
 			echo
-			echo "--- MacOS : extract binairy ---"
+			echo "--- MacOS : extract binary ---"
 			mv Skyscraper.app/Contents/MacOS/Skyscraper Skyscraper
 			rm -rf Skyscraper.app
 			mv VERSION.txt VERSION
