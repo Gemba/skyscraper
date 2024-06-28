@@ -73,12 +73,13 @@ Skyscraper::Skyscraper(const QCommandLineParser &parser,
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 
 void Skyscraper::run() {
-    bool useCacheScraper = config.scraper == "cache";
+    cacheScrapeMode = config.scraper == "cache";
+    doCacheScraping = cacheScrapeMode && !config.pretend;
     printf("Platform:           '\033[1;32m%s\033[0m'\n",
            config.platform.toStdString().c_str());
     printf("Scraping module:    '\033[1;32m%s\033[0m'\n",
            config.scraper.toStdString().c_str());
-    if (useCacheScraper) {
+    if (cacheScrapeMode) {
         printf("Frontend:           '\033[1;32m%s\033[0m'\n",
                config.frontend.toStdString().c_str());
         if (!config.frontendExtra.isEmpty()) {
@@ -145,8 +146,8 @@ void Skyscraper::run() {
 
     if (!config.cacheFolder.isEmpty()) {
         cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
-        if (cache->createFolders(config.scraper)) {
-            if (!cache->read() && useCacheScraper) {
+        if (cacheScrapeMode || cache->createFolders(config.scraper)) {
+            if (!cache->read() && cacheScrapeMode) {
                 printf("No resources for this platform found in the resource "
                        "cache. Please specify a scraping module with '-s' to "
                        "gather some resources before trying to generate a game "
@@ -159,10 +160,12 @@ void Skyscraper::run() {
             exit(1);
         }
     }
+
     if (config.verbosity || config.cacheOptions == "show") {
         cache->showStats(config.cacheOptions == "show" ? 2 : config.verbosity);
-        if (config.cacheOptions == "show")
+        if (config.cacheOptions == "show") {
             exit(0);
+        }
     }
     if (config.cacheOptions.contains("purge:") ||
         config.cacheOptions.contains("vacuum")) {
@@ -211,161 +214,23 @@ void Skyscraper::run() {
         }
         exit(0);
     }
+
+    // remaining cache subcommand validation
+    bool cacheEditCmd = config.cacheOptions.left(4) == "edit";
+    if (!config.cacheOptions.isEmpty() && !cacheEditCmd) {
+        printf("\033[1;31mAmbiguous cache subcommand '--cache %s', "
+               "please check '--cache help' for more info.\n\033[0m",
+               config.cacheOptions.toStdString().c_str());
+        exit(0);
+    }
+
     cache->readPriorities();
 
-    QDir::Filters filter = QDir::Files;
-    // special case scummvm: user do use .svm in folder name to work around the
-    // limitation of the ScummVM / lr-scummvm launch integration in ES/RetroPie
-    if (config.platform == "scummvm") {
-        filter |= QDir::Dirs;
-    }
-    QDir inputDir(config.inputFolder, platformFileExtensions(), QDir::Name,
-                  filter);
-    if (!inputDir.exists()) {
-        printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
-               "accessed by current user. Please check path and permissions.\n",
-               inputDir.absolutePath().toStdString().c_str());
-        exit(1);
-    }
-    config.inputFolder = inputDir.absolutePath();
-
-    const bool isCacheScraping = useCacheScraper && !config.pretend;
-
-    setFolder(isCacheScraping, config.gameListFolder);
-    setFolder(isCacheScraping, config.coversFolder);
-    setFolder(isCacheScraping, config.screenshotsFolder);
-    setFolder(isCacheScraping, config.wheelsFolder);
-    setFolder(isCacheScraping, config.marqueesFolder);
-    setFolder(isCacheScraping, config.texturesFolder);
-    if (config.videos) {
-        setFolder(isCacheScraping, config.videosFolder);
-    }
-    if (config.manuals) {
-        setFolder(isCacheScraping, config.manualsFolder);
-    }
-
-    setFolder(isCacheScraping, config.importFolder, false);
-
-    gameListFileString =
-        config.gameListFolder + "/" + frontend->getGameListFileName();
-
-    QFile gameListFile(gameListFileString);
-
     // Create shared queue with files to process
-    queue = QSharedPointer<Queue>(new Queue());
-    QList<QFileInfo> infoList = inputDir.entryInfoList();
-    if (!useCacheScraper &&
-        QFileInfo::exists(config.inputFolder + "/.skyscraperignore")) {
-        infoList.clear();
-    }
-    if (!config.startAt.isEmpty() && !infoList.isEmpty()) {
-        QFileInfo startAt(config.startAt);
-        if (!startAt.exists()) {
-            startAt.setFile(config.currentDir + "/" + config.startAt);
-        }
-        if (!startAt.exists()) {
-            startAt.setFile(inputDir.absolutePath() + "/" + config.startAt);
-        }
-        if (startAt.exists()) {
-            while (infoList.first().fileName() != startAt.fileName() &&
-                   !infoList.isEmpty()) {
-                infoList.removeFirst();
-            }
-        }
-    }
-    if (!config.endAt.isEmpty() && !infoList.isEmpty()) {
-        QFileInfo endAt(config.endAt);
-        if (!endAt.exists()) {
-            endAt.setFile(config.currentDir + "/" + config.endAt);
-        }
-        if (!endAt.exists()) {
-            endAt.setFile(inputDir.absolutePath() + "/" + config.endAt);
-        }
-        if (endAt.exists()) {
-            while (infoList.last().fileName() != endAt.fileName() &&
-                   !infoList.isEmpty()) {
-                infoList.removeLast();
-            }
-        }
-    }
-    queue->append(infoList);
-    if (config.subdirs) {
-        QDirIterator dirIt(config.inputFolder,
-                           QDir::Dirs | QDir::NoDotAndDotDot,
-                           QDirIterator::Subdirectories);
-        QString exclude = "";
-        while (dirIt.hasNext()) {
-            QString subdir = dirIt.next();
-            if (!useCacheScraper &&
-                QFileInfo::exists(subdir + "/.skyscraperignoretree")) {
-                exclude = subdir;
-            }
-            if (!exclude.isEmpty() &&
-                (subdir == exclude ||
-                 (subdir.left(exclude.length()) == exclude &&
-                  subdir.mid(exclude.length(), 1) == "/"))) {
-                continue;
-            } else {
-                exclude.clear();
-            }
-            if (!useCacheScraper &&
-                QFileInfo::exists(subdir + "/.skyscraperignore")) {
-                continue;
-            }
-            inputDir.setPath(subdir);
-            queue->append(inputDir.entryInfoList());
-            if (config.verbosity > 0) {
-                printf("Adding files from subdir: '%s'\n",
-                       subdir.toStdString().c_str());
-            }
-        }
-        if (config.verbosity > 0)
-            printf("\n");
-    }
-    if (!config.excludePattern.isEmpty()) {
-        queue->filterFiles(config.excludePattern);
-    }
-    if (!config.includePattern.isEmpty()) {
-        queue->filterFiles(config.includePattern, true);
-    }
-
-    if (!cliFiles.isEmpty()) {
-        queue->clear();
-        for (const auto &cliFile : cliFiles) {
-            queue->append(QFileInfo(cliFile));
-        }
-    }
-
-    // Remove files from excludeFrom, if any
-    if (!config.excludeFrom.isEmpty()) {
-        QFileInfo excludeFromInfo(config.excludeFrom);
-        if (!excludeFromInfo.exists()) {
-            excludeFromInfo.setFile(config.currentDir + "/" +
-                                    config.excludeFrom);
-        }
-        if (excludeFromInfo.exists()) {
-            QFile excludeFrom(excludeFromInfo.absoluteFilePath());
-            if (excludeFrom.open(QIODevice::ReadOnly)) {
-                QList<QString> excludes;
-                while (!excludeFrom.atEnd()) {
-                    excludes.append(
-                        QString(excludeFrom.readLine().simplified()));
-                }
-                excludeFrom.close();
-                if (!excludes.isEmpty()) {
-                    queue->removeFiles(excludes);
-                }
-            }
-        } else {
-            printf("File: '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
-                   "verify the filename and try again...\n",
-                   excludeFromInfo.absoluteFilePath().toStdString().c_str());
-            exit(1);
-        }
-    }
+    prepareFileQueue();
 
     state = CACHE_EDIT; // Clear queue on ctrl+c
-    if (config.cacheOptions.left(4) == "edit") {
+    if (cacheEditCmd) {
         QString editCommand = "";
         QString editType = "";
         if (config.cacheOptions.contains(":") &&
@@ -386,7 +251,12 @@ void Skyscraper::run() {
     }
     state = SINGLE;
 
-    if (isCacheScraping && config.gameListBackup) {
+    gameListFileString =
+        config.gameListFolder + "/" + frontend->getGameListFileName();
+
+    QFile gameListFile(gameListFileString);
+
+    if (doCacheScraping && config.gameListBackup) {
         QString gameListBackup =
             gameListFile.fileName() + "-" +
             QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
@@ -395,15 +265,14 @@ void Skyscraper::run() {
         gameListFile.copy(gameListBackup);
     }
 
-    if (isCacheScraping && !config.unattend && !config.unattendSkip &&
+    if (doCacheScraping && !config.unattend && !config.unattendSkip &&
         gameListFile.exists()) {
         std::string userInput = "";
         printf("\033[1;34m'\033[0m\033[1;33m%s\033[0m\033[1;34m' already "
                "exists, do you want to overwrite it\033[0m (y/N)? ",
                frontend->getGameListFileName().toStdString().c_str());
         getline(std::cin, userInput);
-        if (userInput == "y" || userInput == "Y") {
-        } else {
+        if (userInput != "y" && userInput != "Y") {
             printf("User chose not to overwrite, now exiting...\n");
             exit(0);
         }
@@ -420,7 +289,7 @@ void Skyscraper::run() {
         }
         printf("\n");
     }
-    if (config.pretend && useCacheScraper) {
+    if (config.pretend && cacheScrapeMode) {
         printf("Pretend set! Not changing any files, just showing output.\n\n");
     }
 
@@ -521,10 +390,157 @@ void Skyscraper::run() {
     }
 }
 
-void Skyscraper::setFolder(const bool isCacheScraping, QString &outFolder,
+void Skyscraper::prepareFileQueue() {
+    QDir::Filters filter = QDir::Files;
+    // special case scummvm: user do use .svm in folder name to work around the
+    // limitation of the ScummVM / lr-scummvm launch integration in ES/RetroPie
+    if (config.platform == "scummvm") {
+        filter |= QDir::Dirs;
+    }
+    QDir inputDir(config.inputFolder, platformFileExtensions(), QDir::Name,
+                  filter);
+    if (!inputDir.exists()) {
+        printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
+               "accessed by current user. Please check path and permissions.\n",
+               inputDir.absolutePath().toStdString().c_str());
+        exit(1);
+    }
+    config.inputFolder = inputDir.absolutePath();
+
+    setFolder(doCacheScraping, config.gameListFolder);
+    setFolder(doCacheScraping, config.coversFolder);
+    setFolder(doCacheScraping, config.screenshotsFolder);
+    setFolder(doCacheScraping, config.wheelsFolder);
+    setFolder(doCacheScraping, config.marqueesFolder);
+    setFolder(doCacheScraping, config.texturesFolder);
+    if (config.videos) {
+        setFolder(doCacheScraping, config.videosFolder);
+    }
+    if (config.manuals) {
+        setFolder(doCacheScraping, config.manualsFolder);
+    }
+
+    setFolder(doCacheScraping, config.importFolder, false);
+
+    QList<QFileInfo> infoList = inputDir.entryInfoList();
+    if (!cacheScrapeMode &&
+        QFileInfo::exists(config.inputFolder + "/.skyscraperignore")) {
+        infoList.clear();
+    }
+    if (!config.startAt.isEmpty() && !infoList.isEmpty()) {
+        QFileInfo startAt(config.startAt);
+        if (!startAt.exists()) {
+            startAt.setFile(config.currentDir + "/" + config.startAt);
+        }
+        if (!startAt.exists()) {
+            startAt.setFile(inputDir.absolutePath() + "/" + config.startAt);
+        }
+        if (startAt.exists()) {
+            while (infoList.first().fileName() != startAt.fileName() &&
+                   !infoList.isEmpty()) {
+                infoList.removeFirst();
+            }
+        }
+    }
+    if (!config.endAt.isEmpty() && !infoList.isEmpty()) {
+        QFileInfo endAt(config.endAt);
+        if (!endAt.exists()) {
+            endAt.setFile(config.currentDir + "/" + config.endAt);
+        }
+        if (!endAt.exists()) {
+            endAt.setFile(inputDir.absolutePath() + "/" + config.endAt);
+        }
+        if (endAt.exists()) {
+            while (infoList.last().fileName() != endAt.fileName() &&
+                   !infoList.isEmpty()) {
+                infoList.removeLast();
+            }
+        }
+    }
+
+    queue = QSharedPointer<Queue>(new Queue());
+    queue->append(infoList);
+
+    if (config.subdirs) {
+        QDirIterator dirIt(config.inputFolder,
+                           QDir::Dirs | QDir::NoDotAndDotDot,
+                           QDirIterator::Subdirectories);
+        QString exclude = "";
+        while (dirIt.hasNext()) {
+            QString subdir = dirIt.next();
+            if (!cacheScrapeMode &&
+                QFileInfo::exists(subdir + "/.skyscraperignoretree")) {
+                exclude = subdir;
+            }
+            if (!exclude.isEmpty() &&
+                (subdir == exclude ||
+                 (subdir.left(exclude.length()) == exclude &&
+                  subdir.mid(exclude.length(), 1) == "/"))) {
+                continue;
+            } else {
+                exclude.clear();
+            }
+            if (!cacheScrapeMode &&
+                QFileInfo::exists(subdir + "/.skyscraperignore")) {
+                continue;
+            }
+            inputDir.setPath(subdir);
+            queue->append(inputDir.entryInfoList());
+            if (config.verbosity > 0) {
+                printf("Adding files from subdir: '%s'\n",
+                       subdir.toStdString().c_str());
+            }
+        }
+        if (config.verbosity > 0)
+            printf("\n");
+    }
+    if (!config.excludePattern.isEmpty()) {
+        queue->filterFiles(config.excludePattern);
+    }
+    if (!config.includePattern.isEmpty()) {
+        queue->filterFiles(config.includePattern, true);
+    }
+
+    if (!cliFiles.isEmpty()) {
+        queue->clear();
+        for (const auto &cliFile : cliFiles) {
+            queue->append(QFileInfo(cliFile));
+        }
+    }
+
+    // Remove files from excludeFrom, if any
+    if (!config.excludeFrom.isEmpty()) {
+        QFileInfo excludeFromInfo(config.excludeFrom);
+        if (!excludeFromInfo.exists()) {
+            excludeFromInfo.setFile(config.currentDir + "/" +
+                                    config.excludeFrom);
+        }
+        if (excludeFromInfo.exists()) {
+            QFile excludeFrom(excludeFromInfo.absoluteFilePath());
+            if (excludeFrom.open(QIODevice::ReadOnly)) {
+                QList<QString> excludes;
+                while (!excludeFrom.atEnd()) {
+                    excludes.append(
+                        QString(excludeFrom.readLine().simplified()));
+                }
+                excludeFrom.close();
+                if (!excludes.isEmpty()) {
+                    queue->removeFiles(excludes);
+                }
+            }
+        } else {
+            printf("File: '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
+                   "verify the filename and try again...\n",
+                   excludeFromInfo.absoluteFilePath().toStdString().c_str());
+            exit(1);
+        }
+    }
+}
+
+void Skyscraper::setFolder(const bool doCacheScraping, QString &outFolder,
                            const bool createMissingFolder) {
     QDir dir(outFolder);
-    if (isCacheScraping) {
+    if (doCacheScraping) {
         checkForFolder(dir, createMissingFolder);
     }
     outFolder = dir.absolutePath();

@@ -20,6 +20,7 @@
 
 #include "cli.h"
 
+#include "cache.h"
 #include "strtools.h"
 
 #include <QCommandLineOption>
@@ -378,7 +379,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
                         "scraping module. Requires a scraping module set with "
                         "'-s'. Similar to '--refresh'."},
         };
-    } else {
+    } else if (subCmd == "flags") {
         m = {
             {"help", "Prints this help and exits."},
             {"forcefilename",
@@ -473,6 +474,26 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "Enables scraping and caching of manuals for the scraping modules "
              "that support them."},
         };
+    } else {
+        QStringList resTypes = Cache::getAllResourceTypes();
+        resTypes.sort();
+        m = {
+            {"help", "Shows this help message and exits."},
+            {"all", "Creates reports for all resource types."},
+            {"textual", "Creates reports for all textual resource types."},
+            {"artwork", "Creates reports for all artwork related resource "
+                        "types excluding 'video' and 'manual'."},
+            {"media", "Creates reports for all media resource types including "
+                      "'video' and 'manual'."},
+            {"type1,type2,type3,...",
+             "Creates reports for selected types. Example: "
+             "'developer,screenshot,rating'. Available resource types: " +
+                 resTypes.join(", ")},
+        };
     }
     return m;
+}
+
+void Cli::cacheReportMissingUsage() {
+    subCommandUsage("cache report:missing=");
 }

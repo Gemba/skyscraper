@@ -33,8 +33,8 @@
 
 static inline bool isArcadePlatform(const QString &platform) {
     const QStringList arcadePlatforms = {"arcade",        "fba",
-                                        "mame-advmame",  "mame-libretro",
-                                        "mame-mame4all", "neogeo"};
+                                         "mame-advmame",  "mame-libretro",
+                                         "mame-mame4all", "neogeo"};
     return arcadePlatforms.contains(platform);
 }
 
@@ -62,8 +62,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             // config.ini may set platform= in [main]
             config->platform = settings->value("platform").toString();
         } else {
-            bool cacheHelp =
-                parser->isSet("cache") && parser->value("cache") == "help";
+            bool cacheHelp = parser->isSet("cache") &&
+                             (parser->value("cache") == "help" ||
+                              parser->value("cache") == "report:missing=help");
             QStringList flags = parseFlags();
             if (!cacheHelp && !flags.contains("help")) {
                 if (parser->isSet("p")) {
@@ -585,8 +586,12 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->cacheOptions = parser->value("cache");
         if (config->cacheOptions == "refresh") {
             config->refresh = true;
+            config->cacheOptions = "";
         } else if (config->cacheOptions == "help") {
             Cli::subCommandUsage("cache");
+            exit(0);
+        } else if (config->cacheOptions == "report:missing=help") {
+            Cli::cacheReportMissingUsage();
             exit(0);
         }
     }

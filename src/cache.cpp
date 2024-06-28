@@ -25,6 +25,7 @@
 
 #include "cache.h"
 
+#include "cli.h"
 #include "nametools.h"
 #include "queue.h"
 
@@ -61,26 +62,24 @@ static inline QStringList binTypes(bool withVideo = true,
     return binTypes;
 };
 
+const QStringList Cache::getAllResourceTypes() {
+    return txtTypes() + binTypes();
+}
+
 Cache::Cache(const QString &cacheFolder) { cacheDir = QDir(cacheFolder); }
 
 bool Cache::createFolders(const QString &scraper) {
-    if (scraper != "cache") {
-        for (auto const &f : binTypes()) {
-            if (!cacheDir.mkpath(
-                    QString("%1/%2s/%3") // plural 's'
-                        .arg(cacheDir.absolutePath(), f, scraper))) {
-                return false;
-            }
+    for (auto const &f : binTypes()) {
+        if (!cacheDir.mkpath(QString("%1/%2s/%3") // plural 's'
+                                 .arg(cacheDir.absolutePath(), f, scraper))) {
+            return false;
         }
     }
 
     // Copy priorities.xml example file to cache folder if it doesn't already
     // exist
-    if (!QFileInfo::exists(cacheDir.absolutePath() + "/priorities.xml")) {
-        QFile::copy("cache/priorities.xml.example",
-                    cacheDir.absolutePath() + "/priorities.xml");
-    }
-
+    QFile::copy("cache/priorities.xml.example",
+                cacheDir.absolutePath() + "/priorities.xml");
     return true;
 }
 
@@ -862,7 +861,7 @@ QList<QFileInfo> Cache::getFileInfos(const QString &inputFolder,
             printf("\nInput folder returned no entries...\n\n");
         }
     } else {
-        printf("Found less than 2 suffix filters. Something is wrong...\n");
+        printf("Found less than two suffix filters. Something is wrong...\n");
     }
     return fileInfos;
 }
@@ -893,8 +892,9 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
     QString reportStr = config.cacheOptions;
 
     if (!reportStr.contains("report:missing=")) {
-        printf("Don't understand report option, please check '--cache help' "
-               "for more info.\n");
+        printf("\033[1;31mAmbiguous cache report option '%s'.\n\033[0m",
+               reportStr.toStdString().c_str());
+        Cli::cacheReportMissingUsage();
         return;
     }
     reportStr.replace("report:missing=", "");
@@ -906,13 +906,19 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
     } else {
         if (missingOption == "all") {
             resTypeList += txtTypes(false); // contains 'tags' instead 'genres'
-            resTypeList += binTypes();
+            resTypeList.sort();
+            QStringList bt = binTypes();
+            bt.sort();
+            resTypeList += bt;
         } else if (missingOption == "textual") {
             resTypeList += txtTypes(false);
+            resTypeList.sort();
         } else if (missingOption == "artwork") {
             resTypeList += binTypes(false, false); // w/o 'video' and 'manual'
+            resTypeList.sort();
         } else if (missingOption == "media") {
             resTypeList += binTypes();
+            resTypeList.sort();
         } else {
             resTypeList.append(missingOption); // If a single type is given
         }
@@ -920,43 +926,9 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
     for (const auto &resType : resTypeList) {
         if (!binTypes().contains(resType) &&
             !txtTypes(false).contains(resType)) {
-            if (resType != "help") {
-                printf("\033[1;31mUnknown resource type '%s'!\033[0m\n",
-                       resType.toStdString().c_str());
-            }
-            printf("Please use one of the following:\n");
-            printf("  \033[1;32mhelp\033[0m: Shows this help message\n");
-            printf("  \033[1;32mall\033[0m: Creates reports for all resource "
-                   "types\n");
-            printf("  \033[1;32mtextual\033[0m: Creates reports for all "
-                   "textual resource types\n");
-            printf("  \033[1;32martwork\033[0m: Creates reports for all "
-                   "artwork related resource types excluding 'video' and "
-                   "'manual'\n");
-            printf("  \033[1;32mmedia\033[0m: Creates reports for all media "
-                   "resource types including 'video' and 'manual'\n");
-            printf(
-                "  \033[1;32mtype1,type2,type3,...\033[0m: Creates reports for "
-                "selected types. Example: 'developer,screenshot,rating'\n");
-            printf("\nAvailable resource types:\n");
-            printf("  \033[1;32mtitle\033[0m\n");
-            printf("  \033[1;32mplatform\033[0m\n");
-            printf("  \033[1;32mdescription\033[0m\n");
-            printf("  \033[1;32mpublisher\033[0m\n");
-            printf("  \033[1;32mdeveloper\033[0m\n");
-            printf("  \033[1;32mplayers\033[0m\n");
-            printf("  \033[1;32mages\033[0m\n");
-            printf("  \033[1;32mtags\033[0m\n");
-            printf("  \033[1;32mrating\033[0m\n");
-            printf("  \033[1;32mreleasedate\033[0m\n");
-            printf("  \033[1;32mcover\033[0m\n");
-            printf("  \033[1;32mscreenshot\033[0m\n");
-            printf("  \033[1;32mwheel\033[0m\n");
-            printf("  \033[1;32mmarquee\033[0m\n");
-            printf("  \033[1;32mtexture\033[0m\n");
-            printf("  \033[1;32mvideo\033[0m\n");
-            printf("  \033[1;32mmanual\033[0m\n");
-            printf("\n");
+            printf("\033[1;31mUnknown resource type '%s'!\033[0m\n",
+                   resType.toStdString().c_str());
+            Cli::cacheReportMissingUsage();
             return;
         }
     }

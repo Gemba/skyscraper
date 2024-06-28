@@ -69,6 +69,7 @@ struct ResCounts {
 class Cache {
 public:
     Cache(const QString &cacheFolder);
+    static const QStringList getAllResourceTypes();
     bool createFolders(const QString &scraper);
     bool read();
     void printPriorities(QString cacheId);

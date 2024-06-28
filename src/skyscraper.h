@@ -68,6 +68,7 @@ private:
     void checkForFolder(QDir &folder, bool create = true);
     void showHint();
     void prepareScraping();
+    void prepareFileQueue();
     void updateWhdloadDb(NetComm &netComm, QEventLoop &q);
     void prepareIgdb(NetComm &netComm, QEventLoop &q);
     void prepareScreenscraper(NetComm &netComm, QEventLoop &q);
@@ -82,7 +83,7 @@ private:
         return Platform::get().getFormats(config.platform, config.extensions,
                                           config.addExtensions);
     }
-    void setFolder(const bool isCacheScraping, QString &outFolder,
+    void setFolder(const bool doCacheScraping, QString &outFolder,
                    const bool createMissingFolder = true);
 
     AbstractFrontend *frontend;
@@ -103,6 +104,8 @@ private:
     int avgCompleteness;
     int currentFile;
     int totalFiles;
+    bool cacheScrapeMode; // config.scraper == "cache"
+    bool doCacheScraping; // cacheScrapeMode && pretend == false
 };
 
 #endif // SKYSCRAPER_H
