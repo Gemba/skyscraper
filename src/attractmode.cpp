@@ -81,6 +81,7 @@ bool AttractMode::skipExisting(QList<GameEntry> &gameEntries,
     gameEntries = oldEntries;
 
     printf("Resolving missing entries...");
+    fflush(stdout);
     int dots = 0;
     for (int a = 0; a < gameEntries.length(); ++a) {
         dots++;
@@ -88,8 +89,9 @@ bool AttractMode::skipExisting(QList<GameEntry> &gameEntries,
             printf(".");
             fflush(stdout);
         }
+        QString baseName = gameEntries.at(a).baseName;
         for (int b = 0; b < queue->length(); ++b) {
-            if (gameEntries.at(a).baseName == queue->at(b).completeBaseName()) {
+            if (baseName == queue->at(b).completeBaseName()) {
                 queue->removeAt(b);
                 // We assume baseName is unique, so break after getting first
                 // hit

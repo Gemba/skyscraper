@@ -59,6 +59,7 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
     gameEntries = oldEntries;
 
     printf("Resolving missing entries...");
+    fflush(stdout);
     int dots = 0;
     for (int a = 0; a < gameEntries.length(); ++a) {
         dots++;
@@ -66,20 +67,24 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
             printf(".");
             fflush(stdout);
         }
+
         QFileInfo current(gameEntries.at(a).path);
-        for (int b = 0; b < queue->length(); ++b) {
-            if (current.isFile()) {
-                if (current.fileName() == queue->at(b).fileName()) {
+        if (current.isFile()) {
+            QString fileName = current.fileName();
+            for (int b = 0; b < queue->length(); ++b) {
+                if (fileName == queue->at(b).fileName()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
                     break;
                 }
-            } else if (current.isDir()) {
-                // Use current.canonicalFilePath here since it is already a
-                // path. Otherwise it will use the parent folder
-                if (current.canonicalFilePath() ==
-                    queue->at(b).canonicalPath()) {
+            }
+        } else if (current.isDir()) {
+            // Use current.canonicalFilePath here since it is already a
+            // path. Otherwise it will use the parent folder
+            QString filePath = current.canonicalFilePath();
+            for (int b = 0; b < queue->length(); ++b) {
+                if (filePath == queue->at(b).canonicalPath()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
@@ -88,6 +93,7 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
             }
         }
     }
+
     return true;
 }
 

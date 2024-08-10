@@ -1260,6 +1260,7 @@ void Cache::readPriorities() {
     QFile prioFile(cacheDir.absolutePath() + "/priorities.xml");
     printf("Looking for optional '\033[1;33mpriorities.xml\033[0m' file in "
            "cache folder... ");
+    fflush(stdout);
     if (prioFile.open(QIODevice::ReadOnly)) {
         printf("\033[1;32mFound!\033[0m\n");
         if (!prioDoc.setContent(prioFile.readAll())) {

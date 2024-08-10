@@ -215,6 +215,7 @@ bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
     gameEntries = oldEntries;
 
     printf("Resolving missing entries...");
+    fflush(stdout);
     int dots = 0;
     for (int a = 0; a < gameEntries.length(); ++a) {
         dots++;
@@ -222,19 +223,24 @@ bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
             printf(".");
             fflush(stdout);
         }
+
         QFileInfo current(gameEntries.at(a).path);
-        for (int b = 0; b < queue->length(); ++b) {
-            if (current.isFile()) {
-                if (current.fileName() == queue->at(b).fileName()) {
+        if (current.isFile()) {
+            QString fileName = current.fileName();
+            for (int b = 0; b < queue->length(); ++b) {
+                if (fileName == queue->at(b).fileName()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
                     break;
                 }
-            } else if (current.isDir()) {
-                // Use current.absoluteFilePath here since it is already a path.
-                // Otherwise it will use the parent folder
-                if (current.absoluteFilePath() == queue->at(b).absolutePath()) {
+            }
+        } else if (current.isDir()) {
+            // Use current.absoluteFilePath here since it is already a path.
+            // Otherwise it will use the parent folder
+            QString filePath = current.absoluteFilePath();
+            for (int b = 0; b < queue->length(); ++b) {
+                if (filePath == queue->at(b).absoluteFilePath()) {
                     queue->removeAt(b);
                     // We assume filename is unique, so break after getting
                     // first hit
@@ -243,6 +249,7 @@ bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
             }
         }
     }
+
     return true;
 }
 
