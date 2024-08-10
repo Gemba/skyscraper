@@ -111,8 +111,26 @@ bool Cache::read() {
         printf("\033[1;32mDone!\033[0m\n");
     }
 
+
     QFile cacheFile(cacheDir.absolutePath() + "/db.xml");
     if (cacheFile.open(QIODevice::ReadOnly)) {
+        printf("Building file lookup cache, please wait... ");
+        fflush(stdout);
+
+        QSet<QString> fileEntries;
+        for (auto const &t : binTypes()) {
+            QDir dir(cacheDir.absolutePath() % "/" % t % "s", "*.*", QDir::Name,
+                    QDir::Files);
+            QDirIterator it(dir.absolutePath(),
+                            QDir::Files | QDir::NoDotAndDotDot,
+                            QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                fileEntries.insert(it.next());
+            }
+        }
+        printf("\033[1;32mDone!\033[0m\n");
+        printf("Cached %d files\n\n", fileEntries.count());
+
         printf("Reading and parsing resource cache, please wait... ");
         fflush(stdout);
         QXmlStreamReader xml(&cacheFile);
@@ -161,7 +179,7 @@ bool Cache::read() {
             }
             resource.value = xml.readElementText();
             if (binTypes().contains(resource.type) &&
-                !QFileInfo::exists(cacheDir.absolutePath() + "/" +
+                !fileEntries.contains(cacheDir.absolutePath() + "/" +
                                    resource.value)) {
                 printf("Source file '%s' missing, skipping entry...\n",
                        resource.value.toStdString().c_str());
