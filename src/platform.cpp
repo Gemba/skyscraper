@@ -90,14 +90,6 @@ void Platform::clearConfigData() {
     platformIdsMap.clear();
 }
 
-QStringList Platform::getScrapers(QString platform) const {
-    QStringList scrapers = peas[platform].toHash()["scrapers"].toStringList();
-    // Always add 'cache' as the last one
-    scrapers.append("cache");
-
-    return scrapers;
-}
-
 QString Platform::getFormats(QString platform, QString extensions,
                              QString addExtensions) const {
     if (!extensions.isEmpty() && extensions.contains("*.")) {

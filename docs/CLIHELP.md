@@ -242,7 +242,7 @@ Outputs a description of all available `--cache` functions.
 
 Allows editing of any cached resources connected to your roms. The editing mode will go through each of the files in the queue one by one, allowing you to add and remove resources as needed. Any resource you add manually will be prioritized above all others.
 
-You can provide one or more filenames to the end of the command line or use the `--fromfile` option to edit the resources for just those files. You can use the `--startat` and `--endat` options to edit a span of roms. If none of those options are used, it will edit all of the roms in the input folder one by one.
+You can provide one or more filenames to the end of the command line or use the `--includefrom` option to edit the resources for just those files. You can use the `--startat` and `--endat` options to edit a span of roms. If none of those options are used, it will edit all of the roms in the input folder one by one.
 
 For efficiency, when adding a lot of resources of the same type, you can also add the optional `new=<TYPE>` which will make it very easy to batch insert resources of the defined type to all the files you are editing. `<TYPE>` can be any of the known textual resources: `title`, `platform`, `releasedate`, `developer`, `publisher`, `players`, `ages`, `genres`, `rating`, `description`.
 
@@ -253,8 +253,8 @@ Skyscraper -p snes --cache edit <FILENAME 1> <FILENAME 2>
 Skyscraper -p snes --cache edit --startat <FILENAME> --endat <FILENAME>
 Skyscraper -p snes --cache edit:new=developer --startat <FILENAME> --endat <FILENAME>
 Skyscraper -p snes --cache edit
-Skyscraper -p snes --cache edit --fromfile "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
-Skyscraper -p snes --cache edit:new=ages --fromfile "/home/pi/.skyscraper/reports/report-snes-missing_ages-20190708.txt"
+Skyscraper -p snes --cache edit --includefrom "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
+Skyscraper -p snes --cache edit:new=ages --includefrom "/home/pi/.skyscraper/reports/report-snes-missing_ages-20190708.txt"
 ```
 
 #### --cache merge:&lt;FOLDER&gt;
@@ -317,7 +317,7 @@ Supported resource types are: `title`, `platform`, `description`, `publisher`, `
 
 !!! tip
 
-    The reports can be fed back into Skyscraper using the `--fromfile <REPORTFILE>` option, which tells Skyscraper to only work on the files contained in the report. This is useful in combination with, for instance, the `--cache edit` option or the `--cache refresh`/`--refresh` (they are the same) option(s).
+    The reports can be fed back into Skyscraper using the `--includefrom <REPORTFILE>` option, which tells Skyscraper to only work on the files contained in the report. This is useful in combination with, for instance, the `--cache edit` option or the `--cache refresh`/`--refresh` (they are the same) option(s).
 
 **Example(s)**
 
@@ -376,7 +376,7 @@ If you wish to work on a subset of your roms you can use this option to set the 
 
 !!! tip
 
-    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--fromfile` option.
+    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--includefrom` option.
 
 **Example(s)**
 
@@ -585,24 +585,10 @@ Skyscraper -p amiga --flags forcefilename,nosubdirs,skipexistingwheels
 Skyscraper -p nes --flags videos,nomarquees
 ```
 
-### --fromfile &lt;FILENAME&gt;
-
-Using this option is the equivalent to adding a bunch of filenames to work on directly on the commandline. It reads one line at a time from `<FILENAME>` and adds them to the queue of files to work on. This is very useful in combination with the `--cache edit` option or if you want to refresh data for just those files using `-s <SCRAPING MODULE>`.
-
-!!! tip
-
-    The `--cache report` option creates files that are directly usable with the `--fromfile` option.
-
-**Example(s)**
-
-```
-Skyscraper -p snes --cache edit --fromfile "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
-Skyscraper -p snes -s screenscraper --fromfile "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
-```
-
 ### --includefrom &lt;FILENAME&gt;
 
-Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with FULL path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').
+Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with _absolute_ path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').
+The option is the equivalent to adding a bunch of filenames to work on directly on the commandline. It reads one line at a time from `<FILENAME>` and adds them to the queue of files to work on. This is very useful in combination with the `--cache edit` option or if you want to refresh data for just those files using `-s <SCRAPING MODULE>`.
 
 This file can be generated with the '--cache report:missing' option or made manually.
 
@@ -614,6 +600,9 @@ This file can be generated with the '--cache report:missing' option or made manu
 
 ```
 Skyscraper -p snes -s screenscraper --includefrom "/home/pi/.skyscraper/includes.txt"
+# After running --cache report:missing
+Skyscraper -p snes --cache edit --includefrom "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
+Skyscraper -p snes -s screenscraper --includefrom "/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt"
 ```
 
 ### --includepattern &lt;PATTERN 1,PATTERN 2&gt;
@@ -727,7 +716,7 @@ If you wish to work on a subset of your roms you can use this option to set the 
 
 !!! tip
 
-    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--fromfile` option.
+    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--includefrom` option.
 
 **Example(s)**
 
@@ -745,83 +734,3 @@ Sets how verbose Skyscraper should be when running. Default level is 0. The high
 ```
 Skyscraper -p snes -s screenscraper --verbosity 3
 ```
-
-## Deprecated Options
-
-These options may be removed at any future version of Skyscraper without prior notice. If you still use them, do switch to the replacement option listed below.
-
-### --forcefilename
-
-This option is deprecated! Please set it using the [`--flags forcefilename`](#forcefilename) option instead.
-
-### --interactive
-
-This option is deprecated! Please set it using the [`--flags interactive`](#interactive) option instead.
-
-### --nobrackets
-
-This option is deprecated! Please set it using the [`--flags nobrackets`](#nobrackets) option instead.
-
-### --nocovers
-
-This option is deprecated! Please set it using the [`--flags nocovers`](#--nocovers) option instead.
-
-### --nohints
-
-This option is deprecated! Please set it using the [`--flags nohints`](#nohints) option instead.
-
-### --nomarquees
-
-This option is deprecated! Please set it using the [`--flags nomarquees`](#nomarquees) option instead.
-
-### --noresize
-
-This option is deprecated! Please set it using the [`--flags`](#noresize) option instead.
-
-### --noscreenshots
-
-This option is deprecated! Please set it using the [`--flags noscreenshots`](#noscreenshots) option instead.
-
-### --nosubdirs
-
-This option is deprecated! Please set it using the [`--flags nosubdirs`](#nosubdirs) option instead.
-
-### --nowheels
-
-This option is deprecated! Please set it using the [`--flags nowheels`](#nowheels) option instead.
-
-### --onlymissing
-
-This option is deprecated! Please set it using the [`--flags onlymissing`](#onlymissing) option instead.
-
-### --pretend
-
-This option is deprecated! Please set it using the [`--flags pretend`](#pretend) option instead.
-
-### --relative
-
-This option is deprecated! Please set it using the [`--flags relative`](#relative) option instead.
-
-### --skipped
-
-This option is deprecated! Please set it using the [`--flags skipped`](#skipped) option instead.
-
-### --symlink
-
-This option is deprecated! Please set it using the [`--flags symlink`](#symlink) option instead.
-
-### --unattend
-
-This option is deprecated! Please set it using the [`--flags unattend`](#unattend) option instead.
-
-### --unattendskip
-
-This option is deprecated! Please set it using the [`--flags unattendskip`](#unattendskip) option instead.
-
-### --unpack
-
-This option is deprecated! Please set it using the [`--flags unpack`](#unpack) option instead.
-
-### --videos
-
-This option is deprecated! Please set it using the [`--flags videos`](#videos) option instead.

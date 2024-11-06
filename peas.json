@@ -5,9 +5,6 @@
             "*.chd",
             "*.cue",
             "*.iso"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "3ds": {
@@ -16,9 +13,6 @@
         ],
         "formats": [
             "*.3ds"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "actionmax": {
@@ -30,10 +24,6 @@
         "formats": [
             "*.daphne",
             "*.singe"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "ags": {
@@ -45,11 +35,6 @@
         "formats": [
             "*.ags",
             "*.exe"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "amiga": {
@@ -74,10 +59,6 @@
             "*.m3u",
             "*.rp9",
             "*.uae"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "amstradcpc": {
@@ -92,9 +73,6 @@
             "*.dsk",
             "*.m3u",
             "*.tap"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "apple2": {
@@ -105,9 +83,6 @@
             "*.dsk",
             "*.nib",
             "*.po"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "apple2gs": {
@@ -116,9 +91,6 @@
         ],
         "formats": [
             "*.2mg"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "arcade": {
@@ -196,10 +168,6 @@
             "*.dat",
             "*.fba",
             "*.iso"
-        ],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
         ]
     },
     "arcadia": {
@@ -209,9 +177,6 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "arduboy": {
@@ -220,11 +185,6 @@
         ],
         "formats": [
             "*.hex"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "astrocade": {
@@ -232,10 +192,7 @@
             "astrocade",
             "bally astrocade"
         ],
-        "formats": [],
-        "scrapers": [
-            "screenscraper"
-        ]
+        "formats": []
     },
     "atari2600": {
         "aliases": [
@@ -246,9 +203,6 @@
             "*.bin",
             "*.gz",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atari5200": {
@@ -266,9 +220,6 @@
             "*.xex",
             "*.xfd",
             "*.xfd.gz"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atari7800": {
@@ -278,10 +229,6 @@
         "formats": [
             "*.a78",
             "*.bin"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "atari800": {
@@ -305,9 +252,6 @@
             "*.xex",
             "*.xfd",
             "*.xfd.gz"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atarijaguar": {
@@ -318,9 +262,6 @@
         "formats": [
             "*.j64",
             "*.jag"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atarijaguarcd": {
@@ -335,9 +276,6 @@
             "*.cue",
             "*.j64",
             "*.jag"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atarilynx": {
@@ -347,9 +285,6 @@
         ],
         "formats": [
             "*.lnx"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atarist": {
@@ -366,9 +301,6 @@
             "*.rom",
             "*.st",
             "*.stx"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "atomiswave": {
@@ -432,9 +364,6 @@
             "*.bin",
             "*.chd",
             "*.dat"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "c128": {
@@ -452,9 +381,6 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "c64": {
@@ -476,9 +402,6 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "cd32": {
@@ -498,12 +421,6 @@
             "*.lha",
             "*.rp9",
             "*.uae"
-        ],
-        "scrapers": [
-            "mobygames",
-            "openretro",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "cdi": {
@@ -514,9 +431,6 @@
         ],
         "formats": [
             "*.chd"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "cdtv": {
@@ -535,12 +449,6 @@
             "*.lha",
             "*.rp9",
             "*.uae"
-        ],
-        "scrapers": [
-            "mobygames",
-            "openretro",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "channelf": {
@@ -551,9 +459,6 @@
         "formats": [
             "*.bin",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "coco": {
@@ -574,9 +479,6 @@
             "*.sna",
             "*.vdk",
             "*.wav"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "coleco": {
@@ -587,9 +489,6 @@
             "*.bin",
             "*.col",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "crvision": {
@@ -598,11 +497,6 @@
         ],
         "formats": [
             "*.rom"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "daphne": {
@@ -614,9 +508,6 @@
         "formats": [
             "*.daphne",
             "*.ogv"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "dragon32": {
@@ -636,9 +527,6 @@
             "*.sna",
             "*.vdk",
             "*.wav"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "dreamcast": {
@@ -652,18 +540,12 @@
             "*.gdi",
             "*.iso",
             "*.m3u"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "easyrpg": {
         "aliases": [],
         "formats": [
             "*.ini"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "fba": {
@@ -740,10 +622,6 @@
             "*.cue",
             "*.fba",
             "*.iso"
-        ],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
         ]
     },
     "fds": {
@@ -757,9 +635,6 @@
         "formats": [
             "*.fds",
             "*.nes"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "fm7": {
@@ -771,11 +646,6 @@
             "*.d77",
             "*.d88",
             "*.t77"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "gameandwatch": {
@@ -784,9 +654,6 @@
         ],
         "formats": [
             "*.mgw"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gamecom": {
@@ -795,11 +662,6 @@
         ],
         "formats": [
             "*.tgc"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "gamegear": {
@@ -811,9 +673,6 @@
             "*.bin",
             "*.gg",
             "*.sms"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gb": {
@@ -823,9 +682,6 @@
         ],
         "formats": [
             "*.gb"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gba": {
@@ -835,9 +691,6 @@
         ],
         "formats": [
             "*.gba"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gbc": {
@@ -848,9 +701,6 @@
         ],
         "formats": [
             "*.gbc"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gc": {
@@ -866,9 +716,6 @@
             "*.iso",
             "*.m3u",
             "*.rvz"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "gmaster": {
@@ -878,11 +725,6 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "intellivision": {
@@ -892,9 +734,6 @@
             "*.int",
             "*.itv",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "j2me": {
@@ -903,9 +742,6 @@
         ],
         "formats": [
             "*.jar"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "love": {
@@ -914,8 +750,7 @@
         ],
         "formats": [
             "*.love"
-        ],
-        "scrapers": []
+        ]
     },
     "macintosh": {
         "aliases": [],
@@ -924,11 +759,6 @@
             "*.img",
             "*.rom",
             "*.txt"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "mame": {
@@ -1001,11 +831,7 @@
             "video system co.",
             "visco"
         ],
-        "formats": [],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
-        ]
+        "formats": []
     },
     "mame-advmame": {
         "aliases": [
@@ -1077,11 +903,7 @@
             "video system co.",
             "visco"
         ],
-        "formats": [],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
-        ]
+        "formats": []
     },
     "mame-libretro": {
         "aliases": [
@@ -1153,11 +975,7 @@
             "video system co.",
             "visco"
         ],
-        "formats": [],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
-        ]
+        "formats": []
     },
     "mame-mame4all": {
         "aliases": [
@@ -1229,11 +1047,7 @@
             "video system co.",
             "visco"
         ],
-        "formats": [],
-        "scrapers": [
-            "arcadedb",
-            "screenscraper"
-        ]
+        "formats": []
     },
     "mastersystem": {
         "aliases": [
@@ -1243,10 +1057,6 @@
         "formats": [
             "*.bin",
             "*.sms"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "megadrive": {
@@ -1262,10 +1072,6 @@
             "*.md",
             "*.sg",
             "*.smd"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "megaduck": {
@@ -1274,10 +1080,6 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "moto": {
@@ -1296,9 +1098,6 @@
             "*.m7",
             "*.rom",
             "*.sap"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "msx": {
@@ -1315,9 +1114,6 @@
             "*.mx1",
             "*.mx2",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "msx2": {
@@ -1333,9 +1129,6 @@
             "*.mx1",
             "*.mx2",
             "*.rom"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "n64": {
@@ -1346,9 +1139,6 @@
             "*.n64",
             "*.v64",
             "*.z64"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "n64dd": {
@@ -1360,9 +1150,6 @@
             "*.ndd",
             "*.v64",
             "*.z64"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "naomi": {
@@ -1437,9 +1224,6 @@
             "*.bin",
             "*.chd",
             "*.dat"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "naomi2": {
@@ -1452,9 +1236,6 @@
             "*.bin",
             "*.chd",
             "*.dat"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "nds": {
@@ -1463,9 +1244,6 @@
         ],
         "formats": [
             "*.nds"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "neogeo": {
@@ -1483,11 +1261,6 @@
             "*.cue",
             "*.fba",
             "*.iso"
-        ],
-        "scrapers": [
-            "arcadedb",
-            "openretro",
-            "screenscraper"
         ]
     },
     "neogeocd": {
@@ -1504,9 +1277,6 @@
             "*.chd",
             "*.cue",
             "*.iso"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "nes": {
@@ -1522,10 +1292,6 @@
             "*.sfc",
             "*.smc",
             "*.swc"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "ngp": {
@@ -1535,9 +1301,6 @@
         ],
         "formats": [
             "*.ngp"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "ngpc": {
@@ -1547,9 +1310,6 @@
         ],
         "formats": [
             "*.ngc"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "openbor": {
@@ -1557,9 +1317,6 @@
         "formats": [
             "*.bor",
             "*.pak"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "oric": {
@@ -1569,9 +1326,6 @@
         "formats": [
             "*.dsk",
             "*.tap"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "palm": {
@@ -1582,10 +1336,6 @@
             "*.img",
             "*.pqa",
             "*.prc"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper"
         ]
     },
     "pc": {
@@ -1614,9 +1364,6 @@
             "*.m3u8",
             "*.sh",
             "*.vhd"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "pc88": {
@@ -1630,9 +1377,6 @@
             "*.d88",
             "*.m3u",
             "*.t88"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "pc98": {
@@ -1658,9 +1402,6 @@
             "*.tfd",
             "*.thd",
             "*.xdf"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "pcengine": {
@@ -1679,10 +1420,6 @@
             "*.chd",
             "*.cue",
             "*.pce"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "pcenginecd": {
@@ -1701,10 +1438,6 @@
             "*.chd",
             "*.cue",
             "*.pce"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "pcfx": {
@@ -1718,9 +1451,6 @@
             "*.img",
             "*.iso",
             "*.pce"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "pico8": {
@@ -1731,9 +1461,6 @@
         "formats": [
             "*.p8",
             "*.png"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "plus4": {
@@ -1752,11 +1479,6 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "pokemini": {
@@ -1766,9 +1488,6 @@
         ],
         "formats": [
             "*.min"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "ports": {
@@ -1785,9 +1504,6 @@
             "*.conf",
             "*.exe",
             "*.sh"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "ps2": {
@@ -1809,10 +1525,6 @@
             "*.mdf",
             "*.z",
             "*.z2"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "ps3": {
@@ -1825,9 +1537,6 @@
             "*.iso",
             "*.m3u",
             "*.pkg"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "ps4": {
@@ -1838,9 +1547,6 @@
         "formats": [
             "*.bin",
             "*.iso"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "ps5": {
@@ -1851,9 +1557,6 @@
         "formats": [
             "*.bin",
             "*.iso"
-        ],
-        "scrapers": [
-            "thegamesdb"
         ]
     },
     "psp": {
@@ -1866,9 +1569,6 @@
             "*.cso",
             "*.iso",
             "*.pbp"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "psvita": {
@@ -1878,11 +1578,6 @@
         ],
         "formats": [
             "*.psvita"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "psx": {
@@ -1902,10 +1597,6 @@
             "*.toc",
             "*.z",
             "*.znx"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "pv1000": {
@@ -1915,11 +1606,6 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "samcoupe": {
@@ -1932,11 +1618,6 @@
             "*.mgt",
             "*.sad",
             "*.sbt"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "saturn": {
@@ -1949,9 +1630,6 @@
             "*.iso",
             "*.m3u",
             "*.mdf"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "scummvm": {
@@ -1970,10 +1648,6 @@
         "formats": [
             "*.scummvm",
             "*.svm"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "scv": {
@@ -1983,11 +1657,6 @@
         "formats": [
             "*.0",
             "*.bin"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "sega32x": {
@@ -2000,9 +1669,6 @@
             "*.bin",
             "*.md",
             "*.smd"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "segacd": {
@@ -2016,9 +1682,6 @@
             "*.cue",
             "*.iso",
             "*.m3u"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "sg-1000": {
@@ -2028,9 +1691,6 @@
         "formats": [
             "*.bin",
             "*.sg"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "snes": {
@@ -2053,19 +1713,12 @@
             "*.sfc",
             "*.smc",
             "*.swc"
-        ],
-        "scrapers": [
-            "openretro",
-            "screenscraper"
         ]
     },
     "solarus": {
         "aliases": [],
         "formats": [
             "*.solarus"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "steam": {
@@ -2080,17 +1733,13 @@
             "windows",
             "windows apps"
         ],
-        "formats": [],
-        "scrapers": [
-            "screenscraper"
-        ]
+        "formats": []
     },
     "stratagus": {
         "aliases": [],
         "formats": [
             "*.data"
-        ],
-        "scrapers": []
+        ]
     },
     "supervision": {
         "aliases": [
@@ -2099,11 +1748,6 @@
         "formats": [
             "*.bin",
             "*.sv"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "switch": {
@@ -2114,9 +1758,6 @@
             "*.nca",
             "*.nsp",
             "*.xci"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "symbian": {
@@ -2127,9 +1768,6 @@
             "*.sis",
             "*.sisx",
             "*.symbian"
-        ],
-        "scrapers": [
-            "mobygames"
         ]
     },
     "ti99": {
@@ -2140,9 +1778,6 @@
         ],
         "formats": [
             "*.ctg"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "tic80": {
@@ -2151,9 +1786,6 @@
         ],
         "formats": [
             "*.tic"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "trs-80": {
@@ -2162,9 +1794,6 @@
         ],
         "formats": [
             "*.dsk"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "vectrex": {
@@ -2173,9 +1802,6 @@
             "*.bin",
             "*.gam",
             "*.vec"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "vic20": {
@@ -2192,9 +1818,6 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "videopac": {
@@ -2208,11 +1831,14 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
+    "vircon32": {
+        "aliases": [],
+        "formats": [
+            "*.v32"
+        ]
+    },    
     "virtualboy": {
         "aliases": [
             "nintendo virtual boy",
@@ -2220,9 +1846,6 @@
         ],
         "formats": [
             "*.vb"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "vsmile": {
@@ -2231,11 +1854,6 @@
         ],
         "formats": [
             "*.bin"
-        ],
-        "scrapers": [
-            "mobygames",
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "wii": {
@@ -2253,10 +1871,6 @@
             "*.rvz",
             "*.wad",
             "*.wbfs"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "wiiu": {
@@ -2275,19 +1889,12 @@
             "*.wua",
             "*.wud",
             "*.wux"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "wonderswan": {
         "aliases": [],
         "formats": [
             "*.ws"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "wonderswancolor": {
@@ -2296,9 +1903,6 @@
         ],
         "formats": [
             "*.wsc"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "x1": {
@@ -2314,9 +1918,6 @@
             "*.hdm",
             "*.tfd",
             "*.xdf"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "x68000": {
@@ -2331,9 +1932,6 @@
             "*.hdm",
             "*.m3u",
             "*.xdf"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "xbox": {
@@ -2343,9 +1941,6 @@
         "formats": [
             "*.iso",
             "*.xbe"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "xbox360": {
@@ -2353,9 +1948,6 @@
         "formats": [
             "*.iso",
             "*.m3u"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "zmachine": {
@@ -2373,10 +1965,6 @@
             "*.z6",
             "*.z7",
             "*.z8"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "thegamesdb"
         ]
     },
     "zx81": {
@@ -2385,9 +1973,6 @@
             "*.p",
             "*.t81",
             "*.tzx"
-        ],
-        "scrapers": [
-            "screenscraper"
         ]
     },
     "zxspectrum": {
@@ -2409,10 +1994,6 @@
             "*.tzx",
             "*.udi",
             "*.z80"
-        ],
-        "scrapers": [
-            "screenscraper",
-            "worldofspectrum"
         ]
     }
 }

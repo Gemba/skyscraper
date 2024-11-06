@@ -165,15 +165,6 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "Tells Skyscraper which file to end at. Forces '--refresh' and "
         "'--flags nosubdirs' enabled.",
         "FILENAME", "");
-    QCommandLineOption includefilesOption(
-        "includefiles",
-        "(DEPRECATED, please use '--includepattern' instead) Tells Skyscraper "
-        "to only include the files matching the provided asterisk pattern(s). "
-        "Remember to double-quote the pattern to avoid weird behaviour. You "
-        "can add several patterns by separating them with ','. In cases where "
-        "you need to match for a comma you need to escape it as '\\,'. "
-        "(Pattern example: '\"Super*,*Fighter*\"')",
-        "PATTERN", "");
     QCommandLineOption includepatternOption(
         "includepattern",
         "Tells Skyscraper to only include the files matching the provided "
@@ -181,15 +172,6 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "weird behaviour. You can add several patterns by separating them with "
         "','. In cases where you need to match for a comma you need to escape "
         "it as '\\,'. (Pattern example: '\"Super*,*Fighter*\"')",
-        "PATTERN", "");
-    QCommandLineOption excludefilesOption(
-        "excludefiles",
-        "(DEPRECATED, please use '--excludepattern' instead) Tells Skyscraper "
-        "to always exclude the files matching the provided asterisk "
-        "pattern(s). Remember to double-quote the pattern to avoid weird "
-        "behaviour. You can add several patterns by separating them with ','. "
-        "In cases where you need to match for a comma you need to escape it as "
-        "'\\,'. (Pattern example: '\"*[BIOS]*,*proto*\"')",
         "PATTERN", "");
     QCommandLineOption excludepatternOption(
         "excludepattern",
@@ -199,12 +181,6 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "','. In cases where you need to match for a comma you need to escape "
         "it as '\\,'. (Pattern example: '\"*[BIOS]*,*proto*\"')",
         "PATTERN", "");
-    QCommandLineOption fromfileOption(
-        "fromfile",
-        "(DEPRECATED, please use '--includefrom' instead) Tells Skyscraper to "
-        "load the list of filenames to work on from a file. This file can be "
-        "generated with the '--cache report:missing' option or made manually.",
-        "FILENAME", "");
     QCommandLineOption includefromOption(
         "includefrom",
         "Tells Skyscraper to only include the files listed in FILENAME. One "
@@ -244,12 +220,6 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption verbosityOption(
         "verbosity", "Print more info while scraping. Default: 0", "0-3", "0");
 
-#if QT_VERSION >= 0x050800
-    includefilesOption.setFlags(QCommandLineOption::HiddenFromHelp);
-    excludefilesOption.setFlags(QCommandLineOption::HiddenFromHelp);
-    fromfileOption.setFlags(QCommandLineOption::HiddenFromHelp);
-#endif
-
     parser->addOption(addextOption);
     parser->addOption(aOption);
     parser->addOption(cacheOption);
@@ -257,15 +227,12 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(dOption);
     parser->addOption(endatOption);
     parser->addOption(eOption);
-    parser->addOption(excludefilesOption);
     parser->addOption(excludefromOption);
     parser->addOption(excludepatternOption);
     parser->addOption(flagsOption);
     parser->addOption(fOption);
-    parser->addOption(fromfileOption);
     parser->addOption(gOption);
     parser->addHelpOption();
-    parser->addOption(includefilesOption);
     parser->addOption(includefromOption);
     parser->addOption(includepatternOption);
     parser->addOption(iOption);

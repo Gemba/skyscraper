@@ -1040,7 +1040,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         }
     }
     printf("\033[1;32mAll done!\033[0m\nConsider using the '\033[1;33m--cache "
-           "edit --fromfile <REPORTFILE>\033[0m' or the '\033[1;33m-s "
+           "edit --includefrom <REPORTFILE>\033[0m' or the '\033[1;33m-s "
            "import\033[0m' module to add the missing resources. Check "
            "'\033[1;33m--help\033[0m' and '\033[1;33m--cache help\033[0m' for "
            "more information.\n\n");

@@ -362,6 +362,7 @@
     },
     "241": {
         "nom_eu": "CreatiVision",
+        "nom_recalbox": "creativision",
         "nom_retropie": "crvision"
     },
     "49": {
@@ -481,12 +482,12 @@
         "nom_eu": "Gamate"
     },
     "52": {
-        "nom_eu": "Game &amp; Watch",
+        "nom_eu": "Game & Watch",
         "nom_recalbox": "gw",
         "nom_retropie": "gameandwatch",
-        "nom_launchbox": "Game &amp; Watch",
+        "nom_launchbox": "Game & Watch",
         "nom_hyperspin": "Electronic Handheld Games",
-        "noms_commun": "Nintendo Game &amp; Watch,Game &amp; Watch,Nintendo Game and Watch,Game and Watch,Nintendo Game&apos;n&apos;Watch,Game&apos;n&apos;Watch,G&amp;W,GW"
+        "noms_commun": "Nintendo Game & Watch,Game & Watch,Nintendo Game and Watch,Game and Watch,Nintendo Game'n'Watch,Game'n'Watch,G&W,GW"
     },
     "9": {
         "nom_eu": "Game Boy",
@@ -925,6 +926,14 @@
         "nom_hyperspin": "Nintendo Entertainment System,Nintendo Famicom",
         "noms_commun": "Nintendo Entertainment System,NES,Famicom,Family Computer,Nintendo Famicom,Nintendo Family Computer"
     },
+    "278": {
+        "nom_eu": "Nes - Super Mario Bros. Hacks",
+        "nom_recalbox": "nes",
+        "nom_retropie": "nes",
+        "nom_launchbox": "Nintendo Entertainment System - Mario Hacks",
+        "nom_hyperspin": "Nintendo Famicom, Nintendo Entertainment System",
+        "noms_commun": "Nintendo Entertainment System - Super Mario Mario Hacks,Nes - Super Mario Bros. Hacks"
+    },
     "180": {
         "nom_eu": "Nichibutsu",
         "nom_recalbox": "arcade,mame,fba,fba_libretro",
@@ -1132,7 +1141,7 @@
     "99": {
         "nom_eu": "Plus/4",
         "nom_launchbox": "Commodore Plus 4",
-        "nom_hyperspin": "Commodore 16 &amp; Plus4",
+        "nom_hyperspin": "Commodore 16 & Plus4",
         "noms_commun": "Commodore Plus/4,Plus/4,Commodore 16,Commodore Minus/60,Minus/60"
     },
     "237": {
@@ -1299,10 +1308,10 @@
         "noms_commun": "Bandai Sufami Turbo,Sufami Turbo"
     },
     "100": {
-        "nom_eu": "Super A&apos;can",
+        "nom_eu": "Super A'can",
         "nom_launchbox": "Funtech Super Acan",
         "nom_hyperspin": "Funtech Super Acan",
-        "noms_commun": "Funtech Super A&apos;Can,Super A&apos;Can"
+        "noms_commun": "Funtech Super A'Can,Super A'Can"
     },
     "67": {
         "nom_eu": "Super Cassette Vision",
@@ -1365,6 +1374,11 @@
         "nom_launchbox": "arcade",
         "noms_commun": "TECMO"
     },
+    "269": {
+        "nom_eu": "TeknoParrot",
+        "nom_launchbox": "TeknoParrot",
+        "noms_commun": "Tekno Parrot"
+    },
     "200": {
         "nom_eu": "the Pinball Arcade"
     },
@@ -1425,6 +1439,10 @@
         "nom_eu": "V.Smile",
         "noms_commun": "VTech V.Smile,V.Smile"
     },
+    "281": {
+        "nom_eu": "VC 4000",
+        "nom_us": "Video Computer 4000"
+    },
     "102": {
         "nom_eu": "Vectrex",
         "nom_recalbox": "vectrex",
@@ -1456,6 +1474,10 @@
         "nom_hyperspin": "Magnavox Odyssey 2,Philips Videopac Plus G7400",
         "noms_commun": "Magnavox Odyssey²,Magnavox Odyssey2,Philips Videopac,Radiola Videopac,Schneider Videopac,Siera Videopac,Brandt Jopac,Continental Edision Jopac,Sabe Jopac,Philips Videopac G7000,Philips Videopac C52,Radiola Videopac Jet 25,Philips Videopac G7200,Radiola Videopac Jet 27,Schneider Videopac 7200,Magnavox Odyssey²,Magnavox Odyssey2,Philips Videopac,Radiola Videopac,Schneider Videopac,Siera Videopac,Brandt Jopac,Continental Edision Jopac,Sabe Jopac,Philips Videopac G7000,Philips Videopac C52,Philips Videopac N60,Radiola Videopac Jet 25,Philips Videopac G7200,Radiola Videopac Jet 27,Schneider Videopac 7200,Philips Videopac+ G7400,Radiola Videopac Jet 47,Radiola Videopac Jet 74+,Brandt Japac JO7400,Continental Edison Jopac JO 1450,Philips Videopac C7420,Philips Videopac G7401,Radiola Videopac Jet 471,Radiola Videopac Jet 741+,Odyssey²,Odyssey2,Videopac,Jopac,Videopac G7000,Videopac C52,Videopac N60,Videopac Jet 25,Videopac G7200,Videopac Jet 27,Videopac 7200,Videopac+ G7400,Videopac Jet 47,Videopac Jet 74+,Japac JO 7400,Jopac JO 1450,Videopac C7420,Videopac G7401,Videopac Jet 471,Videopac Jet 741+,G7000,G7200,G7400,JO 7400,JO 1450,C7420,G7401"
     },
+    "272": {
+        "nom_eu": "Vircon32",
+        "nom_recalbox": "vircon32"
+    },
     "11": {
         "nom_eu": "Virtual Boy",
         "nom_recalbox": "virtualboy",
@@ -1474,6 +1496,10 @@
     "198": {
         "nom_eu": "Visual Pinball",
         "nom_hyperspin": "Visual Pinball"
+    },
+    "275": {
+        "nom_eu": "Voxatron",
+        "nom_retropie": "voxatron"
     },
     "262": {
         "nom_eu": "WASM-4",

@@ -179,12 +179,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->excludeFrom = v;
                 continue;
             }
-            if (k == "excludePattern" || k == "excludeFiles") {
-                if (k == "excludeFiles") {
-                    printf("\033[1;33mParameter %s is deprecated! "
-                           "Use excludePattern instead.\n\033[0m",
-                           k.toUtf8().constData());
-                }
+            if (k == "excludePattern") {
                 config->excludePattern = v;
                 continue;
             }
@@ -192,13 +187,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->extensions = v;
                 continue;
             }
-            if (k == "gamelistFolder" || k == "gameListFolder") {
-                if (k == "gamelistFolder") {
-                    printf("\033[1;33mParameter %s is deprecated! "
-                           "Use gameListFolder (note the upper L) "
-                           "instead.\n\033[0m",
-                           k.toUtf8().constData());
-                }
+            if (k == "gameListFolder") {
                 config->gameListFolder = (type == CfgType::MAIN)
                                              ? concatPath(v, config->platform)
                                              : v;
@@ -227,12 +216,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 }
                 continue;
             }
-            if (k == "includeFiles" || k == "includePattern") {
-                if (k == "includeFiles") {
-                    printf("\033[1;33mParameter %s is deprecated! "
-                           "Use includePattern instead.\n\033[0m",
-                           k.toUtf8().constData());
-                }
+            if (k == "includePattern") {
                 config->includePattern = v;
                 continue;
             }
@@ -601,16 +585,8 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     if (parser->isSet("endat")) {
         config->endAt = parser->value("endat");
     }
-    // This option is DEPRECATED, use includepattern
-    if (parser->isSet("includefiles")) {
-        config->includePattern = parser->value("includefiles");
-    }
     if (parser->isSet("includepattern")) {
         config->includePattern = parser->value("includepattern");
-    }
-    // This option is DEPRECATED, use excludepattern
-    if (parser->isSet("excludefiles")) {
-        config->excludePattern = parser->value("excludefiles");
     }
     if (parser->isSet("excludepattern")) {
         config->excludePattern = parser->value("excludepattern");

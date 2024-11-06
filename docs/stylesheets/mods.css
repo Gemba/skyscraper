@@ -8,6 +8,10 @@
   --md-default-fg-color--light: hsla(var(--md-hue),15%,90%,0.90);
 }
 
+.md-typeset .admonition {
+  font-size: 90%;
+}
+
 .md-typeset .admonition.warning,
 .md-typeset details.warning {
   border-color: #ffd815;

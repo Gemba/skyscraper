@@ -1,7 +1,22 @@
 ## Changes
 
-This page summarizes the changes per Skyscraper release [for
+This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
+
+### Version 3.13.0 (2024-11-xx)
+
+- Added: Option to provide user file `peas_local.json` (same format as
+  `peas.json`), to extend platform information or overwrite existing platform
+  information
+- Updated: `*_platform.json` files as reference for supported platforms of
+  various scrapers
+- Added: Support for Vircon32 platform in `peas.json`. Thanks for hinting,
+  @vircon32
+- Removed: `scrapers` entries in `peas.json`, as it did not provide any use.
+- Removed: Deprecated flags and options: `includeFiles` superseded by
+  `includePattern`; `excludeFiles` superseded by `excludePattern`;
+  `gamelistFolder` superseded by `gameListFolder`; `fromfile` superseded by
+  `includefrom`. These were deprecated since v3.7.0.
 
 ### Version 3.12.0 (2024-07-01)
 

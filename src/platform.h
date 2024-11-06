@@ -41,7 +41,6 @@ public:
     void clearConfigData();
 
     QStringList getPlatforms() const;
-    QStringList getScrapers(QString platform) const;
     QString getFormats(QString platform, QString extensions,
                        QString addExtensions) const;
     QString getDefaultScraper() const;
