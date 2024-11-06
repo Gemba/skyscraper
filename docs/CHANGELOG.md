@@ -3,7 +3,7 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.13.0 (2024-11-xx)
+### Version 3.13.0 (2024-11-06)
 
 - Added: Option to provide user file `peas_local.json` (same format as
   `peas.json`), to extend platform information or overwrite existing platform

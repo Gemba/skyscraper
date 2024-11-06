@@ -80,7 +80,7 @@ sibling to the Skyscraper executable. Below is a part of the output:
 Outline:
 
 1. Create a file `peas_local.json` sibling to `peas.json`. Enter in this file an
-   empty `{}` JSON object. 
+   empty `{}` JSON object.
 2. Create a new platform block in `peas_local.json` inside the outer (empty)
    block created before, or copy an existing block and adapt to your needs. For
    RetroPie your chosen `<platform_name>` must match the folder in
