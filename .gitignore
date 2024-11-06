@@ -63,6 +63,7 @@ packages
 *-packages
 target
 build
+peas_local.json
 
 # macOS
 .DS_Store

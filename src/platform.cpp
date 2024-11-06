@@ -60,8 +60,8 @@ bool Platform::loadConfig() {
         return false;
     }
 
-    QByteArray saveData = configFile.readAll();
-    QJsonDocument json(QJsonDocument::fromJson(saveData));
+    QByteArray jsonData = configFile.readAll();
+    QJsonDocument json(QJsonDocument::fromJson(jsonData));
 
     if (json.isNull() || json.isEmpty()) {
         printf("\033[1;31mFile '%s' empty or no JSON format. Now "
@@ -70,7 +70,14 @@ bool Platform::loadConfig() {
         return false;
     }
 
+    QJsonObject jObjLocal = loadLocalConfig();
     QJsonObject jObj = json.object();
+
+    for (auto plit = jObjLocal.constBegin(); plit != jObjLocal.constEnd();
+         plit++) {
+        jObj.insert(plit.key(), plit.value());
+    }
+
     peas = jObj.toVariantMap();
 
     for (auto piter = jObj.constBegin(); piter != jObj.constEnd(); piter++) {
@@ -83,6 +90,23 @@ bool Platform::loadConfig() {
         return false;
     }
     return true;
+}
+
+QJsonObject Platform::loadLocalConfig() {
+    QJsonObject peasLocal;
+    QString fn = "peas_local.json";
+    QFile configFile(fn);
+
+    if (configFile.open(QIODevice::ReadOnly)) {
+        QByteArray jsonData = configFile.readAll();
+        QJsonDocument json(QJsonDocument::fromJson(jsonData));
+
+        if (!json.isNull() && !json.isEmpty()) {
+            qDebug() << "successfully loaded" << fn;
+            peasLocal = json.object();
+        }
+    }
+    return peasLocal;
 }
 
 void Platform::clearConfigData() {

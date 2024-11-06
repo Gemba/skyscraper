@@ -98,6 +98,7 @@ def print_coverage(df):
         "utilizing the 'aliases' list of the peas.json file. Read the details: "
         "https://gemba.github.io/skyscraper/PLATFORMS/#updating-peasjson-and-platforms_idmapcsv")
 
+
 def annotate_peas(f):
     if f in replacements:
         print(
@@ -186,6 +187,17 @@ if __name__ == "__main__":
 
     with open(peas_fn) as fh:
         peas = pd.DataFrame([k for k in json.load(fh).keys()], columns=["folder"])
+
+    peas_local_fn = cfg_home / "peas_local.json"
+    if peas_local_fn.exists():
+        peas = peas.set_index("folder")
+        with open(peas_local_fn) as fh:
+            peas_local = pd.DataFrame([k for k in json.load(fh).keys()], columns=["folder"])
+            peas_local.set_index("folder")
+            peas.update(peas_local)
+            peas = peas.reset_index()
+        print(f"[+] Merging with local platform file: {peas_local_fn}")
+
 
     df = print_platform_tree()
     print_coverage(df)

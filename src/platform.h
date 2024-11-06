@@ -50,6 +50,7 @@ public:
 
 private:
     bool loadPlatformsIdMap();
+    QJsonObject loadLocalConfig();
 
     QStringList platforms;
     QVariantMap peas;
