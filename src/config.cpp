@@ -26,6 +26,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QStringBuilder>
+#include <QStringList>
 
 void Config::copyFile(const QString &src, const QString &dest, FileOp fileOp) {
     if (QFileInfo::exists(src)) {
@@ -38,7 +40,8 @@ void Config::copyFile(const QString &src, const QString &dest, FileOp fileOp) {
                 QString d = QString(dest + ".dist");
                 QFile::remove(d);
                 QFile::copy(src, d);
-                qDebug() << "Created original dist file as" << d;
+                qDebug() << "Copied original distribution file" << src << "as"
+                         << d;
             }
         } else {
             QFile::copy(src, dest);
@@ -65,14 +68,11 @@ void Config::setupUserConfig() {
     }
 
     // Create import paths
-    skyDir.mkpath("import/textual");
-    skyDir.mkpath("import/screenshots");
-    skyDir.mkpath("import/covers");
-    skyDir.mkpath("import/wheels");
-    skyDir.mkpath("import/marquees");
-    skyDir.mkpath("import/textures");
-    skyDir.mkpath("import/videos");
-    skyDir.mkpath("import/manuals");
+    QStringList paths = {"covers",  "manuals",  "marquees", "screenshots",
+                         "textual", "textures", "videos",   "wheels"};
+    for (auto p : paths) {
+        skyDir.mkpath("import/" % p);
+    }
 
     // Create resources folder
     skyDir.mkpath("resources");
@@ -149,7 +149,8 @@ void Config::setupUserConfig() {
         if (dest.isEmpty()) {
             dest = src;
         }
-        copyFile(localEtcPath + src, dest, configFiles.value(src).second);
+        copyFile(localEtcPath % src, skyDir.absolutePath() % "/" % dest,
+                 configFiles.value(src).second);
     }
 }
 

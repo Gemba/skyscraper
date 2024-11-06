@@ -120,7 +120,7 @@ bool Cache::read() {
         QSet<QString> fileEntries;
         for (auto const &t : binTypes()) {
             QDir dir(cacheDir.absolutePath() % "/" % t % "s", "*.*", QDir::Name,
-                    QDir::Files);
+                     QDir::Files);
             QDirIterator it(dir.absolutePath(),
                             QDir::Files | QDir::NoDotAndDotDot,
                             QDirIterator::Subdirectories);
@@ -180,7 +180,7 @@ bool Cache::read() {
             resource.value = xml.readElementText();
             if (binTypes().contains(resource.type) &&
                 !fileEntries.contains(cacheDir.absolutePath() % "/" %
-                                   resource.value)) {
+                                      resource.value)) {
                 printf("Source file '%s' missing, skipping entry...\n",
                        resource.value.toStdString().c_str());
                 continue;
