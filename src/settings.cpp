@@ -188,7 +188,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "gameListFolder") {
-                config->gameListFolder = (type == CfgType::MAIN)
+                config->gameListFolder = (type == CfgType::MAIN ||
+                                          type == CfgType::FRONTEND /* #68 */)
                                              ? concatPath(v, config->platform)
                                              : v;
                 gameListFolderSet = true;
@@ -249,7 +250,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "mediaFolder") {
-                config->mediaFolder = (type == CfgType::MAIN)
+                config->mediaFolder = (type == CfgType::MAIN ||
+                                       type == CfgType::FRONTEND /* #68 */)
                                           ? concatPath(v, config->platform)
                                           : v;
                 mediaFolderSet = true;

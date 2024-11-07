@@ -146,7 +146,7 @@ Sets the game list export folder. By default Skyscraper exports the game list to
 
 !!! note
 
-    If this is set in the `[main]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
+    If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
@@ -164,13 +164,13 @@ Allowed in sections: `[main]`, `[<FRONTEND>]`
 
 #### mediaFolder
 
-Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder extended with `/media`. This allows you to change that to a non-default location.
+Sets the artwork / media output folder. By default (ie. if the option `mediaFolder` is not explicitly set or pre-defined by the frontend) Skyscraper outputs the composited artwork files to the game list export folder concatenated with `/media`. The `mediaFolder` setting enables you to change that to a non-default location.
 
 Read more about the artwork compositing [here](ARTWORK.md).
 
 !!! note
 
-    If this is set in the `[main]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLAFORM>]` section instead where it will be used as is.
+    If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLAFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>/media`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
