@@ -70,13 +70,11 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
     // Request list of games but don't allow re-releases ("game.version_parent =
     // null")
     limiter.exec();
-    netComm->request(baseUrl + "/search/",
-                     "fields "
-                     "game.name,game.platforms.name,game.release_dates.date,"
-                     "game.release_dates.platform; search \"" +
-                         searchName +
-                         "\"; where game != null & game.version_parent = null;",
-                     headers);
+    const QString postData =
+        "fields game.name,game.platforms.name,game.release_dates.date,"
+        "game.release_dates.platform; search \"" +
+        searchName + "\"; where game != null & game.version_parent = null;";
+    netComm->request(baseUrl + "/search/", postData, headers);
     q.exec();
     data = netComm->getData();
 
