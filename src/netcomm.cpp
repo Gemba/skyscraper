@@ -25,6 +25,7 @@
 
 #include "netcomm.h"
 
+#include <QDebug>
 #include <QNetworkRequest>
 #include <QUrl>
 
@@ -43,8 +44,6 @@ void NetComm::request(QString query, QString postData,
     request.setHeader(QNetworkRequest::UserAgentHeader,
                       "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) "
                       "Gecko/20100101 Firefox/74.0");
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/x-www-form-urlencoded");
 
     if (!headers.isEmpty()) {
         for (const auto &header : headers) {
@@ -53,8 +52,15 @@ void NetComm::request(QString query, QString postData,
     }
 
     if (postData.isNull()) {
+        // GET
+        // No body -> no Content-Type
         reply = manager->getRequest(request);
+    } else if (postData == "HEAD") {
+        reply = manager->headRequest(request);
     } else {
+        // POST
+        request.setHeader(QNetworkRequest::ContentTypeHeader,
+                          "application/x-www-form-urlencoded");
         reply = manager->postRequest(request, postData.toUtf8());
     }
     connect(reply, &QNetworkReply::finished, this, &NetComm::replyReady);
@@ -69,11 +75,22 @@ void NetComm::replyReady() {
     error = reply->error();
     contentType = reply->rawHeader("Content-Type");
     redirUrl = reply->rawHeader("Location");
+    headerPairs = reply->rawHeaderPairs();
     reply->deleteLater();
     emit dataReady();
 }
 
 QByteArray NetComm::getData() { return data; }
+
+QString NetComm::getHeaderValue(const QString headerKey) {
+    for (const auto &h : headerPairs) {
+        if (h.first == headerKey.toUtf8()) {
+            qDebug() << h.first << ":" << h.second;
+            return QString(h.second);
+        }
+    }
+    return "";
+}
 
 QNetworkReply::NetworkError NetComm::getError(const int &verbosity) {
     if (error != QNetworkReply::NoError && verbosity >= 1) {

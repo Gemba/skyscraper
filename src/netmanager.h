@@ -36,6 +36,7 @@ class NetManager : public QNetworkAccessManager {
 public:
     NetManager();
     QNetworkReply *getRequest(const QNetworkRequest &request);
+    QNetworkReply *headRequest(const QNetworkRequest &request);
     QNetworkReply *postRequest(const QNetworkRequest &request,
                                const QByteArray &data);
 

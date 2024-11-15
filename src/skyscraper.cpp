@@ -1084,9 +1084,31 @@ void Skyscraper::prepareScraping() {
 }
 
 void Skyscraper::updateWhdloadDb(NetComm &netComm, QEventLoop &q) {
+    const QString url = "https://raw.githubusercontent.com/HoraceAndTheSpider/"
+                        "Amiberry-XML-Builder/master/whdload_db.xml";
+    netComm.request(url, "HEAD");
+    q.exec();
+    
+    QString etag = netComm.getHeaderValue("ETag");
+    QString cachedEtag;
+    QFile whdlEtagFile(Config::getSkyFolder(Config::SkyFolderType::LOG) %
+                       "/whdload_cached_etag.txt");
+    if (whdlEtagFile.open(QIODevice::ReadOnly)) {
+        cachedEtag = QString(whdlEtagFile.readLine());
+        whdlEtagFile.close();
+    }
+    if (!etag.isEmpty() && etag == cachedEtag) {
+        // not expired, no need to download again
+        return;
+    }
+
+    if (!etag.isEmpty() && whdlEtagFile.open(QIODevice::WriteOnly)) {
+        whdlEtagFile.write(etag.toUtf8());
+        whdlEtagFile.close();
+    }
+
     printf("Fetching 'whdload_db.xml', just a sec...");
-    netComm.request("https://raw.githubusercontent.com/HoraceAndTheSpider/"
-                    "Amiberry-XML-Builder/master/whdload_db.xml");
+    netComm.request(url);
     q.exec();
     QByteArray data = netComm.getData();
     QDomDocument tempDoc;

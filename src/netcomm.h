@@ -43,6 +43,7 @@ public:
     QNetworkReply::NetworkError getError(const int &verbosity = 0);
     QByteArray getContentType();
     QByteArray getRedirUrl();
+    QString getHeaderValue(const QString headerKey);
 
 private slots:
     void replyReady();
@@ -60,6 +61,7 @@ private:
     QByteArray contentType;
     QByteArray redirUrl;
     QNetworkReply *reply;
+    QList<QNetworkReply::RawHeaderPair> headerPairs;
 };
 
 #endif // NETCOMM_H
