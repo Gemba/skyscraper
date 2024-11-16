@@ -763,8 +763,14 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
 }
 
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
-    QSettings settings(parser.isSet("c") ? parser.value("c") : "config.ini",
-                       QSettings::IniFormat);
+    QString iniFile = parser.isSet("c") ? parser.value("c") : "config.ini";
+    if (!QFileInfo(iniFile).exists()) {
+        printf(
+            "\nWARNING! Provided config file '\033[1;33m%s\033[0m' does not "
+            "exist.\nSkyscraper will use default configuration values...\n\n",
+            iniFile.toStdString().c_str());
+    }
+    QSettings settings(iniFile, QSettings::IniFormat);
 
     RuntimeCfg *rtConf = new RuntimeCfg(&config, &parser);
     // Start by setting frontend, since we need it to set default for game list
