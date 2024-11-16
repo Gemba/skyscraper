@@ -555,7 +555,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 #### unattend
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _never_ skip existing entries, in other words: the game list will be newly created. This is useful when scripting Skyscraper to avoid the need for user input.
+When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _never_ skip existing entries, in other words: the game list will be newly created. This is flag useful for example when scripting Skyscraper to avoid the need for user input.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
@@ -564,7 +564,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
 
 #### unattendSkip
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _always_ skip existing entries, in other words: game list entries are added if not present in the gamelist, existing entries are left untouched. This is useful when scripting Skyscraper to avoid the need for user input.
+When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _always_ skip existing entries, in other words: game list entries are added if not present in the gamelist, existing entries are left untouched. This flag is useful for example when scripting Skyscraper to avoid the need for user input.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
@@ -726,7 +726,8 @@ langPrios="it,en"
 
 #### artworkXml
 
-Sets a non-default xml file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. Read more about the artwork.xml format and customization options [here](ARTWORK.md).
+Sets a non-default xml file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded to `/home/<USER>/.skyscraper/<artworkXml>`, respective to `$XDG_CONFIG_HOME/skyscraper/<artworkXml>`, if you use Skyscraper in [XDG](XDG.md) mode.  
+Read more about the artwork.xml format and customization options [here](ARTWORK.md).
 
 !!! tip
 

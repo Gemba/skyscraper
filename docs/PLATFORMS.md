@@ -101,7 +101,7 @@ Outline:
 There is also a an verbatim example, you may skip the next section initially and
 can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
 
-### Updating `peas.json` and `platforms_idmap.csv`
+### Updating `peas.json` (or `peas_local.json`) and `platforms_idmap.csv`
 
 These two files are ment to be locally edited and extended for additional
 platforms. Whenever you add a new platform block to the `peas.json` do also

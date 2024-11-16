@@ -55,8 +55,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
     if (config->platform.isEmpty()) {
         QStringList plafs = Platform::get().getPlatforms();
         if (parser->isSet("p") &&
-            // '_' is seen as a subcategory of the selected platform
             plafs.contains(parser->value("p").split('_').first())) {
+            /* '_' is seen as a subcategory of the selected platform */
             config->platform = parser->value("p");
         } else if (type == CfgType::MAIN && settings->contains("platform") &&
                    plafs.contains(settings->value("platform").toString())) {
@@ -67,7 +67,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                              (parser->value("cache") == "help" ||
                               parser->value("cache") == "report:missing=help");
             QStringList flags = parseFlags();
-            if (!cacheHelp && !flags.contains("help")) {
+            if (!cacheHelp && !flags.contains("help") &&
+                !parser->isSet("hint")) {
                 if (parser->isSet("p")) {
                     printf("\033[1;31mUnknown platform '%s' provided. \033[0m",
                            parser->value("p").toUtf8().constData());
@@ -588,6 +589,10 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     }
     if (parser->isSet("refresh")) {
         config->refresh = true;
+    }
+    if (parser->isSet("hint")) {
+        Cli::showHint();
+        exit(0);
     }
     if (parser->isSet("cache")) {
         config->cacheOptions = parser->value("cache");

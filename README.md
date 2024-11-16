@@ -69,8 +69,8 @@ Follow the steps below to install the latest version of Skyscraper. Lines beginn
 
 NOTE! If you are using the RetroPie distribution, you have the option to install Skyscraper directly from the RetroPie-Setup script (*you need to update the script before installing it!*). Read more about all of that [here](https://retropie.org.uk/docs/Scraper/#skyscraper). If not, read on.
 
-### Installation of Skyscraper Enhanced on RetroPie
-This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie_setup.sh` and folow the menus (_Manage packages_ -> _Manage optional packages_ -> then look for _Skyscraper_) or run `sudo RetroPie-Setup/retropie_packages.sh skyscraper`. This will also automagically install programmable completion (aka. bash completion) for the Skyscraper command line.
+### Installation of Skyscraper on RetroPie and Programmable Completion
+This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie_setup.sh` and folow the menus (_Manage packages_ -> _Manage optional packages_ -> then look for _Skyscraper_) or run `sudo RetroPie-Setup/retropie_packages.sh skyscraper`. This will also automagically install programmable completion (aka. bash completion) for the Skyscraper command line (see also [here](https://gemba.github.io/skyscraper/CLIHELP#programmable-completion)).
 
 ### Installation Prerequisites on Other Systems or Architectures
 #### Linux
@@ -197,14 +197,14 @@ To read more about any of the features described above, please check out all of 
 ### Artwork look and effects
 Check the full artwork documentation [here](https://gemba.github.io/skyscraper/ARTWORK/)
 
-## Skyscraper Configurable Platforms Enhancement
-The main goal of this fork is to allow users to easily configurate and add platforms without having the needs to edit the code source directly.
+## Skyscraper Configurable Platforms
+You can easily configurate and add platforms without having the needs to edit the code source directly.
 
 This feature is achieved by adding new config files:
 - [peas.json](peas.json): Describes now the supported platforms by Skyscraper. See all details [here](https://gemba.github.io/skyscraper/PLATFORMS/).
 - [platforms_idmap.csv](platforms_idmap.csv): Maps the local platform name to the platform ID of screenscraper.fr, Mobygames or The Games DB web API.
 
-These files are copied in the folder `/home/pi/.skyscraper` on RetroPie (or `/usr/local/etc/skyscraper/` in general) at the first run of the program if you want to edit them after an installation.  
+These files are copied into the folder `/home/pi/.skyscraper` on RetroPie (or `/usr/local/etc/skyscraper/` in general) at the first run of the program if you want to edit them after an installation.
 
 ## Previous Release Notes
 Release notes for older releases which this fork builds on can be found [here](docs/OLDERRELEASES.md).

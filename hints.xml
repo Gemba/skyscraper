@@ -11,7 +11,7 @@
   <hint>You can turn off these hints using the '--flags nohints' command line flag.</hint>
   <hint>You can force Skyscraper to never apply any bracket notes (such as '(Europe)' or '[aga]') to the game names by using the '--flags nobrackets' command line flag.</hint>
   <hint>If you don't like the returned titles of your games, you can either import your own with the '-s import' module or force it to use the filenames with the '--flags forcefilename' command line flag.</hint>
-  <hint>You can scrape a single game by adding it to the command line either with partial or full path. You can also scrape a span of games with the '--startat' and '--endat' command line options.</hint>
+  <hint>You can scrape a single game by adding it to the command line either with relative or absolute path. You can also scrape a span of games with the '--startat' and '--endat' command line options.</hint>
   <hint>With the '--cache show' command line option, you can check the status of the resources that are cached for the platform you are scraping.</hint>
   <hint>You can use the '--help' command line option to view all available options. Most of these can also be set in the '/home/USER/.skyscraper/config.ini'. Check the '/home/USER/.skyscraper/config.ini.example' file for all available options.</hint>
   <hint>You can set custom input/rom, game list and media folders using the '-i', '-g' and '-o' command line options.</hint>
@@ -26,5 +26,10 @@
   <hint>You can create reports for all files missing certain resources in the cache using the '--cache report:missing=&lt;GROUP or RESOURCE1,RESOURCE2,...&gt; option. Great ways to add missing resources that the online sources are having trouble providing are the '--cache edit' option or the '-s import' module.</hint>
   <hint>Using the '--flags theinfront' flag you can force Skyscraper to always move 'The' to the front of the game titles, regardless of how it was returned from the scraping sources.</hint>
   <hint>When importing ratings ("-s import") you can use either 5-star like scale (0.5, 1, 1.5, ... , 5) or decimal numbers scale (0.0 to 1.0) for the rating value.</hint>
-  <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;"", where the &lt;gameid&gt; is the ID listed on the mobygames site in a game's detail view.</hint>
+  <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;", where the &lt;gameid&gt; is the ID listed on the mobygames site in a game's detail view.</hint>
+  <hint>Skyscraper on Linux supports bash-completion (programmable completion): Check the documentation how to enable it. Afterwards press TAB twice to display options or values for options.</hint>
+  <hint>You can scrape game manuals with Skyscraper and display them if your frontend supports this. Use manuals=true in config.ini.</hint>
+  <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the XDG.md documentation.</hint>
+  <hint>Skyscraper supports ES-DE frontend format.</hint>
+  <hint>You can add new platforms (i.e., systems to scrape) by configuration file edits. See PLATFORMS.md.</hint>
 </hints>

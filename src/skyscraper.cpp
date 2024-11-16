@@ -43,17 +43,47 @@
 #include <QStorageInfo>
 #endif
 
-#if QT_VERSION >= 0x050a00
-#include <QRandomGenerator>
-#endif
-
 #include "attractmode.h"
+#include "cli.h"
 #include "emulationstation.h"
 #include "esde.h"
 #include "pegasus.h"
 #include "settings.h"
 #include "skyscraper.h"
 #include "strtools.h"
+
+// https://stackoverflow.com/a/323302
+static inline unsigned long mix(unsigned long a, unsigned long b,
+                                unsigned long c) {
+    a = a - b;
+    a = a - c;
+    a = a ^ (c >> 13);
+    b = b - c;
+    b = b - a;
+    b = b ^ (a << 8);
+    c = c - a;
+    c = c - b;
+    c = c ^ (b >> 13);
+    a = a - b;
+    a = a - c;
+    a = a ^ (c >> 12);
+    b = b - c;
+    b = b - a;
+    b = b ^ (a << 16);
+    c = c - a;
+    c = c - b;
+    c = c ^ (b >> 5);
+    a = a - b;
+    a = a - c;
+    a = a ^ (c >> 3);
+    b = b - c;
+    b = b - a;
+    b = b ^ (a << 10);
+    c = c - a;
+    c = c - b;
+    c = c ^ (b >> 15);
+    return c;
+}
 
 Skyscraper::Skyscraper(const QCommandLineParser &parser,
                        const QString &currentDir) {
@@ -63,7 +93,7 @@ Skyscraper::Skyscraper(const QCommandLineParser &parser,
 
     // Randomize timer
 #if QT_VERSION < 0x050a00
-    qsrand(QTime::currentTime().msec());
+    qsrand(clock(), time(NULL), QCoreApplication::applicationPid());
 #endif
 
     printf("%s", StrTools::getVersionHeader().toStdString().c_str());
@@ -1017,28 +1047,7 @@ QString Skyscraper::normalizePath(QFileInfo fileInfo) {
     return "";
 }
 
-void Skyscraper::showHint() {
-    QFile hintsFile("hints.xml");
-    QDomDocument hintsXml;
-    if (!hintsFile.open(QIODevice::ReadOnly) ||
-        !hintsXml.setContent(&hintsFile)) {
-        return;
-    }
-    hintsFile.close();
-    QDomNodeList hintNodes = hintsXml.elementsByTagName("hint");
-    printf("\033[1;33mDID YOU KNOW:\033[0m %s\n\n",
-           hintsXml
-               .elementsByTagName("hint")
-#if QT_VERSION >= 0x050a00
-               .at(QRandomGenerator::global()->generate() % hintNodes.length())
-#else
-               .at(qrand() % hintNodes.length())
-#endif
-               .toElement()
-               .text()
-               .toStdString()
-               .c_str());
-}
+void Skyscraper::showHint() { Cli::showHint(); }
 
 void Skyscraper::prepareScraping() {
     loadAliasMap();

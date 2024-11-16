@@ -28,6 +28,7 @@ namespace Cli {
     void subCommandUsage(const QString subCmd);
     QMap<QString, QString> getSubCommandOpts(const QString subCmd);
     void cacheReportMissingUsage();
+    void showHint();
 } // namespace Cli
 
 #endif // CLI_H

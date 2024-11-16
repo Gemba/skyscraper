@@ -7,6 +7,15 @@ humans](https://keepachangelog.com).
 
 - Added: Support for [XDG Base Directories](XDG.md), thanks for the suggestion
   @ASHGOLDOFFICIAL. 
+- Added: Option `--hint`, shows a random Tip of the Day
+- Updated: Skyscraper's hardcoded `/home/<USER>` replaced with the actual user's
+  home directory screen messages, thanks for highlighting it on the Mac,
+  @cdaters 
+- Updated: A downloaded `whdload.xml` file for platform Amiga will be not
+  downloaded again until the server indicates. Manually removing
+  `/home/<USER>/.skyscraper/whdload_cached_etag.txt` will force a new download.
+- Fixed: Performing Ctrl-C in `--cache edit` mode will now dismiss any changes
+  made instead of persisting them
 
 ### Version 3.13.0 (2024-11-06)
 

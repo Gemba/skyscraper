@@ -25,8 +25,13 @@
 #include "strtools.h"
 
 #include <QCommandLineOption>
+#include <QDomDocument>
 #include <QMapIterator>
 #include <QStringBuilder>
+
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#endif
 
 void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 
@@ -230,6 +235,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "CODE", "en");
     QCommandLineOption verbosityOption(
         "verbosity", "Print more info while scraping. Default: 0", "0-3", "0");
+    QCommandLineOption hintOption("hint",
+                                  "Show a random 'Tip of the Day' and quit.");
 
     parser->addOption(addextOption);
     parser->addOption(aOption);
@@ -244,6 +251,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(fOption);
     parser->addOption(gOption);
     parser->addHelpOption();
+    parser->addOption(hintOption);
     parser->addOption(includefromOption);
     parser->addOption(includepatternOption);
     parser->addOption(iOption);
@@ -474,4 +482,27 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
 
 void Cli::cacheReportMissingUsage() {
     subCommandUsage("cache report:missing=");
+}
+
+void Cli::showHint() {
+    QFile hintsFile("hints.xml");
+    QDomDocument hintsXml;
+    if (!hintsFile.open(QIODevice::ReadOnly) ||
+        !hintsXml.setContent(&hintsFile)) {
+        return;
+    }
+    hintsFile.close();
+    QDomNodeList hintNodes = hintsXml.elementsByTagName("hint");
+    printf("\033[1;33mDID YOU KNOW:\033[0m %s\n\n",
+           hintsXml
+               .elementsByTagName("hint")
+#if QT_VERSION >= 0x050a00
+               .at(QRandomGenerator::global()->generate() % hintNodes.length())
+#else
+               .at(qrand() % hintNodes.length())
+#endif
+               .toElement()
+               .text()
+               .toStdString()
+               .c_str());
 }

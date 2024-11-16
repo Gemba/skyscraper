@@ -30,7 +30,8 @@ you will information about the other options here too.
 
 ### -a &lt;FILENAME&gt;
 
-Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. Read more about the artwork.xml format and customization options [here](ARTWORK.md). Consider setting this in [`config.ini`](CONFIGINI.md#artworkxml) instead.
+Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded relative to the current working directory. Consider setting this in [`config.ini`](CONFIGINI.md#artworkxml) instead.  
+Read more about the artwork.xml format and customization options [here](ARTWORK.md).
 
 **Example(s)**
 
@@ -40,7 +41,7 @@ Skyscraper -p snes -a "/path/to/artwork.xml"
 
 ### -c &lt;FILENAME&gt;
 
-Sets a non-default config file. By default Skyscraper uses the file `/home/<USER>/.skyscraper/config.ini`.
+Sets a non-default config file. By default Skyscraper uses the file `/home/<USER>/.skyscraper/config.ini`. A relative filepath will be prepended with the current working directory. If you provide a config file that does not exist, Skyscraper will print a warning and will continue by using built-in default values for the configuration.
 
 **Example(s)**
 
@@ -48,13 +49,13 @@ Sets a non-default config file. By default Skyscraper uses the file `/home/<USER
 Skyscraper -p snes -c "/path/to/config.ini"
 ```
 
-### -d &lt;FOLDER&gt;
+### -d &lt;PATH&gt;
 
-Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to (for instance if you want your cache to reside on a USB drive). The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.).
+Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.).
 
 !!! note
 
-    If you wish to always use a certain location as base folder for your resource cache (for instance a folder on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant `config.ini` option [here](CONFIGINI.md#cachefolder).
+    If you wish to _always_ use a certain location as base folder for your resource cache ((for instance if you want your cache to reside on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant `config.ini` option [here](CONFIGINI.md#cachefolder).
 
 **Example(s)**
 
@@ -113,6 +114,10 @@ Outputs the help text for all command line options to the terminal.
 Skyscraper --help
 Skyscraper -h
 ```
+
+### --hint
+
+Displays one of Skyscrapers's 'Did you know?' tips and exits.
 
 ### -i &lt;PATH&gt;
 
@@ -257,9 +262,9 @@ Skyscraper -p snes --cache edit --includefrom "/home/pi/.skyscraper/reports/repo
 Skyscraper -p snes --cache edit:new=ages --includefrom "/home/pi/.skyscraper/reports/report-snes-missing_ages-20190708.txt"
 ```
 
-#### --cache merge:&lt;FOLDER&gt;
+#### --cache merge:&lt;PATH&gt;
 
-This option allows you to merge two resource caches together. It will merge the cache located at the `<FOLDER>` location into the default cache for the chosen platform. The path specified must be a path containing the `db.xml` file. You can also set a non-default destination to merge to with the `-d` option.
+This option allows you to merge two resource caches together. It will merge the cache located at the `<PATH>` location into the default cache for the chosen platform. The path specified must be a path containing the `db.xml` file. You can also set a non-default destination to merge to with the `-d` option.
 
 **Example(s)**
 
