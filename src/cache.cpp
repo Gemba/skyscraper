@@ -618,22 +618,24 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
             } else if (userInput == "d") {
-                int b = 0;
-                QList<int> resIds;
+                int rIdx = 0;
+                QList<int> rIdxList;
                 printf("\033[1;34mWhich resource id would you like to "
                        "remove?\033[0m (Enter to cancel)\n");
-                for (auto res : resources) {
+                for (const auto &res : resources) {
                     if (res.cacheId == cacheId &&
                         !binTypes().contains(res.type)) {
-                        printf("\033[1;33m%d\033[0m) \033[1;33m%s\033[0m (%s): "
-                               "'\033[1;32m%s\033[0m'\n",
-                               ++b, res.type.toStdString().c_str(),
-                               res.source.toStdString().c_str(),
-                               res.value.toStdString().c_str());
-                        resIds.append(b - 1);
+                        printf(
+                            "\033[1;33m%4d\033[0m) \033[1;33m%s\033[0m (%s): "
+                            "'\033[1;32m%s\033[0m'\n",
+                            rIdxList.length() + 1, res.type.toStdString().c_str(),
+                            res.source.toStdString().c_str(),
+                            res.value.toStdString().c_str());
+                        rIdxList.append(rIdx);
                     }
+                    rIdx++;
                 }
-                if (resIds.isEmpty()) {
+                if (rIdxList.isEmpty()) {
                     printf("No resources found, cancelling...\n\n");
                     continue;
                 }
@@ -646,12 +648,17 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     continue;
                 } else {
                     int chosen = atoi(typeInput.c_str());
-                    if (chosen >= 1 && chosen <= resIds.length()) {
-                        resources.removeAt(resIds.at(
-                            chosen - 1)); // -1 because lists start at 0
-                        printf("<<< Removed resource id %d\n\n", chosen);
+                    if (chosen >= 1 && chosen <= rIdxList.length()) {
+                        int index = rIdxList.at(chosen - 1);
+                        QString delType = resources[index].type;
+                        QString delSource = resources[index].source;
+                        resources.removeAt(index);
+                        printf("<<< Removed resource: %s (%s)\n\n",
+                               delType.toStdString().c_str(),
+                               delSource.toStdString().c_str());
+
                     } else {
-                        printf("Incorrect resource id, cancelling...\n\n");
+                        printf("Invalid input, cancelling...\n\n");
                     }
                 }
             } else if (userInput == "D") {
