@@ -74,6 +74,12 @@ bool Platform::loadConfig() {
 
     for (auto plit = jObjLocal.constBegin(); plit != jObjLocal.constEnd();
          plit++) {
+        if (jObj.contains(plit.key())) {
+            printf("\033[1;33mWARNING: Duplicate JSON Object key detected "
+                   "'%s'. Skyscraper will continue and use last found object. "
+                   "Remove duplicate to rectify the issue.\033[0m\n",
+                   plit.key().toUtf8().constData());
+        }
         jObj.insert(plit.key(), plit.value());
     }
 
@@ -119,6 +125,7 @@ QString Platform::getFormats(QString platform, QString extensions,
         return extensions;
     }
 
+    // default extensions/formats for all
     QSet<QString> formats({"*.zip", "*.7z", "*.ml"});
     QStringList addExts;
 
@@ -211,6 +218,14 @@ bool Platform::loadPlatformsIdMap() {
                 }
             }
             i++;
+        }
+        if (platformIdsMap.contains(pkey)) {
+            printf("\033[1;33mWARNING: Duplicate platform key detected '%s' in "
+                   "'%s'. Skyscraper will continue and uses values of that "
+                   "platform (%s). Remove duplicate to rectify the "
+                   "issue.\033[0m\n",
+                   pkey.toUtf8().constData(), fn.toUtf8().constData(),
+                   parts.join(',').toUtf8().constData());
         }
         platformIdsMap.insert(pkey, ids);
     }
