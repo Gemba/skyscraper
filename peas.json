@@ -648,6 +648,34 @@
             "*.t77"
         ]
     },
+    "fmtowns": {
+        "aliases": [
+            "Fujitsu FM-Towns",
+            "Fujitsu FM-Towns Marty"
+        ],
+        "formats": [
+            "*.bin",
+            "*.cue",
+            "*.d88",
+            "*.d77",
+            "*.iso",
+            "*.chd",
+            "*.toc",
+            "*.nrg",
+            "*.gdi",
+            "*.cdr",
+            "*.mfi",
+            "*.dfi",
+            "*.hfe",
+            "*.mfm",
+            "*.td0",
+            "*.imd",
+            "*.1dd",
+            "*.cqm",
+            "*.cqi",
+            "*.dsk"
+        ]
+    },
     "gameandwatch": {
         "aliases": [
             "game & watch"

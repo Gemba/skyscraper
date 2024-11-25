@@ -6,6 +6,7 @@ folder,screenscraper_id,mobygames_id,tgdb_id
 # - thegamesdb platform id
 #
 # If you need more than one match use the alias property in platforms.json.
+#
 # Use supplementary/scraperdata/peas_and_idmap_verify.py to view platform names
 # of the ids below. 
 
@@ -110,6 +111,7 @@ cd32,130,56,4947
 cdi,133,73,4917
 cdtv,129,83,-1
 easyrpg,231,-1,-1
+fmtowns,253,102,4932
 gamecom,121,50,4940
 gmaster,103,-1,-1
 j2me,-1,-1,5018
