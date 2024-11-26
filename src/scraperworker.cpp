@@ -396,6 +396,22 @@ void ScraperWorker::run() {
             if (config.brackets) {
                 game.title.append(
                     StrTools::xmlUnescape(parenthesesInfo % bracketInfo));
+            } else if (config.keepDiscInfo) {
+                QRegularExpressionMatch match;
+                QString discRe = "dis(k|c|co|que)\\s?\\d{1,2}";
+                QRegularExpression re = QRegularExpression(
+                    "(\\(" % discRe % "(\\)|.+\\)))",
+                    QRegularExpression::CaseInsensitiveOption);
+                match = re.match(parenthesesInfo);
+                if (match.hasMatch()) {
+                    game.title.append(" " % match.captured(1));
+                } else {
+                    re.setPattern("(\\[" % discRe % "(\\]|.+\\]))");
+                    match = re.match(bracketInfo);
+                    if (match.hasMatch()) {
+                        game.title.append(" " % match.captured(1));
+                    }
+                }
             }
         }
         output.append("Platform:       '\033[1;32m" + game.platform +

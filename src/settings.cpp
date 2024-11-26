@@ -374,6 +374,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->interactive = v;
                 continue;
             }
+            if (k == "keepDiscInfo") {
+                config->keepDiscInfo = v;
+                continue;
+            }
             if (k == "mediaFolderHidden") {
                 QStringList allowedFe({"emulationstation", "retrobat"});
                 if (allowedFe.contains(config->frontend)) {

@@ -93,6 +93,7 @@ This is an alphabetical index of all configuration options including the section
 | [inputFolder](CONFIGINI.md#inputfolder)                     |    Y     |       Y        |                |               |
 | [interactive](CONFIGINI.md#interactive)                     |    Y     |       Y        |                |       Y       |
 | [jpgQuality](CONFIGINI.md#jpgquality)                       |    Y     |       Y        |                |       Y       |
+| [keepDiscInfo](CONFIGINI.md#keepdiscinfo)                   |    Y     |       Y        |                |               |
 | [lang](CONFIGINI.md#lang)                                   |    Y     |       Y        |                |               |
 | [langPrios](CONFIGINI.md#langprios)                         |    Y     |       Y        |                |               |
 | [launch](CONFIGINI.md#launch)                               |    Y     |       Y        |       Y        |               |
@@ -548,6 +549,34 @@ Same as [innerBracketsReplace](#innerbracketsreplace) but for parentheses `)(`
 
 ---
 
+#### keepDiscInfo
+
+Only in use when the option `brackets` is set to `false` for gamelist creation:
+If you set `keepDiscInfo="true"`, Skyscraper attempts to retain the "Disc N (of
+M)" part in the resulting game title in the gamelist. Currently the term 'disc'
+is identified in the filename in English. German, French, Italian.  
+Any disc information is first searched in parentheses e.g., (Disc 1 of 4) and then in
+brackets e.g., [Disc 1]. Any suffix after the disc number like "of 4" is also
+kept.
+
+!!! tip
+
+    If the emulator supports multi disc loading with an `*.m3u` or `*.cue` file you should use it, as it will remove gamelist clutter. Another option is to define a custom game title for each of the filenames with disc information via Skyscraper's [import function](IMPORT.md). The latter option allows you to define any "Disc N of M" display style in your gamelist. 
+
+!!! note
+
+    The option keepDiscInfo is not applicable if you use a [name template](#nametemplate).
+
+**Example(s)**
+
+Filename: `Stupid Invaders v1.001 (2001)(Ubi Soft)(US)(Disc 1 of 2)[!].chd`  
+Resulting game title: `Stupid Invaders (Disc 1 of 2)`
+
+Default value: `false`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
 #### maxLength
 
 Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500.
@@ -617,7 +646,7 @@ Enable this option to force Skyscraper to use the file name (excluding extension
 
 !!! tip
 
-    If you set `forceFilename="true"` and your filenames contain bracket notes such as `(this)` or `[that]` at the end, these will be combined with whatever bracket notes are at the end of the titles returned from the sources. This can cause some confusion. For instance, if you have the filename `Gran Turismo 2 (USA) (Arcade Mode)` and the cached title is `Gran Turismo 2 (Arcade Mode)`, then the gamelist name will become `Gran Turismo 2 (Arcade Mode)(USA)(Arcade Mode)`. You can disable them altogether with the `brackets="no"` option.
+    If you set `forceFilename="true"` and your filenames contain bracket notes such as `(this)` or `[that]` at the end, these will be combined with whatever bracket notes are at the end of the titles returned from the sources. This can cause some confusion. For instance, if you have the filename `Gran Turismo 2 (USA) (Arcade Mode)` and the cached title is `Gran Turismo 2 (Arcade Mode)`, then the gamelist name will become `Gran Turismo 2 (Arcade Mode)(USA)(Arcade Mode)`. You can disable them altogether with the `brackets="false"` option.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`

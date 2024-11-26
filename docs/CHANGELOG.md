@@ -11,6 +11,9 @@ humans](https://keepachangelog.com).
   parentheses in gamelist title. See
   [`innerBracketsReplace`](CONFIGINI.md#innerbracketsreplace) for examples.
   Thanks for the suggestion, @retrobit.
+- Added: Option to retain disc numbering from game filename, when no other
+  bracket information is requested. See
+  [`keepDiscInfo`](CONFIGINI.md#keepdiscinfo) for details. Thanks, @maxexcloo!
 - Added: [Platform 'Fujitsu
   FM-Towns'](https://github.com/Gemba/skyscraper/pull/95/files). Manually update
   your `peas.json` and `platformid_map.csv` to make use of it.
@@ -19,7 +22,7 @@ humans](https://keepachangelog.com).
   home directory screen messages. Thanks for highlighting it on the Mac,
   @cdaters 
 - Updated: A downloaded `whdload.xml` file for platform Amiga will be not
-  downloaded again until the server indicates. Manually removing
+  downloaded again until the server indicates. However, manually removing
   `/home/<USER>/.skyscraper/whdload_cached_etag.txt` will force a new download.
 - Fixed: Performing Ctrl-C in `--cache edit` mode will now dismiss any changes
   made instead of persisting them

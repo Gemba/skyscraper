@@ -81,6 +81,7 @@ struct Settings {
     int totalFiles = 0;
     int maxLength = 2500;
     bool brackets = true;
+    bool keepDiscInfo = false;
     bool refresh = false;
     QString cacheOptions = "";
     bool cacheResize = true;
@@ -221,6 +222,7 @@ private:
         {"innerParenthesesReplace", QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"interactive",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"jpgQuality",              QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"keepDiscInfo",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"lang",                    QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"langPrios",               QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"launch",                  QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},

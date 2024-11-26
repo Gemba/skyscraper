@@ -51,6 +51,7 @@
 ;videoConvertExtension="mp4"
 ;symlink="false"
 ;brackets="true"
+;keepDiscInfo="false"
 ;maxLength="10000"
 ;threads="2"
 ;pretend="false"
