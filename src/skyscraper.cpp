@@ -365,6 +365,18 @@ void Skyscraper::run() {
     }
 
     totalFiles = queue->length();
+    if (totalFiles == 0) {
+        QString extraInfo = doCacheScraping ? "in cache "
+                                            : "matching these extensions " +
+                                                  platformFileExtensions();
+        printf("\nNo files to process %s for platform "
+               "'%s'.\nCheck configured and existing file extensions and cache "
+               "content.\n\n\033[1;33mSkyscraper came to an untimely "
+               "end.\033[0m\n\n",
+               extraInfo.toStdString().c_str(),
+               config.platform.toStdString().c_str());
+        exit(0);
+    }
 
     if (config.romLimit != -1 && totalFiles > config.romLimit) {
         int inCache = 0;
@@ -395,20 +407,12 @@ void Skyscraper::run() {
     }
     printf("\n");
     if (!doCacheScraping) {
-        if (totalFiles > 0) {
-            printf(
-                "Starting scraping run on \033[1;32m%d\033[0m files using "
-                "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
-                "the work! :)\n\n",
-                totalFiles, config.threads);
-        } else {
-            printf("\nNo entries to scrape...\n\n");
-        }
-    } else {
-        if (totalFiles == 0) {
-            printf("\nAll games found in cache.\n\n");
-        }
+        printf("Starting scraping run on \033[1;32m%d\033[0m files using "
+               "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
+               "the work! :)\n",
+               totalFiles, config.threads);
     }
+    printf("\n");
 
     timer.start();
     currentFile = 1;

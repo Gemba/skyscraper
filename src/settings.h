@@ -75,10 +75,6 @@ struct Settings {
     bool threadsSet = false;
     int minMatch = 65;
     bool minMatchSet = false;
-    int notFound = 0;
-    int found = 0;
-    int currentFile = 0;
-    int totalFiles = 0;
     int maxLength = 2500;
     bool brackets = true;
     bool refresh = false;
