@@ -28,6 +28,7 @@
 #include "nametools.h"
 #include "strtools.h"
 
+#include <QDebug>
 #include <QRegularExpression>
 
 OpenRetro::OpenRetro(Settings *config, QSharedPointer<NetManager> manager)
@@ -244,7 +245,7 @@ void OpenRetro::getRating(GameEntry &game) {
     bool ratingDecimal = true;
 
     if (checkNom(ratingPre.at(0))) {
-        // "0 ... 100%" or "n/d" (from mags/ext. websites)
+        // "0 ... 100%" or "numerator/denominator" (from mags or ext. websites)
         nomNom(ratingPre.at(0));
         nomNom(ratingPre.at(1));
         ratingDecimal = false;
@@ -258,6 +259,8 @@ void OpenRetro::getRating(GameEntry &game) {
 
     bool toDoubleOk = false;
     game.rating = data.left(data.indexOf(ratingPost.toUtf8()));
+    qDebug() << "game.rating" << game.rating;
+    qDebug() << "ratingDecimal" << ratingDecimal;
 
     if (!ratingDecimal) {
         if (game.rating.endsWith("%")) {
@@ -268,7 +271,7 @@ void OpenRetro::getRating(GameEntry &game) {
             if (toDoubleOk) {
                 double den = parts.value(1).toDouble(&toDoubleOk);
                 if (toDoubleOk && den > 0.0) {
-                    game.rating = QString::number(num / den);
+                    game.rating = QString::number(num / den, 'g', 2);
                     return;
                 }
             }
@@ -280,7 +283,7 @@ void OpenRetro::getRating(GameEntry &game) {
 
     double rating = game.rating.toDouble(&toDoubleOk);
     if (toDoubleOk) {
-        game.rating = QString::number(rating / (ratingDecimal ? 10.0 : 1.0));
+        game.rating = QString::number(rating / (ratingDecimal ? 1.0 : 100.0));
     } else {
         game.rating = "";
     }

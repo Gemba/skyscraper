@@ -23,6 +23,7 @@ humans](https://keepachangelog.com).
   `/home/<USER>/.skyscraper/whdload_cached_etag.txt` will force a new download.
 - Fixed: Performing Ctrl-C in `--cache edit` mode will now dismiss any changes
   made instead of persisting them
+- Fixed: Game rating calculation in Openretro scraping module
 
 ### Version 3.13.0 (2024-11-06)
 
