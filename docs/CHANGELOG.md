@@ -7,9 +7,16 @@ humans](https://keepachangelog.com).
 
 - Added: Support for [XDG Base Directories](XDG.md), thanks for the suggestion
   @ASHGOLDOFFICIAL. 
-- Added: Option `--hint`, shows a random Tip of the Day
+- Added: Option to allow any delimiter between consecutive brackets and
+  parentheses in gamelist title. See
+  [`innerBracketsReplace`](CONFIGINI.md#innerbracketsreplace) for examples.
+  Thanks for the suggestion, @retrobit.
+- Added: [Platform 'Fujitsu
+  FM-Towns'](https://github.com/Gemba/skyscraper/pull/95/files). Manually update
+  your `peas.json` and `platformid_map.csv` to make use of it.
+- Added: Option `--hint`, it shows a random Tip of the Day.
 - Updated: Skyscraper's hardcoded `/home/<USER>` replaced with the actual user's
-  home directory screen messages, thanks for highlighting it on the Mac,
+  home directory screen messages. Thanks for highlighting it on the Mac,
   @cdaters 
 - Updated: A downloaded `whdload.xml` file for platform Amiga will be not
   downloaded again until the server indicates. Manually removing

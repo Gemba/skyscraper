@@ -5,7 +5,7 @@
 # This file is global and will be used when scraping ANY platform.
 #
 # Note 2:
-# All bracket info in the search name alias is ignored.
+# All bracket/parenthesis info in the search name alias is ignored.
 # It merely provides a different base name for Skyscraper when it creates
 # the search query. It is meant to help scrape files that have abstract file-
 # names where the search-based scraping modules have a hard time finding good

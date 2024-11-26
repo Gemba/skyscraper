@@ -364,9 +364,29 @@ void ScraperWorker::run() {
             output.append("Title:          '\033[1;32m" + game.title +
                           "\033[0m' (" + game.titleSrc + ")\n");
         }
+
+        QString bracketInfo = game.sqrNotes;
+        QString parenthesesInfo = game.parNotes;
+        if (config.brackets) {
+            if (!config.innerBracketsReplace.isEmpty()) {
+                bracketInfo =
+                    bracketInfo.replace("][", config.innerBracketsReplace);
+            }
+            if (!bracketInfo.isEmpty()) {
+                bracketInfo = " " % bracketInfo;
+            }
+            if (!config.innerParenthesesReplace.isEmpty()) {
+                parenthesesInfo = parenthesesInfo.replace(
+                    ")(", config.innerParenthesesReplace);
+            }
+            if (!parenthesesInfo.isEmpty()) {
+                parenthesesInfo = " " % parenthesesInfo;
+            }
+        }
+
         if (!config.nameTemplate.isEmpty()) {
-            game.title = StrTools::xmlUnescape(
-                NameTools::getNameFromTemplate(game, config.nameTemplate));
+            game.title = StrTools::xmlUnescape(NameTools::getNameFromTemplate(
+                game, config.nameTemplate, parenthesesInfo, bracketInfo));
         } else {
             game.title = StrTools::xmlUnescape(game.title);
             if (config.forceFilename) {
@@ -374,9 +394,8 @@ void ScraperWorker::run() {
                     StrTools::stripBrackets(info.completeBaseName()));
             }
             if (config.brackets) {
-                game.title.append(StrTools::xmlUnescape(
-                    (game.parNotes != "" ? " " + game.parNotes : "") +
-                    (game.sqrNotes != "" ? " " + game.sqrNotes : "")));
+                game.title.append(
+                    StrTools::xmlUnescape(parenthesesInfo % bracketInfo));
             }
         }
         output.append("Platform:       '\033[1;32m" + game.platform +

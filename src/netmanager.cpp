@@ -34,7 +34,6 @@ QNetworkReply *NetManager::getRequest(const QNetworkRequest &request) {
     return get(request);
 }
 
-
 QNetworkReply *NetManager::headRequest(const QNetworkRequest &request) {
     QMutexLocker locker(&requestMutex);
     return head(request);

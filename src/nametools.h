@@ -48,7 +48,9 @@ public:
     static QString getUniqueNotes(const QString &notes, QChar delim);
     static QString getCacheId(const QFileInfo &info);
     static QString getNameFromTemplate(const GameEntry &game,
-                                       const QString &nameTemplate);
+                                       const QString &nameTemplate,
+                                       const QString &parenthesesInfo,
+                                       const QString &bracketInfo);
 
 private:
     static QString notesByRegex(const QString &baseName, const QString &re);

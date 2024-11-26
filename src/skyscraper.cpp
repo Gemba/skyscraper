@@ -1107,7 +1107,7 @@ void Skyscraper::updateWhdloadDb(NetComm &netComm, QEventLoop &q) {
                         "Amiberry-XML-Builder/master/whdload_db.xml";
     netComm.request(url, "HEAD");
     q.exec();
-    
+
     QString etag = netComm.getHeaderValue("ETag");
     QString cachedEtag;
     QFile whdlEtagFile(Config::getSkyFolder(Config::SkyFolderType::LOG) %

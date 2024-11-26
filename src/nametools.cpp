@@ -33,6 +33,7 @@
 #include <QFileInfo>
 #include <QRegularExpression>
 #include <QSettings>
+#include <QStringBuilder>
 
 QString NameTools::getScummName(const QFileInfo &info, const QString baseName,
                                 const QString scummIni) {
@@ -280,6 +281,7 @@ QString NameTools::notesByRegex(const QString &baseName, const QString &re) {
 QString NameTools::getSqrNotes(QString baseName) {
     // Get square notes: Pattern to match text in brackets
     QString sqrNotes = notesByRegex(baseName, "\\[([^[\\]]+)\\]");
+    qDebug() << "sqrNotes  pre:" << sqrNotes;
 
     // Look for '_tag_' or '[tag]' with the last char optional
     QMap<QString, QString> replacements = {
@@ -292,10 +294,13 @@ QString NameTools::getSqrNotes(QString baseName) {
     QMapIterator<QString, QString> i(replacements);
     while (i.hasNext()) {
         i.next();
-        if (QRegularExpression(i.key()).match(baseName).hasMatch()) {
-            sqrNotes.append("[" + i.value() + "]");
+        if (QRegularExpression(i.key()).match(baseName).hasMatch() &&
+            /* avoid NTSC-U being replicated to NTSC on psx */
+            !sqrNotes.contains("[" + i.value(), Qt::CaseInsensitive)) {
+            sqrNotes.append("[" % i.value() % "]");
         }
     }
+    qDebug() << "sqrNotes post:" << sqrNotes;
     return sqrNotes.simplified();
 }
 
@@ -390,7 +395,9 @@ QString NameTools::getCacheId(const QFileInfo &info) {
 }
 
 QString NameTools::getNameFromTemplate(const GameEntry &game,
-                                       const QString &nameTemplate) {
+                                       const QString &nameTemplate,
+                                       const QString &parenthesesInfo,
+                                       const QString &bracketInfo) {
     QList<QString> templateGroups = nameTemplate.split(";");
     QString finalName;
     for (auto &templateGroup : templateGroups) {
@@ -401,10 +408,10 @@ QString NameTools::getNameFromTemplate(const GameEntry &game,
         if (templateGroup.contains("%f") && !game.baseName.isEmpty()) {
             include = true;
         }
-        if (templateGroup.contains("%b") && !game.parNotes.isEmpty()) {
+        if (templateGroup.contains("%b") && !parenthesesInfo.isEmpty()) {
             include = true;
         }
-        if (templateGroup.contains("%B") && !game.sqrNotes.isEmpty()) {
+        if (templateGroup.contains("%B") && !bracketInfo.isEmpty()) {
             include = true;
         }
         if (templateGroup.contains("%a") && !game.ages.isEmpty()) {
@@ -425,8 +432,8 @@ QString NameTools::getNameFromTemplate(const GameEntry &game,
         if (include) {
             templateGroup.replace("%t", game.title);
             templateGroup.replace("%f", StrTools::stripBrackets(game.baseName));
-            templateGroup.replace("%b", game.parNotes);
-            templateGroup.replace("%B", game.sqrNotes);
+            templateGroup.replace("%b", parenthesesInfo);
+            templateGroup.replace("%B", bracketInfo);
             templateGroup.replace("%a", game.ages);
             templateGroup.replace("%d", game.developer);
             templateGroup.replace("%p", game.publisher);

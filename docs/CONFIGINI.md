@@ -88,6 +88,8 @@ This is an alphabetical index of all configuration options including the section
 | [importFolder](CONFIGINI.md#importfolder)                   |    Y     |       Y        |                |               |
 | [includeFrom](CONFIGINI.md#includefrom)                     |    Y     |       Y        |                |               |
 | [includePattern](CONFIGINI.md#includepattern)               |    Y     |       Y        |       Y        |               |
+| [innerBracketsReplace](CONFIGINI.md#innerbracketsreplace)   |    Y     |                |                |               |
+| [innerParenthesesReplace](CONFIGINI.md#innerparenthesesreplace) |  Y   |                |                |               |
 | [inputFolder](CONFIGINI.md#inputfolder)                     |    Y     |       Y        |                |               |
 | [interactive](CONFIGINI.md#interactive)                     |    Y     |       Y        |                |       Y       |
 | [jpgQuality](CONFIGINI.md#jpgquality)                       |    Y     |       Y        |                |       Y       |
@@ -241,7 +243,7 @@ By default Skyscraper uses just the title as the game name when generating gamel
 
 -   `%t`: The game title as returned by the scraping sources without bracket information (see `%b` and `%B` below)
 -   `%f`: The game filename without extension and bracket information (see `%b` and `%B` below)
--   `%b`: The game `()` bracket information. This information often comes from the filename, but can also come from the scraping source title (eg. `(USA)` or `(en,fr,de)`)
+-   `%b`: The game `()` parentheses information. This information often comes from the filename, but can also come from the scraping source title (eg. `(USA)` or `(en,fr,de)`)
 -   `%B`: The game `[]` bracket information. This information often comes from the filename, but can also come from the scraping source title (eg. `[disk 1 of 2]` or `[AGA]`)
 -   `%a`: The age restriction as returned by the scraping sources (eg. `16+`)
 -   `%d`: The game developer as returned by the scraping sources
@@ -514,6 +516,35 @@ Disable this option to remove any bracket notes when generating the game list. I
 
 Default value: `true`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+---
+
+#### innerBracketsReplace
+
+Only in use when the option `brackets` is set to `true` for gamelist creation:
+This replaces consecutive brackets `][` in the game title with whatever is
+defined in this option. This setting has no effect, if there is only one bracket
+present in the game filename.  
+Use the option `innerParenthesesReplace` for the same effect on round brackets
+`)(` (aka. parentheses).
+
+**Example(s)**
+
+Filename: `Oddworld - Abe's Exoddus [NTSC-U] [SLUS-00710].m3u`
+
+- `innerBracketsReplace=""` (unset), gamelist game title output: `Oddworld - Abe's Exoddus [NTSC-U][SLUS-00710]`
+- `innerBracketsReplace="] ["`, gamelist game title output (_note the space._): `Oddworld - Abe's Exoddus [NTSC-U] [SLUS-00710]`
+- `innerBracketsReplace=","`, gamelist game title output: `Oddworld - Abe's Exoddus [NTSC-U,SLUS-00710]`
+
+Default value: unset  
+Allowed in sections: `[main]`
+
+---
+
+#### innerParenthesesReplace
+
+Same as [innerBracketsReplace](#innerbracketsreplace) but for parentheses `)(`
+(aka. round brackets).
 
 ---
 

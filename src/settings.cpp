@@ -232,6 +232,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->includeFrom = v;
                 continue;
             }
+            if (k == "innerBracketsReplace") {
+                config->innerBracketsReplace = v;
+                continue;
+            }
+            if (k == "innerParenthesesReplace") {
+                config->innerParenthesesReplace = v;
+                continue;
+            }
             if (k == "inputFolder") {
                 config->inputFolder = (type == CfgType::MAIN)
                                           ? concatPath(v, config->platform)
