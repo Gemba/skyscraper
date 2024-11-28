@@ -27,64 +27,40 @@
 
 #include <QCryptographicHash>
 #include <QDate>
+#include <QDebug>
 #include <QRegularExpression>
 #include <QStringBuilder>
 
+inline void issueParseWarning(QString msg, QString v) {
+    qWarning() << msg << v;
+    qWarning()
+        << "Please report an issue at https://github.com/Gemba/skyscraper";
+    qWarning() << "Use the first line of this warning message as issue title, "
+                  "no further details needed. Thank you!";
+}
+
 QString StrTools::xmlUnescape(QString str) {
-    str = str.replace("&amp;", "&")
-              .replace("&lt;", "<")
-              .replace("&gt;", ">")
-              .replace("&quot;", "\"")
-              .replace("&apos;", "'")
-              .replace("&copy;", "(c)")
-              .replace("&#32;", " ")
-              .replace("&#33;", "!")
-              .replace("&#34;", "\"")
-              .replace("&#35;", "#")
-              .replace("&#36;", "$")
-              .replace("&#37;", "%")
-              .replace("&#38;", "&")
-              .replace("&#39;", "'")
-              .replace("&#40;", "(")
-              .replace("&#41;", ")")
-              .replace("&#42;", "*")
-              .replace("&#43;", "+")
-              .replace("&#44;", ",")
-              .replace("&#45;", "-")
-              .replace("&#46;", ".")
-              .replace("&#47;", "/")
-              .replace("&#032;", " ")
-              .replace("&#033;", "!")
-              .replace("&#034;", "\"")
-              .replace("&#035;", "#")
-              .replace("&#036;", "$")
-              .replace("&#037;", "%")
-              .replace("&#038;", "&")
-              .replace("&#039;", "'")
-              .replace("&#040;", "(")
-              .replace("&#041;", ")")
-              .replace("&#042;", "*")
-              .replace("&#043;", "+")
-              .replace("&#044;", ",")
-              .replace("&#045;", "-")
-              .replace("&#046;", ".")
-              .replace("&#047;", "/")
-              .replace("&#160;", " ")
-              .replace("&#179;", "3")
-              .replace("&#8211;", "-")
-              .replace("&#8217;", "'")
-              .replace("&#xF4;", "o")
-              .replace("&#xE3;", "a")
-              .replace("&#xE4;", "ae")
-              .replace("&#xE1;", "a")
-              .replace("&#xE9;", "e")
-              .replace("&#xED;", "i")
-              .replace("&#x16B;", "uu")
-              .replace("&#x22;", "\"")
-              .replace("&#x26;", "&")
-              .replace("&#x27;", "'")
-              .replace("&#xB3;", "3")
-              .replace("&#x14D;", "o");
+    QMap<QString, QString> xmlMap = {
+        {"&amp;", "&"},    {"&lt;", "<"},     {"&gt;", ">"},   {"&quot;", "\""},
+        {"&apos;", "'"},   {"&copy;", "(c)"}, {"&#32;", " "},  {"&#33;", "!"},
+        {"&#34;", "\""},   {"&#35;", "#"},    {"&#36;", "$"},  {"&#37;", "%"},
+        {"&#38;", "&"},    {"&#39;", "'"},    {"&#40;", "("},  {"&#41;", ")"},
+        {"&#42;", "*"},    {"&#43;", "+"},    {"&#44;", ","},  {"&#45;", "-"},
+        {"&#46;", "."},    {"&#47;", "/"},    {"&#032;", " "}, {"&#033;", "!"},
+        {"&#034;", "\""},  {"&#035;", "#"},   {"&#036;", "$"}, {"&#037;", "%"},
+        {"&#038;", "&"},   {"&#039;", "'"},   {"&#040;", "("}, {"&#041;", ")"},
+        {"&#042;", "*"},   {"&#043;", "+"},   {"&#044;", ","}, {"&#045;", "-"},
+        {"&#046;", "."},   {"&#047;", "/"},   {"&#160;", " "}, {"&#179;", "3"},
+        {"&#8211;", "-"},  {"&#8217;", "'"},  {"&#xF4;", "o"}, {"&#xE3;", "a"},
+        {"&#xE4;", "ae"},  {"&#xE1;", "a"},   {"&#xE9;", "e"}, {"&#xED;", "i"},
+        {"&#x16B;", "uu"}, {"&#x22;", "\""},  {"&#x26;", "&"}, {"&#x27;", "'"},
+        {"&#xB3;", "3"},   {"&#x14D;", "o"}};
+
+    QMapIterator<QString, QString> i(xmlMap);
+    while (i.hasNext()) {
+        i.next();
+        str = str.replace(i.key(), i.value());
+    }
 
     while (str.contains("&") && str.contains(";") &&
            str.indexOf("&") < str.indexOf(";") &&
@@ -92,13 +68,11 @@ QString StrTools::xmlUnescape(QString str) {
         str = str.remove(str.indexOf("&"),
                          str.indexOf(";") + 1 - str.indexOf("&"));
     }
-
     return str;
 }
 
 QString StrTools::xmlEscape(QString str) {
     str = xmlUnescape(str);
-
     return str.replace("&", "&amp;")
         .replace("<", "&lt;")
         .replace(">", "&gt;")
@@ -126,9 +100,7 @@ QByteArray StrTools::magic(const QByteArray str) {
         thingie.append(QString::number(strChars[a] += magicChars[a]).toUtf8() %
                        ";");
     }
-
     thingie.chop(1);
-
     return thingie;
 }
 
@@ -151,171 +123,124 @@ QByteArray StrTools::unMagic(const QByteArray str) {
     for (int a = 0; a < length; ++a) {
         thingie.append(QString(QChar(strChars[a] -= magicChars[a])).toUtf8());
     }
-
     return thingie;
 }
 
-QString StrTools::conformPlayers(const QString str) {
-    if (QRegularExpression("^1 Player").match(str).hasMatch())
+QString StrTools::conformPlayers(const QString playerString) {
+    QString str = playerString.simplified();
+    QStringList patterns = {"^(\\d) Player", "^(\\d) Only", "^1 or (\\d)",
+                            "^\\d\\s?(?:-|to)\\s?(\\d\\d?)", "^(\\d)\\+"};
+    QRegularExpression re;
+    re.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch m;
+    for (auto const &p : patterns) {
+        re.setPattern(p);
+        m = re.match(str);
+        if (m.hasMatch())
+            return m.captured(1);
+    }
+
+    // number as text
+    re.setPattern("^single player");
+    if (re.match(str).hasMatch())
         return "1";
 
-    if (QRegularExpression("^1 Only").match(str).hasMatch())
-        return "1";
+    bool ok;
+    str.toInt(&ok);
+    if (ok)
+        return str;
 
-    if (QRegularExpression("^single player").match(str).hasMatch())
-        return "1";
-
-    if (QRegularExpression("^1 or 2").match(str).hasMatch())
-        return "2";
-
-    if (QRegularExpression("^\\d-\\d\\d").match(str).hasMatch())
-        return str.mid(2, 2);
-
-    if (QRegularExpression("^\\d-\\d").match(str).hasMatch())
-        return str.mid(2, 1);
-
-    if (QRegularExpression("^\\d - \\d\\d").match(str).hasMatch())
-        return str.mid(4, 2);
-
-    if (QRegularExpression("^\\d - \\d").match(str).hasMatch())
-        return str.mid(4, 1);
-
-    // A faulty Openretro entry is necessary as it marks "1 - 6" as "1 -6"
-    if (QRegularExpression("^\\d -\\d\\d").match(str).hasMatch())
-        return str.mid(3, 2);
-
-    if (QRegularExpression("^\\d -\\d").match(str).hasMatch())
-        return str.mid(3, 1);
-
-    if (QRegularExpression("^\\d to \\d\\d").match(str).hasMatch())
-        return str.mid(5, 2);
-
-    if (QRegularExpression("^\\d to \\d").match(str).hasMatch())
-        return str.mid(5, 1);
-
-    if (QRegularExpression("^\\d\\+").match(str).hasMatch())
-        return str.mid(0, 1);
-
+    issueParseWarning("Player count not replaced to number for scraper input",
+                      str);
     return str;
 }
 
 QString StrTools::conformAges(QString str) {
-    if (str == "0 (ohne Altersbeschränkung)") {
-        str = "1";
-    } else if (str == "U") {
-        str = "1";
-    } else if (str == "E") {
-        str = "1";
-    } else if (str == "E - Everyone") {
-        str = "1";
-    } else if (str == "Everyone") {
-        str = "1";
-    } else if (str == "GA") {
-        str = "1";
-    } else if (str == "EC") {
-        str = "3";
-    } else if (str == "Early Childhood") {
-        str = "3";
-    } else if (str == "3+") {
-        str = "3";
-    } else if (str == "G") {
-        str = "3";
-    } else if (str == "KA") {
-        str = "6";
-    } else if (str == "Kids to Adults") {
-        str = "6";
-    } else if (str == "G8+") {
-        str = "8";
-    } else if (str == "E10+") {
-        str = "10";
-    } else if (str == "E10+ - Everyone 10+") {
-        str = "10";
-    } else if (str == "Everyone 10+") {
-        str = "10";
-    } else if (str == "11+") {
-        str = "11";
-    } else if (str == "12+") {
-        str = "11";
-    } else if (str == "MA-13") {
-        str = "13";
-    } else if (str == "T") {
-        str = "13";
-    } else if (str == "T - Teen") {
-        str = "13";
-    } else if (str == "Teen") {
-        str = "13";
-    } else if (str == "M") {
-        str = "15";
-    } else if (str == "M15+") {
-        str = "15";
-    } else if (str == "MA 15+") {
-        str = "15";
-    } else if (str == "MA15+") {
-        str = "15";
-    } else if (str == "PG") {
-        str = "15";
-    } else if (str == "15+") {
-        str = "15";
-    } else if (str == "MA-17") {
-        str = "17";
-    } else if (str == "M") {
-        str = "17";
-    } else if (str == "18+") {
-        str = "18";
-    } else if (str == "R18+") {
-        str = "18";
-    } else if (str == "18 (keine Jugendfreigabe)") {
-        str = "18";
-    } else if (str == "A") {
-        str = "18";
-    } else if (str == "AO") {
-        str = "18";
-    } else if (str == "AO - Adults Only") {
-        str = "18";
-    } else if (str == "Adults Only") {
-        str = "18";
-    } else if (str == "M - Mature") {
-        str = "18";
-    } else if (str == "Mature") {
-        str = "18";
-    }
+    QMap<QString, QString> ageMap = {{"0 (ohne Altersbeschränkung)", "1"},
+                                     {"U", "1"},
+                                     {"E", "1"},
+                                     {"E - Everyone", "1"},
+                                     {"Everyone", "1"},
+                                     {"GA", "1"},
+                                     {"EC", "3"},
+                                     {"Early Childhood", "3"},
+                                     {"3+", "3"},
+                                     {"G", "3"},
+                                     {"KA", "6"},
+                                     {"Kids to Adults", "6"},
+                                     {"G8+", "8"},
+                                     {"E10+", "10"},
+                                     {"E10+ - Everyone 10+", "10"},
+                                     {"Everyone 10+", "10"},
+                                     {"11+", "11"},
+                                     {"12+", "11"},
+                                     {"MA-13", "13"},
+                                     {"T", "13"},
+                                     {"T - Teen", "13"},
+                                     {"Teen", "13"},
+                                     {"M", "15"},
+                                     {"M15+", "15"},
+                                     {"MA 15+", "15"},
+                                     {"MA15+", "15"},
+                                     {"PG", "15"},
+                                     {"15+", "15"},
+                                     {"MA-17", "17"},
+                                     {"18+", "18"},
+                                     {"R18+", "18"},
+                                     {"18 (keine Jugendfreigabe)", "18"},
+                                     {"A", "18"},
+                                     {"AO", "18"},
+                                     {"AO - Adults Only", "18"},
+                                     {"Adults Only", "18"},
+                                     {"M - Mature", "18"},
+                                     {"Mature", "18"}};
 
+    QMapIterator<QString, QString> i(ageMap);
+    while (i.hasNext()) {
+        i.next();
+        if (str == i.key())
+            return i.value();
+    }
+    bool ok;
+    str.toInt(&ok);
+    if (ok)
+        return str;
+
+    issueParseWarning("Age rating not replaced to number for scraper input",
+                      str);
     return str;
 }
 
 QString StrTools::conformReleaseDate(QString str) {
-    if (QRegularExpression("^\\d{4}$").match(str).hasMatch()) {
-        str = QDate::fromString(str, "yyyy").toString("yyyyMMdd");
-    } else if (QRegularExpression("^\\d{4}-[0-1]{1}\\d{1}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "yyyy-MM").toString("yyyyMMdd");
-    } else if (QRegularExpression("^\\d{4}-[0-1]{1}\\d{1}-[0-3]{1}\\d{1}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "yyyy-MM-dd").toString("yyyyMMdd");
-    } else if (QRegularExpression("^[0-1]{1}\\d{1}/[0-3]{1}\\d{1}/\\d{4}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "MM/dd/yyyy").toString("yyyyMMdd");
-    } else if (QRegularExpression("^\\d{4}-[a-zA-Z]{3}-[0-3]{1}\\d{1}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "yyyy-MMM-dd").toString("yyyyMMdd");
-    } else if (QRegularExpression("^[a-zA-z]{3}, \\d{4}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "MMM, yyyy").toString("yyyyMMdd");
-    } else if (QRegularExpression("^[a-zA-z]{3} [0-3]{1}\\d{1}, \\d{4}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = QDate::fromString(str, "MMM dd, yyyy").toString("yyyyMMdd");
-    } else if (QRegularExpression("^[12]{1}[019]{1}[0-9]{2}[0-1]{1}[0-9]{1}[0-"
-                                  "3]{1}[0-9]{1}T[0-9]{6}$")
-                   .match(str)
-                   .hasMatch()) {
-        str = str.left(8);
+    // cut of time if present
+    str = str.replace(QRegularExpression("T\\d{6}$"), "");
+    QMap<QString, QString> dateFormats = {
+        // clang-format off
+        {"^\\d{4}$", "yyyy"},
+        {"^\\d{4}-[0-1]{1}\\d{1}$", "yyyy-MM"},
+        {"^\\d{4}-[0-1]{1}\\d{1}-[0-3]{1}\\d{1}$", "yyyy-MM-dd"},
+        {"^[0-1]{1}\\d{1}/[0-3]{1}\\d{1}/\\d{4}$", "MM/dd/yyyy"},
+        {"^\\d{4}-[a-zA-Z]{3}-[0-3]{1}\\d{1}$", "yyyy-MMM-dd"},
+        {"^[a-zA-z]{3}, \\d{4}$", "MMM, yyyy"},
+        {"^[a-zA-z]{3} [0-3]{1}\\d{1}, \\d{4}$", "MMM dd, yyyy"},
+        {"^[12]{1}[012349]{1}[0-9]{2}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1}$", "yyyyMMdd"}
+        // clang-format on
+    };
+    QRegularExpression re;
+    re.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch m;
+
+    QMapIterator<QString, QString> i(dateFormats);
+    while (i.hasNext()) {
+        i.next();
+        re.setPattern(i.key());
+        m = re.match(str);
+        if (m.hasMatch())
+            return QLocale::c().toDate(str, i.value()).toString("yyyyMMdd");
     }
+
+    issueParseWarning(
+        "Release date string is not parsable as date for scraper input", str);
     return str;
 }
 
