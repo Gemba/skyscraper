@@ -1,10 +1,10 @@
 TEMPLATE = app
-TARGET = strtools_test
+TARGET = test_strtools
 DEPENDPATH += .
 INCLUDEPATH += ../../src
 CONFIG += debug
-QT += core network xml
-QMAKE_CXXFLAGS += -std=c++11
+QT += core network xml testlib
+QMAKE_CXXFLAGS += -std=c++17
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -13,6 +13,6 @@ DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 HEADERS += ../../src/strtools.h 
 
-SOURCES += strtools_test.cpp \
+SOURCES += test_strtools.cpp \
            ../../src/strtools.cpp 
 
