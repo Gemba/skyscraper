@@ -8,8 +8,8 @@ public:
     TestSettings() {}
     ~TestSettings() {}
 private slots:
-    void configIniMain();
-    void configIniPlatform();
-    void configIniFrontend();
-    void configIniScraper();
+    void testConfigIniMain();
+    void testConfigIniPlatform();
+    void testConfigIniFrontend();
+    void testConfigIniScraper();
 };

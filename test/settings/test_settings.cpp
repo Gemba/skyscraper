@@ -1,4 +1,4 @@
-#include "settings_test.h"
+#include "test_settings.h"
 
 #include "src/cli.h"
 #include "src/platform.h"
@@ -6,7 +6,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-void TestSettings::configIniMain() {
+void TestSettings::testConfigIniMain() {
     QString currentDir = QDir::currentPath();
     Settings config;
     if (!Platform::get().loadConfig()) {
@@ -165,7 +165,7 @@ void TestSettings::configIniMain() {
     settings.endGroup();
 }
 
-void TestSettings::configIniPlatform() {
+void TestSettings::testConfigIniPlatform() {
     QString currentDir = QDir::currentPath();
     Settings config;
     if (!Platform::get().loadConfig()) {
@@ -308,7 +308,7 @@ void TestSettings::configIniPlatform() {
     settings.endGroup();
 }
 
-void TestSettings::configIniFrontend() {
+void TestSettings::testConfigIniFrontend() {
     QString currentDir = QDir::currentPath();
     Settings config;
     if (!Platform::get().loadConfig()) {
@@ -368,13 +368,15 @@ void TestSettings::configIniFrontend() {
     exp = settings.value("gameListBackup");
     QCOMPARE(config.gameListBackup, exp);
     exp = settings.value("gameListFolder");
-    QCOMPARE(config.gameListFolder, exp);
+    // #88
+    QCOMPARE(config.gameListFolder, exp.toString() + "/amiga");
     exp = settings.value("includePattern");
     QCOMPARE(config.includePattern, exp);
     exp = settings.value("maxLength");
     QCOMPARE(config.maxLength, exp);
     exp = settings.value("mediaFolder");
-    QCOMPARE(config.mediaFolder, exp);
+    // #88
+    QCOMPARE(config.mediaFolder, exp.toString() + "/amiga");
     exp = settings.value("mediaFolderHidden");
     QCOMPARE(config.mediaFolderHidden, exp.toBool());
     exp = settings.value("skipped");
@@ -397,7 +399,7 @@ void TestSettings::configIniFrontend() {
     settings.endGroup();
 }
 
-void TestSettings::configIniScraper() {
+void TestSettings::testConfigIniScraper() {
     QString currentDir = QDir::currentPath();
     Settings config;
     if (!Platform::get().loadConfig()) {

@@ -74,9 +74,10 @@ private slots:
                      "Blarf _Aga_ text _Cd32_Ntsc texttext [any] end"),
                  "[any][AGA][CD32][NTSC]");
         QCOMPARE(NameTools::getSqrNotes(
-                     "Blarf _Aga_ text _Cd32 [Aga] texttext [any] end"),
-                 "[Aga][any][AGA][CD32]");
+                     "Blarf _AGa_ text _Cd32 [Aga] texttext [any] end"),
+                 "[AGA][any][CD32]");
         QCOMPARE(NameTools::getSqrNotes("Blarf end"), "");
+        QCOMPARE(NameTools::getSqrNotes("Text [NTSC-U] Text"), "[NTSC-U]");
     }
 
     void testGetParNotes() {

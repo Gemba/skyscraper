@@ -1,5 +1,5 @@
 Makefile
 *.o
-settings_test
+test_settings
 peas.json
 platforms_idmap.csv

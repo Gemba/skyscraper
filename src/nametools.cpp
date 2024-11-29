@@ -294,9 +294,10 @@ QString NameTools::getSqrNotes(QString baseName) {
     QMapIterator<QString, QString> i(replacements);
     while (i.hasNext()) {
         i.next();
+        sqrNotes= sqrNotes.replace(QRegularExpression("\\["+i.value(),QRegularExpression::CaseInsensitiveOption), "["+i.value());
         if (QRegularExpression(i.key()).match(baseName).hasMatch() &&
-            /* avoid NTSC-U being replicated to NTSC on psx */
-            !sqrNotes.contains("[" + i.value(), Qt::CaseInsensitive)) {
+            /* avoid duplicates */
+            !sqrNotes.contains("[" + i.value())) {
             sqrNotes.append("[" % i.value() % "]");
         }
     }
