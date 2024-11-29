@@ -173,7 +173,7 @@ Read more about the artwork compositing [here](ARTWORK.md).
 
 !!! note
 
-    If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLAFORM>]` section instead where it will be used as is.
+    If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>/media`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
@@ -201,7 +201,7 @@ Sets a non-default location for the storing and loading of cached game resources
 
 !!! note
 
-    If this is set in the `[main]` section (recommended) it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLAFORM>]` section instead where it will be used as is.
+    If this is set in the `[main]` section (recommended) it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/.skyscraper/cache/<PLATFORM>`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
