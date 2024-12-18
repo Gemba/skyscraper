@@ -101,11 +101,10 @@ Two Docker setups exist: One general in the `docker/` folder. The other resides 
 When you've installed the prerequisites as described above for Linux or macOS, you can install Skyscraper by typing in the following commands:
 ```
 $ cd
-$ mkdir skysource
-$ cd skysource
+$ mkdir -p skysource && cd skysource
 $ wget -q -O - https://raw.githubusercontent.com/Gemba/skyscraper/master/update_skyscraper.sh | bash
 ```
-The last command will download and run the latest update script from Github. The script installs the latest release of Skyscraper. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.
+The last command will download and run the latest update script from Github. The script installs the latest release of Skyscraper, by default with the prefix `/usr/local/`. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.
 
 If you want also bash completion, then copy the [Skyscraper.bash](https://github.com/Gemba/skyscraper/blob/master/supplementary/bash-completion/Skyscraper.bash) to the folder of bash completion scripts according to your distribution. 
 
@@ -127,7 +126,7 @@ git clone --depth 1 https://github.com/Gemba/skyscraper.git
 cd skyscraper
 [[ -f Makefile ]] && make --ignore-errors clean
 rm --force .qmake.stash
-QT_SELECT=5 qmake 
+QT_SELECT=5 qmake  # Add PREFIX=/path/to if you want a different PREFIX than /usr/local
 make -j$(nproc)
 sudo make install
 ```

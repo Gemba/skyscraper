@@ -219,7 +219,7 @@ additional information on this.
   Thus, Skyscraper expects to find ROMs in `/home/pi/RetroPie/roms/satellaview`.
 - Line 6 contains the extensions which are recognized by EmulationStation. These
   extensions should be also be present in the `"formats":` block of `peas.json`.
-  However, Skyscraper uses case insensitive extension mapping. The
+  However, Skyscraper uses case insensitive file extension mapping. The
   extensions `.7z` and `.zip` are added automagically by Skyscraper, thus the
   `"formats":` list is usually shorter than the EmulationStation `<extension/>`
   list.

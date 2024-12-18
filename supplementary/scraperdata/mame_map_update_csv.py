@@ -10,7 +10,7 @@ from pathlib import Path
 import csv
 import pandas as pd
 import requests
-
+import sys
 
 URL = (
     "https://raw.githubusercontent.com/"
@@ -23,6 +23,18 @@ req = requests.get(URL)
 lines = req.text.split("\n")
 hdr = lines[0].replace("<!--", "").replace("-->", "").strip()
 print(f"[+] File info: {hdr}")
+
+prev_hdr = ""
+try:
+    with open(OUTFILE, "r") as prev:
+        prev_hdr = prev.readline().replace("# ","").strip()
+except IOError:
+    pass
+
+if (hdr == prev_hdr):
+    print(f"[*] No changes detected. No new {OUTFILE.name} written.")
+    sys.exit(0)
+
 lines[0] = "<root>"
 lines.append("</root>")
 df = pd.read_xml("".join(lines), xpath="//root/*")

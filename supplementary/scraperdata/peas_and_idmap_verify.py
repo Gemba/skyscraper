@@ -19,8 +19,8 @@
 
 from pathlib import Path
 import json
-import pandas as pd
 import sys
+import pandas as pd
 
 replacements = {
     "amigacd32": "cd32",
@@ -37,6 +37,7 @@ def print_platform_tree():
     df = pd.read_csv(pid_map_fn)
     df = df[~df.folder.str.contains("#")]
     df = df.astype({col: int for col in df.columns[1:]})
+    df = df.sort_values("folder")
     last_folder = df["folder"].values[-1]
 
     print(f"[*] {pid_map_fn.name}:")
@@ -94,8 +95,8 @@ def print_coverage(df):
     print(
         f"    The Games DB : {tgdb_count:3d}/{total} ({100.0 * tgdb_count/total:.1f}%)"
     )
-    print("   Any not covered/matched platform can most likely be scraped by "
-        "utilizing the 'aliases' list of the peas.json file. Read the details: "
+    print("    Any not covered/matched platform can most likely be scraped by "
+        "utilizing the 'aliases' list in the peas.json file.\n    Read the details: "
         "https://gemba.github.io/skyscraper/PLATFORMS/#updating-peasjson-and-platforms_idmapcsv")
 
 

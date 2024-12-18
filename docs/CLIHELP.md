@@ -115,10 +115,6 @@ Skyscraper --help
 Skyscraper -h
 ```
 
-### --hint
-
-Displays one of Skyscrapers's 'Did you know?' tips and exits.
-
 ### -i &lt;PATH&gt;
 
 Sets the rom input folder. By default Skyscraper will look for roms in the `/home/<user>/RetroPie/roms/<PLATFORM>` folder. If your roms are located in a non-default location, you can set the input path using this option. Consider setting this in [`config.ini`](CONFIGINI.md#inputfolder) instead.
@@ -608,6 +604,10 @@ Overrides the default gamelist filename of the frontend. If you are using a vari
 ```
 Skyscraper -p megadrive -f pegasus --gamelistfilename metadata.txt   # default for pegasus frontend is metadata.pegasus.txt
 ```
+
+### --hint
+
+Displays one of Skyscrapers's 'Did you know?' tips and exits.
 
 ### --includefrom &lt;FILENAME&gt;
 
