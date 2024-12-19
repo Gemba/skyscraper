@@ -34,6 +34,7 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QProcess>
+#include <QRegularExpression>
 
 constexpr int RETRIESMAX = 4;
 constexpr int MINARTSIZE = 256;
@@ -422,7 +423,7 @@ void ScreenScraper::getScreenshot(GameEntry &game) {
 
 void ScreenScraper::getWheel(GameEntry &game) {
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
-                              QList<QString>({"wheel", "wheel-hd"}));
+                              QList<QString>({"wheel(-hd)?"}));
     game.wheelData = downloadMedia(url);
 }
 
@@ -433,9 +434,9 @@ void ScreenScraper::getMarquee(GameEntry &game) {
 }
 
 void ScreenScraper::getTexture(GameEntry &game) {
-    QString url = getJsonText(
-        jsonObj["medias"].toArray(), REGION,
-        QList<QString>({"support-2D", "support-2d", "support-texture"}));
+    QString url =
+        getJsonText(jsonObj["medias"].toArray(), REGION,
+                    QList<QString>({"support-2[Dd]", "support-texture"}));
     game.textureData = downloadMedia(url);
 }
 
@@ -611,11 +612,14 @@ QString ScreenScraper::getUrlOrTextPropertyValue(const QJsonObject &jsonObj,
 QString ScreenScraper::getPropertyValue(const QJsonArray &jsonArr,
                                         const QList<QString> &locPrios,
                                         const QString &locationKey,
-                                        const QString &type) {
+                                        QString type) {
     for (const auto &location : locPrios) {
         for (const auto &jsonVal : jsonArr) {
             QJsonObject jsonObj = jsonVal.toObject();
-            if (type.isEmpty() || jsonObj["type"].toString() == type) {
+            if (type.isEmpty() ||
+                QRegularExpression(type.prepend('^').append('$'))
+                    .match(jsonObj["type"].toString())
+                    .hasMatch()) {
                 if (QString ret = getUrlOrTextPropertyValue(
                         jsonObj, locationKey, location);
                     !ret.isEmpty()) {
