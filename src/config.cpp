@@ -102,6 +102,13 @@ void Config::copyFile(const QString &src, const QString &dest, FileOp fileOp) {
     if (QFileInfo::exists(src)) {
         if (QFileInfo::exists(dest)) {
             if (fileOp == FileOp::OVERWRITE) {
+                if (QFileInfo(QFileInfo(dest).dir().path() %
+                              "/.platformcfg_overwrite_ok")
+                        .exists() &&
+                    (src.endsWith("peas.json") ||
+                     src.endsWith("platforms_idmap.csv"))) {
+                    QFile::remove(dest % ".dist");
+                }
                 QFile::remove(dest);
                 QFile::copy(src, dest);
                 qDebug() << "Overwritten file" << dest;
@@ -163,54 +170,43 @@ void Config::setupUserConfig() {
     }
 
     QMap<QString, QPair<QString, FileOp>> configFiles = {
-        {"ARTWORK.md", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example1", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example2", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example3", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example4", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"cache/priorities.xml.example",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"config.ini.example",
-         QPair<QString, FileOp>("config.ini.example", FileOp::OVERWRITE)},
-        {"CACHE.md",
-         QPair<QString, FileOp>("cache/README.md", FileOp::OVERWRITE)},
-        {"hints.xml", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/definitions.dat.example1",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/definitions.dat.example2",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/IMPORT.md",
-         QPair<QString, FileOp>("import/README.md", FileOp::OVERWRITE)},
-        {"mameMap.csv", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"mobygames_platforms.json",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"README.md", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"resources/boxfront.png",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"resources/boxside.png",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"screenscraper_platforms.json",
-         QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_developers.json", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_genres.json", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_platforms.json", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_publishers.json", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        // clang-format off
+        {"ARTWORK.md",                      QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"artwork.xml.example1",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"artwork.xml.example2",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"artwork.xml.example3",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"artwork.xml.example4",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"cache/priorities.xml.example",    QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"config.ini.example",              QPair<QString, FileOp>("config.ini.example", FileOp::OVERWRITE)},
+        {"CACHE.md",                        QPair<QString, FileOp>("cache/README.md", FileOp::OVERWRITE)},
+        {"hints.xml",                       QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"import/definitions.dat.example1", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"import/definitions.dat.example2", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"import/IMPORT.md",                QPair<QString, FileOp>("import/README.md", FileOp::OVERWRITE)},
+        {"mameMap.csv",                     QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"mobygames_platforms.json",        QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"README.md",                       QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"resources/boxfront.png",          QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"resources/boxside.png",           QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"screenscraper_platforms.json",    QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"tgdb_developers.json",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"tgdb_genres.json",                QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"tgdb_platforms.json",             QPair<QString, FileOp>("", FileOp::OVERWRITE)},
+        {"tgdb_publishers.json",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
         // do not overwrite
-        {"config.ini.example",
-         QPair<QString, FileOp>("config.ini", FileOp::KEEP)},
-        {"import/definitions.dat.example2",
-         QPair<QString, FileOp>("import/definitions.dat", FileOp::KEEP)},
-        {"resources/frameexample.png",
-         QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/maskexample.png", QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/scanlines1.png", QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/scanlines2.png", QPair<QString, FileOp>("", FileOp::KEEP)},
-        // create <fn>.dist if exists
-        {"aliasMap.csv", QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"artwork.xml", QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"peas.json", QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"platforms_idmap.csv",
-         QPair<QString, FileOp>("", FileOp::CREATE_DIST)}};
+        {"config.ini.example",              QPair<QString, FileOp>("config.ini", FileOp::KEEP)},
+        {"import/definitions.dat.example2", QPair<QString, FileOp>("import/definitions.dat", FileOp::KEEP)},
+        {"resources/frameexample.png",      QPair<QString, FileOp>("", FileOp::KEEP)},
+        {"resources/maskexample.png",       QPair<QString, FileOp>("", FileOp::KEEP)},
+        {"resources/scanlines1.png",        QPair<QString, FileOp>("", FileOp::KEEP)},
+        {"resources/scanlines2.png",        QPair<QString, FileOp>("", FileOp::KEEP)},
+        // create <fn>.dist by default if exists
+        {"aliasMap.csv",                    QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
+        {"artwork.xml",                     QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
+        {"peas.json",                       QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
+        {"platforms_idmap.csv",             QPair<QString, FileOp>("", FileOp::CREATE_DIST)}
+        // clang-format off
+    };
 
     for (auto src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;
@@ -227,6 +223,9 @@ void Config::setupUserConfig() {
         } else if (src.startsWith("resources/")) {
             tgtDir = getSkyFolder(SkyFolderType::RESOURCE);
             dest = dest.replace("resources/", "");
+        } else if (QFileInfo(tgtDir % "/.platformcfg_overwrite_ok").exists() &&
+                   (src == "peas.json" || src == "platforms_idmap.csv")) {
+            configFiles[src] = QPair<QString, FileOp>("", FileOp::OVERWRITE);
         }
         QString tgt = tgtDir % "/" % dest;
         copyFile(localEtcPath % src, tgt, configFiles.value(src).second);

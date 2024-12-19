@@ -95,3 +95,7 @@ article a:hover {
   height: 50px;
   width: 50px;
 }
+
+.md-typeset h4 {
+  margin-bottom: -0.7em;
+}

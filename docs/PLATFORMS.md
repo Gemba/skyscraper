@@ -101,12 +101,22 @@ Outline:
 There is also a an verbatim example, you may skip the next section initially and
 can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
 
-### Updating `peas.json` (or `peas_local.json`) and `platforms_idmap.csv`
+### Updating `peas_local.json` and `platforms_idmap_local.csv`
 
 These two files are ment to be locally edited and extended for additional
-platforms. Whenever you add a new platform block to the `peas.json` do also
-lookup the corresponding platform ids and add them to `platforms_idmap.csv` for
+platforms. Whenever you add a new platform block to the `peas_local.json` do also
+lookup the corresponding platform ids and add them to `platforms_idmap_local.csv` for
 the scraping sites with an API.
+
+From Skyscraper 3.15.0 onwards creating/editing the `peas_local.json` and
+`platforms_idmap_local.csv` is the preferred way. In any case both files (e.g.
+`peas.json` and `peas_local.json`) will be evalutated but the `_local`
+configuration has precedence over the distributed `peas.json`. The same rule
+applies to `platforms_idmap.csv` and `platforms_idmap_local.csv`.  
+If you have made local changes before Skyscraper 3.15 to either `peas.json` or
+`platforms_idmap.csv` read the section [Transferring Local Platform
+Changes](PLATFORMS.md#transferring-local-platform-changes) on how to transfer
+your changes to the corresponding `*_local.*` files.
 
 To find the platform ids for Screenscraper, Mobygames and The Games DB, please
 consult the files `screenscraper_platforms.json`, `mobygames_platforms.json` and
@@ -126,7 +136,7 @@ list in the `peas.json` for the respective platform/system at `<platform_name>`.
 
     The platforms ScummVM or Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or `"steam": ...` section of `peas.json`. Usually you find the platform information if you lookup the game manually on the scraping website.
 
-### Sample Usecase: Adding Platform _Satellaview_ 
+### Sample Usecase: Adding Platform _Satellaview_
 
 Let the platform/systemname be `satellaview`. You may read about this SNES
 enhancing peripheral [here](https://en.wikipedia.org/wiki/Satellaview).
@@ -187,6 +197,7 @@ at the end may be a less cumbersome manual merge with your local
 `platforms_idmap.csv`.
 
 Add this information:
+
 ```csv
 satellaview,107,-1,-1
 ```
@@ -234,7 +245,7 @@ additional information on this.
 
 1. Scrape and generate the `satellaview/gamelist.xml` as in the [introductive
    use case](USECASE.md) using `Skyscraper -p
-   satellaview -s screenscraper` and `Skyscraper -p satellaview`
+satellaview -s screenscraper` and `Skyscraper -p satellaview`
 2. Restart EmulationStation, respective trigger reload of the gamelist in your
    frontend.
 3. Smile :)
@@ -243,9 +254,111 @@ additional information on this.
 
     Thanks to retrobit @ GitHub for contributing this usecase.
 
+### Transferring Local Platform Changes
+
+This section describes how to transfer your changes from `peas.json` and
+`platforms_idmap.csv` to `*_local.*` files with the same format. If you never
+changed these files, you can safely ignore this section.  
+Whenever there is an update and maybe changes to `peas.json` and
+`platforms_idmap.csv` Skyscraper will place the distribution files as
+`peas.json.rp-dist` and `platforms_idmap.csv.rp-dist`.  
+Before Skyscraper 3.15.0 you had to manually transfer updates from
+`peas.json.rp-dist` and `platforms_idmap.csv.rp-dist`. With Skyscraper 3.15.0
+onwards there is a semi-automated approach.
+
+!!! note Non-RetroPie Users
+
+    If you are using Skyscraper without RetroPie
+    context these files will have the suffix `.dist`.
+    The manual will use `.rp-dist` as synonym for both.
+
+
+#### Step 1: Transfer Platform Information (`peas`) to Local File
+
+Install Python Deepdiff: `sudo apt install python3-deepdiff`. Then navigate to
+`/opt/retropie/supplementary/skyscraper/` and find the script
+`deepdiff_peas_jsonfiles.py`.
+
+!!! tip Non-RetroPie Users
+
+    If you are using Skyscraper without RetroPie
+    context the you can find the Python script in source in the
+    `supplementary/scraperdata` folder.
+
+The script expects at least two parameters:
+
+1. `<source_peas.json>`: The pristiine/baseline file with all platform
+   information
+2. `<dest_peas.json>`: The file with your local changes
+3. Optionally `<outfile_peas.json>`: Once you have reviewed the changes provide
+   this file to store the platform "diff" between the pristine file and your
+   changes
+
+**Example(s)**
+
+Create a diff on the console:
+```bash
+python3 deepdiff_peas_jsonfiles.py peas.json.rp-dist peas.json
+```
+
+Review the diff, then run:
+```bash
+python3 deepdiff_peas_jsonfiles.py peas.json.rp-dist peas.json peas_local.json
+```
+
+Backup your `peas.json` if needed and when satisfied move
+`peas.json.rp-dist` to `peas.json`.
+
+#### Step 2: Transfer Platform Scraper IDs (`platforms_idmap`) to Local File
+
+The logic is the same as before and provides an output of the lines you have
+changed in `platforms_idmap.csv` in relation to the baseline
+`platforms_idmap.csv.rp-dist`.  
+Navigate to the folder with the `platforms_idmap.csv`. Then run:
+
+```bash
+diff \
+  --new-line-format="%L" \
+  --old-line-format="" \
+  --unchanged-line-format="" \
+  platforms_idmap.csv.rp-dist platforms_idmap.csv > platforms_idmap_local.csv
+```
+
+Also add the column header (folder, screenscraper_id, mobygames_id, tgdb_id) to
+the `platforms_idmap_local.csv` file, for example with:
+
+```bash
+echo folder,screenscraper_id,mobygames_id,tgdb_id | \
+cat - platforms_idmap_local.csv > tmp_piggy.csv && \
+mv tmp_piggy.csv platforms_idmap_local.csv
+```
+
+Backup your `platforms_idmap.csv` if needed and when satisfied move
+`platforms_idmap.csv.rp-dist` to `platforms_idmap.csv`.
+
+#### Step 3: Automatically Apply Distribution Updates for Platform Configuration
+
+Navigate to the folder with the `_local.*` files mentioned before. Create an
+empty file names `.platformcfg_overwrite_ok` (note the heading dot). If this
+file is present Skyscraper will overwrite the existing `peas.json` and
+`platforms_idmap.csv` with the files from the distribution when updating to a
+newer version.  
+If you remove the file `.platformcfg_overwrite_ok`, Skyscraper will install the
+`*.rp-dist` files again on the next install.
+
+### One More Thing...
+
+If you have changes which would be beneficial for the community, feel free to
+file an issue with the proposed additions/changes or table it in the [RetroPie
+Forum/Skyscraper Thread](https://retropie.org.uk/forum/topic/34588). Thank you!
+
 ### Migrating `platforms.json` and `screenscraper.json`
 
 !!! info
+
+    This section is only applicable if you update from Skyscraper 3.7.7-2.
+
+!!! tip
 
     If you neither edited `platforms.json` nor `screenscraper.json` or do not
     have these files in the Skyscraper config folder (sibling to the
@@ -259,26 +372,29 @@ the platform ids of two more web API sites.
 
 Use the script `convert_platforms_json.py` (sibling to the Skyscraper
 executable) to convert the `platforms.json` to a `peas_mine.json` file which you
-can then diff to the `peas.json` and transfer your changes to `peas.json` or
+can then diff to the `peas.json` and transfer your changes to
 `peas_local.json`.
 
 Use the script `check_screenscraper_json_to_idmap.py` to identify differences
 from your `screenscraper.json`. Then use the three `<scraper>_platforms.json`
 files to identify the matching platform ids to be entered in
-`platform_idmap.csv`. Use `-1` in this file, if there is no matching platform id.
+`platforms_idmap_local.csv`. Use `-1` in this file, if there is no matching platform id.
 
 ### Summary of Changes in the Config Files
 
 Filenames shown ~~strikethrough~~ are superseded.  
 Filenames shown _italic_ are user editable.
 
-| <div style="width:140px">File</div> | Introduced with Version | Notes (version)                                                                                                                                      |
-| ----------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ~~`mobygames.json`~~                | 3.8.0                   | superseded by `mobygames_platforms.json` (v3.9.0); not to be edited; IDs are used in `platforms_idmap.csv`                                          |
-| ~~`platforms.json`~~                | 3.7.7-2 (@detain)       | superseded by _`peas.json`_ (3.9.0) and _`peas_local.json`_ (3.13.0); do edit the latter to add/change platforms; these files use a leaner format than `platforms.json`                                         |
-| _`platforms_idmap.csv`_             | 3.9.0                   | maps the platform names (handles) from _`peas.json`_ / _`peas_local.json`_ to exact platform IDs used in scrapers MobyGames, Screenscraper or TGDB; do edit to add new platforms         |
-| ~~`screenscraper.json`~~            | 3.7.7-2 (@detain)       | IDs formerly used in here are part of `platforms_idmap.csv` (3.9.0); superseded by `screenscraper_platforms.json` (3.9.0) which is not to be edited |
-| `tgdb_developers.json`              | 2.5.3 (@muldjord)       | API mapping of 'Developers'; Uses leaner format as before (3.9.0); not to be edited                                                                  |
-| `tgdb_genres.json`                  | 3.9.0                   | API mapping of 'Genres' (3.9.0); not to be edited                                                                                                    |
-| `tgdb_platforms.json`               | 3.9.0                   | API mapping of 'Platforms' (3.9.0); not to be edited; IDs are used in `platforms_idmap.csv`                                                          |
-| `tgdb_publishers.json`              | 2.5.3 (@muldjord)       | API mapping of 'Publishers'; Uses leaner format as before (3.9.0); not to be edited                                                                  |
+| <div style="width:140px">File</div> | Introduced with Version | Notes (version)                                                                                                                                                                                       |
+| ----------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~`mobygames.json`~~                | 3.8.0                   | superseded by `mobygames_platforms.json` (v3.9.0); not to be edited; IDs are used in `platforms_idmap.csv`                                                                                            |
+| ~~`platforms.json`~~                | 3.7.7-2 (@detain)       | superseded by _`peas.json`_ (3.9.0) and _`peas_local.json`_ (3.13.0); do edit the latter to add/change platforms; these files use a leaner format than the initially used `platforms.json`            |
+| _`platforms_idmap.csv`_             | 3.9.0                   | maps the platform names (handles) from _`peas.json`_ / _`peas_local.json`_ to exact platform IDs used in scrapers MobyGames, Screenscraper or TGDB; do edit to add new platforms                      |
+| _`peas.json`_                       | 3.9.0                   | maps platform names (read: ROM folder names) to extensions and aliases for that platform                                                                                                              |
+| _`peas_local.json`_                 | 3.13.0                  | same as usage as `peas.json`, the `_local.json` file will not be altered by Skyscraper updates. Entries in this file have higher precedence than the distribution file `peas.json`                    |
+| _`platforms_idmap_local.csv`_       | 3.15.0                  | same as usage as `platforms_idmap.csv`, the `_local.csv` file will not be altered by Skyscraper updates. Entries in this file have higher precedence than the distribution file `platforms_idmap.csv` |
+| ~~`screenscraper.json`~~            | 3.7.7-2 (@detain)       | IDs formerly used in here are part of `platforms_idmap.csv` (3.9.0); superseded by `screenscraper_platforms.json` (3.9.0) which is not to be edited                                                   |
+| `tgdb_developers.json`              | 2.5.3 (@muldjord)       | API mapping of 'Developers'; Uses leaner format as before (3.9.0); not to be edited                                                                                                                   |
+| `tgdb_genres.json`                  | 3.9.0                   | API mapping of 'Genres' (3.9.0); not to be edited                                                                                                                                                     |
+| `tgdb_platforms.json`               | 3.9.0                   | API mapping of 'Platforms' (3.9.0); not to be edited; IDs are used in `platforms_idmap.csv`                                                                                                           |
+| `tgdb_publishers.json`              | 2.5.3 (@muldjord)       | API mapping of 'Publishers'; Uses leaner format as before (3.9.0); not to be edited                                                                                                                   |
