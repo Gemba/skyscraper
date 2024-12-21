@@ -170,6 +170,10 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "resource cache. It must be followed by 'COMMAND[:OPTIONS]'.\nSee "
         "'--cache help' for a full description of all functions.",
         "COMMAND[:OPTIONS]", "");
+    QCommandLineOption gamelistfilenameOption(
+        "gamelistfilename",
+        "Game list export filename.\n(default depends on frontend)", "FILENAME",
+        "");
     QCommandLineOption refreshOption("refresh", "Same as '--cache refresh'.");
     QCommandLineOption startatOption(
         "startat",
@@ -250,6 +254,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(flagsOption);
     parser->addOption(fOption);
     parser->addOption(gOption);
+    parser->addOption(gamelistfilenameOption);
     parser->addHelpOption();
     parser->addOption(hintOption);
     parser->addOption(includefromOption);

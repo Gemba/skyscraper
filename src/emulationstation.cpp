@@ -397,7 +397,8 @@ QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
 bool EmulationStation::canSkip() { return true; }
 
 QString EmulationStation::getGameListFileName() {
-    return QString("gamelist.xml");
+    return config->gameListFilename.isEmpty() ? QString("gamelist.xml")
+                                              : config->gameListFilename;
 }
 
 QString EmulationStation::getInputFolder() {

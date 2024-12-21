@@ -57,6 +57,7 @@ struct Settings {
     QString igdbToken = "";
     QString inputFolder = "";
     QString gameListFolder = "";
+    QString gameListFilename = "";
     QString mediaFolder = "";
     // Next two only relevant for EmulationStation/ES-DE
     bool mediaFolderHidden = false; // EmulationStation only
@@ -208,6 +209,7 @@ private:
         {"forceFilename",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"frontend",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"gameListBackup",          QPair<QString, int>("bool", CfgType::MAIN |                     CfgType::FRONTEND                    )},
+        {"gameListFilename",        QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"gameListFolder",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"gameListVariants",        QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
         {"hints",                   QPair<QString, int>("bool", CfgType::MAIN                                                            )},

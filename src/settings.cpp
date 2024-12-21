@@ -194,6 +194,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->extensions = v;
                 continue;
             }
+            if (k == "gameListFilename") {
+                config->gameListFilename = v;
+                continue;
+            }
             if (k == "gameListFolder") {
                 config->gameListFolder = (type == CfgType::MAIN ||
                                           type == CfgType::FRONTEND /* #68 */)
@@ -622,6 +626,9 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             Cli::cacheReportMissingUsage();
             exit(0);
         }
+    }
+    if (parser->isSet("gamelistfilename")) {
+        config->gameListFilename = parser->value("gamelistfilename");
     }
     if (parser->isSet("startat")) {
         config->startAt = parser->value("startat");

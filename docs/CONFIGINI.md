@@ -82,6 +82,7 @@ This is an alphabetical index of all configuration options including the section
 | [forceFilename](CONFIGINI.md#forcefilename)                 |    Y     |       Y        |       Y        |               |
 | [frontend](CONFIGINI.md#frontend)                           |    Y     |                |                |               |
 | [gameListBackup](CONFIGINI.md#gamelistbackup)               |    Y     |                |       Y        |               |
+| [gameListFilename](CONFIGINI.md#gamelistfilename)           |    Y     |       Y        |       Y        |               |
 | [gameListFolder](CONFIGINI.md#gamelistfolder)               |    Y     |       Y        |       Y        |               |
 | [gameListVariants](CONFIGINI.md#gamelistvariants)           |          |                |       Y        |               |
 | [hints](CONFIGINI.md#hints)                                 |    Y     |                |                |               |
@@ -153,6 +154,15 @@ Sets the game list export folder. By default Skyscraper exports the game list to
     If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+---
+
+#### gameListFilename
+
+Sets the game list export filename. This enables you to change that to a non-default filename.
+
+Default value: depends on [frontend](FRONTENDS.md)
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 ---

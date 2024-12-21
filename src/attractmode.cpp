@@ -260,7 +260,9 @@ bool AttractMode::canSkip() { return true; }
 
 QString AttractMode::getGameListFileName() {
     QFileInfo info(config->frontendExtra);
-    return QString(info.completeBaseName() % ".txt");
+    return config->gameListFilename.isEmpty()
+               ? QString(info.completeBaseName() % ".txt")
+               : config->gameListFilename;
 }
 
 QString AttractMode::getInputFolder() {
