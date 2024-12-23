@@ -160,7 +160,8 @@ int main(int argc, char *argv[]) {
     if (argc <= 1 || parser.isSet("help") || parser.isSet("h")) {
         parser.showHelp();
     } else {
-        x = new Skyscraper(parser, currentDir);
+        x = new Skyscraper(currentDir);
+        x->loadConfig(parser);
         QObject::connect(x, &Skyscraper::finished, &app,
                             &QCoreApplication::quit);
         QTimer::singleShot(0, x, SLOT(run()));

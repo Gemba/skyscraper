@@ -37,6 +37,8 @@
 #include <QSharedPointer>
 #include <QString>
 
+class Skyscraper;
+
 struct Resource {
     QString cacheId = "";
     int version = 1;
@@ -69,6 +71,12 @@ struct ResCounts {
 class Cache {
 public:
     Cache(const QString &cacheFolder);
+
+    static bool isCommandValidOnAllPlatform(const QString &command);
+    static void purgeAllPlatform(Settings config, Skyscraper *app);
+    static void reportAllPlatform(Settings config, Skyscraper *app);
+    static void vacuumAllPlatform(Settings config, Skyscraper *app);
+    static void validateAllPlatform(Settings config, Skyscraper *app);
 
     static const QStringList getAllResourceTypes();
     bool createFolders(const QString &scraper);

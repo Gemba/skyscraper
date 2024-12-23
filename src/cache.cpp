@@ -29,6 +29,7 @@
 #include "config.h"
 #include "nametools.h"
 #include "queue.h"
+#include "skyscraper.h"
 
 #include <QBuffer>
 #include <QDateTime>
@@ -743,7 +744,8 @@ bool Cache::purgeAll(const bool unattend) {
         }
     }
 
-    printf("Purging ALL resources for the selected platform, please wait...");
+    printf("Purging ALL resources for %s platform, please wait...",
+           cacheDir.dirName().toStdString().c_str());
 
     int purged = 0;
     int dots = 0;
@@ -776,6 +778,94 @@ bool Cache::purgeAll(const bool unattend) {
     }
     printf("\n");
     return true;
+}
+
+bool Cache::isCommandValidOnAllPlatform(const QString &command) {
+    QList<QString> validCommands({"help", "purge:all", "vacuum", "validate"});
+
+    return validCommands.contains(command) ||
+           command.contains("report:missing");
+}
+
+void Cache::purgeAllPlatform(Settings config, Skyscraper *app) {
+    printf("\033[1;31mWARNING! You are about to purge / remove ALL "
+           "resources from the Skyscaper cache. \033[0m\n\n");
+    printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+    std::string userInput = "";
+    getline(std::cin, userInput);
+    if (userInput != "y") {
+        printf("User chose not to continue, cancelling purge...\n\n");
+        return;
+    }
+
+    QDir cacheDir(config.cacheFolder);
+    for (const auto &platform :
+         cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        config.platform = platform;
+        Cache cache(cacheDir.filePath(platform));
+        if (cache.read() && cache.purgeAll(true)) {
+            app->state = Skyscraper::OpMode::NO_INTR;
+            cache.write();
+            app->state = Skyscraper::OpMode::SINGLE;
+        }
+    }
+}
+
+void Cache::reportAllPlatform(Settings config, Skyscraper *app) {
+    QDir cacheDir(config.cacheFolder);
+    for (const auto &platform :
+         cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        config.platform = platform;
+        Cache cache(cacheDir.filePath(platform));
+        if (cache.read()) {
+            cache.assembleReport(config, app->getPlatformFileExtensions());
+        }
+    }
+}
+
+void Cache::vacuumAllPlatform(Settings config, Skyscraper *app) {
+    printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
+           "resources that don't match your current romset. Please consider "
+           "making a backup of your "
+           "Skyscraper cache before performing this action. THIS CANNOT BE "
+           "UNDONE!\033[0m\n\n");
+    printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+    std::string userInput = "";
+    getline(std::cin, userInput);
+    if (userInput != "y") {
+        printf("User chose not to continue, cancelling vacuum...\n\n");
+        return;
+    }
+
+    QDir cacheDir(config.cacheFolder);
+    for (const auto &platform :
+         cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        Cache cache(cacheDir.filePath(platform));
+        config.platform = platform;
+        if (cache.read() &&
+            cache.vacuumResources(QDir(config.inputFolder).filePath(platform),
+                                  app->getPlatformFileExtensions(),
+                                  config.verbosity, true)) {
+            app->state = Skyscraper::OpMode::NO_INTR;
+            cache.write();
+            app->state = Skyscraper::OpMode::SINGLE;
+        }
+    }
+}
+
+void Cache::validateAllPlatform(Settings config, Skyscraper *app) {
+    QDir cacheDir(config.cacheFolder);
+    for (const auto &platform :
+         cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        config.platform = platform;
+        Cache cache(cacheDir.filePath(platform));
+        if (cache.read()) {
+            cache.validate();
+            app->state = Skyscraper::OpMode::NO_INTR;
+            cache.write();
+            app->state = Skyscraper::OpMode::SINGLE;
+        }
+    }
 }
 
 QList<QFileInfo> Cache::getFileInfos(const QString &inputFolder,
@@ -832,7 +922,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         Cli::cacheReportMissingUsage();
         return;
     }
-    reportStr.replace("report:missing=", "");
+    reportStr.remove("report:missing=");
 
     QString missingOption = reportStr.simplified();
     QStringList resTypeList;
@@ -990,7 +1080,9 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
         }
     }
 
-    printf("Vacuuming cache, this can take several minutes, please wait...");
+    printf("Vacuuming cache for %s platform, this can take several minutes, "
+           "please wait...",
+           cacheDir.dirName().toStdString().c_str());
     QList<QFileInfo> fileInfos = getFileInfos(inputFolder, filter);
     // Clean the quick id's aswell
     QMap<QString, QPair<qint64, QString>> quickIdsCleaned;
@@ -1259,7 +1351,9 @@ bool Cache::write(const bool onlyQuickId) {
 void Cache::validate() {
     // TODO: Add format checks for each resource type, and remove if deemed
     // corrupt
-    printf("Starting resource cache validation run, please wait...\n");
+    printf("Starting resource cache validation run for %s platform, please "
+           "wait...\n",
+           cacheDir.dirName().toStdString().c_str());
 
     if (!QFileInfo::exists(dbFilePath())) {
         printf("'db.xml' not found, cache cleaning cancelled...\n");

@@ -279,6 +279,8 @@ This is a powerful option that allows you to purge the requested resources from 
 
 You can purge _all_ resources from the cache for the chosen platform using the keyword `all`.
 
+If no platform is specified, the `purge:all` operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
+
 You can purge specific resources from a certain module with `m=<MODULE>` or of a certain type with `t=<TYPE>` or a combination of the two separated by a `,`.
 
 Supported modules can be seen under `-s` when using the `--help` option. Supported types are: `title`, `platform`, `description`, `publisher`, `developer`, `ages`, `tags`, `rating`, `releasedate`, `cover`, `screenshot`, `wheel`, `marquee`, `video`.
@@ -294,6 +296,7 @@ Skyscraper -p snes --cache purge:all
 Skyscraper -p snes --cache purge:m=thegamesdb
 Skyscraper -p snes --cache purge:t=cover
 Skyscraper -p snes --cache purge:m=thegamesdb,t=cover
+Skyscraper --cache purge:all
 ```
 
 #### --cache refresh
@@ -319,6 +322,8 @@ You can use any of the following:
 -   `type1`,`type2`,`type3`,...:
 
 Supported resource types are: `title`, `platform`, `description`, `publisher`, `developer`, `ages`, `tags`, `rating`, `releasedate`, `cover`, `screenshot`, `wheel`, `marquee`, `video`.
+
+If no platform is specified, reports will be generated for all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
 
 !!! tip
 
@@ -347,6 +352,8 @@ Skyscraper -p snes --cache show
 
 You can purge all resources that don't have any connection to your current romset for the selected platform by using the `vacuum` command. This is extremely useful if you've removed a bunch of roms from your collection and you wish to purge any cached data you don't need anymore.
 
+If no platform is specified, the vacuum operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
+
 !!! danger "Possible dangerous command"
 
     Vacuuming the cache cannot be undone, so please consider making a backup.
@@ -360,6 +367,8 @@ Skyscraper -p snes --cache vacuum
 #### --cache validate
 
 This will test the integrity of the resource cache connected to the chosen platform. It will remove / clean out any stray files that aren't connected to an entry in the cache and vice versa. It's not really necessary to use this option unless you have manually deleted any of the cached files or entries in the `db.xml` file connected to the platform.
+
+If no platform is specified, the validate operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
 
 !!! note
 

@@ -85,8 +85,7 @@ static inline unsigned long mix(unsigned long a, unsigned long b,
     return c;
 }
 
-Skyscraper::Skyscraper(const QCommandLineParser &parser,
-                       const QString &currentDir) {
+Skyscraper::Skyscraper(const QString &currentDir) {
     qRegisterMetaType<GameEntry>("GameEntry");
 
     manager = QSharedPointer<NetManager>(new NetManager());
@@ -99,12 +98,30 @@ Skyscraper::Skyscraper(const QCommandLineParser &parser,
     printf("%s", StrTools::getVersionHeader().toStdString().c_str());
 
     config.currentDir = currentDir;
-    loadConfig(parser);
 }
 
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 
 void Skyscraper::run() {
+
+    if (config.platform.isEmpty()) {
+        if (config.cacheOptions == "purge:all") {
+            Cache::purgeAllPlatform(config, this);
+            exit(0);
+        } else if (config.cacheOptions.contains("report:missing")) {
+            Cache::reportAllPlatform(config, this);
+            exit(0);
+        } else if (config.cacheOptions == "vacuum") {
+            Cache::vacuumAllPlatform(config, this);
+            exit(0);
+        } else if (config.cacheOptions == "validate") {
+            Cache::validateAllPlatform(config, this);
+            exit(0);
+        } else {
+            exit(1);
+        }
+    }
+
     cacheScrapeMode = config.scraper == "cache";
     doCacheScraping = cacheScrapeMode && !config.pretend;
     printf("Platform:           '\033[1;32m%s\033[0m'\n",
@@ -206,8 +223,8 @@ void Skyscraper::run() {
             success = cache->purgeAll(config.unattend || config.unattendSkip);
         } else if (config.cacheOptions == "vacuum") {
             success = cache->vacuumResources(
-                config.inputFolder, platformFileExtensions(), config.verbosity,
-                config.unattend || config.unattendSkip);
+                config.inputFolder, getPlatformFileExtensions(),
+                config.verbosity, config.unattend || config.unattendSkip);
         } else if (config.cacheOptions.contains("purge:m=") ||
                    config.cacheOptions.contains("purge:t=")) {
             success = cache->purgeResources(config.cacheOptions);
@@ -220,7 +237,7 @@ void Skyscraper::run() {
         exit(0);
     }
     if (config.cacheOptions.contains("report:")) {
-        cache->assembleReport(config, platformFileExtensions());
+        cache->assembleReport(config, getPlatformFileExtensions());
         exit(0);
     }
     if (config.cacheOptions == "validate") {
@@ -368,7 +385,7 @@ void Skyscraper::run() {
     if (totalFiles == 0) {
         QString extraInfo = doCacheScraping ? "in cache "
                                             : "matching these extensions " +
-                                                  platformFileExtensions();
+                                                  getPlatformFileExtensions();
         printf("\nNo files to process %s for platform "
                "'%s'.\nCheck configured and existing file extensions and cache "
                "content.\n\n\033[1;33mSkyscraper came to an untimely "
@@ -452,7 +469,7 @@ void Skyscraper::prepareFileQueue() {
     if (config.platform == "scummvm") {
         filter |= QDir::Dirs;
     }
-    QDir inputDir(config.inputFolder, platformFileExtensions(), QDir::Name,
+    QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
         printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
@@ -871,6 +888,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // 5. Command line configs, overrides all
     rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
+
+    if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
+        return; // cache option to be applied to all platform
+    }
 
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {

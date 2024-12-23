@@ -44,12 +44,18 @@ class Skyscraper : public QObject {
     Q_OBJECT
 
 public:
-    Skyscraper(const QCommandLineParser &parser, const QString &currentDir);
+    Skyscraper(const QString &currentDir);
     ~Skyscraper();
     QSharedPointer<Queue> queue;
     QSharedPointer<NetManager> manager;
     enum OpMode { SINGLE, NO_INTR, CACHE_EDIT, CACHE_EDIT_DISMISS, THREADED };
     int state = SINGLE;
+
+    void loadConfig(const QCommandLineParser &parser);
+    const inline QString getPlatformFileExtensions() {
+        return Platform::get().getFormats(config.platform, config.extensions,
+                                          config.addExtensions);
+    }
 
 public slots:
     void run();
@@ -64,7 +70,6 @@ private slots:
 
 private:
     Settings config;
-    void loadConfig(const QCommandLineParser &parser);
     QString secsToString(const int &seconds);
     void checkForFolder(QDir &folder, bool create = true);
     void showHint();
@@ -80,10 +85,6 @@ private:
     void setLangPrios();
     QString normalizePath(QFileInfo fileInfo);
     // void migrate(QString filename);
-    const inline QString platformFileExtensions() {
-        return Platform::get().getFormats(config.platform, config.extensions,
-                                          config.addExtensions);
-    }
     void setFolder(const bool doCacheScraping, QString &outFolder,
                    const bool createMissingFolder = true);
 

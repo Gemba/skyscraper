@@ -19,6 +19,7 @@
 
 #include "settings.h"
 
+#include "cache.h"
 #include "cli.h"
 #include "config.h"
 #include "platform.h"
@@ -46,6 +47,16 @@ RuntimeCfg::RuntimeCfg(Settings *config, const QCommandLineParser *parser) {
 
 RuntimeCfg::~RuntimeCfg(){};
 
+void RuntimeCfg::reportInvalidPlatform() {
+    if (parser->isSet("p")) {
+        printf("\033[1;31mUnknown platform '%s' provided. \033[0m",
+               parser->value("p").toUtf8().constData());
+    }
+    printf("\033[1;31mPlease set a valid platform with '-p "
+           "<PLATFORM>'\nCheck '--help' for a list of supported "
+           "platforms. Qutting.\n\033[0m");
+}
+
 void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                                 bool &inputFolderSet, bool &gameListFolderSet,
                                 bool &mediaFolderSet) {
@@ -63,19 +74,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             // config.ini may set platform= in [main]
             config->platform = settings->value("platform").toString();
         } else {
-            bool cacheHelp = parser->isSet("cache") &&
-                             (parser->value("cache") == "help" ||
-                              parser->value("cache") == "report:missing=help");
-            QStringList flags = parseFlags();
-            if (!cacheHelp && !flags.contains("help") &&
-                !parser->isSet("hint")) {
-                if (parser->isSet("p")) {
-                    printf("\033[1;31mUnknown platform '%s' provided. \033[0m",
-                           parser->value("p").toUtf8().constData());
-                }
-                printf("\033[1;31mPlease set a valid platform with '-p "
-                       "<PLATFORM>'\nCheck '--help' for a list of supported "
-                       "platforms. Qutting.\n\033[0m");
+            bool isCacheOK =
+                parser->isSet("cache") &&
+                Cache::isCommandValidOnAllPlatform(parser->value("cache"));
+            bool isFlagsOK =
+                parser->isSet("flags") && parseFlags().contains("help");
+
+            if (!isCacheOK && !isFlagsOK && !parser->isSet("hint")) {
+                reportInvalidPlatform();
                 exit(1);
             }
         }
