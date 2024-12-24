@@ -154,14 +154,26 @@ void Config::setupUserConfig() {
     // Config::getSkyFolder(type ...)
     QDir::setCurrent(getSkyFolder());
 
-    // copy configs
-    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
+    QString rpInst = "/opt/retropie/supplementary/skyscraper/Skyscraper";
+    bool isRpInstall = QFileInfo(rpInst).isFile();
+    QString manualInst = PREFIX "/Skyscraper";
+    bool exeIsSymlink = QFileInfo(manualInst).isSymLink();
 
-    if (!QFileInfo::exists(localEtcPath)) {
+    if (!exeIsSymlink && isRpInstall) {
+        printf("\033[1;31mDuplicate installation of Skyscraper found:\n%s "
+               "and\n%s\nPlease remove one or the other to avoid "
+               "confusion.\033[0m\n",
+               manualInst.toStdString().c_str(), rpInst.toStdString().c_str());
+        exit(1);
+    }
+
+    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
+    if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
         // RetroPie or Windows installation type: handled externally
         return;
     }
 
+    // copy configs
     QMap<QString, QPair<QString, FileOp>> configFiles = {
         {"ARTWORK.md", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
         {"artwork.xml.example1", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
