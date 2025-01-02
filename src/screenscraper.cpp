@@ -337,7 +337,7 @@ void ScreenScraper::getTags(GameEntry &game) {
         QString tag =
             getJsonText(jsonTags.at(a).toObject()["noms"].toArray(), LANGUE);
         if (!tag.isEmpty()) {
-            game.tags.append(tag + ", ");
+            game.tags.append(tag % ", ");
         }
     }
 
@@ -612,14 +612,13 @@ QString ScreenScraper::getUrlOrTextPropertyValue(const QJsonObject &jsonObj,
 QString ScreenScraper::getPropertyValue(const QJsonArray &jsonArr,
                                         const QList<QString> &locPrios,
                                         const QString &locationKey,
-                                        QString type) {
+                                        const QString &type) {
     for (const auto &location : locPrios) {
         for (const auto &jsonVal : jsonArr) {
             QJsonObject jsonObj = jsonVal.toObject();
-            if (type.isEmpty() ||
-                QRegularExpression(type.prepend('^').append('$'))
-                    .match(jsonObj["type"].toString())
-                    .hasMatch()) {
+            if (type.isEmpty() || QRegularExpression("^" % type % "$")
+                                      .match(jsonObj["type"].toString())
+                                      .hasMatch()) {
                 if (QString ret = getUrlOrTextPropertyValue(
                         jsonObj, locationKey, location);
                     !ret.isEmpty()) {
@@ -638,7 +637,7 @@ QString ScreenScraper::getLocalizedValue(const QJsonArray &jsonArr,
     qDebug() << "Types:" << types;
     QString ret;
     if (types.isEmpty()) {
-        ret = getPropertyValue(jsonArr, locPrios, locationKey);
+        ret = getPropertyValue(jsonArr, locPrios, locationKey, QString());
     } else {
         for (const auto &type : types) {
             ret = getPropertyValue(jsonArr, locPrios, locationKey, type);
