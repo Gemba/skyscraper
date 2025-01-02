@@ -42,7 +42,6 @@ class ScreenScraper : public AbstractScraper {
 public:
     ScreenScraper(Settings *config, QSharedPointer<NetManager> manager);
 
-
 private:
     QTimer limitTimer;
     QEventLoop limiter;
