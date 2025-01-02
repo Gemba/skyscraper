@@ -42,6 +42,7 @@ class ScreenScraper : public AbstractScraper {
 public:
     ScreenScraper(Settings *config, QSharedPointer<NetManager> manager);
 
+
 private:
     QTimer limitTimer;
     QEventLoop limiter;
@@ -80,8 +81,7 @@ private:
                               const QList<QString> &types);
     QString getPropertyValue(const QJsonArray &jsonArr,
                              const QList<QString> &locPrios,
-                             const QString &locationKey,
-                             QString type = QString());
+                             const QString &locationKey, const QString &type);
     int getPlatformId(const QString platform) override;
 
     QString region;
