@@ -57,6 +57,8 @@ private:
     QString fromPreservedHeader(const QString &key, const QString &suggested);
     void removePreservedHeader(const QString &key);
     QString toPegasusFormat(const QString &key, const QString &value);
+    QString addMediaFile(const QString &asset, bool useRelativePath,
+                         QString &mediaFile);
     QMap<QString, QString> headerPairs;
     QString tab = "  ";
 };
