@@ -82,7 +82,7 @@ This is an alphabetical index of all configuration options including the section
 | [forceFilename](CONFIGINI.md#forcefilename)                 |    Y     |       Y        |       Y        |               |
 | [frontend](CONFIGINI.md#frontend)                           |    Y     |                |                |               |
 | [gameListBackup](CONFIGINI.md#gamelistbackup)               |    Y     |                |       Y        |               |
-| [gameListFilename](CONFIGINI.md#gamelistfilename)           |    Y     |       Y        |       Y        |               |
+| [gameListFilename](CONFIGINI.md#gamelistfilename)           |          |                |       Y        |               |
 | [gameListFolder](CONFIGINI.md#gamelistfolder)               |    Y     |       Y        |       Y        |               |
 | [gameListVariants](CONFIGINI.md#gamelistvariants)           |          |                |       Y        |               |
 | [hints](CONFIGINI.md#hints)                                 |    Y     |                |                |               |
@@ -160,10 +160,10 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### gameListFilename
 
-Sets the game list export filename. This enables you to change that to a non-default filename.
+Override the game list filename. This enables you to set a filename different from the default provided by the frontend modules.
 
-Default value: depends on [frontend](FRONTENDS.md)
-Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+Default value: depends on [frontend](FRONTENDS.md)  
+Allowed in sections: `[<FRONTEND>]`
 
 ---
 
