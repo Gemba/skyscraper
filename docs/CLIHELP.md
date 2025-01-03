@@ -599,6 +599,16 @@ Skyscraper -p amiga --flags forcefilename,nosubdirs,skipexistingwheels
 Skyscraper -p nes --flags videos,nomarquees
 ```
 
+### --gamelistfilename &lt;FILENAME&gt;
+
+Overrides the default gamelist filename of the frontend. If you are using a variant of a frontend, this switch may come in handy. Consider setting this in [`config.ini`](CONFIGINI.md#gamelistfilename) instead.
+
+**Example(s)**
+
+```
+Skyscraper -p megadrive -f pegasus --gamelistfilename metadata.txt   # default for pegasus frontend is metadata.pegasus.txt
+```
+
 ### --includefrom &lt;FILENAME&gt;
 
 Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with _absolute_ path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').

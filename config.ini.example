@@ -141,6 +141,7 @@
 ;emulator=""
 ;launch=""
 ;gameListFolder="/home/pi/RetroPie/roms/amiga"
+;gameListFilename="metadata.txt"
 ;gameListBackup="false"
 ;mediaFolder="/home/pi/RetroPie/roms/amiga/media"
 ;skipped="false"
