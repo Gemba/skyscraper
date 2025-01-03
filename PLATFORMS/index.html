@@ -1,0 +1,1569 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/PLATFORMS/">
+      
+      
+        <link rel="prev" href="../CLIHELP/">
+      
+      
+        <link rel="next" href="../LANGUAGES/">
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Platforms - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#supported-platforms" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Platforms
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SCRAPINGMODULES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPORT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONFIGINI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The config.ini File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLIHELP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Platforms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Platforms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-platform-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exact platform mapping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-add-platforms-for-scraping" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Add Platforms For Scraping
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Add Platforms For Scraping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-peasjson-or-peas_localjson-and-platforms_idmapcsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating peas.json (or peas_local.json) and platforms_idmap.csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-usecase-adding-platform-satellaview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Usecase: Adding Platform Satellaview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sample Usecase: Adding Platform Satellaview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-add-a-section-to-peas_localjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Add a Section to peas_local.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-lookup-values-for-satellaview-and-update-platforms_idmapcsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Lookup Values for Satellaview and Update platforms_idmap.csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-the-system-in-retropieemulationstation-and-populate-the-rom-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-happy-scraping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Happy Scraping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-platformsjson-and-screenscraperjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrating platforms.json and screenscraper.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-changes-in-the-config-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary of Changes in the Config Files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Languages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Varia
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Varia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Platforms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Platforms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-platform-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exact platform mapping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-add-platforms-for-scraping" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Add Platforms For Scraping
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Add Platforms For Scraping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-peasjson-or-peas_localjson-and-platforms_idmapcsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating peas.json (or peas_local.json) and platforms_idmap.csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-usecase-adding-platform-satellaview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Usecase: Adding Platform Satellaview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sample Usecase: Adding Platform Satellaview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-add-a-section-to-peas_localjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Add a Section to peas_local.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-lookup-values-for-satellaview-and-update-platforms_idmapcsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Lookup Values for Satellaview and Update platforms_idmap.csv
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-the-system-in-retropieemulationstation-and-populate-the-rom-folder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-happy-scraping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Happy Scraping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-platformsjson-and-screenscraperjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migrating platforms.json and screenscraper.json
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-changes-in-the-config-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary of Changes in the Config Files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Platforms</h1>
+
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
+<p>Get a list of supported platforms with <code>Skyscraper --help</code>.</p>
+<p>After the initial work from torresflo @ GitHub it is possible to add new
+platforms by editing the <code>platforms.json</code> file. However, since version 3.9.0 of
+Skyscraper this file is replaced by <code>peas.json</code> (short for <em>p</em>latforms,
+<em>e</em>xtensions/formats, <em>a</em>liases and <em>s</em>crapers. The scrapers list has been
+removed with 3.13.0 as it did not have any use) in the same folder.</p>
+<p>Take this example from the <code>peas.json</code> file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="w">    </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;megadrive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="nt">&quot;aliases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">            </span><span class="s2">&quot;genesis&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">            </span><span class="s2">&quot;mega drive&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="s2">&quot;sega mega drive&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="s2">&quot;sega mega drive/genesis&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="p">],</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nt">&quot;formats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">            </span><span class="s2">&quot;*.bin&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">            </span><span class="s2">&quot;*.gen&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">            </span><span class="s2">&quot;*.md&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="s2">&quot;*.sg&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">            </span><span class="s2">&quot;*.smd&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p">]</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">[</span><span class="err">...</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li><code>&lt;key&gt;</code>: the key (<code>megadrive</code> in the example) reflects the platform/folder
+  name (or more generally the handle), usually provided with <code>-p</code> on the command
+  line.</li>
+<li><code>aliases</code>: these aliases can be used to allow additional hits for a search.
+  The use of aliases is handy especially for scraping websites which do <em>not</em>
+  provide a web API. Currently Screenscraper, Mobygames or The Games DB are
+  providing an web API. See also section about
+  <a href="#exact-platform-mapping"><code>platforms_idmap.csv</code></a> and <a href="#updating-peasjson-and-platforms_idmapcsv">Updating the
+  files</a> below.</li>
+<li><code>formats</code>: set of ROM file extensions which will be included in scraping if
+  a ROM file is not provided explicitly via command line.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Since Skyscraper 3.13.0 you may also maintain local changes to the <code>peas.json</code>
+in a separate file called <code>peas_local.json</code> alongside to the <code>peas.json</code>. The
+format is identical to the <code>peas.json</code>. Precedence: Any platform entry from
+<code>peas_local.json</code> with the same platform name as in <code>peas.json</code> overwrites
+the one from <code>peas.json</code>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you need a specific folder name for a platform (on your setup or due to an
+EmulationStation theme) use a symbolic link (see <code>megadrive</code> (=folder) and
+<code>genesis</code> (=symlink) for example on RetroPie or <code>plus4</code> (=folder) and <code>c16</code>
+(=symlink)) instead of adding a new platform in the JSON file.</p>
+</div>
+<h3 id="exact-platform-mapping">Exact platform mapping<a class="headerlink" href="#exact-platform-mapping" title="Permanent link">&para;</a></h3>
+<p>The file <code>platforms_idmap.csv</code> defines exact platform id for the web API of the
+three before mentioned scraping sites. It is a CSV file which maps the platform
+handle (e.g. <code>megadrive</code>) to the respective platform id of the scraping sites:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>folder,screenscraper_id,mobygames_id,tgdb_id
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[...]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>megadrive,1,16,36
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>[...]
+</code></pre></div>
+<p>You can display the number with their platform name on each of the three
+scraping sites with the script <code>peas_and_idmap_verify.py</code>. Find the script
+sibling to the Skyscraper executable. Below is a part of the output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[...]
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    ├── megadrive
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    │   ├── ScrS    1: Megadrive
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    │   ├── Moby   16: Genesis
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    │   └── TGDB   36: Sega Mega Drive
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>[...]
+</code></pre></div>
+<h2 id="how-to-add-platforms-for-scraping">How to Add Platforms For Scraping<a class="headerlink" href="#how-to-add-platforms-for-scraping" title="Permanent link">&para;</a></h2>
+<p>Outline:</p>
+<ol>
+<li>Create a file <code>peas_local.json</code> sibling to <code>peas.json</code>. Enter in this file an
+   empty <code>{}</code> JSON object.</li>
+<li>Create a new platform block in <code>peas_local.json</code> inside the outer (empty)
+   block created before, or copy an existing block and adapt to your needs. For
+   RetroPie your chosen <code>&lt;platform_name&gt;</code> must match the folder in
+   <code>~/RetroPie/roms/&lt;platform_name&gt;</code>.</li>
+<li>Use <code>&lt;platform_name&gt;</code> also in <code>platforms_idmap.csv</code> (see below for details).</li>
+<li>If you use RetroPie do add the platform/system also to your <code>es_systems.cfg</code>
+   as documented
+   <a href="https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/">here</a>.</li>
+</ol>
+<p>There is also a an verbatim example, you may skip the next section initially and
+can continue with the <a href="./#sample-usecase-adding-platform-satellaview">hands-on example</a>.</p>
+<h3 id="updating-peasjson-or-peas_localjson-and-platforms_idmapcsv">Updating <code>peas.json</code> (or <code>peas_local.json</code>) and <code>platforms_idmap.csv</code><a class="headerlink" href="#updating-peasjson-or-peas_localjson-and-platforms_idmapcsv" title="Permanent link">&para;</a></h3>
+<p>These two files are ment to be locally edited and extended for additional
+platforms. Whenever you add a new platform block to the <code>peas.json</code> do also
+lookup the corresponding platform ids and add them to <code>platforms_idmap.csv</code> for
+the scraping sites with an API.</p>
+<p>To find the platform ids for Screenscraper, Mobygames and The Games DB, please
+consult the files <code>screenscraper_platforms.json</code>, <code>mobygames_platforms.json</code> and
+<code>tgdb_platforms.json</code> which are located sibling to your <code>config.ini</code> of the
+Skyscraper installation. If you can not identify an id in these files use <code>-1</code>
+as value in the CSV. If you add <code>-1</code> to CSV, the <code>aliases</code> from peas are tried
+to find a match upon scraping. Edits in <code>screenscraper_platforms.json</code>,
+<code>mobygames_platforms.json</code> and <code>tgdb_platforms.json</code> are not needed and moreover
+they will be overwritten with each Skyscraper update, as these files are only a
+reference for finding the id values for the <code>platforms_idmap.csv</code>.</p>
+<p>For those scraping sites without an API or without exact id match do use the
+platform name which is used on the scraping site and put it into the in the <code>aliases</code>
+list in the <code>peas.json</code> for the respective platform/system at <code>&lt;platform_name&gt;</code>.</p>
+<div class="admonition example use of aliases">
+<p class="admonition-title">Example</p>
+<p>The platforms ScummVM or Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as <code>"aliases": ...</code> in the <code>"scummvm": ...</code> or <code>"steam": ...</code> section of <code>peas.json</code>. Usually you find the platform information if you lookup the game manually on the scraping website.</p>
+</div>
+<h3 id="sample-usecase-adding-platform-satellaview">Sample Usecase: Adding Platform <em>Satellaview</em><a class="headerlink" href="#sample-usecase-adding-platform-satellaview" title="Permanent link">&para;</a></h3>
+<p>Let the platform/systemname be <code>satellaview</code>. You may read about this SNES
+enhancing peripheral <a href="https://en.wikipedia.org/wiki/Satellaview">here</a>.</p>
+<h4 id="step-1-add-a-section-to-peas_localjson">Step 1: Add a Section to <code>peas_local.json</code><a class="headerlink" href="#step-1-add-a-section-to-peas_localjson" title="Permanent link">&para;</a></h4>
+<p>Actually, this is a copy of the <a href="https://github.com/Gemba/skyscraper/blob/4aff22586d848f9974d2464d5372b8986a0e64c0/peas.json#L1833-L1857"><code>"snes:
+..."</code></a>
+block, with slight modifications.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span>
+<span class="normal"><a href="#__codelineno-3-18">18</a></span>
+<span class="normal"><a href="#__codelineno-3-19">19</a></span>
+<span class="normal"><a href="#__codelineno-3-20">20</a></span>
+<span class="normal"><a href="#__codelineno-3-21">21</a></span>
+<span class="normal"><a href="#__codelineno-3-22">22</a></span>
+<span class="normal"><a href="#__codelineno-3-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="err">...</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="hll"><span class="nt">&quot;satellaview&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;aliases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="hll"><span class="w">        </span><span class="s2">&quot;snes&quot;</span><span class="p">,</span>
+</span><a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">        </span><span class="s2">&quot;nintendo power&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">        </span><span class="s2">&quot;snes - super mario world hacks&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">        </span><span class="s2">&quot;sufami turbo&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">        </span><span class="s2">&quot;super famicom&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">        </span><span class="s2">&quot;super nintendo&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">        </span><span class="s2">&quot;super nintendo (snes)&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">        </span><span class="s2">&quot;super nintendo entertainment system (snes)&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">        </span><span class="s2">&quot;super nintendo msu-1&quot;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">    </span><span class="nt">&quot;formats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">        </span><span class="s2">&quot;*.bin&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">        </span><span class="s2">&quot;*.fig&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="w">        </span><span class="s2">&quot;*.mgd&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18"></a><span class="w">        </span><span class="s2">&quot;*.sfc&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19"></a><span class="w">        </span><span class="s2">&quot;*.smc&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20"></a><span class="w">        </span><span class="s2">&quot;*.swc&quot;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22"></a><span class="p">}</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23"></a><span class="err">...</span>
+</code></pre></div></td></tr></table></div>
+<ul>
+<li>Line 2 defines the platform name</li>
+<li>Line 4 adds an alias to SNES as Satellaview is an hardware addon to a SNES</li>
+</ul>
+<h4 id="step-2-lookup-values-for-satellaview-and-update-platforms_idmapcsv">Step 2: Lookup Values for <em>Satellaview</em> and Update <code>platforms_idmap.csv</code><a class="headerlink" href="#step-2-lookup-values-for-satellaview-and-update-platforms_idmapcsv" title="Permanent link">&para;</a></h4>
+<p>To fill in the values into the CSV file do consult the
+<a href="https://github.com/Gemba/skyscraper/blob/master/screenscraper_platforms.json"><code>screenscraper_platforms.json</code></a>,
+<a href="https://github.com/Gemba/skyscraper/blob/master/mobygames_platforms.json"><code>mobygames_platforms.json</code></a>
+and
+<a href="https://github.com/Gemba/skyscraper/blob/master/tgdb_platforms.json"><code>tgdb_platforms.json</code></a>
+files. Try to find the ID for the platform in these files. For <code>satellaview</code>
+only Screenscraper has an exact match:
+<a href="https://github.com/Gemba/skyscraper/blob/4aff22586d848f9974d2464d5372b8986a0e64c0/screenscraper_platforms.json#L1179-L1180"><code>107</code></a>.
+Use <code>-1</code> as ID when no exact match is provided for the scraping site. Whenever
+an <code>-1</code> is encountered Skyscraper tries the <code>"aliases":</code> from <code>peas.json</code> (and
+from <code>peas_local.json</code> if present) to find scraping data.</p>
+<p>Add this information at the end of the CSV file. Why at the end? On rare
+occasions the <code>platforms_idmap.csv</code> may be updated on a new release. On RetroPie
+the installed file is then named <code>platforms_idmap.csv.rp-dist</code>, having changes
+at the end may be a less cumbersome manual merge with your local
+<code>platforms_idmap.csv</code>.</p>
+<p>Add this information:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>satellaview,107,-1,-1
+</code></pre></div></p>
+<h4 id="step-3-create-the-system-in-retropieemulationstation-and-populate-the-rom-folder">Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder<a class="headerlink" href="#step-3-create-the-system-in-retropieemulationstation-and-populate-the-rom-folder" title="Permanent link">&para;</a></h4>
+<p>This part should be added to your <code>~/.emulationstation/es_systems.cfg</code>. See
+<a href="https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/">here</a> for
+additional information on this.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Stop EmulationStation before editing the config file.</p>
+</div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>...
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="nt">&lt;system&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="hll"><span class="w">    </span><span class="nt">&lt;name&gt;</span>satellaview<span class="nt">&lt;/name&gt;</span>
+</span><a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">    </span><span class="nt">&lt;fullname&gt;</span>Satellaview<span class="nt">&lt;/fullname&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">    </span><span class="nt">&lt;path&gt;</span>/home/pi/RetroPie/roms/Nintendo<span class="w"> </span>-<span class="w"> </span>Satellaview<span class="nt">&lt;/path&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="hll"><span class="w">    </span><span class="nt">&lt;extension&gt;</span>.7z<span class="w"> </span>.bin<span class="w"> </span>.bs<span class="w"> </span>.smc<span class="w"> </span>.sfc<span class="w"> </span>.fig<span class="w"> </span>.swc<span class="w"> </span>.mgd<span class="w"> </span>.zip<span class="w"> </span>.7Z<span class="w"> </span>.BIN<span class="w"> </span>.BS<span class="w"> </span>.SMC<span class="w"> </span>.SFC<span class="w"> </span>.FIG<span class="w"> </span>.SWC<span class="w"> </span>.MGD<span class="w"> </span>.ZIP<span class="nt">&lt;/extension&gt;</span>
+</span><a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="w">    </span><span class="nt">&lt;command&gt;</span>/opt/retropie/supplementary/runcommand/runcommand.sh<span class="w"> </span>0<span class="w"> </span>_SYS_<span class="w"> </span>snes<span class="w"> </span>%ROM%<span class="nt">&lt;/command&gt;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">    </span><span class="nt">&lt;platform&gt;</span>satellaview,snes<span class="nt">&lt;/platform&gt;</span><span class="w"> </span><span class="cm">&lt;!--Not used by Screenscraper, but by built-in ES scraper and maybe others--&gt;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="hll"><span class="w">    </span><span class="nt">&lt;theme&gt;</span>satellaview<span class="nt">&lt;/theme&gt;</span>
+</span><a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="nt">&lt;/system&gt;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a>...
+</code></pre></div></td></tr></table></div>
+<ul>
+<li>Line 3 defines the platform name, respective the folder name for your ROMs.
+  Thus, Skyscraper expects to find ROMs in <code>/home/pi/RetroPie/roms/satellaview</code>.</li>
+<li>Line 6 contains the extensions which are recognized by EmulationStation. These
+  extensions should be also be present in the <code>"formats":</code> block of <code>peas.json</code>.
+  However, Skyscraper uses case insensitive file extension mapping. The
+  extensions <code>.7z</code> and <code>.zip</code> are added automagically by Skyscraper, thus the
+  <code>"formats":</code> list is usually shorter than the EmulationStation <code>&lt;extension/&gt;</code>
+  list.</li>
+<li>Line 9: If your theme doesn't support Satellaview, you can also use <code>snes</code> as
+  <theme> value.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you run a different frontend than EmulationStation, consult the documentation for your frontend on how to add additional systems.</p>
+</div>
+<h4 id="step-4-happy-scraping">Step 4: Happy Scraping<a class="headerlink" href="#step-4-happy-scraping" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Scrape and generate the <code>satellaview/gamelist.xml</code> as in the <a href="../USECASE/">introductive
+   use case</a> using <code>Skyscraper -p
+   satellaview -s screenscraper</code> and <code>Skyscraper -p satellaview</code></li>
+<li>Restart EmulationStation, respective trigger reload of the gamelist in your
+   frontend.</li>
+<li>Smile :)</li>
+</ol>
+<div class="admonition success">
+<p class="admonition-title">Kudos</p>
+<p>Thanks to retrobit @ GitHub for contributing this usecase.</p>
+</div>
+<h3 id="migrating-platformsjson-and-screenscraperjson">Migrating <code>platforms.json</code> and <code>screenscraper.json</code><a class="headerlink" href="#migrating-platformsjson-and-screenscraperjson" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you neither edited <code>platforms.json</code> nor <code>screenscraper.json</code> or do not
+have these files in the Skyscraper config folder (sibling to the
+<code>config.ini</code>) you can safely ignore this section.</p>
+</div>
+<p>If you have local changes in these files you can transfer your local
+changes to the new files. The new <code>peas.json</code> is the <code>platforms.json</code> but in a
+more compact form which has less visual overhead and also allows faster parsing.
+The <code>platforms_idmap.csv</code> maps the former <code>screenscraper.json</code> platform ids plus
+the platform ids of two more web API sites.</p>
+<p>Use the script <code>convert_platforms_json.py</code> (sibling to the Skyscraper
+executable) to convert the <code>platforms.json</code> to a <code>peas_mine.json</code> file which you
+can then diff to the <code>peas.json</code> and transfer your changes to <code>peas.json</code> or
+<code>peas_local.json</code>.</p>
+<p>Use the script <code>check_screenscraper_json_to_idmap.py</code> to identify differences
+from your <code>screenscraper.json</code>. Then use the three <code>&lt;scraper&gt;_platforms.json</code>
+files to identify the matching platform ids to be entered in
+<code>platform_idmap.csv</code>. Use <code>-1</code> in this file, if there is no matching platform id.</p>
+<h3 id="summary-of-changes-in-the-config-files">Summary of Changes in the Config Files<a class="headerlink" href="#summary-of-changes-in-the-config-files" title="Permanent link">&para;</a></h3>
+<p>Filenames shown <del>strikethrough</del> are superseded.<br />
+Filenames shown <em>italic</em> are user editable.</p>
+<table>
+<thead>
+<tr>
+<th><div style="width:140px">File</div></th>
+<th>Introduced with Version</th>
+<th>Notes (version)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><del><code>mobygames.json</code></del></td>
+<td>3.8.0</td>
+<td>superseded by <code>mobygames_platforms.json</code> (v3.9.0); not to be edited; IDs are used in <code>platforms_idmap.csv</code></td>
+</tr>
+<tr>
+<td><del><code>platforms.json</code></del></td>
+<td>3.7.7-2 (@detain)</td>
+<td>superseded by <em><code>peas.json</code></em> (3.9.0) and <em><code>peas_local.json</code></em> (3.13.0); do edit the latter to add/change platforms; these files use a leaner format than <code>platforms.json</code></td>
+</tr>
+<tr>
+<td><em><code>platforms_idmap.csv</code></em></td>
+<td>3.9.0</td>
+<td>maps the platform names (handles) from <em><code>peas.json</code></em> / <em><code>peas_local.json</code></em> to exact platform IDs used in scrapers MobyGames, Screenscraper or TGDB; do edit to add new platforms</td>
+</tr>
+<tr>
+<td><del><code>screenscraper.json</code></del></td>
+<td>3.7.7-2 (@detain)</td>
+<td>IDs formerly used in here are part of <code>platforms_idmap.csv</code> (3.9.0); superseded by <code>screenscraper_platforms.json</code> (3.9.0) which is not to be edited</td>
+</tr>
+<tr>
+<td><code>tgdb_developers.json</code></td>
+<td>2.5.3 (@muldjord)</td>
+<td>API mapping of 'Developers'; Uses leaner format as before (3.9.0); not to be edited</td>
+</tr>
+<tr>
+<td><code>tgdb_genres.json</code></td>
+<td>3.9.0</td>
+<td>API mapping of 'Genres' (3.9.0); not to be edited</td>
+</tr>
+<tr>
+<td><code>tgdb_platforms.json</code></td>
+<td>3.9.0</td>
+<td>API mapping of 'Platforms' (3.9.0); not to be edited; IDs are used in <code>platforms_idmap.csv</code></td>
+</tr>
+<tr>
+<td><code>tgdb_publishers.json</code></td>
+<td>2.5.3 (@muldjord)</td>
+<td>API mapping of 'Publishers'; Uses leaner format as before (3.9.0); not to be edited</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

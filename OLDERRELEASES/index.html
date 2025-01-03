@@ -1,0 +1,3782 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/OLDERRELEASES/">
+      
+      
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>OLDERRELEASES - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#version-xxx-features-under-consideration-all-unimplemented" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              OLDERRELEASES
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SCRAPINGMODULES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPORT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONFIGINI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The config.ini File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLIHELP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLATFORMS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Languages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Varia
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Varia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-xxx-features-under-consideration-all-unimplemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version x.x.x (Features under consideration, all unimplemented)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-377-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.7-2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-377-28th-june-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.7 (28th June 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-376-12th-june-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.6 (12th June 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-375-31st-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.5 (31st January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-374-23rd-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.4 (23rd January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-373-23rd-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.3 (23rd January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-372-20th-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.2 (20th January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-371-19th-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.1 (19th January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-370-17th-january-2022" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.7.0 (17th January 2022)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3616-9th-november-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.16 (9th November 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3615-25th-august-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.15 (25th August 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3614-5th-august-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.14 (5th August 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3613-2nd-june-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.13 (2nd June 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3612-15th-may-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.12 (15th May 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3611-6th-may-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.11 (6th May 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3610-12th-april-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.10 (12th April 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-369-1st-april-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.9 (1st April 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-368-31st-march-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.8 (31st March 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-367-27th-january-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.7 (27th January 2021)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-366-21st-december-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.6 (21st December 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-365-18th-december-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.5 (18th December 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-361-27th-october-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.1 (27th October 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-360-25th-october-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.6.0 (25th October 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-359-24th-october-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.9 (24th October 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-358-16th-august-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.8 (16th August 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-357-31st-july-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.7 (31st July 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-356-30th-july-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.6 (30th July 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-355-18th-may-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.5 (18th May 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-354-14th-may-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.4 (14th May 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-353-11th-may-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.3 (11th May 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-352-29th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.2 (29th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-351-28th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.1 (28th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-350-27th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.5.0 (27th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-3410-20th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.10 (20th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-349-17th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.9 (17th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-348-14th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.8 (14th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-347-12th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.7 (12th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-346-9th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.6 (9th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-345-7th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.5 (7th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-344-7th-april-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.4 (7th April 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-343-14th-march-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.3 (14th March 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-342-26th-february-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.2 (26th February 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-341-11th-february-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.1 (11th February 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-340-4th-february-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.4.0 (4th February 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-338-12th-january-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.8 (12th January 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-337-8th-january-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.7 (8th January 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-336-5th-january-2020" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.6 (5th January 2020)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-335-15th-december-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.5 (15th December 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-334-8th-december-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.4 (8th December 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-333-21st-november-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.3 (21st November 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-332-4th-november-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.2 (4th November 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-331-17th-october-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.1 (17th October 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-330-15th-september-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.3.0 (15th September 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-328-31st-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.8 (31st August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-327-31st-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.7 (31st August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-326-24th-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.6 (24th August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-325-21st-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.5 (21st August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-324-19th-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.4 (19th August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-323-13th-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.3 (13th August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-322-3rd-august-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.2 (3rd August 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-321-15th-july-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.1 (15th July 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-320-8th-july-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.2.0 (8th July 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-314-23rd-march-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.1.4 (23rd March 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-313-12th-march-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.1.3 (12th March 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-312-10th-march-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.1.2 (10th March 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-311-8th-march-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.1.1 (8th March 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-310-2th-march-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.1.0 (2th March 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-305-26th-february-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.5 (26th February 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-304-18th-february-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.4 (18th February 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-303-16th-february-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.3 (16th February 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-302-14th-february-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.2 (14th February 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-301-27th-january-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.1 (27th January 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-300-23rd-january-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 3.0.0 (23rd January 2019)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-295-22nd-december-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.9.5 (22nd December 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-291-15th-december-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.9.1 (15th December 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-290-13th-december-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.9.0 (13th December 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-283-8th-december-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.8.3 (8th December 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-282-7th-december-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.8.2 (7th December 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-281-25th-november-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.8.1 (25th November 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-280-4th-november-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.8.0 (4th November 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-278-21st-october-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.8 (21st October 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-277-10th-october-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.7 (10th October 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-276-7th-october-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.6 (7th October 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-275-21st-september-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.5 (21st September 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-274-11th-september-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.4 (11th September 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-273-4th-september-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.3 (4th September 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-272-2nd-september-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.2 (2nd September 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-271-28th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.1 (28th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-270-27th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.7.0 (27th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-260-25th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.6.0 (25th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-258-24th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.8 (24th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-257-21st-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.7 (21st August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-256-20th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.6 (20th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-255-18th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.5 (18th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-254-10th-august-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.4 (10th August 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-253-24th-july-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.3 (24th July 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-252-13th-july-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.2 (13th July 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-251-10th-july-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.1 (10th July 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-250-8th-july-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.5.0 (8th July 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-2411-17th-june-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.11 (17th June 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-2410-14th-june-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.10 (14th June 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-249-9th-june-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.9 (9th June 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-248-31st-may-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.8 (31st May 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-247-30th-may-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.7 (30th May 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-246-25th-may-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.6 (25th May 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-245-8th-may-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.5 (8th May 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-244-2nd-april-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.4 (2nd April 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-243-25th-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.3 (25th March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-242-25th-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.2 (25th March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-241-25th-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.1 (25th March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-240-24rd-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.4.0 (24rd March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-239-23rd-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.9 (23rd March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-238-23rd-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.8 (23rd March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-237-18th-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.7 (18th March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-236-12th-march-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.6 (12th March 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-235-24th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.5 (24th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-234-19th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.4 (19th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-233-17th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.3 (17th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-232-13th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.2 (13th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-231-13th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.1 (13th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-230-7th-february-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.3.0 (7th February 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-227-31st-january-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.2.7 (31st January 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-226a-18th-january-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.2.6a (18th January 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-226-17th-january-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.2.6 (17th January 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-225-3rd-january-2018" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.2.5 (3rd January 2018)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-220-31st-of-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.2.0 (31st of December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-211-27th-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.1.1 (27th December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-210-26th-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.1.0 (26th December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-206-23rd-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.6 (23rd December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-205c-23rd-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.5c (23rd December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-205b-5th-december-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.5b (5th December 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-205a-15th-november-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.5a (15th November 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-205-14th-november-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.5 (14th November 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-204-5th-november-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.4 (5th November 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-203-5th-october-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.3 (5th October 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-202-4th-october-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.2 (4th October 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-201-15th-september-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.1 (15th September 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-200-7th-september-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 2.0.0 (7th September 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#older-unsupported-releases-no-longer-available-and-dont-ask-for-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      Older unsupported releases (no longer available and don't ask for them)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-182-27th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.8.2 (27th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-181-22nd-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.8.1 (22nd August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-180-14th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.8.0 (14th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-174-10th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.4 (10th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-173-8th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.3 (8th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-172-7th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.2 (7th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-171c-7th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.1c (7th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-171-7th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.1 (7th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-170-5th-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.7.0 (5th August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-160-1st-august-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.6.0 (1st August 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-150-27th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.5.0 (27th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-118b-24th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.8b (24th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-118a-23rd-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.8a (23rd July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-118-23rd-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.8 (23rd July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-117-21st-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.7 (21st July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-116-20th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.6 (20th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-115-20th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.5 (20th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-114-20th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.4 (20th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-113-19th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.3 (19th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-112-19th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.2 (19th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-111-18th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.1 (18th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-110a-16th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.0a (16th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-110-14th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.1.0 (14th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-101-4th-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.0.1 (4th July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-100-3rd-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 1.0.0 (3rd July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-099-2nd-july-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.9 (2nd July 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-098-29th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.8 (29th June 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-097a-27th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.7a (27th June 2017)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-097-26th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.7 (26th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-096-25th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.6 (25th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-095-23rd-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.5 (23rd June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-094-21st-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.4 (21st June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-093-19th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.3 (19th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-092-19th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.2 (19th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-091-19th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.1 (19th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-090-19th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.9.0 (19th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-080-15th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.8.0 (15th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-072-12th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.7.2 (12th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-070-11th-june-2017" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version 0.7.0 (11th June 2017):
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>OLDERRELEASES</h1>
+
+<h3 id="version-xxx-features-under-consideration-all-unimplemented">Version x.x.x (Features under consideration, all unimplemented)<a class="headerlink" href="#version-xxx-features-under-consideration-all-unimplemented" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add the option to scrape from cached data purely originating from certain scraping modules</li>
+<li>Consider making aliasMap the global baseName instead of just the search term base name. This will fix missing brackets in alias names being ignored later on</li>
+<li>Make all artwork types custom meaning that their type can be whatever the user wants. The sources will create ones with known types such as 'screenshot' and 'cover', but the user can import other types they define themselves, such as 'cabinet' or whatever else. Internally artwork is then handled by a list of artwork instead of 4 hardcoded types in GameEntry</li>
+<li>Introduce the ability to use <BASENAME> in the 'file="somefolder/<BASENAME>.png"' in artwork.xml which would then look for a file in 'resources' with the game basename.png allowing users to use their own custom artwork data as a workaround to adding new types to import (Thank you to 'jueank' for suggesting this)</li>
+<li>Add the option of scraping custom platforms by configuring them in the config with an alias to an already existing platform. Example: scrape 'pcenginecd' could be scraped as 'pcengine' in case you have those files in a 'roms/pcenginecd' folder instead of the pcengine folder. Check here: https://github.com/muldjord/skyscraper/issues/136</li>
+<li>Create a testmode for the artwork compositor that let's you quickly render an example to see if you got everything set up right in the artwork xml</li>
+<li>Allow 'region' to be a list similar to 'regionPrios'. When using 'region' it should simply keep the default priority list and add those from 'region' to the top. 'regionPrios' should still overwrite it entirely. Naming change probably a good idea, for instance rename 'region' to 'regionsPrefer' or something. 'regionPrios' should probably also be changed to 'regionsOverride'. (Thank you to 'corezon' for suggesting this).</li>
+<li>Implement a less rigid filename match for the 'import' module to allow for close match filenames</li>
+<li>Add support for grouping multi-disk games so they only have one entry in the gamelists. See issues/232 (Thank you to 'igno2k' for suggesting this)</li>
+</ul>
+<h3 id="version-377-2">Version 3.7.7-2<a class="headerlink" href="#version-377-2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added script to quickly generate the mapMap.csv</li>
+<li>Added script to quickly generate the platforms.json from an existing platform.cpp file</li>
+<li>Moved the list of platforms and thier associated scrapers, file masks, and aliases to be loaded from a JSON file instead of hardcoded in CPP from <a href="https://github.com/torresflo/skyscraper-enhanced">torresflo/skyscraper-enhanced</a></li>
+<li>Added 'texture' image type to be stored in textures dir from <a href="https://github.com/InfiRandia/skyscraper">InfiRandia/skyscraper</a></li>
+<li>Updated MAME map to 0.245</li>
+<li>Added 'actionmax', 'naomi2', 'ps3', 'ps4', 'ps5', and 'xbox' platforms</li>
+<li>Added '*.chd' to 'naomi' and 'naomi2'</li>
+<li>Added '*.nca' to 'switch'</li>
+<li>Fixed the 'pc88' and 'x1' ScreenScraper IDs</li>
+<li>Added automatic generation of compiled builds on new tag</li>
+</ul>
+<h3 id="version-377-28th-june-2022">Version 3.7.7 (28th June 2022)<a class="headerlink" href="#version-377-28th-june-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '*.m3u' to 'segacd' platform (Thank you to user 'bmn001' for suggesting it)</li>
+</ul>
+<h3 id="version-376-12th-june-2022">Version 3.7.6 (12th June 2022)<a class="headerlink" href="#version-376-12th-june-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'pico8' platform (Thank you to user 'zerojay' for suggesting it)</li>
+</ul>
+<h3 id="version-375-31st-january-2022">Version 3.7.5 (31st January 2022)<a class="headerlink" href="#version-375-31st-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now allows ':' in Pegasus command</li>
+</ul>
+<h3 id="version-374-23rd-january-2022">Version 3.7.4 (23rd January 2022)<a class="headerlink" href="#version-374-23rd-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'--includefrom' and '--excludefrom' now works with relative paths (Thank you to use 'sleve_mcdichael' for reporting this</li>
+<li>Skipped file entries now conforms to same format as report files to allow using them with '--excludefrom' and '--includefrom' (Thank you to user 'TomFury' for suggesting this)</li>
+</ul>
+<h3 id="version-373-23rd-january-2022">Version 3.7.3 (23rd January 2022)<a class="headerlink" href="#version-373-23rd-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'switch' platform (Thank you to user 'Redemp' for providing info)</li>
+</ul>
+<h3 id="version-372-20th-january-2022">Version 3.7.2 (20th January 2022)<a class="headerlink" href="#version-372-20th-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Skyscraper now only ignore files when using the '.skyscraperignore[tree]' files when scraping for new data. They will NOT be ignored when generating game lists</li>
+</ul>
+<h3 id="version-371-19th-january-2022">Version 3.7.1 (19th January 2022)<a class="headerlink" href="#version-371-19th-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Skyscraper will now ignore an entire tree of subfolders where a file called '.skyscraperignoretree' is found (Thank you to user 'sromeroi' for suggesting this)</li>
+</ul>
+<h3 id="version-370-17th-january-2022">Version 3.7.0 (17th January 2022)<a class="headerlink" href="#version-370-17th-january-2022" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Moved '--fromfile' option to '--includefrom'. '--fromfile' still works, but is considered deprecated</li>
+<li>Moved '--includefiles' option to '--includepattern'. '--includefiles' still works, but is considered deprecated</li>
+<li>Moved '--excludefiles' option to '--excludepattern'. '--excludefiles' still works, but is considered deprecated</li>
+<li>Added '--excludefrom' option similar to '--includefrom' only the opposite (Thank you to user 'TomFury' for suggesting this)</li>
+<li>Skyscraper will now ignore any subfolders within the input folder where a file called '.skyscraperignore' is found (Thank you to user 'sromeroi' for suggesting this)</li>
+<li>Added platform 'easyrpg', only usable using the 'screenscraper' scraping module (Thank you to user 'zerojay' for suggesting this)</li>
+</ul>
+<h3 id="version-3616-9th-november-2021">Version 3.6.16 (9th November 2021)<a class="headerlink" href="#version-3616-9th-november-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added platform 'moto' (Thank you to user 'Yserra' for suggesting it)</li>
+</ul>
+<h3 id="version-3615-25th-august-2021">Version 3.6.15 (25th August 2021)<a class="headerlink" href="#version-3615-25th-august-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'chd' extension to 'atomiswave' platform (Thank you to user 'smeegoan' for reporting this)</li>
+<li>Fixed bug that caused 'T000000' to be added multiple times when skipping entries in ES gamelists (Thank you to user 'sleve_mcdichael' for reporting this)</li>
+</ul>
+<h3 id="version-3614-5th-august-2021">Version 3.6.14 (5th August 2021)<a class="headerlink" href="#version-3614-5th-august-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'windows 3.x' as alias to Mobygames scraping module (Thank you to user 'ecto' for reporting this)</li>
+</ul>
+<h3 id="version-3613-2nd-june-2021">Version 3.6.13 (2nd June 2021)<a class="headerlink" href="#version-3613-2nd-june-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'mediaFolderHidden' EmulationStation specific config option that will set the media folder to 'PLATFORM/.media' when set to true. This can speed up EmulationStation initial loading when using slow storage such as a network file system (Thank you to user 'XenuIsWatching' for suggesting this)</li>
+</ul>
+<h3 id="version-3612-15th-may-2021">Version 3.6.12 (15th May 2021)<a class="headerlink" href="#version-3612-15th-may-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Removed 'Simple Mode' as it was broken and deprecated. Use RetroPie script instead</li>
+<li>Removed A LOT of deprecated (and hidden) CLI options</li>
+</ul>
+<h3 id="version-3611-6th-may-2021">Version 3.6.11 (6th May 2021)<a class="headerlink" href="#version-3611-6th-may-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'--fromfile' now accepts both relative and absolute path to filename (Thank you to user 'sleve_mcdichael' for reporting this)</li>
+<li>Added platforms 'atarijaguarcd', 'pcenginecd' and 'channelf' (Thank you to user 'XenuIsWatching' for providing info)</li>
+</ul>
+<h3 id="version-3610-12th-april-2021">Version 3.6.10 (12th April 2021)<a class="headerlink" href="#version-3610-12th-april-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'naomi' as platform</li>
+<li>Added 'msx2' as platform</li>
+<li>Added 'atomiswave' as platform</li>
+</ul>
+<h3 id="version-369-1st-april-2021">Version 3.6.9 (1st April 2021)<a class="headerlink" href="#version-369-1st-april-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Probably fixed <code>--flags unpack</code> which broke with 3.6.8 due to deprecated Qt function calls</li>
+<li>Probably fixed video conversion which broke with 3.6.8 due to deprecated Qt function calls</li>
+</ul>
+<h3 id="version-368-31st-march-2021">Version 3.6.8 (31st March 2021)<a class="headerlink" href="#version-368-31st-march-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'cacheRefresh' config.ini option and added it to default config.ini for 'esgamelist' module (Thank you to user 'penx' for suggesting this)</li>
+<li>'ScreenScraper APIv2 returned invalid / empty Json' message now no longer includes message to attach the error json file unless it's more than 64 bytes long</li>
+<li>Added 'ca' to region priority list (Thank you to user 'joaoluizcarvalho' for pointing this out)</li>
+<li>Added 'de', 'fr' and 'es' to default language priority list</li>
+<li>Added 'players' resource to '--cache report:missing' CLI option (Thank you to user 'peligwe' for reporting this)</li>
+<li>Added 'theInFront' config.ini option and 'theinfront' CLI flag (Thank you to user 'sleve_mcdichael' for suggesting this)</li>
+<li>'unattend' and 'unattendSkip' can now be used in a scraping module section in config.ini (Thank you to user 'sleve_mcdichael' for reporting this)</li>
+<li>Added Qt version pre-processor checks for deprecated Qt methods to avoid compilation warning on newer Qt installations</li>
+</ul>
+<h3 id="version-367-27th-january-2021">Version 3.6.7 (27th January 2021)<a class="headerlink" href="#version-367-27th-january-2021" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '*.rvz' extension for 'wii' and 'gc' platforms (Thank you to user 'tcamargo' for reporting this)</li>
+<li>Added '*.chd' extension for '3do' platform (Thank you to user 'Roudaku' for reporting this)</li>
+<li>Added 'openbor' platform. Exists in RetroPie as experimental platform (as requested by user 'hahnmt')</li>
+<li>'neogeo' platform now uses 'box-2D' as cover instead of 'flyer' when scraping with the ScreenScraper module (Thank you to user 'retro81' for suggesting this)</li>
+</ul>
+<h3 id="version-366-21st-december-2020">Version 3.6.6 (21st December 2020)<a class="headerlink" href="#version-366-21st-december-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The 'esgamelist' module now looks for the 'gamelist.xml' file in the path set with '-g' instead of the path set with '-i' (Thank you to user 'c0d3h4x0r' for reporting this and helping me debug it)</li>
+</ul>
+<h3 id="version-365-18th-december-2020">Version 3.6.5 (18th December 2020)<a class="headerlink" href="#version-365-18th-december-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now uses one shared networking instance, instead of one per thread</li>
+<li>'daphne' platform entries now added as '<game>' entries instead of '<folder>' entries (Thank you to user 'clyde' for helping figure this out)</li>
+<li>Added 'nocropblack' cli flag and 'cropBlack="BOOL"' config.ini option that allows user to disable cropping of black borders around screenshots when compositing the final gamelist artwork (Thank you to user 'WindyWinston' for suggesting this)</li>
+</ul>
+<h3 id="version-361-27th-october-2020">Version 3.6.1 (27th October 2020)<a class="headerlink" href="#version-361-27th-october-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'amigacd32' as a separate platform just because (Thank you to user 'HoraceAndTheSpider' for resetting The Matrix)</li>
+</ul>
+<h3 id="version-360-25th-october-2020">Version 3.6.0 (25th October 2020)<a class="headerlink" href="#version-360-25th-october-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Changed 'SecsSinceEpich' to 'MSecsSinceEpich' to support pre-5.8 Qt versions (Thank you to user 'Hazza4569' for reporting this)</li>
+</ul>
+<h3 id="version-359-24th-october-2020">Version 3.5.9 (24th October 2020)<a class="headerlink" href="#version-359-24th-october-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented the new IGDB v4 authentication method. IGDB will now work again, and requires free credentials. Read more about that <a href="https://gemba.github.io/skyscraper/SCRAPINGMODULES#igdb">here</a></li>
+<li>Improved memory consumption when handing entries back to main thread</li>
+<li>Added '.au3' file extension to id script exception list (Thank you to 'o0alucard0o' for reporting this)</li>
+</ul>
+<h3 id="version-358-16th-august-2020">Version 3.5.8 (16th August 2020)<a class="headerlink" href="#version-358-16th-august-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now supports spaces in Attract-Mode media paths (Thank you to user 'o0alucard0o' for pointing this out)</li>
+</ul>
+<h3 id="version-357-31st-july-2020">Version 3.5.7 (31st July 2020)<a class="headerlink" href="#version-357-31st-july-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now uses regular expressions when converting text to Pegasus format for better compatibility</li>
+<li>Removed 'extensions' when generating Pegasus game list, as it isn't required</li>
+</ul>
+<h3 id="version-356-30th-july-2020">Version 3.5.6 (30th July 2020)<a class="headerlink" href="#version-356-30th-july-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'neogeocd' platform (Thank you to 'igno2k' and 'meveric' for suggesting it)</li>
+<li>'screenscraper' module now supports region for screenshots (Thank you to 'cameronhimself' for pointing this out)</li>
+<li>Low disk space check for cache is now calculated from cache folder location</li>
+<li>Skyscraper initial output now shows frontend and extras when generating game lists</li>
+<li>Changed 'gamelistFolder' config.ini option to 'gameListFolder' but kept old variable name for backwards compatibility</li>
+<li>Added 'gameListBackup' config.ini option to allow for game list backups being created on each run (Thank you to 'igno2k' for suggesting it)</li>
+<li>Attract-Mode now recognizes '$HOME' in emulator file</li>
+<li>Refactored Attract-Mode media folder getters</li>
+<li>Fixed rare faulty matches from 'esgamelist' module in cases where last part of 'path' was a match with filename (Thank you to 'akamming' for reporting this)</li>
+<li>Exporting for Pegasus frontend now supports preservation of old game list key-value pairs (Thank you to user 'HugLifeTiZ' for suggesting this)</li>
+<li>'--cache report' now also adheres so excludeFiles and includeFiles (Thank you to user 'spilinek' for pointing this out)</li>
+</ul>
+<h3 id="version-355-18th-may-2020">Version 3.5.5 (18th May 2020)<a class="headerlink" href="#version-355-18th-may-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in 'igdb' module where it still used old hardcoded key (Thank you to 'stlbluesfan' for reporting this)</li>
+</ul>
+<h3 id="version-354-14th-may-2020">Version 3.5.4 (14th May 2020)<a class="headerlink" href="#version-354-14th-may-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Hints file converted to xml (hints.txt -&gt; hints.xml)</li>
+<li>Moved documentation resources into 'docs' folder</li>
+<li>Added 'videoPreferNormalized' config.ini option for use with the 'screenscraper' module</li>
+</ul>
+<h3 id="version-353-11th-may-2020">Version 3.5.3 (11th May 2020)<a class="headerlink" href="#version-353-11th-may-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Added video conversion support through config.ini option 'videoConvertCommand="COMMAND %i %o"' option. See docs for more details</li>
+<li>Removed deprecated <code>&lt;cover&gt;</code> node and replaced it with <code>&lt;thumbnail&gt;</code> for ES gamelist generation (Thank you to 'yisraeldov' for letting me know)</li>
+<li>Added simple error handling for media network requests</li>
+<li>'--flags help' and '--cache help' no longer requires '-p PLATFORM' to be set</li>
+<li>Changed 'worldofspectrum' scraping module to use https</li>
+</ul>
+<h3 id="version-352-29th-april-2020">Version 3.5.2 (29th April 2020)<a class="headerlink" href="#version-352-29th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Hid deprecated options from '--help'. Deprecated options still work just aren't shown</li>
+<li>Updated 'Simple Mode' to use the new '--flags' options</li>
+</ul>
+<h3 id="version-351-28th-april-2020">Version 3.5.1 (28th April 2020)<a class="headerlink" href="#version-351-28th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed minor bug in 'daphne' when it only has one rom in 'daphne/roms'</li>
+</ul>
+<h3 id="version-350-27th-april-2020">Version 3.5.0 (27th April 2020)<a class="headerlink" href="#version-350-27th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>For 'screenscraper', 'thegamesdb', 'mobygames' and 'arcadedb' Skyscraper will now no longer fetch the artworks if user has requested it to remain uncached (Thank you to user 'herbymachine' for the request)</li>
+<li>Added '--skipexistingmedia' option to allow for faster gamelist generation in cases where some artwork already exists in the gamelist media folder (Thank you to 'jacrify' for suggesting this)</li>
+<li>Added '--flags' command-line option that collects certain flag-like options into one</li>
+<li>Added deprecated warnings to all options that are now moved to the '--flags' option</li>
+<li>Added '*.cue' extension to '3do' platform (Thank you to 'therealdealneil' for the suggestion)</li>
+<li>Implemented a hack for the 'daphne' platform that will add the game info to the 'game.daphne' folders instead of the 'game.zip' files (Thank you to 'AlCzervik' for pointing this out)</li>
+</ul>
+<h3 id="version-3410-20th-april-2020">Version 3.4.10 (20th April 2020)<a class="headerlink" href="#version-3410-20th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Re-implemented double-check when saving artwork to cache to avoid 0-byte files on systems with a broken libpng (Thank you to 'jacrify' for letting me know)</li>
+</ul>
+<h3 id="version-349-17th-april-2020">Version 3.4.9 (17th April 2020)<a class="headerlink" href="#version-349-17th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'wiiu' platform (Thank you to 'minilandl' for suggesting it)</li>
+</ul>
+<h3 id="version-348-14th-april-2020">Version 3.4.8 (14th April 2020)<a class="headerlink" href="#version-348-14th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Lowered sanity check limit of 1024 bytes for artwork from 'screenscraper' to 256 bytes (Thank you to user 'Paul-Colucci' for reporting this)</li>
+</ul>
+<h3 id="version-347-12th-april-2020">Version 3.4.7 (12th April 2020)<a class="headerlink" href="#version-347-12th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>If '--onlymissing' is set the initial first found rom check is ignored (Thank you to user 'Paul-Colucci' for reporting this)</li>
+</ul>
+<h3 id="version-346-9th-april-2020">Version 3.4.6 (9th April 2020)<a class="headerlink" href="#version-346-9th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented nameTemplate as config.ini option. See CONFIGINI.md doc for explanation (Thank you to user 'vg8020' for suggesting this)</li>
+</ul>
+<h3 id="version-345-7th-april-2020">Version 3.4.5 (7th April 2020)<a class="headerlink" href="#version-345-7th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Minor fix to 'screenscraper' romnom query</li>
+</ul>
+<h3 id="version-344-7th-april-2020">Version 3.4.4 (7th April 2020)<a class="headerlink" href="#version-344-7th-april-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Remove '<em>.bin' support for 'saturn' platform since '</em>.cue' is already in there. This caused double-entries in gamelists (Thank you to user 'joaoluizcarvalho' for pointing this out)</li>
+<li>Now handles faulty login (incorrectly entered in config.ini) better with 'screenscraper'</li>
+<li>Fixed bug that caused 'pegasus' launch command to be entered incorrectly (Thank you to user 'Itetrel' for letting me know)</li>
+<li>Added '--onlymissing' CLI option which allows users to skip files that already have any kind of data cached from any source</li>
+<li>Now clearly states what happened when a request timed out when using 'screenscraper' (Thank you to 'seriema' for pointing this out)</li>
+</ul>
+<h3 id="version-343-14th-march-2020">Version 3.4.3 (14th March 2020)<a class="headerlink" href="#version-343-14th-march-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>All arcade platforms now use 'flyer' from 'screenscraper' for cover artwork instead of 'box-2D' (Thank you to user 'aidy80s' for suggesting this)</li>
+</ul>
+<h3 id="version-342-26th-february-2020">Version 3.4.2 (26th February 2020)<a class="headerlink" href="#version-342-26th-february-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved filename versioning removal for optimal query generation</li>
+<li>Updated 'mameMap.csv' with latest Mame v0.218 listings</li>
+<li>Added support for 'wheel' artwork type in 'arcadedb' scraping module</li>
+<li>Now supports symlinked paths inside of the input folder (Thank you to rhunjadi for pointing this out)</li>
+</ul>
+<h3 id="version-341-11th-february-2020">Version 3.4.1 (11th February 2020)<a class="headerlink" href="#version-341-11th-february-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Further optimized artwork space requirements. Now checks if original takes up less space than resized artwork, then forces use of original for those cases</li>
+<li>The 'thegamesdb' module now also supports wheel and marquee for the games that have them (Thank you to 'tv21' for pointing this out)</li>
+<li>Updated developer and publisher json list for 'thegamesdb'</li>
+</ul>
+<h3 id="version-340-4th-february-2020">Version 3.4.0 (4th February 2020)<a class="headerlink" href="#version-340-4th-february-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Disabled config.ini migration as most people should be migrated now</li>
+<li>Added 'launcher' option to 'simple mode' when using 'pegasus' frontend</li>
+<li>Added 'excludeFiles' config option that allows excluding certain files when scraping (Thank you to 'timothybrown' for suggesting this)</li>
+<li>Added 'includeFiles' config option that allows only including certain files when scraping</li>
+<li>Added '--excludefiles' cli option that allows excluding certain files when scraping</li>
+<li>Added '--includefiles' cli option that allows only including certain files when scraping</li>
+<li>If 'noresize' is set all images are now saved to cache in their original format and size instead of always converting them to PNG's (Thank you to 'krcroft' for requesting this)</li>
+<li>Added 'jpgQuality' config option that sets the default JPG quality (0-100) when '--noresize' is NOT set. Screenshots and images with transparency are still saved as PNG's.</li>
+<li>Upped 'screenscraper' request limiter to 1.2 seconds per request to avoid 'maximum threads per minute reached' error message</li>
+</ul>
+<h3 id="version-338-12th-january-2020">Version 3.3.8 (12th January 2020)<a class="headerlink" href="#version-338-12th-january-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in platform alias for 'pc (microsoft windows)' which was missing the last ')' bracket (Thank you to 'o0alucard0o' for reporting this)</li>
+</ul>
+<h3 id="version-337-8th-january-2020">Version 3.3.7 (8th January 2020)<a class="headerlink" href="#version-337-8th-january-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added the option to add frontend specific config sections to set artwork xml and other relevant configuration parameters per frontend</li>
+</ul>
+<h3 id="version-336-5th-january-2020">Version 3.3.6 (5th January 2020)<a class="headerlink" href="#version-336-5th-january-2020" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Skipped file now includes platform in the filename (Thanks to 'parker-hemphill' for suggesting this)</li>
+<li>Now handles the '<em>*</em>*' error message from ScreenScraper (Thank you to 'GiulioCentorame' for reporting this)</li>
+<li>Updated 'thegamesdb' to include the 'v1' prefix (Thank you to 'Clyde' for letting me know)</li>
+</ul>
+<h3 id="version-335-15th-december-2019">Version 3.3.5 (15th December 2019)<a class="headerlink" href="#version-335-15th-december-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Updated 'screenscraper' API to support new system name json format (Thank you to 'Micket' for letting me know)</li>
+</ul>
+<h3 id="version-334-8th-december-2019">Version 3.3.4 (8th December 2019)<a class="headerlink" href="#version-334-8th-december-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'igdb' module global key has been removed from Skyscraper. They have moved to free personal keys instead (this is good news!). To get one, register at https://api.igdb.com (Thank you to 'stlbluesfan' for letting me know)</li>
+<li>Fixed disk space check so it also works for 'attractmode' frontend</li>
+<li>Updated 'attractmode' to save overviews in correct location and format (Thanks to 'barolo' for letting me know, thanks to 'teeedubb' and 'barolo' for testing)</li>
+<li>For 'attractmode' added semicolon detection for 'snaps'/'video' parsing for determining resource folders (Thanks to 'barolo' for pointing this out)</li>
+<li>Removed rom limit on 'igdb' module</li>
+</ul>
+<h3 id="version-333-21st-november-2019">Version 3.3.3 (21st November 2019)<a class="headerlink" href="#version-333-21st-november-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for the Nintendo 3DS platform as '3ds' (Thank you to 'barolo' for suggesting this)</li>
+<li>Fixed system id for 'coleco' platform when using the 'screenscraper' module causing roms not to be recognized (Thank you to 'DMahlon' for reporting this)</li>
+</ul>
+<h3 id="version-332-4th-november-2019">Version 3.3.2 (4th November 2019)<a class="headerlink" href="#version-332-4th-november-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '.gcm' file extension to Gamecube platform (Thank you to 'mrsilver76' for suggesting this)</li>
+<li>The '-e' option can now be used to optionally set the Pegasus launch command (Thank you to Sixdd6' for suggesting this)</li>
+<li>Refined 'Found/Skipped' output a bit</li>
+</ul>
+<h3 id="version-331-17th-october-2019">Version 3.3.1 (17th October 2019)<a class="headerlink" href="#version-331-17th-october-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added new '--cache edit:new=<TYPE>' option for efficient batch adding of a resource of a certain type</li>
+<li>Improved ctrl+c handling</li>
+<li>Protected cache write calls from ctrl+c obstruction</li>
+</ul>
+<h3 id="version-330-15th-september-2019">Version 3.3.0 (15th September 2019)<a class="headerlink" href="#version-330-15th-september-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: File identification now uses new quick id method for up to 75% faster processing (Thank you to 'langest' for finally making me look into this)</li>
+<li>Added 'pc98' platform (Thank you to 'leosmeira' for suggesting it)</li>
+<li>Added 'pokemini' platform (Thank you to 'leosmeira' for suggesting it)</li>
+<li>Renamed all 'sha1' file id's to 'id' as sha1 was misleading</li>
+<li>Changed relevant defines to constexpr</li>
+<li>ScreenScraper now always prioritizes the 'video-normalized' above 'video' (Thank you to 'JuanVCS' for suggesting this)</li>
+<li>Fixed bug in ScreenScraper retry code which made it retry more than necessary</li>
+</ul>
+<h3 id="version-328-31st-august-2019">Version 3.2.8 (31st August 2019)<a class="headerlink" href="#version-328-31st-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>--cache report</code> now supports symlinks (Thank you to 'vanativo' for reporting this)</li>
+</ul>
+<h3 id="version-327-31st-august-2019">Version 3.2.7 (31st August 2019)<a class="headerlink" href="#version-327-31st-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The '--cache report' option now adhere to the '--nosubdirs' option (Thank you to 'vanativo' for reporting this)</li>
+</ul>
+<h3 id="version-326-24th-august-2019">Version 3.2.6 (24th August 2019)<a class="headerlink" href="#version-326-24th-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug where entering a correct fronted in simple mode would loop the question (Thank you to 'thadboyd' for reporting this)</li>
+</ul>
+<h3 id="version-325-21st-august-2019">Version 3.2.5 (21st August 2019)<a class="headerlink" href="#version-325-21st-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>EmulationStation module now converts to '<folder>' entry for all supported platform suffixes (Thank you to 'kgonepostl' for reporting this)</li>
+</ul>
+<h3 id="version-324-19th-august-2019">Version 3.2.4 (19th August 2019)<a class="headerlink" href="#version-324-19th-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented JSON flaw workaround for the ScreenScraper module</li>
+</ul>
+<h3 id="version-323-13th-august-2019">Version 3.2.3 (13th August 2019)<a class="headerlink" href="#version-323-13th-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Added support for the 'Pegasus' frontend (set with '-f pegasus')</li>
+<li>Now checks for, and removes, double bracket notes in final game list title</li>
+<li>Fixed minor bug in the 3D gamebox effect renderer</li>
+<li>Completely transparent images are no longer saved when compositing (Thank you to metallkopf for getting me to finally fix this)</li>
+<li>Optimized the final game list assembling code to use game entry references instead of copies</li>
+<li>Optimized all cache resource iterations to use const references instead of copies</li>
+<li>Optimized the entire codebase by removing all Qt-centric foreach iterate-by-copy to use references instead</li>
+<li>Fixed bug where 'screenscraper' would only look for ESRB age classification</li>
+<li>Potential faulty JSON replies from Screenscraper are now saved to '/home/USER/.skyscraper/screenscraper_error.json' for easier debugging</li>
+</ul>
+<h3 id="version-322-3rd-august-2019">Version 3.2.2 (3rd August 2019)<a class="headerlink" href="#version-322-3rd-august-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'bat' scripts to sha1 special handling list (please purge platforms using 'bat' files and rescrape)</li>
+<li>Now discards 'ZZZ(notgame)' results from ScreenScraper</li>
+<li>Fixed double-quote issue when reading titles from scummvm.ini</li>
+<li>Made location of scummvm.ini configurable in config.ini</li>
+<li>Fixed bug in roman and integer numeral conversion functions</li>
+<li>Rewrote the entire 'screenscraper' module to use JSON instead of XML</li>
+</ul>
+<h3 id="version-321-15th-july-2019">Version 3.2.1 (15th July 2019)<a class="headerlink" href="#version-321-15th-july-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in 'mobygames' module that could cause an endless loop while getting cover</li>
+</ul>
+<h3 id="version-320-8th-july-2019">Version 3.2.0 (8th July 2019)<a class="headerlink" href="#version-320-8th-july-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved output of edit mode to show queue size and initial prioritized resources</li>
+<li>Now clearly shows missing resources when adding resources in editing mode</li>
+<li>Made '--cache vacuum' more verbose at verbosity level 2 or higher</li>
+<li>Removed platform check for screenscraper module as it wasn't really necessary</li>
+<li>Added 'videoSizeLimit' config variable (Thank you to 'silverfr0st' for suggesting this)</li>
+<li>Now also processes brackets for skipped games (Thanks to 'hexive' for pointing this out)</li>
+<li>Added 'arcadia' and 'astrocde' MESS platforms (Thank you to 'raphkoster' for suggesting these)</li>
+<li>Added '--cache report:missing=<GROUP or RESOURCE1,2,...>' option (Thank you to JaymesRS for suggesting this)</li>
+<li>Added '--fromfile' option allowing you to work on a subset of files taken from a file. Compatible with files created using the '--cache report' option</li>
+<li>MobyGames module now includes 'platform' id query when relevant. Should improve result accuracy</li>
+<li>Added region support for MobyGames cover artwork</li>
+<li>Added A LOT of regions to region autodetection in general</li>
+<li>Now no longer creates media folders when in resource gathering mode</li>
+<li>Moved help texts for '--cache' options to '--cache help'</li>
+</ul>
+<h3 id="version-314-23rd-march-2019">Version 3.1.4 (23rd March 2019)<a class="headerlink" href="#version-314-23rd-march-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refactored network communication class</li>
+<li>Added request download size limit to work around possible bug in ScreenScraper API</li>
+</ul>
+<h3 id="version-313-12th-march-2019">Version 3.1.3 (12th March 2019)<a class="headerlink" href="#version-313-12th-march-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved 'screenscraper' error handling</li>
+</ul>
+<h3 id="version-312-10th-march-2019">Version 3.1.2 (10th March 2019)<a class="headerlink" href="#version-312-10th-march-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for Moonlight '*.ml' extension for all platforms</li>
+<li>Added 'ps2' platform for use with Moonlight and all other supported Ps2 extensions</li>
+<li>Added 'steam' platform for use with Moonlight '*.ml' files</li>
+<li>Fixed minor bug in CRC checksum calculator for 'screenscraper'</li>
+<li>Improved workarounds for ScreenScraper XML errors</li>
+</ul>
+<h3 id="version-311-8th-march-2019">Version 3.1.1 (8th March 2019)<a class="headerlink" href="#version-311-8th-march-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Worked around a bug in the 'screenscraper' xml output improving stability</li>
+<li>Added limiter to media getter functions for 'screenscraper' which should improve stability</li>
+</ul>
+<h3 id="version-310-2th-march-2019">Version 3.1.0 (2th March 2019)<a class="headerlink" href="#version-310-2th-march-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Added '--cache edit' command line option which allows viewing, editing and deleting cached resources for the roms in the queue. Narrow the queue down by providing file names on command line or by using '--startat <FILENAME>' and '--endat <FILENAME>'</li>
+<li>Added 'zx81' platform. Note! The only module that supports it is the 'screenscraper' module</li>
+</ul>
+<h3 id="version-305-26th-february-2019">Version 3.0.5 (26th February 2019)<a class="headerlink" href="#version-305-26th-february-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed and improved ES metadata preservation code</li>
+</ul>
+<h3 id="version-304-18th-february-2019">Version 3.0.4 (18th February 2019)<a class="headerlink" href="#version-304-18th-february-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved Amiga CD32 disc image support to prep for the upcoming support in Amiberry (Thank you to 'HoraceAndTheSpider' for the heads up)</li>
+<li>Added check for Qt5.4.0 and ignores QStorageInfo include if requirement not met (Thank you to 'ByteThis' for reporting this issue)</li>
+<li>Improved work around to fix invalid XML returned by ScreenScraper</li>
+</ul>
+<h3 id="version-303-16th-february-2019">Version 3.0.3 (16th February 2019)<a class="headerlink" href="#version-303-16th-february-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Worked around a flaw in the returned screenscraper xml results which caused many games to not be recognized due to invalid xml being returned (Thank you to 'Brunnis' for reporting this)</li>
+<li>Improved SIGINT handler to now allow unclean exit if user is VERY adament about it</li>
+</ul>
+<h3 id="version-302-14th-february-2019">Version 3.0.2 (14th February 2019)<a class="headerlink" href="#version-302-14th-february-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Upped the rom limit from 5 to 35 for the "igdb" module</li>
+<li>Upped the rom limit from 25 to 35 for the "mobygames" module</li>
+<li>Added media cache config options to module section</li>
+<li>Add Sharp X1 platform as "x1"</li>
+<li>Now exits nicely when running low on disk space</li>
+<li>Added 'spaceCheck=<BOOL>' to config.ini</li>
+<li>Fixed crash when using '--startat' and '--endat' where the '--endat' file name came before the '--startat' file name. Note! What 'ls' reports in alphabetical order is not always what Skyscraper see as it it locale specific. So be aware of this. A huge thanks to 'Gemba' for taking the time to investigate this bug thoroughly.</li>
+<li>Fixed bug in game list metadata preservation when using relativePaths and '<folder>' entries (thank you to 'HumanRob' for reporting this)</li>
+<li>Fixed game list entries skipping for 'relativePaths' and '<folder>' instances</li>
+<li>Skyscraper now saves the cache and exits nicely on ctrl+c (SIGINT) (thanks to 'krcroft' for pointing this out)</li>
+<li>The 'screenscraper' module now includes 'systemeid' in the query for better results</li>
+<li>Now skips the game list assembling when in gathering mode</li>
+<li>Now skips cache saving when in game list generation mode</li>
+<li>Output now says whether it was a gathering run or a game list generation run</li>
+</ul>
+<h3 id="version-301-27th-january-2019">Version 3.0.1 (27th January 2019)<a class="headerlink" href="#version-301-27th-january-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added note for '--query' option when user forgets to add a file name on command line</li>
+<li>Fixed minor bugs in aliasMap, mameMap and whdLoad map lookups</li>
+</ul>
+<h3 id="version-300-23rd-january-2019">Version 3.0.0 (23rd January 2019)<a class="headerlink" href="#version-300-23rd-january-2019" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Game list creation and media compositing now only processed when leaving out the "-s" option</li>
+<li>Now converts textual "\n" in descriptions to newlines. Useful when importing textual data (Thank you to "scthirouin" for requesting it)</li>
+<li>Added disk space check. Now aborts if disk has less than 200 megs left</li>
+<li>Updated "igdb" API til APIv3000. Key now global for all users</li>
+<li>Fixed ES game list release dates by adding "T000000" (Thank you to "michaelbaudino" for noticing)</li>
+<li>Added "subdirs" to config.ini (Thank you to "otherguy" for noticing it was missing)</li>
+<li>"--startat" and "--endat" now supports current workdir file paths</li>
+<li>Changed "allowExtension" config variable to "addExtensions"</li>
+<li>Changed "noHints" config variable to "hints"</li>
+<li>Changed "noBrackets" config variable to "brackets"</li>
+<li>Changed "noResize" config variable to "resize"</li>
+<li>Removed "--updatedb" cli option as it was deprecated (use "--cache refresh" instead)</li>
+<li>Removed "--nolocaldb" cli option as it is irrelevant after 3.0.0 usage changes</li>
+<li>Changed "--allowext" cli option to "--addext"</li>
+<li>Removed "localDb"/"cache" config sections and moved options to "main"</li>
+<li>Removed "userCreds" option from main and platform sections in config.ini. They should be set in scraping module section instead</li>
+<li>Removed "scraper" config.ini variable as it made no sense to ever set it like that</li>
+<li>Changed "startat" config.ini option to "startAt" to conform with style of other variables</li>
+<li>Changed "endat" config.ini option to "endAt" to conform with style of other variables</li>
+<li>Fixed "--relative" option when combined with roms in subdirs</li>
+<li>"--unattend" options now answers "y" to all "--cache purge:" prompts automatically</li>
+<li>Added "regionPrios" and "langPrios" variables to config.ini for main and platform sections</li>
+<li>Added auto-migration from old config.ini format to v3.0.0 format</li>
+<li>Added auto-migration from "dbs" folder to "cache" folder</li>
+<li>Optimized "--cache validate" A LOT</li>
+<li>Now converts ES game list entries to <folder> entries if a .cue or .m3u file is found in a subfolder. This causes the information and artwork to be shown when selecting the folder in ES rather than the .cue or .m3u file inside the subfolder. This is very useful for psx scraping</li>
+</ul>
+<h3 id="version-295-22nd-december-2018">Version 2.9.5 (22nd December 2018)<a class="headerlink" href="#version-295-22nd-december-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Added option "--purgedb vacuum" which vacuums all resources not related to your current romset. Remember to make backups of your cache before using this</li>
+<li>MAJOR: Added option "--purgedb all" that purges all resources for the selected platform. Remember to make backups of your cache before using this</li>
+<li>MAJOR: Added "--symlink" option which forces cached videos to be symlinked to destination instead of being copied when scraping with the "localdb" scraping module</li>
+<li>MAJOR: Added "esgamelist" emulationstation gamelist.xml scraping module. Contributed by "mgerhardy". Rewritten by me to better conform to Skyscraper design</li>
+<li>MAJOR: Added aliasMap.csv that forces the use of a title alias when searching for specific filenames</li>
+<li>Removed version bracket tag for Amiga lha files</li>
+<li>Improved getCompareTitle for mame games and lha files</li>
+<li>Code cleanup for sqrNotes</li>
+<li>Added the "ti99" platform. (Thank you to "jhbeskow" for suggesting it)</li>
+</ul>
+<h3 id="version-291-15th-december-2018">Version 2.9.1 (15th December 2018)<a class="headerlink" href="#version-291-15th-december-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in "screenscraper" module when using --unpack where files exceeding limits would get checksummed as the "Point Blank" game. (Thank you to CookiePLMonster for reporting this issue)</li>
+<li>Raised --unpack size limit to 8 megs</li>
+</ul>
+<h3 id="version-290-13th-december-2018">Version 2.9.0 (13th December 2018)<a class="headerlink" href="#version-290-13th-december-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Now looks up Amiga lha files in the Amiberry "whdload_db.xml" and retrieves data from "openretro.org" based on the uuid from the xml</li>
+<li>Added search based fallback pass for Amiga when game isn't found via uuid</li>
+<li>Added "<scanlines>" effect to compositor. Check <a href="../ARTWORK/">here</a> for more info (Thank you to "jakejm79" for suggesting this)</li>
+<li>"mobygames" module now uses https</li>
+<li>Fixed bug in "openretro" module where "developer" would potentially scrape wrong under certain circumstances</li>
+<li>Improved "description" scraping for "openretro" module</li>
+<li>Improved bracket tag handling for Amiga lha files A LOT</li>
+<li>Fixed minor pass 2 bug when using search based sources</li>
+<li>Added a pass for integer to roman conversion for search based sources (eg. "4" converts to "IV")</li>
+<li>"the" matching now uses regular expression for better precision</li>
+<li>Added "mame-*" platforms to "mameMap" name load list</li>
+</ul>
+<h3 id="version-283-8th-december-2018">Version 2.8.3 (8th December 2018)<a class="headerlink" href="#version-283-8th-december-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added "region" and "lang" options to "[platform]" section of config.ini</li>
+<li>Added "noResize" variable to "[localDb]" config.ini section</li>
+<li>Fixed bug where "--query" would stop working when region was autodetected</li>
+</ul>
+<h3 id="version-282-7th-december-2018">Version 2.8.2 (7th December 2018)<a class="headerlink" href="#version-282-7th-december-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now autodetects region from filename and prioritizes it when scraping with "screenscraper" unless user has forced region with "--region" option (thank you to "movisman" for suggesting this)</li>
+<li>Fixed issue where "wheel" artwork would not be fetched for specified region even though it exists</li>
+<li>Added ".cue" file extension to Amiga</li>
+</ul>
+<h3 id="version-281-25th-november-2018">Version 2.8.1 (25th November 2018)<a class="headerlink" href="#version-281-25th-november-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now loads tgdb json files from "~/.skyscraper"</li>
+</ul>
+<h3 id="version-280-4th-november-2018">Version 2.8.0 (4th November 2018)<a class="headerlink" href="#version-280-4th-november-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now tries to preserve EmulationStaton gamelist.xml metadata unless new incoming data exists</li>
+<li>Now tries to preserve AttractMode romlist metadata unless new incoming data exists</li>
+<li>Improved terminal output a bit with fflush and progress dots</li>
+<li>Now looks for 'definitions.dat' in base import folder before trying import/[platform] folder</li>
+</ul>
+<h3 id="version-278-21st-october-2018">Version 2.7.8 (21st October 2018)<a class="headerlink" href="#version-278-21st-october-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added CRC32 checksum attribute to 'screenscraper' pass</li>
+<li>Changed the 'import' folder to also look into 'import/[platform]' if it exists so users can create imports per platform. Old method also works (Thanks to tacodog for suggesting this)</li>
+<li>Added 'mpixels' attribute to compositor layers that allows users to scale images to a desired area size instead of using width and height (Thank you to Vynce for suggesting this)</li>
+</ul>
+<h3 id="version-277-10th-october-2018">Version 2.7.7 (10th October 2018)<a class="headerlink" href="#version-277-10th-october-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed instances where '--query' would be applied to all roms if a faulty filename was given on command line (Thank you to Razile89 for reporting this)</li>
+</ul>
+<h3 id="version-276-7th-october-2018">Version 2.7.6 (7th October 2018)<a class="headerlink" href="#version-276-7th-october-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'Found', 'Not found' and 'Total' to output</li>
+<li>Re-added 'aga' Amiga detection for OpenRetro after refactoring</li>
+<li>Added 'resource' attribute to 'output' nodes which enables user to directly export wheel as marquee by adding a <output type="marquee" resource="wheel"/> node to artwork.xml</li>
+</ul>
+<h3 id="version-275-21st-september-2018">Version 2.7.5 (21st September 2018)<a class="headerlink" href="#version-275-21st-september-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed a bug where 'brackets="false"' in config.ini would be flipped (Thanks to Vynce for reporting this)</li>
+<li>Completely refactored pass procedures for cleaner code and to enable '--query' option</li>
+<li>Added '--query' command line option. This option requires a single rom file to be passed on command line aswell, otherwise it will be ignored (Thank you to AnalogHero and Vynce for suggesting this)</li>
+<li>Added scrapers to 'psx' and 'pc' platforms when using Simple Mode</li>
+</ul>
+<h3 id="version-274-11th-september-2018">Version 2.7.4 (11th September 2018)<a class="headerlink" href="#version-274-11th-september-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '--unpack' command line option and config.ini options which enables the calculation of the checksum of the file inside 7z and zip files instead of the base file itself. Only relevant for 'screenscraper' module and requires 'p7zip' installed. (<code>$ sudo apt-get install p7zip-full</code> for Debian base systems)</li>
+<li>Added 'inputFolder' to [main] section of config.ini</li>
+<li>Added 'gamelistFolder' to [main] section of config.ini</li>
+<li>Added 'mediaFolder' to [main] section of config.ini</li>
+</ul>
+<h3 id="version-273-4th-september-2018">Version 2.7.3 (4th September 2018)<a class="headerlink" href="#version-273-4th-september-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved image cropping to now also crop black borders, but only for screenshots (Thank you to 'chipsnblip' for suggesting this)</li>
+<li>Made 'import' base folder configurable in config.ini</li>
+<li>Fixed bug in 'import' scraping module that caused dummy titles to be saved to localdb when scraping media resources</li>
+<li>Changed 'curl' to 'wget' in update_skyscraper.sh script to avoid curl requirement</li>
+</ul>
+<h3 id="version-272-2nd-september-2018">Version 2.7.2 (2nd September 2018)<a class="headerlink" href="#version-272-2nd-september-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug that caused the <marquee> nodes to disappear from gamelist.xml when skipping entries (Thanks to ozy24 for reporting this)</li>
+<li>Added ###TITLE### tag to import scraping module (Thanks to ozy24 for suggesting this)</li>
+<li>Updated import definition examples and documentation to include ###TITLE### tag and ###AGES### tag</li>
+<li>Updated priorities.xml.example to also include 'import' under 'title'</li>
+<li>Added 'Did you know' hints when running Skyscraper</li>
+<li>Added '--nohints' to disable hints. Can also be set in config.ini</li>
+</ul>
+<h3 id="version-271-28th-august-2018">Version 2.7.1 (28th August 2018)<a class="headerlink" href="#version-271-28th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Made sure 'Skyscraper's choice' only appears once per entry when using interactive mode</li>
+<li>Added 'sidescaling' attribute to 'gamebox' compositor effect node (Thanks to darkvader for suggesting this)</li>
+</ul>
+<h3 id="version-270-27th-august-2018">Version 2.7.0 (27th August 2018)<a class="headerlink" href="#version-270-27th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added scraping module specific configs in config.ini to allow different userCreds per scraping module</li>
+<li>Added 'igdb' scraping module</li>
+<li>Added '--interactive' mode which will ask user to choose the best result</li>
+<li>Changed release date patterns to regexps for cleaner code</li>
+<li>Fixed bug which caused <video> tags to disappear when skipping entries with emulationstation (thank you to ozy24 for reporting this)</li>
+<li>Reached commit number 1000!!! I'm gonna celebrate by coding some more</li>
+<li>Conformed [homedir] to be '~' everywhere</li>
+<li>Added several aliases to platforms to better support all scraping modules</li>
+<li>Added option for custom header when initiating network requests</li>
+<li>When generating search names, all instances of ' v.X' and ' rev.X' are now removed prior to search</li>
+<li>Added '--unattendskip' option to allow for always skipping existing entries without user input (thank you to ozy24 for suggesting this)</li>
+</ul>
+<h3 id="version-260-25th-august-2018">Version 2.6.0 (25th August 2018)<a class="headerlink" href="#version-260-25th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'mobygames' scraping module</li>
+</ul>
+<h3 id="version-258-24th-august-2018">Version 2.5.8 (24th August 2018)<a class="headerlink" href="#version-258-24th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in 'genesis' platform when using the 'screenscraper' module</li>
+<li>Added 'megacd' platform support</li>
+</ul>
+<h3 id="version-257-21st-august-2018">Version 2.5.7 (21st August 2018)<a class="headerlink" href="#version-257-21st-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'Super Famicom' as alias to 'Super Nintendo'</li>
+<li>Added restrictions for 'openretro' scraping module and removed it from Simple Mode</li>
+</ul>
+<h3 id="version-256-20th-august-2018">Version 2.5.6 (20th August 2018)<a class="headerlink" href="#version-256-20th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'atari800' platform support</li>
+</ul>
+<h3 id="version-255-18th-august-2018">Version 2.5.5 (18th August 2018)<a class="headerlink" href="#version-255-18th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Changed '--updatedb' to '--refresh' as the name confused users. '--updatedb' still works, but is considered deprecated</li>
+<li>Added 'ss' and 'uk' regions to 'screenscraper' module which should fix A LOT of games that weren't found when using this module</li>
+<li>Added unofficial OSX support to the install script</li>
+</ul>
+<h3 id="version-254-10th-august-2018">Version 2.5.4 (10th August 2018)<a class="headerlink" href="#version-254-10th-august-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'extensions=' to platform sections of config.ini to allow overwriting the default extensions for any platform</li>
+<li>Added '--maxfails [int]' command line option and 'maxFails=[int]' config.ini option to allow user to set a higher allowed initial 'Not found' before quitting</li>
+</ul>
+<h3 id="version-253-24th-july-2018">Version 2.5.3 (24th July 2018)<a class="headerlink" href="#version-253-24th-july-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '--allowext' option which will force allow a file extension for the given platform. Thank you to 'herbymachine' for suggesting this</li>
+<li>Added 'allowExtension' to the '~/.skyscraper/config.ini' variables for both 'main' and 'platform' specific sections. This is useful if you wish to permanently add a file extension to all or one platform when scraping</li>
+<li>Implemented 'developers' change in 'thegamesdb' API</li>
+<li>Implemented 'publishers' change in 'thegamesdb' API</li>
+<li>Fixed 'Tags' bug in 'screenscraper' module</li>
+</ul>
+<h3 id="version-252-13th-july-2018">Version 2.5.2 (13th July 2018)<a class="headerlink" href="#version-252-13th-july-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in 'thegamesdb' module that broke platform and genre detection</li>
+</ul>
+<h3 id="version-251-10th-july-2018">Version 2.5.1 (10th July 2018)<a class="headerlink" href="#version-251-10th-july-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '--relative' option which forces rom relative paths in gamelist for EmulationStation</li>
+</ul>
+<h3 id="version-250-8th-july-2018">Version 2.5.0 (8th July 2018)<a class="headerlink" href="#version-250-8th-july-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'thegamesdb' removed from Simple Mode scraping scripts due to new api restrictions</li>
+<li>Implemented new 'thegamesdb' api, be wary of monthly request limit!</li>
+<li>Made sure 'remaining requests' is clearly stated when using 'thegamesdb'</li>
+<li>Implemented request limit test which makes Skyscraper stop if limit is reached</li>
+<li>Made sure cli header always has correct number of dashes</li>
+</ul>
+<h3 id="version-2411-17th-june-2018">Version 2.4.11 (17th June 2018)<a class="headerlink" href="#version-2411-17th-june-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'mega-cd' as alias for 'segacd' platform. Thank you to user trevor7oaks for reporting this</li>
+</ul>
+<h3 id="version-2410-14th-june-2018">Version 2.4.10 (14th June 2018)<a class="headerlink" href="#version-2410-14th-june-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'/home/pi' is no longer hardcoded anywhere in Skyscraper. Now always uses current user home dir</li>
+<li>Changed 'Estimated time total' to 'Estimated time left' in terminal output</li>
+</ul>
+<h3 id="version-249-9th-june-2018">Version 2.4.9 (9th June 2018)<a class="headerlink" href="#version-249-9th-june-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'mame-advmame', 'mame-mame4all' and 'mame-libretro' platforms</li>
+</ul>
+<h3 id="version-248-31st-may-2018">Version 2.4.8 (31st May 2018)<a class="headerlink" href="#version-248-31st-may-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug that made region default to 'wor' instead of 'eu' and 'us' if unset</li>
+</ul>
+<h3 id="version-247-30th-may-2018">Version 2.4.7 (30th May 2018)<a class="headerlink" href="#version-247-30th-may-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added c16, c128 and vic20 platforms. c16 and c128 will scrape using c64 alias as they aren't directly supported by the sources</li>
+</ul>
+<h3 id="version-246-25th-may-2018">Version 2.4.6 (25th May 2018)<a class="headerlink" href="#version-246-25th-may-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'overview' support for AttractMode. It will now create the necessary cfg files to show the game descriptions</li>
+<li>Added '<code>&lt;kidgame&gt;bool&lt;/kidgame&gt;</code>' output to Emulationstation gamelist generation</li>
+<li>Added 'ages' support in 'screenscraper' module. Will convert PEGI and ESRB to numeric</li>
+<li>Added 'ages' support in 'thegamesdb' module. Will convert PEGI and ESRB to numeric</li>
+</ul>
+<h3 id="version-245-8th-may-2018">Version 2.4.5 (8th May 2018)<a class="headerlink" href="#version-245-8th-may-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for the 'x68000' platform</li>
+</ul>
+<h3 id="version-244-2nd-april-2018">Version 2.4.4 (2nd April 2018)<a class="headerlink" href="#version-244-2nd-april-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Changed openretro 'wheel' type to 'marquee' type. It wasn't really a wheel</li>
+<li>'openretro' now filters out variants to avoid bad screenshots (Thank you AnalogHero)</li>
+<li>Now allows you to set custom dbFolder in config.ini both under main and platform sections</li>
+<li>For Amiga it now searches for "Demo", "aga", "cdtv" and "cd32" in filenames and converts to [] bracket names (Thanks Dom)</li>
+<li>Region 'wor' has been moved below 'eu' and 'us' for Screenscraper since it often returns Japanese titles (Thanks maroonout09)</li>
+<li>Now turns '<em>-</em>' into ' ' in filenames before doing searches (Thanks maroonout09)</li>
+<li>Simplified thread result communication with main thread from two functions to just one</li>
+<li>Now again properly tests for a scraping run with 30 consecutive misses, then exits</li>
+</ul>
+<h3 id="version-243-25th-march-2018">Version 2.4.3 (25th March 2018)<a class="headerlink" href="#version-243-25th-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed modules that aren't filename based to just always return first entry (Thank you AnalogHero)</li>
+</ul>
+<h3 id="version-242-25th-march-2018">Version 2.4.2 (25th March 2018)<a class="headerlink" href="#version-242-25th-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Reordered options in '--help' output</li>
+<li>Changed help text for certain options for clarity</li>
+<li>Made sure import scraper uses complete baseName in case filenames have more than one dots (Thank you AnalogHero)</li>
+</ul>
+<h3 id="version-241-25th-march-2018">Version 2.4.1 (25th March 2018)<a class="headerlink" href="#version-241-25th-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now auto-adds '--videos' option when using 'import' scraping module (Thank you AnalogHero)</li>
+<li>Fixed bug in import scraper that would hand it the wrong filename to look for</li>
+</ul>
+<h3 id="version-240-24rd-march-2018">Version 2.4.0 (24rd March 2018)<a class="headerlink" href="#version-240-24rd-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bugs in overloaded functions for import and localdb...</li>
+</ul>
+<h3 id="version-239-23rd-march-2018">Version 2.3.9 (23rd March 2018)<a class="headerlink" href="#version-239-23rd-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed bug in network communicator that would cause everything to stall</li>
+</ul>
+<h3 id="version-238-23rd-march-2018">Version 2.3.8 (23rd March 2018)<a class="headerlink" href="#version-238-23rd-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented user credentials ('-u user:password') to set up threads for 'screenscraper' module</li>
+<li>Made sure artwork output gets exported, even if entry has no base artwork resource</li>
+<li>Changed 'verbose' to 'verbosity' to allow levels and made terminal output more useful overall</li>
+<li>Added '--dbstats' command line option that prints stats for the selected local dabatase cache</li>
+<li>Added '--purgedb' command line option that allows purging resources from localdb</li>
+<li>Fixed bugs in mergedb command line option</li>
+<li>Fixed bug in Simle Mode where 'attractmode' would not work properly (thank you Humayun)</li>
+</ul>
+<h3 id="version-237-18th-march-2018">Version 2.3.7 (18th March 2018)<a class="headerlink" href="#version-237-18th-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented user credentials ('-u user:password') to set up threads for 'screenscraper' module</li>
+<li>Now checks for .lha suffix and adds spaces where appropriate to get better results</li>
+<li>Improved returned image data validity check (libpng errors still happen, but can be ignored)</li>
+<li>Rewrote the worker to main thread communication a bit</li>
+<li>Implemented '--startat' option that tells Skyscraper the first file to scrape</li>
+<li>Implemented '--endat' option that tells Skyscraper the last file to scrape</li>
+<li>Added thread id to terminal output</li>
+<li>Applied serverside artwork size limit to openretro module to avoid running out of memory</li>
+<li>Improved network communication class</li>
+</ul>
+<h3 id="version-236-12th-march-2018">Version 2.3.6 (12th March 2018)<a class="headerlink" href="#version-236-12th-march-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Completely rewrote the openretro parser to make use of the 'edit' page instead</li>
+<li>Added '*.lha' suffix to amiga platform</li>
+<li>Changed default scraping module for all platforms to 'localdb'</li>
+<li>Added 'wheel' support to 'openretro' scraping module</li>
+<li>Rewrote thread queue so entries are always taken alphabetically</li>
+<li>Now forces 4 threads for 'screenscraper' scraping module to accomodate their limits</li>
+<li>Updated screenscraper API to use v2</li>
+<li>Added 'rating' to screenscraper scraping module</li>
+</ul>
+<h3 id="version-235-24th-february-2018">Version 2.3.5 (24th February 2018)<a class="headerlink" href="#version-235-24th-february-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>IMPORTANT: Fixed bug that caused resources to be mixed up between games because Qt's network cache wasn't cleared (Probably not a Qt bug, but a DAMN hard bug to spot either way). All previous Skyscraper releases have this bug, SO PLEASE UPDATE!!!</li>
+<li>Made 'scummvm' parsing look for config in homedir aswell ('.scummvmrc')</li>
+<li>Now always removes brackets from returned titles</li>
+<li>Now always shows current scraping module in output</li>
+<li>Optimized search matching even more</li>
+<li>No longer asks user about skipping entries if filenames are provided on command line</li>
+</ul>
+<h3 id="version-234-19th-february-2018">Version 2.3.4 (19th February 2018)<a class="headerlink" href="#version-234-19th-february-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>'gamebox' effect no longer cuts top and bottom from source layer</li>
+<li>'gamebox' effect now handles side artwork that is too tall</li>
+<li>Optimized localdb mutexes</li>
+<li>Fixed issue where searchName could be empty and cause Skyscraper to stall for 15 minutes</li>
+<li>Now no longer runs screenscraper sha1 and md5 passes if filesize is 0</li>
+</ul>
+<h3 id="version-233-17th-february-2018">Version 2.3.3 (17th February 2018)<a class="headerlink" href="#version-233-17th-february-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'hue' effect which changes the hue of the image</li>
+<li>Added 'saturation' effect which changes the color saturation of the image</li>
+<li>Added 'colorize' effect which renders the image using a single hue</li>
+<li>Added 'rotate' effect that rotates the parent layer around the x, y or z axis</li>
+<li>Added layer render 'mode' attribute ('overlay', 'colordodge', 'hardlight' and so on)</li>
+<li>Added layer 'opacity' attribute (0-100)</li>
+<li>Improved front and side textures for the 'gamebox' effect</li>
+<li>Optimized search passes a bit</li>
+<li>Re-added platform checking on 'screenscraper' and added all arcade platforms as aliases</li>
+</ul>
+<h3 id="version-232-13th-february-2018">Version 2.3.2 (13th February 2018)<a class="headerlink" href="#version-232-13th-february-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for 'wii' and 'gc' platforms</li>
+<li>Added '.chd' format to a bunch of platforms</li>
+<li>Added more robust filtering of the faulty screenscraper 'hack-Link' results</li>
+<li>Added 'update_skyscraper.sh' script which enables auto-updating to latest version</li>
+</ul>
+<h3 id="version-231-13th-february-2018">Version 2.3.1 (13th February 2018)<a class="headerlink" href="#version-231-13th-february-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed 'players' tag to always conform to a 1-digit format</li>
+<li>Now filters out ".hack-Link" results from 'screenscraper' to avoid bad localdb data</li>
+<li>Added note to output about how many new resources have been added during scraping run</li>
+<li>Added 'color="#fffff"' option to stroke effect for the geeky people (including me of course)</li>
+<li>Conformed 'game tags' to 'Platform, Action' format</li>
+<li>Fixed so 'localdb' folder isn't created inside dbs media folders</li>
+<li>Optimized the mameMap a bit</li>
+<li>Improved the searchMatch system to also consider numerals</li>
+<li>Now looks up 'scummvm' dummy files in 'scummvm.ini' and uses the correct game name</li>
+</ul>
+<h3 id="version-230-7th-february-2018">Version 2.3.0 (7th February 2018)<a class="headerlink" href="#version-230-7th-february-2018" title="Permanent link">&para;</a></h3>
+<p>The ARTWORK release. Check artwork documentation <a href="../ARTWORK/">here</a>
+* MAJOR: Completely rewrote the artwork compositing engine
+    * Now supports nested layers which anchors to the parent layer for easy placement
+    * Implemented 'balance' effect that adjusts the colors of the parent layer
+    * Implemented 'blur' effect that blurs the parent layer
+    * Implemented 'brightness' effect that adjusts the brightness of the parent layer
+    * Implemented 'contrast' effect that adjusts the contrast of the parent layer
+    * Implemented 'frame' effect that allows you to add a graphical frame to the parent layer
+    * Implemented 'gamebox' effect that turns the parent layer into a nice looking 3D game box
+    * Implemented 'mask' effect that allows you to mask out certain parts of the parent layer
+    * Implemented 'opacity' effect that adjusts the opacity of the parent layer
+    * Implemented 'rounded' effect that rounds the corners of the parent layer
+    * Implemented 'stroke' effect that outlines the parent layer
+    * Improved 'shadow' effect to adhere perfectly to softness as radius
+* Added '-a' command line option for setting custom artwork xml config file
+* Added 'artworkXml' config file options for setting custom artwork xml config file
+* Implemented resource system that allows user to place files in '~/.skyscraper/resources' and use them in the '~/.skyscraper/artwork.xml' layers and effects
+* Added 'From cache' boolean to output plus note about '--updatedb'
+* 'simple mode' now also accepts "Y" as a yes answer instead of just "y"
+* Now also looks for 'jp' region if no english region media is found for 'screenscraper' module
+* Now always accepts 'screenscraper' results no matter if platform matches or not
+* Now sets 'minMatch' to 0 by default for 'localdb' , 'arcadedb' and 'screenscraper' scraping modules. Can be overruled on command line and in config file
+* Made localdb more thread safe, might've fixed rare issues of resources being mixed up internally
+* Now works with filenames provided on command line even if they don't include full path
+* Added resource sources to output
+* Added 'wonderswan' and 'wonderswancolor' platforms</p>
+<h3 id="version-227-31st-january-2018">Version 2.2.7 (31st January 2018)<a class="headerlink" href="#version-227-31st-january-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Optimized shadow rendering A LOT! WROOOOOOOOOM!!!</li>
+<li>'simple mode' 'Do you want to run the script' answer now defaults to Y</li>
+<li>Fixed bug in 'simple mode' where answering 'y' to adding brackets would actually remove them</li>
+</ul>
+<h3 id="version-226a-18th-january-2018">Version 2.2.6a (18th January 2018)<a class="headerlink" href="#version-226a-18th-january-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now always sets '--updatedb' when using the import scraper</li>
+</ul>
+<h3 id="version-226-17th-january-2018">Version 2.2.6 (17th January 2018)<a class="headerlink" href="#version-226-17th-january-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now always caches resources locally, even if pretend is set</li>
+<li>Optimized 'simple mode' generated script. Now has '--pretend' set for all non-local modules to avoid artwork processing on those runs. This is a lot faster and provides the same result</li>
+<li>Added the possibility to supply one or more filenames on the command line - it will then ONLY scrape those particular files. Platform still has to be set with '-p' for this to work</li>
+<li>Fixed bug where [tags] would be appended twice when using '--forcefilename'</li>
+</ul>
+<h3 id="version-225-3rd-january-2018">Version 2.2.5 (3rd January 2018)<a class="headerlink" href="#version-225-3rd-january-2018" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved artwork 'shadow' effect. Now renders correctly on artwork with transparency</li>
+<li>Added '(uncached)' to terminal output for media types that user has disabled for caching</li>
+<li>Now always uses existing cached resources when scraping with any scraping module. Use '--updatedb' to force a refresh</li>
+<li>Improved 'artwork.xml' parser to better handle xml syntax problems</li>
+<li>Improved '--cleandb' so it always resaves the db after a cleaning run</li>
+<li>Updated 'simple mode' to also include questions about '--forcefilename' and '--updatedb'</li>
+<li>Now always converts images to 16bit externally. Still uses 32bit internally</li>
+<li>Added 'pc' and 'ports' platform</li>
+</ul>
+<h3 id="version-220-31st-of-december-2017">Version 2.2.0 (31st of December 2017)<a class="headerlink" href="#version-220-31st-of-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Completely rewrote how artwork is handled. Now uses '~/.skyscraper/artwork.xml' for everything.</li>
+<li>Implemented 'wheel' and 'marquee' media types and rewrote EVERYTHING to make use of them. :D (this was a damn long rewrite!!!!)</li>
+<li>Added 'wheel' and 'marquee' media types to local database</li>
+<li>Added 'nocovers', 'noscreenshots', 'nowheels' and 'nomarquees' options to allow user to disable caching of those resources locally.</li>
+<li>Added 'noresize' option to disable resizing artwork resources when saving them to localdb. NOTE! This it NOT directly related to how artwork is rendered. Check the <a href="../ARTWORK/">artwork</a> documentation if you want to disable them when exporting the frontend artwork.</li>
+<li>Added support for 'fba' platform</li>
+</ul>
+<h3 id="version-211-27th-december-2017">Version 2.1.1 (27th December 2017)<a class="headerlink" href="#version-211-27th-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for '3do', 'amstradcpc', 'coco', 'daphne', 'dragon32', 'dreamcast', 'fds' and 'gameandwatch', 'intellivision', 'ngp', 'oric', 'pc88', 'pcfx', 'saturn', 'sg-1000', 'trs-80' and 'zmachine' platforms</li>
+<li>Added 'forcefilename' option which forces the file name to be used in the frontend instead of the one returned by the scraping module</li>
+<li>Changed 'gamelist.xml' to 'game list' in 'simple mode' question</li>
+</ul>
+<h3 id="version-210-26th-december-2017">Version 2.1.0 (26th December 2017)<a class="headerlink" href="#version-210-26th-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'simple mode' that allows users a more automated way of running Skyscraper. Invoke it by running Skyscraper with no options by simply typing 'Skyscraper'</li>
+<li>A bunch of code refactoring to make platform related code easier to maintain and enable better platform checking</li>
+</ul>
+<h3 id="version-206-23rd-december-2017">Version 2.0.6 (23rd December 2017)<a class="headerlink" href="#version-206-23rd-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for atarilynx, vectrex, ngpc (Neo Geo Pocket Color), sega32x, virtualboy and videopac platforms</li>
+<li>Changed all 'qDebug' call to 'printf' calls</li>
+</ul>
+<h3 id="version-205c-23rd-december-2017">Version 2.0.5c (23rd December 2017)<a class="headerlink" href="#version-205c-23rd-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed a bug where the import module wouldn't look for all resource types during the same run. Thank you to dylosaur for discovering this.</li>
+</ul>
+<h3 id="version-205b-5th-december-2017">Version 2.0.5b (5th December 2017)<a class="headerlink" href="#version-205b-5th-december-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for *.7z files for all platforms.</li>
+</ul>
+<h3 id="version-205a-15th-november-2017">Version 2.0.5a (15th November 2017)<a class="headerlink" href="#version-205a-15th-november-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed Amiga 'adf' files not being scraped because I messed up and typed it as 'afd'. Thank you to James Kerridge for letting me know about this.</li>
+</ul>
+<h3 id="version-205-14th-november-2017">Version 2.0.5 (14th November 2017)<a class="headerlink" href="#version-205-14th-november-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for 'scummvm' platform in scraping module 'thegamesdb' or 'openretro'.</li>
+<li>Now only removes 'the' from searchName if longer than 10 chars.</li>
+<li>Now always converts underscores to spaces in search- and compare names.</li>
+<li>Added edit distance optimization ('the sequel' will now match 'some game: the sequel' 100%).</li>
+</ul>
+<h3 id="version-204-5th-november-2017">Version 2.0.4 (5th November 2017)<a class="headerlink" href="#version-204-5th-november-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Default language is now 'en' instead of 'us'.</li>
+<li>Empty video tags no longer added to gamelist.xml for emulationstation.</li>
+</ul>
+<h3 id="version-203-5th-october-2017">Version 2.0.3 (5th October 2017)<a class="headerlink" href="#version-203-5th-october-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '--lang' and '--region' command line options. Defaults to 'us' and 'wor' if none is provided.</li>
+<li>Language and region support now implemented for 'screenscraper' module.</li>
+<li>Removed 'stats' option as it didn't make much sense anymore.</li>
+</ul>
+<h3 id="version-202-4th-october-2017">Version 2.0.2 (4th October 2017)<a class="headerlink" href="#version-202-4th-october-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Updated 'arcadedb' result parsing to fit new format</li>
+<li>Now scrapes 'msx' platform families correctly with the 'screenscraper' module</li>
+<li>Optimized file checksumming</li>
+<li>Fixed a bug in 'screenscraper' module not allowing platforms with multiple platform name to be recognized. (thanks to 'qqplayer' for pointing this out!)</li>
+</ul>
+<h3 id="version-201-15th-september-2017">Version 2.0.1 (15th September 2017)<a class="headerlink" href="#version-201-15th-september-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Removed 'mamedb' source files as they were no longer in use</li>
+<li>Slightly changed help text for scraping modules</li>
+<li>'thegamesdb' now properly uses Qt's XML parser</li>
+<li>'screenscraper' now properly uses Qt's XML parser</li>
+<li>Started implementing region and lang support for 'screenscraper', but still not enabled</li>
+</ul>
+<h3 id="version-200-7th-september-2017">Version 2.0.0 (7th September 2017)<a class="headerlink" href="#version-200-7th-september-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Back to basics: Removed several web sources. Now only allows the ones I have explicit permission to use.</li>
+<li>Properly implemented official API for 'arcadedb' module</li>
+<li>Added scraping module info to output per result but only when using '--verbose'</li>
+<li>Added check for unreasonably bad scraping runs, making Skyscraper exit if 30 of 30 files miss from the get-go</li>
+</ul>
+<h3 id="older-unsupported-releases-no-longer-available-and-dont-ask-for-them">Older unsupported releases (no longer available and don't ask for them)<a class="headerlink" href="#older-unsupported-releases-no-longer-available-and-dont-ask-for-them" title="Permanent link">&para;</a></h3>
+<h3 id="version-182-27th-august-2017">Version 1.8.2 (27th August 2017)<a class="headerlink" href="#version-182-27th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added support for 'coleco' platform</li>
+<li>Added support for 'pcengine' platform</li>
+<li>Added zip support to all platforms per request from users. :)</li>
+</ul>
+<h3 id="version-181-22nd-august-2017">Version 1.8.1 (22nd August 2017)<a class="headerlink" href="#version-181-22nd-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'rating' scraping to 'thegamesdb'</li>
+</ul>
+<h3 id="version-180-14th-august-2017">Version 1.8.0 (14th August 2017)<a class="headerlink" href="#version-180-14th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'arcadedb' scraper module <em>with</em> video support</li>
+<li>Vastly improved scraping of 'neogeo' and 'arcade' platforms in general by mapping the filenames to real names from mameMap.csv</li>
+<li>Improved 'neogeo' and 'arcade' search platform matching</li>
+</ul>
+<h3 id="version-174-10th-august-2017">Version 1.7.4 (10th August 2017)<a class="headerlink" href="#version-174-10th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added textual import with 'import' scraper using '~/.skyscraper/important/definitions.dat' file</li>
+<li>Added video import with 'import' scraper</li>
+<li>Improved 'uvlist' description scraping</li>
+<li>Now properly handles empty nodes in EmulationStation gamelist.xml export</li>
+</ul>
+<h3 id="version-173-8th-august-2017">Version 1.7.3 (8th August 2017)<a class="headerlink" href="#version-173-8th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'developer' support for 'uvlist' scraper</li>
+<li>Improved html unescaping a lot</li>
+<li>Cleaned up xml escaping</li>
+<li>Added 'import' scraper, scraping from resources located in '~/.skyscraper/import' folder</li>
+</ul>
+<h3 id="version-172-7th-august-2017">Version 1.7.2 (7th August 2017)<a class="headerlink" href="#version-172-7th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'uvlist' scraping module</li>
+<li>Added rating resource and support</li>
+<li>Added rating support to lemonamiga</li>
+<li>Added rating support to lemon64</li>
+<li>Added rating support to mobygames</li>
+</ul>
+<h3 id="version-171c-7th-august-2017">Version 1.7.1c (7th August 2017)<a class="headerlink" href="#version-171c-7th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed make install</li>
+</ul>
+<h3 id="version-171-7th-august-2017">Version 1.7.1 (7th August 2017)<a class="headerlink" href="#version-171-7th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Moved all source files to 'src' folder</li>
+<li>'~/.skyscraper' is now default folder for all files used by Skyscraper</li>
+<li>'/usr/local/bin/Skyscraper' is now default location for Skyscraper executable</li>
+<li>Refined '--help' output a bit</li>
+<li>Fixed lemon64 scraping</li>
+<li>Added 'lemonamiga' scraping module</li>
+<li>Added '--skipped' command line option</li>
+<li>Added 'make install' for correct installation of files</li>
+</ul>
+<h3 id="version-170-5th-august-2017">Version 1.7.0 (5th August 2017)<a class="headerlink" href="#version-170-5th-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Fixed and refined 'attractmode' frontend implementation, now works in a basic manner</li>
+<li>'attractmode' can now skip existing entries</li>
+<li>'emulationstation' now properly add brackets to 'name' on skipped entries</li>
+<li>Added check for 'db.xml' when doing '--cleandb'</li>
+<li>Refactored GameEntry variables</li>
+<li>Changed GameEntry from struct to class</li>
+<li>Added 'Overall title similarity' to final output</li>
+<li>Added 'Overall completeness' to final output</li>
+<li>Code refactoring here, there and everywhere</li>
+<li>Now accepts results where we have low editDistance, but high similarity (For instance "Disney's Darkwing Duck" with fileName "Darkwing Duck").</li>
+<li>Added '--nobrackets' option that disables and [] and () tags in the frontend game titles. (Thanks for the feedback 'incunabula')</li>
+<li>Fixed bracket parsing</li>
+<li>Now always uses completeBaseName since some filenames have more than one '.'</li>
+<li>Completely rewrote sorting algorithm. 30 lines became one with a nifty C++11 lambda :D</li>
+<li>Added zip format to GameGear and MSX platforms</li>
+<li>Now uses filenames for output image files again</li>
+</ul>
+<h3 id="version-160-1st-august-2017">Version 1.6.0 (1st August 2017)<a class="headerlink" href="#version-160-1st-august-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now allows more resources of same type, as long as 'source' differs</li>
+<li>Now allows user to set priorities for local resource sources</li>
+<li>Fixed a bug that would nullify timestamp of local resources</li>
+<li>Optimized LocalDb communication to improve scraping speed</li>
+<li>Added README.md to dbs subfolder</li>
+<li>Added priorities.xml.example file to dbs subfolder. Automatically copies this to new databases when they are created if none already exists.</li>
+<li>Implemented '--cleandb' command line option that removes files with no resource entry</li>
+<li>Implemented '--mergedb' command line option that merges two local databases together</li>
+<li>Now no longer does sha1 for roms bigger than 50 MBs (Pi runs out of ram when reading them). Instead does sha1 on filename for those special cases.</li>
+<li>Removed default platform when scraping. You are now forced to put in a valid platform with '-p [platform]'</li>
+<li>Added more initial info when running Skyscraper</li>
+<li>Added '--unattend' command line option</li>
+<li>Added 'source' attribute to local database resources</li>
+<li>Removed 'mobygames' descriptions from 'openretro' scraper. Now uses native descriptions.</li>
+<li>Improved cover and screenshot scraping for 'openretro' module</li>
+<li>Disabled filling in missing data when scraping from web sources. User is meant to use 'localdb' scraping module for this.</li>
+<li>Implemented date formats to standardize output and better support EmulationStation requirements</li>
+</ul>
+<h3 id="version-150-27th-july-2017">Version 1.5.0 (27th July 2017)<a class="headerlink" href="#version-150-27th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>MAJOR: Added support for local database resources</li>
+<li>MAJOR: Added support for video scraping (currently supported in the 'screenscraper' scraping module)</li>
+<li>MAJOR: Added 'localdb' scraping module</li>
+<li>Added video tag in EmulationStation gamelist.xml output. Beware though, the Pi's are having a difficult time showing the videos properly.</li>
+<li>Added several new command line options relevant to the new video and localdb features</li>
+<li>Added cover, screenshot and video as part of the result output with "YES" or "NO" depending on whether they were found or not</li>
+<li>Fixed a bug where image tag in gamelist.xml had wrong path when using non-default path</li>
+<li>Now uses rom or filename (for .uae) sha1 for image filename, in case people have several roms with the same name under subdirs</li>
+<li>Added 'players' scraping for 'mobygames' module and improved screenshot getter even more</li>
+</ul>
+<h3 id="version-118b-24th-july-2017">Version 1.1.8b (24th July 2017)<a class="headerlink" href="#version-118b-24th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implemented a slightly hacky fix that removes some (but not all) warnings caused by a known Qt bug</li>
+<li>Improved final sorting algorithm</li>
+<li>Code refactoring / polishing</li>
+</ul>
+<h3 id="version-118a-23rd-july-2017">Version 1.1.8a (23rd July 2017)<a class="headerlink" href="#version-118a-23rd-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Hardcoded screenscraper devid and password, since this seems to be the right way of doing it</li>
+</ul>
+<h3 id="version-118-23rd-july-2017">Version 1.1.8 (23rd July 2017)<a class="headerlink" href="#version-118-23rd-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refactored internal config handling to be MUCH cleaner</li>
+<li>Fixed bug in xml escaping</li>
+<li>Fixed the final sorting algorithm so it no longer outputs double entries</li>
+</ul>
+<h3 id="version-117-21st-july-2017">Version 1.1.7 (21st July 2017)<a class="headerlink" href="#version-117-21st-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added '--nosubdirs' command line argument to exclude subdirs when scraping</li>
+<li>Slightly changed screen output colors and text</li>
+<li>Implemented generic AbstractFrontend class</li>
+<li>Added support for multiple frontends set with '-f'</li>
+<li>Changed default scraper for certain platforms based on new stats</li>
+</ul>
+<h3 id="version-116-20th-july-2017">Version 1.1.6 (20th July 2017)<a class="headerlink" href="#version-116-20th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Corrected max threads from 4 to 8 in command line help text</li>
+<li>Fixed default config value bug</li>
+</ul>
+<h3 id="version-115-20th-july-2017">Version 1.1.5 (20th July 2017)<a class="headerlink" href="#version-115-20th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'msx' platform support</li>
+<li>Added 'psp' platform support</li>
+<li>Added possibility for one input platform to match many different scraper source platforms</li>
+</ul>
+<h3 id="version-114-20th-july-2017">Version 1.1.4 (20th July 2017)<a class="headerlink" href="#version-114-20th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'atarist' support</li>
+<li>Improved mobygames getScreenshot function</li>
+</ul>
+<h3 id="version-113-19th-july-2017">Version 1.1.3 (19th July 2017)<a class="headerlink" href="#version-113-19th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Improved sorting by always moving "The" to end of game title</li>
+</ul>
+<h3 id="version-112-19th-july-2017">Version 1.1.2 (19th July 2017)<a class="headerlink" href="#version-112-19th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Upped allowed number of threads to 8 (Wrooooooom!!!)</li>
+<li>Fixed a nasty race condition related to config file access that caused regular crashes</li>
+<li>Refactored config default loading to be easier to understand</li>
+<li>Fixed a silly memory hog that caused memory to be eaten up (not a leak, just really silly)</li>
+</ul>
+<h3 id="version-111-18th-july-2017">Version 1.1.1 (18th July 2017)<a class="headerlink" href="#version-111-18th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now allows user to skip existing entries</li>
+<li>Now allows user to set max description length with '-l'</li>
+<li>Refactored thread result communication to be much cleaner</li>
+</ul>
+<h3 id="version-110a-16th-july-2017">Version 1.1.0a (16th July 2017)<a class="headerlink" href="#version-110a-16th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed a bug where Skyscraper would get caught in an endless loop when scraping 'amiga' using the 'openretro' scraping module.</li>
+</ul>
+<h3 id="version-110-14th-july-2017">Version 1.1.0 (14th July 2017)<a class="headerlink" href="#version-110-14th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now quits if GamesDatabase has blocked you.</li>
+<li>Added support for user ID and KEY when using scrapers that require it</li>
+<li>Added 'screenscraper' scraping module</li>
+<li>Mobygames scraping module no longer truncates descriptions</li>
+<li>OpenRetro scraping module no longer truncates descriptions</li>
+</ul>
+<h3 id="version-101-4th-july-2017">Version 1.0.1 (4th July 2017)<a class="headerlink" href="#version-101-4th-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>OpenRetro now always removes '[AGA]' from search results, since it will be appended later</li>
+<li>Now supports multitags of both the '()' and '[]' variety</li>
+<li>Now properly removes html tags from game descriptions in various scraper modules</li>
+<li>Fixed situations where using OpenRetro would result in a few blank covers</li>
+</ul>
+<h3 id="version-100-3rd-july-2017">Version 1.0.0 (3rd July 2017)<a class="headerlink" href="#version-100-3rd-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'worldofspectrum' scraping module (Have fun, Dom! :D)</li>
+<li>Now also handles filename parenthesis comments (eg. '(disc 1 of 2)')</li>
+<li>Now properly handles number of threads if number of files are less than allowed threads</li>
+<li>Changed default scraping module for a number of platforms based on stats</li>
+</ul>
+<h3 id="version-099-2nd-july-2017">Version 0.9.9 (2nd July 2017)<a class="headerlink" href="#version-099-2nd-july-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added 'gamesdatabase' scraping module</li>
+<li>Now detects if a game is a sequel and pays more attention to it when looking for matches</li>
+<li>Now properly appends tag such as [AGA] back into the title name when writing the xml</li>
+<li>Added '--stats' command line option for exporting platform scraping stats</li>
+<li>Changed default scraper for a bunch of platforms based on stats</li>
+<li>Added support for the 'apple2' platform</li>
+<li>Added support for the 'atari5200' platform</li>
+<li>Added support for the 'atarijaguar' platform</li>
+<li>Added support for the 'gb' platform</li>
+<li>Added support for the 'gbc' platform</li>
+<li>Added support for the 'n64' platform</li>
+<li>Added support for the 'nds' platform</li>
+<li>Added support for the 'segacd' platform</li>
+</ul>
+<h3 id="version-098-29th-june-2017">Version 0.9.8 (29th June 2017)<a class="headerlink" href="#version-098-29th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added MameDB scraper module</li>
+<li>Added support for the 'neogeo' platform</li>
+<li>Added support for the 'arcade' platform</li>
+<li>Added support for the 'atari2600' platform</li>
+<li>Added support for the 'atari7800' platform</li>
+<li>Added support for the 'gamegear' platform</li>
+<li>Added support for the 'mastersystem' platform</li>
+<li>Added 'Estimated time' to output</li>
+<li>Redesigned thread initialization</li>
+<li>FINALLY found and fixed memory leak :) Verified with 'ps'</li>
+</ul>
+<h3 id="version-097a-27th-june-2017">Version 0.9.7a (27th June 2017)<a class="headerlink" href="#version-097a-27th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Probably fixed a memory leak... I hope. :S</li>
+</ul>
+<h3 id="version-097-26th-june-2017">Version 0.9.7 (26th June 2017):<a class="headerlink" href="#version-097-26th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Artwork is now fully customizable (check 'config.ini.example')</li>
+<li>Added artwork dropshadow effect</li>
+<li>Added artwork config examples</li>
+<li>Added support for megadrive / genesis</li>
+</ul>
+<h3 id="version-096-25th-june-2017">Version 0.9.6 (25th June 2017):<a class="headerlink" href="#version-096-25th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>HOL scraping module added</li>
+</ul>
+<h3 id="version-095-23rd-june-2017">Version 0.9.5 (23rd June 2017):<a class="headerlink" href="#version-095-23rd-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now properly supports config file setup using '-c' (see 'config.ini.example')</li>
+<li>Now allows user to force a certain scraper module using '-s'</li>
+<li>MobyGames scraping support added</li>
+<li>Added support for psx, nes, snes and zxspectrum</li>
+<li>Now provide 'config.ini.example'</li>
+</ul>
+<h3 id="version-094-21st-june-2017">Version 0.9.4 (21st June 2017):<a class="headerlink" href="#version-094-21st-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Lemon64 scraping support added (now default for 'c64')</li>
+</ul>
+<h3 id="version-093-19th-june-2017">Version 0.9.3 (19th June 2017):<a class="headerlink" href="#version-093-19th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed major bug in Amiga scraping which caused it to skip more than half :S</li>
+</ul>
+<h3 id="version-092-19th-june-2017">Version 0.9.2 (19th June 2017):<a class="headerlink" href="#version-092-19th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed minor error in command line descriptions</li>
+<li>Now prints chosen platform when starting</li>
+</ul>
+<h3 id="version-091-19th-june-2017">Version 0.9.1 (19th June 2017):<a class="headerlink" href="#version-091-19th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Removed 'unpublished' command line option, as it was too specific</li>
+</ul>
+<h3 id="version-090-19th-june-2017">Version 0.9.0 (19th June 2017):<a class="headerlink" href="#version-090-19th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now supports both Amiga and C64 scraping. Automatically chooses best scraper for each platform</li>
+<li>Modularized scraping definitions</li>
+<li>TheGamesDb scraping support added (default for 'c64')</li>
+<li>OpenRetro + MobyGames (for descriptions) scraping support added (default for Amiga)</li>
+</ul>
+<h3 id="version-080-15th-june-2017">Version 0.8.0 (15th June 2017):<a class="headerlink" href="#version-080-15th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added threaded scraping! Set number of threads with "-t" command line option. Check "--help" for more info</li>
+</ul>
+<h3 id="version-072-12th-june-2017">Version 0.7.2 (12th June 2017):<a class="headerlink" href="#version-072-12th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Added options for gamelist and images folder</li>
+</ul>
+<h3 id="version-070-11th-june-2017">Version 0.7.0 (11th June 2017):<a class="headerlink" href="#version-070-11th-june-2017" title="Permanent link">&para;</a></h3>
+<ul>
+<li>First public release</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>
