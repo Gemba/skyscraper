@@ -241,6 +241,14 @@ QString StrTools::conformReleaseDate(QString str) {
             return QLocale::c().toDate(str, i.value()).toString("yyyyMMdd");
     }
 
+    // 'N/A' and '????' like
+    re.setPattern("^(N[.\\/]?A[.]?|[\?]{1,4})$");
+    if (re.match(str).hasMatch())
+        return "";
+
+    if (str.length() == 4 /* yyyy */ && str.contains("?") /* #108 */)
+        return str;
+
     if (!str.isEmpty())
         issueParseWarning(
             "Release date string is not parsable as date for scraper input",
