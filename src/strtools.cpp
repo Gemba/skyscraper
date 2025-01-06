@@ -207,6 +207,12 @@ QString StrTools::conformAges(QString str) {
     if (ok)
         return str;
 
+    const QStringList junkList = {
+        "not rated" /* #112 */
+    };
+    if (junkList.contains(str, Qt::CaseInsensitive))
+        return "";
+
     if (!str.isEmpty())
         issueParseWarning("Age rating not replaced to number for scraper input",
                           str);
