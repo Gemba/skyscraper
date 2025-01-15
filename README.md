@@ -102,10 +102,11 @@ When you've installed the prerequisites as described above for Linux or macOS, y
 ```
 $ cd
 $ mkdir -p skysource && cd skysource
-$ wget -q -O - https://raw.githubusercontent.com/Gemba/skyscraper/master/update_skyscraper.sh | bash
+$ wget -q -O - https://raw.githubusercontent.com/Gemba/skyscraper/master/update_skyscraper.sh | bash -s --
 ```
-The last command will download and run the latest update script from Github. The script installs the latest release of Skyscraper, by default with the prefix `/usr/local/`. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.
-
+The last command will download and run the latest update script from Github. The script installs the latest release of Skyscraper. During the installation you might be asked for your sudo password. On RetroPie the default password is `raspberry`.  
+Default prefix for installation is `/usr/local/`. If you want to change this add `PREFIX=` after the pipe, thus it reads `PREFIX=/here/goes/skyscraper/ bash -s --`  
+If you want to compile Skyscraper with XDG support add `xdg` at the very end, thus it reads `bash -s -- xdg`  
 If you want also bash completion, then copy the [Skyscraper.bash](https://github.com/Gemba/skyscraper/blob/master/supplementary/bash-completion/Skyscraper.bash) to the folder of bash completion scripts according to your distribution. 
 
 When the script has completed you are ready to run Skyscraper!
@@ -117,7 +118,11 @@ $ cd
 $ cd skysource
 $ ./update_skyscraper.sh
 ```
-You might be asked for your sudo password during the update. On RetroPie the default password is `raspberry`. If your version is older than 2.3.2 (check with `--help`) you need to follow the [installation instructions](#download-compile-and-install) instead.
+
+Default prefix for installation is `/usr/local/`. If you want to change this add `PREFIX=` before the script e.g., `PREFIX=/here/goes/skyscraper ./update_skyscraper.sh`  
+If you want to compile Skyscraper with XDG support supply the positional argument `xdg` to the script e.g., `./update_skyscraper.sh xdg`  
+You might be asked for your sudo password during the update. On RetroPie the default password is `raspberry`.  
+If your version is older than 2.3.2 (check with `--help`) you need to follow the [installation instructions](#download-compile-and-install) instead.
 
 ### Installing the Development Version
 If you want to build the latest `main/HEAD` version use the following commands. Make sure to have the before mentioned packages installed:

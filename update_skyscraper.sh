@@ -40,8 +40,16 @@
         printf '\n%s\n' "--- Unpacking ---"
         tar_bin='tar'
         [[ "$OSTYPE" == "darwin"* ]] && tar_bin='gtar'
-          $tar_bin xzf "$tarball" --strip-components 1 --overwrite || handle_error "unpack"
+        $tar_bin xzf "$tarball" --strip-components 1 --overwrite || handle_error "unpack"
         rm -f "$tarball"
+
+        if [[ "$1" == "xdg" ]]; then
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+                sed -i '' "s|#DEFINES+=XDG|DEFINES+=XDG|" skyscraper.pro
+            else
+                sed -i "s|#DEFINES+=XDG|DEFINES+=XDG|" skyscraper.pro
+            fi
+        fi
 
         printf '\n%s\n' "--- Cleaning out old build if one exists ---"
         make --ignore-errors clean
