@@ -1,0 +1,1314 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/IMPORT/">
+      
+      
+        <link rel="prev" href="../SCRAPINGMODULES/">
+      
+      
+        <link rel="next" href="../ARTWORK/">
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Import of Game Data - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#custom-data-import" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Import of Game Data
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SCRAPINGMODULES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-data-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Data Import
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Data Import">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#images-videos-and-game-manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Images, Videos and Game Manuals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Images, Videos and Game Manuals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-note-for-videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Special Note for Videos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textual-data-publisher-players-rating" class="md-nav__link">
+    <span class="md-ellipsis">
+      Textual Data (Publisher, Players, Rating, ...)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Textual Data (Publisher, Players, Rating, ...)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#textual-data-definitions-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Textual data definitions file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-of-known-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      List of known tags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-actually-use-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to actually use the data?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONFIGINI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The config.ini File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLIHELP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLATFORMS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Languages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Varia
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Varia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-data-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Data Import
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Data Import">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#images-videos-and-game-manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Images, Videos and Game Manuals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Images, Videos and Game Manuals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-note-for-videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Special Note for Videos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textual-data-publisher-players-rating" class="md-nav__link">
+    <span class="md-ellipsis">
+      Textual Data (Publisher, Players, Rating, ...)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Textual Data (Publisher, Players, Rating, ...)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#textual-data-definitions-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Textual data definitions file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-of-known-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      List of known tags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-actually-use-the-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to actually use the data?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Import of Game Data</h1>
+
+<h2 id="custom-data-import">Custom Data Import<a class="headerlink" href="#custom-data-import" title="Permanent link">&para;</a></h2>
+<p>The following describes how to import your own custom textual, artwork and / or video data into the resource cache for later use when generating game lists (enable game list generation mode simply by leaving out the <code>-s</code> command line option).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For any path in the following description, you can also add a platform subfolder. Skyscraper will auto-detect this and use it instead of the base import folder. For instance, you can create the folder <code>/home/&lt;USER&gt;/.skyscraper/import/amiga</code> and it will use that as base instead of <code>/home/&lt;USER&gt;/.skyscraper/import/</code> when importing for the <code>amiga</code> platform.</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Be sure to also check the <code>--cache edit</code> option <a href="../CLIHELP/#--cache-editnewtype">here</a>.</p>
+</div>
+<h3 id="images-videos-and-game-manuals">Images, Videos and Game Manuals<a class="headerlink" href="#images-videos-and-game-manuals" title="Permanent link">&para;</a></h3>
+<p>To import videos or images into the resource cache, use the following procedure:</p>
+<ul>
+<li>Name your image or video file with the <em>exact</em> base name of the rom you wish to connect it to. Example: <code>Bubble Bobble.nes</code> will import images with a filename of <code>Bubble Bobble.jpg</code> or <code>Bubble Bobble.png</code> or other well-known image formats. As long as the base name is an <em>exact</em> match. Same goes for video files. I recommend only making use of well-known video formats since Skyscraper imports them directly without conversion (unless you convert them as described <a href="../CONFIGINI/#videoconvertcommand">here</a>), so they need to be supported directly by the frontend you plan to use.</li>
+<li>Game manuals are expected to use PDF format and have the extension <code>.pdf</code>. The base name must match the ROM file, thus the game manual of the example is <code>Bubble Bobble.pdf</code>.</li>
+<li>Place all of your images, videos or game manuals in the <code>/home/&lt;USER&gt;/.skyscraper/import/&lt;PLATFORM&gt;/screenshots</code>, <code>covers</code>, <code>wheels</code>, <code>marquees</code>, <code>videos</code> or <code>manuals</code> folders.</li>
+<li>Now run Skyscraper with <code>Skyscraper -p &lt;PLATFORM&gt; -s import</code>. If you named your files correctly, they will now be imported. Look for the green 'YES' in the output at the rom(s) you've placed files for. This will tell you if it succeeded or not.</li>
+<li>The data is now imported into the resource cache. To make use of if read <a href="#how-to-actually-use-the-data">here</a>.</li>
+</ul>
+<h4 id="special-note-for-videos">Special Note for Videos<a class="headerlink" href="#special-note-for-videos" title="Permanent link">&para;</a></h4>
+<p>If you are importing videos, you also need to add the command line flag <code>--flags videos</code> for this to work. Videos aren't imported or scraped by default, since it is considered a huge disk space hog. So keep this in mind if you want to import videos into the cache. If you plan on always using videos, consider adding this option to the <a href="../CONFIGINI/">config.ini</a> instead.</p>
+<h3 id="textual-data-publisher-players-rating">Textual Data (Publisher, Players, Rating, ...)<a class="headerlink" href="#textual-data-publisher-players-rating" title="Permanent link">&para;</a></h3>
+<p>Skyscraper also allows you to import textual data for any rom you have in your collection. All you need to do is to prepare files for each rom with an <em>exactly</em> matching base name. For instance <code>Bubble Bobble.nes</code> should have a file called <code>Bubble Bobble.txt</code> or <code>Bubble Bobble.xml</code> or whatever suffix you want to use. The suffix is not important. What <em>is</em> important is that you place all of these raw data files into the <code>/home/&lt;USER&gt;/.skyscraper/import/textual</code> folder. And then you need to make a definitions file so Skyscraper has a recipe for these files.</p>
+<h4 id="textual-data-definitions-file">Textual data definitions file<a class="headerlink" href="#textual-data-definitions-file" title="Permanent link">&para;</a></h4>
+<p>In order for Skyscraper to understand your textual data files, it needs a recipe. Or a definition of your format if you like. The format is completely up to you. The file must be placed at <code>/home/&lt;USER&gt;/.skyscraper/import/definitions.dat</code>. Here follows a few examples with a matching data file for comparison:</p>
+<p><strong>Example 1</strong></p>
+<p>Definitions file: <code>/home/&lt;USER&gt;/.skyscraper/import/definitions.dat</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;game&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&lt;title&gt;</span>###TITLE###<span class="nt">&lt;/title&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;description&gt;</span>###DESCRIPTION###<span class="nt">&lt;/description&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&lt;developer&gt;</span>###DEVELOPER###<span class="nt">&lt;/developer&gt;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&lt;publisher&gt;</span>###PUBLISHER###<span class="nt">&lt;/publisher&gt;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&lt;players&gt;</span>###PLAYERS###<span class="nt">&lt;/players&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">&lt;rating&gt;</span>###RATING###<span class="nt">&lt;/rating&gt;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">&lt;ages&gt;</span>###AGES###<span class="nt">&lt;/ages&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">&lt;genre&gt;</span>###TAGS###<span class="nt">&lt;/genre&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">&lt;releasedate&gt;</span>###RELEASEDATE###<span class="nt">&lt;/releasedate&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nt">&lt;/game&gt;</span>
+</code></pre></div>
+<p>Import file: <code>/home/&lt;USER&gt;/.skyscraper/import/textual/&lt;EXACT ROM BASE NAME&gt;.xml</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;game&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&lt;title&gt;</span>The<span class="w"> </span>Game<span class="w"> </span>Title<span class="nt">&lt;/title&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;description&gt;</span>This<span class="w"> </span>game<span class="w"> </span>is<span class="w"> </span>about<span class="w"> </span>yada,<span class="w"> </span>yada<span class="w"> </span>yada.<span class="nt">&lt;/description&gt;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&lt;developer&gt;</span>The<span class="w"> </span>game<span class="w"> </span>developer<span class="nt">&lt;/developer&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&lt;publisher&gt;</span>The<span class="w"> </span>game<span class="w"> </span>publisher<span class="nt">&lt;/publisher&gt;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&lt;players&gt;</span>Maximum<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>players<span class="w"> </span>supported<span class="w"> </span>(example<span class="w"> </span>&#39;4&#39;)<span class="nt">&lt;/players&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&lt;rating&gt;</span>The<span class="w"> </span>game<span class="w"> </span>rating<span class="w"> </span>0-5<span class="w"> </span>(example<span class="w"> </span>&#39;3.5&#39;)<span class="nt">&lt;/rating&gt;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">&lt;ages&gt;</span>Minimum<span class="w"> </span>age<span class="w"> </span>restriction<span class="w"> </span>as<span class="w"> </span>integer<span class="w"> </span>(example<span class="w"> </span>&#39;16&#39;)<span class="nt">&lt;/ages&gt;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">&lt;genre&gt;</span>Genres,<span class="w"> </span>Comma-separated<span class="nt">&lt;/genre&gt;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">&lt;releasedate&gt;</span>The<span class="w"> </span>game<span class="w"> </span>release<span class="w"> </span>date<span class="w"> </span>(example<span class="w"> </span>&#39;1985-06-01&#39;)<span class="nt">&lt;/releasedate&gt;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nt">&lt;/game&gt;</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>As with Skyscraper 3.9.2 onwards you are no longer required to have the same indention or whitespace (hard tabs, spaces) as in the XML-like <code>definitions.dat</code>. Matching is solely done via XML elements (e.g. <code>&lt;title&gt;</code>), which saves you headache in identifiying whitespace mismatch between the XML template and your XML import file. If you use a custom XML-like <code>definitions.dat</code>: Keep the opening and closing XML element on one line and use one line per <code>###tag###</code> as in the example definition shown above. This is the default in the provided <code>definitions.dat</code>. In your import file just assure to use also closing elements (<code>&lt;/title&gt;</code>) and the same caSiNg in the elements between template and import file, ie. provide a valid XML file.</p>
+</div>
+<p><strong>Example 2</strong></p>
+<p>Definitions file: <code>/home/&lt;USER&gt;/.skyscraper/import/definitions.dat</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Title      : ###TITLE###
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Description: ###DESCRIPTION###
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Developer  : ###DEVELOPER###
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Publisher  : ###PUBLISHER###
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Players    : ###PLAYERS###
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Rating     : ###RATING###
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Rating     : ###AGES###
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Genre      : ###TAGS###
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Date       : ###RELEASEDATE###
+</code></pre></div>
+<p>Import file: <code>/home/&lt;USER&gt;/.skyscraper/import/textual/&lt;EXACT ROM BASE NAME&gt;.txt</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Title      : Game Title
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Description: This game is about yada, yada yada.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Developer  : The game developer
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Publisher  : The game publisher
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Players    : Maximum number of players supported (example &#39;4&#39;)
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Rating     : The game rating 0-5 (example &#39;3.5&#39;)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Ages       : Minimum age restriction as integer (example &#39;16&#39;)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Genre      : Genres, Comma-separated
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Date       : The game release date (example &#39;1985-06-01&#39;)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure any line matches <em>exactly</em> with the line in the recipe <strong>including white-space characters such as newline characters, spaces and tabs!</strong> Otherwise Skyscraper won't recognize it. Especially for newline characters this can be difficult to debug. Newline characters appear the same in an editor so you won't notice the problem until you load it up in a hex editor.</p>
+</div>
+<h4 id="list-of-known-tags">List of known tags<a class="headerlink" href="#list-of-known-tags" title="Permanent link">&para;</a></h4>
+<p>From the examples above you'll notice the <code>###SOMETHING###</code> tags. This is what Skyscraper recognizes your data from. The supported tags are:</p>
+<ul>
+<li><code>###TITLE###</code></li>
+<li><code>###DESCRIPTION###</code></li>
+<li><code>###DEVELOPER###</code></li>
+<li><code>###PUBLISHER###</code></li>
+<li><code>###PLAYERS###</code></li>
+<li><code>###AGES###</code></li>
+<li><code>###RATING###</code></li>
+<li><code>###TAGS###</code></li>
+<li><code>###RELEASEDATE###</code></li>
+</ul>
+<h4 id="resource-formats">Resource formats<a class="headerlink" href="#resource-formats" title="Permanent link">&para;</a></h4>
+<p>For <code>###PLAYERS###</code>, <code>###AGES###</code>, <code>###RELEASEDATE###</code> and <code>###RATING###</code> a certain format is required.</p>
+<ul>
+<li>Players must contain just the maximum number of players as an integer such as '4'.</li>
+<li>Ages must be an integer between 1 and 18 (for instance "16" means it is suitable from ages 16 and up).</li>
+<li>
+<p>Release date must be of one of the following formats:</p>
+<ul>
+<li><code>yyyy</code></li>
+<li><code>yyyy-MM</code></li>
+<li><code>yyyy-MM-dd</code> (full ISO 8601 date)</li>
+<li><code>yyyy-MMM-dd</code> (MMM is Jan, Feb and so on...)</li>
+<li><code>MM/dd/yyyy</code></li>
+<li><code>MMM, yyyy</code> (MMM is Jan, Feb and so on...)</li>
+<li><code>MMM dd, yyyy</code> (MMM is Jan, Feb and so on...)</li>
+</ul>
+</li>
+<li>
+<p>Rating can be either a number between 0 and 5, use as fraction only .5. Examples: 3 or 4.5 but not 4.25 or 1.0. This value will be divided by five to match the scale of the rating in a gamelist. Additionally, a value between 0.0 and 1.0 can be used. This value will not be recalculated. If you want to use 0.5 in this metric, provide it as .5 (note the missing zero). Do add a fraction of zero explicitly to denote a rating of 1.0 (100%), without this trailing fraction it will be interpreted as if it would be in the range of 0 to 5 (thus 20% for 1).</p>
+</li>
+</ul>
+<h3 id="how-to-actually-use-the-data">How to actually use the data?<a class="headerlink" href="#how-to-actually-use-the-data" title="Permanent link">&para;</a></h3>
+<p>When you've imported all of your data into the resource cache, you can make use of it by enabling Skyscrapers <em>game list generation</em> mode simply by leaving out the <code>-s</code> command line option (eg. <code>Skyscraper -p &lt;PLATFORM&gt;</code>). The game list generator will then make use of your imported data. If you don't know what the resource cache is, read more about it <a href="../CACHE/">here</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

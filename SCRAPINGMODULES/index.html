@@ -1,0 +1,1378 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/SCRAPINGMODULES/">
+      
+      
+        <link rel="prev" href="../XDG/">
+      
+      
+        <link rel="next" href="../IMPORT/">
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Scrapers - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#scraping-module-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Scrapers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scraping-module-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scraping Module Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scraping Module Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#screenscraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      ScreenScraper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thegamesdb-tgdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      TheGamesDb (TGDB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arcadedb-by-motoschifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ArcadeDB (by motoschifo)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openretro" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenRetro
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mobygames" class="md-nav__link">
+    <span class="md-ellipsis">
+      MobyGames
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#igdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      IGDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#world-of-spectrum" class="md-nav__link">
+    <span class="md-ellipsis">
+      World of Spectrum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulationstation-game-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      EmulationStation Game List
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-resource-import-scraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Resource Import Scraper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPORT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONFIGINI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The config.ini File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLIHELP/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLATFORMS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Languages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Varia
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Varia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scraping-module-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scraping Module Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scraping Module Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#screenscraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      ScreenScraper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thegamesdb-tgdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      TheGamesDb (TGDB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arcadedb-by-motoschifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      ArcadeDB (by motoschifo)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openretro" class="md-nav__link">
+    <span class="md-ellipsis">
+      OpenRetro
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mobygames" class="md-nav__link">
+    <span class="md-ellipsis">
+      MobyGames
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#igdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      IGDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#world-of-spectrum" class="md-nav__link">
+    <span class="md-ellipsis">
+      World of Spectrum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulationstation-game-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      EmulationStation Game List
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-resource-import-scraper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Resource Import Scraper
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Scrapers</h1>
+
+<h2 id="scraping-module-overview">Scraping Module Overview<a class="headerlink" href="#scraping-module-overview" title="Permanent link">&para;</a></h2>
+<p>Skyscraper supports several online and local sources when scraping data for your roms. This makes Skyscraper a hugely versatile tool since it also caches any resources that are gathered from any of the modules. The cached data can then be used to generate a game list and composite artwork later.</p>
+<p>Choosing a scraping module is as simply as setting the <code>-s &lt;MODULE&gt;</code> option when running Skyscraper on the command line. It also requires a platform to be set with <code>-p &lt;PLATFORM&gt;</code>. If you leave out the <code>-s</code> option Skyscraper goes into <em>game list generation</em> mode and combines your cached data into a game list for the chosen platform and frontend. Read more about the resource cache <a href="../CACHE/">here</a>.</p>
+<p>For scraping modules that support or require user credentials you have the option of either setting it on commandline with <code>-u &lt;USER:PASSWD&gt;</code> or <code>-u &lt;KEY&gt;</code> or better yet, by adding it permanently to the Skyscraper configuration at <code>/home/&lt;USER&gt;/.skyscraper/config.ini</code> as described <a href="../CONFIGINI/#usercredscredentials-or-key">here</a></p>
+<p>Below follows a description of all scraping modules.</p>
+<h4 id="screenscraper">ScreenScraper<a class="headerlink" href="#screenscraper" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>screenscraper</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="https://www.screenscraper.fr">www.screenscraper.fr</a></em></li>
+<li>Type: <em>Rom checksum based, Exact file name based</em></li>
+<li>User credential support: <em>Yes, and strongly recommended, but not required</em></li>
+<li>API request limit: <em>20k per day for registered users</em></li>
+<li>Thread limit: <em>1 or more depending on user credentials</em></li>
+<li>Platform support: <em><a href="https://www.screenscraper.fr">Check list under "Systémes"</a></em> or see <code>screenscraper_platforms.json</code> sibling to your <code>config.ini</code></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>manual</code>, <code>marquee</code>, <code>video</code></em></li>
+<li>Example use: <code>Skyscraper -p snes -s screenscraper</code></li>
+</ul>
+<p>ScreenScraper is probably the most versatile and complete retro gaming database out there. It searches for games using either the checksums of the files or by comparing the <em>exact</em> file name to entries in their database.</p>
+<p>It can be used for gathering data for pretty much all platforms, but it does have issues with platforms that are ISO based. Still, even for those platforms, it does locate some games.</p>
+<p>It has the best support for the <code>wheel</code> and <code>marquee</code> artwork types of any of the databases, and also contains videos and manuals for a lot of the games.</p>
+<p>I strongly recommend supporting them by contributing data to the database, or by supporting them with a bit of money. This can also give you more threads to scrape with.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>Exact</em> file name matching does not work well for the <code>arcade</code> derived platforms in cases where a data checksum doesn't match. The reason being that <code>arcade</code> and other arcade-like platforms are made up of several subplatforms. Each of those subplatforms have a high chance of containing the same file name entry. In those cases ScreenScraper can't determine a unique game and will return an empty result.</p>
+</div>
+<h4 id="thegamesdb-tgdb">TheGamesDb (TGDB)<a class="headerlink" href="#thegamesdb-tgdb" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>thegamesdb</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="http://www.thegamesdb.net">www.thegamesdb.net</a></em></li>
+<li>Type: <em>File name search based</em></li>
+<li>User credential support: <em>Not required</em></li>
+<li>API request limit: <em>Limited to 3000 requests per IP per month</em></li>
+<li>Thread limit: <em>None</em></li>
+<li>Platform support: <em><a href="https://thegamesdb.net/list_platforms.php">Link to list</a></em> or see <code>tgdb_platforms.json</code> sibling to your <code>config.ini</code></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>marquee</code></em></li>
+<li>Example use: <code>Skyscraper -p snes -s thegamesdb</code></li>
+</ul>
+<p>For newer games there's no way around TheGamesDb. It recently had a huge redesign and their database remains one of the best out there. I would recommend scraping your roms with <code>screenscraper</code> first, and then use <code>thegamesdb</code> to fill out the gaps in your cache.</p>
+<p>There's a small caveat to this module, as it has a monthly request limit (see above) per IP per month. But this should be plenty for most people.</p>
+<p>Their API is based on a file name search. This means that the returned results do have a chance of being faulty. Skyscraper does a lot internally to make sure accepted data is for the correct game. But it is impossible to ensure 100% correct results, so do keep that in mind when using it. Consider using the <code>--flags interactive</code> command line flag if you want complete control of the accepted entries.</p>
+<h4 id="arcadedb-by-motoschifo">ArcadeDB (by motoschifo)<a class="headerlink" href="#arcadedb-by-motoschifo" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>arcadedb</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="http://adb.arcadeitalia.net">adb.arcadeitalia.net</a>, <a href="https://www.youtube.com/c/ArcadeDatabase">youtube</a></em></li>
+<li>Contact: <em>arcadedatabase@gmail.com</em></li>
+<li>Type: <em>Mame file name id based</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>None</em></li>
+<li>Thread limit: <em>1</em></li>
+<li>Platform support: <em>Exclusively arcade platforms using official MAME files</em></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>marquee</code>, <code>video</code></em></li>
+<li>Example use: <code>Skyscraper -p fba -s arcadedb</code></li>
+</ul>
+<p>Several Arcade databases using the MAME file name id's have existed throughout the years. Currently the best one, in my opinion, is the ArcadeDB made by motoschifo. It goes without saying that this module is best used for arcade platforms such as <code>fba</code>, <code>arcade</code> and any of the mame sub-platforms.</p>
+<p>As it relies on the MAME file name id when searching, there's no use trying to use this module for any non-MAME files. It won't give you any results.</p>
+<p>This module also supports videos for many games.</p>
+<h4 id="openretro">OpenRetro<a class="headerlink" href="#openretro" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>openretro</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="https://www.openretro.org">www.openretro.org</a></em></li>
+<li>Type: <em>WHDLoad uuid based, File name search based</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>None</em></li>
+<li>Thread limit: <em>1</em></li>
+<li>Platform support: <em>Primarily Amiga, but supports others as well. <a href="https://openretro.org/browse/amiga/a">Check list to the right</a></em></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code>, <code>marquee</code></em></li>
+<li>Example use: <code>Skyscraper -p amiga -s openretro</code></li>
+</ul>
+<p>If you're looking to scrape the Amiga RetroPlay LHA files, there's no better way to do this than using the <code>openretro</code> module. It is by far the best WHDLoad Amiga database on the internet when it comes to data scraping, and maybe even the best Amiga game info database overall.</p>
+<p>The database also supports many non-Amiga platforms, but there's no doubt that Amiga is the strong point.</p>
+<h4 id="mobygames">MobyGames<a class="headerlink" href="#mobygames" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>mobygames</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="https://www.mobygames.com">www.mobygames.com</a></em></li>
+<li>Type: <em>File name search based</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>1 request per 10 seconds</em></li>
+<li>Rom limit per run: <em>35</em></li>
+<li>Thread limit: <em>1</em></li>
+<li>Platform support: <em><a href="https://www.mobygames.com/browse/games">List</a></em> or see <code>mobygames_platforms.json</code> sibling to your <code>config.ini</code></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code></em></li>
+<li>Example use:<ul>
+<li><code>Skyscraper -p fba -s mobygames &lt;SINGLE FILE TO SCRAPE&gt;</code></li>
+<li><code>Skyscraper -p fba -s mobygames --startat &lt;FILE TO START AT&gt; --endat &lt;FILE TO END AT&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>MobyGames. What can I say. If you haven't heard about this database before you've been missing out. It's one of the best and oldest games databases on the internet. You'll probably come across references to MobyGames on other sites when searching for retro games. There's a reason for that - it's that good.</p>
+<p>There's a caveat to the module as it has quite strong restrictions for the number of requests that are allowed at any given time. This restriction is global for the entire Skyscraper user base, which means that it might quit on you if other users are currently scraping from it. For this reason it has been strongly limited inside of Skyscraper by forcing a maximum number of rom scrapings per run.</p>
+<p>Please use this module sparingly. And only ever use it to scrape those last few roms you can't get any data for using any of the other sources.</p>
+<h4 id="igdb">IGDB<a class="headerlink" href="#igdb" title="Permanent link">&para;</a></h4>
+<p><img alt="IGDB logo" src="../resources/igdb.png" /></p>
+<ul>
+<li>Shortname: <em><code>igdb</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="https://www.igdb.com">www.igdb.com</a></em></li>
+<li>Type: <em>File name search based</em></li>
+<li>User credential support: <em>Yes, free private API client-id and secret-key required! Read more below</em></li>
+<li>API request limit: <em>A maximum of 4 requests per seconds is allowed</em></li>
+<li>Thread limit: <em>4 (each being limited to 1 request per second)</em></li>
+<li>Platform support: <em><a href="https://www.igdb.com/platforms">List</a></em></li>
+<li>Media support: <em>None</em></li>
+<li>Example use:<ul>
+<li><code>Skyscraper -p fba -s igdb &lt;SINGLE FILE TO SCRAPE&gt;</code></li>
+<li><code>Skyscraper -p fba -s igdb --startat &lt;FILE TO START AT&gt; --endat &lt;FILE TO END AT&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>IGDB is a relatively new database on the market. But absolutely not a bad one at that. It has a couple caveats though, as the database doesn't distinguish between platform versions of the same game when it comes to any artwork resources (they are working to implement this at some point). This makes it less usable in a retro game scraping context as many of the games differ drastically visually between the old platforms. For that reason alone, this module will only provide textual data for your roms for the time being.</p>
+<p>It is <em>required</em> to register with the Twitch dev program (IGDB is owned by Twitch) and create a free client-id and secret-key pair for use with Skyscraper. The process of getting this free client-id and secret-key pair is quite easy. Just follow the following steps:</p>
+<ul>
+<li>Go <a href="https://dev.twitch.tv/login">here</a> and sign up for an account</li>
+<li><a href="https://www.twitch.tv/settings/security">Enable</a> two-factor authentication (required)</li>
+<li><a href="https://dev.twitch.tv/console/apps/create">Register</a> an application (call it whatever you like)</li>
+<li><a href="https://dev.twitch.tv/console/apps">Manage</a> the application</li>
+<li>Add <code>http://localhost</code> as OAuth redirect URL</li>
+<li>Generate a secret-key by clicking <code>New secret</code></li>
+<li>Add your client-id and secret-key pair to the Skyscraper config ini (<code>/home/&lt;USER&gt;/.skyscraper/config.ini</code>):</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[igdb]
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>userCreds=&quot;CLIENTID:SECRETKEY&quot;
+</code></pre></div>
+<p>Substitute CLIENTID and SECRETKEY with your own details. And that's it, you should now be able to use the IGDB module.</p>
+<h4 id="world-of-spectrum">World of Spectrum<a class="headerlink" href="#world-of-spectrum" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>worldofspectrum</code></em></li>
+<li>Type: <em>Online</em></li>
+<li>Website: <em><a href="http://www.worldofspectrum.org">www.worldofspectrum.org</a></em></li>
+<li>Type: <em>File name search based</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>None</em></li>
+<li>Thread limit: <em>None</em></li>
+<li>Platform support: <em>Exclusively ZX Spectrum games</em></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code></em></li>
+<li>Example use: <code>Skyscraper -p zxspectrum -s worldofspectrum</code></li>
+</ul>
+<p>If you're looking specifically for ZX Spectrum data, this is the module to use. World of Spectrum is probably the most complete ZX Spectrum resource and information database in existence. I strongly recommend visiting the site if you have any interest in these little machines. It's a cornucopia of information on the platform.</p>
+<h4 id="emulationstation-game-list">EmulationStation Game List<a class="headerlink" href="#emulationstation-game-list" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>esgamelist</code></em></li>
+<li>Type: <em>Local</em></li>
+<li>Website: <em><a href="https://emulationstation.org">https://emulationstation.org</a></em></li>
+<li>Type: <em>Exact file name match</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>None</em></li>
+<li>Thread limit: <em>None</em></li>
+<li>Platform support: <em>All</em></li>
+<li>Media support: <em><code>screenshot</code>, <code>marquee</code>, <code>video</code></em></li>
+<li>Example use: <code>Skyscraper -p snes -s esgamelist</code></li>
+</ul>
+<p>This module allows you to import data from an existing EmulationStation game list into the Skyscraper cache. This is useful if you already have a lot of data and artwork in a gamelist.xml file and you wish to use it with Skyscraper.</p>
+<p>Skyscraper will search for the <code>gamelist.xml</code> file at <code>&lt;INPUT FOLDER&gt;/gamelist.xml</code> which by default is <code>/home/&lt;USER&gt;/RetroPie/roms/&lt;PLATFORM&gt;/gamelist.xml</code>. If that file isn't found it will look for it at <code>/home/&lt;USER&gt;/.skyscraper/import/&lt;PLATFORM&gt;/gamelist.xml</code>.</p>
+<h4 id="custom-resource-import-scraper">Custom Resource Import Scraper<a class="headerlink" href="#custom-resource-import-scraper" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Shortname: <em><code>import</code></em></li>
+<li>Type: <em>Local</em></li>
+<li>Website: <em><a href="../IMPORT/">Documentation@github</a></em></li>
+<li>Type: <em>Exact file name match</em></li>
+<li>User credential support: <em>None required</em></li>
+<li>API request limit: <em>None</em></li>
+<li>Thread limit: <em>None</em></li>
+<li>Platform support: <em>All</em></li>
+<li>Media support: <em><code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>marquee</code>, <code>video</code></em></li>
+<li>Example use: <code>Skyscraper -p snes -s import</code></li>
+</ul>
+<p>Read a thorough description of this module <a href="../IMPORT/">here</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>

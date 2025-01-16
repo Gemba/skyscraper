@@ -1,0 +1,2890 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/CLIHELP/">
+      
+      
+        <link rel="prev" href="../CONFIGINI/">
+      
+      
+        <link rel="next" href="../PLATFORMS/">
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Command Line Options - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Command Line Options
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SCRAPINGMODULES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Scrapers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPORT/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONFIGINI/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The config.ini File
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Command Line Options
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programmable-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programmable Completion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Short Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Short Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-a-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      -a &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-c-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      -c &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-d-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -d &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-e-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      -e &lt;STRING&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-f-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      -f &lt;FRONTEND&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-g-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -g &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-h-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      -h, --help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-i-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -i &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-l-0-10000" class="md-nav__link">
+    <span class="md-ellipsis">
+      -l &lt;0-10000&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-m-0-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      -m &lt;0-100&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-o-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -o &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-p-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      -p &lt;PLATFORM&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-s-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      -s &lt;MODULE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-t-1-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      -t &lt;1-8&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-u-key-or-useridpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      -u &lt;KEY or USERID:PASSWORD&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Long Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-addext-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      --addext &lt;EXTENSION&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="--cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-cache-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-editnewtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache edit[:new=&lt;TYPE&gt;]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-mergepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache merge:&lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-purgekeywordmodule-andor-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache purge:&lt;KEYWORD|MODULE and/or TYPE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-reportmissingall-textual-artwork-media-or-resource1resource2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache report:missing=&lt;all, textual, artwork, media or RESOURCE1,RESOURCE2,...&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-show" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-vacuum" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache vacuum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-endat-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --endat &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-excludefrom-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --excludefrom &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-excludepattern-pattern-1-pattern-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --excludepattern &lt;PATTERN 1, PATTERN 2&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      --flags
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="--flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forcefilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      forcefilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      interactive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      manuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nobrackets" class="md-nav__link">
+    <span class="md-ellipsis">
+      nobrackets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nocovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      nocovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nocropblack" class="md-nav__link">
+    <span class="md-ellipsis">
+      nocropblack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nohints" class="md-nav__link">
+    <span class="md-ellipsis">
+      nohints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nomarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      nomarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      noresize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noscreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      noscreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nosubdirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      nosubdirs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notextures" class="md-nav__link">
+    <span class="md-ellipsis">
+      notextures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notidydesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      notidydesc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nowheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      nowheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlymissing" class="md-nav__link">
+    <span class="md-ellipsis">
+      onlymissing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pretend" class="md-nav__link">
+    <span class="md-ellipsis">
+      pretend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relative" class="md-nav__link">
+    <span class="md-ellipsis">
+      relative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingcovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingcovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingmanuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingmanuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingmarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingmarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingscreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingscreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingvideos" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingvideos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingwheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingwheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      symlink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theinfront" class="md-nav__link">
+    <span class="md-ellipsis">
+      theinfront
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattend" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattendskip" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattendskip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      unpack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      videos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-gamelistfilename-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --gamelistfilename &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      --hint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-includefrom-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --includefrom &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-includepattern-pattern-1pattern-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --includepattern &lt;PATTERN 1,PATTERN 2&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-lang-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      --lang &lt;CODE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-maxfails-1-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      --maxfails &lt;1-200&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-query-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      --query &lt;STRING&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      --refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-region-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      --region &lt;CODE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-startat-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --startat &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-verbosity-0-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      --verbosity &lt;0-3&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLATFORMS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Languages
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Regions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Varia
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Varia
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programmable-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programmable Completion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Short Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Short Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-a-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      -a &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-c-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      -c &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-d-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -d &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-e-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      -e &lt;STRING&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-f-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      -f &lt;FRONTEND&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-g-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -g &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-h-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      -h, --help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-i-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -i &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-l-0-10000" class="md-nav__link">
+    <span class="md-ellipsis">
+      -l &lt;0-10000&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-m-0-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      -m &lt;0-100&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-o-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      -o &lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-p-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      -p &lt;PLATFORM&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-s-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      -s &lt;MODULE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-t-1-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      -t &lt;1-8&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-u-key-or-useridpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      -u &lt;KEY or USERID:PASSWORD&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#long-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Long Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-addext-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      --addext &lt;EXTENSION&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="--cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-cache-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-editnewtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache edit[:new=&lt;TYPE&gt;]
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-mergepath" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache merge:&lt;PATH&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-purgekeywordmodule-andor-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache purge:&lt;KEYWORD|MODULE and/or TYPE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-reportmissingall-textual-artwork-media-or-resource1resource2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache report:missing=&lt;all, textual, artwork, media or RESOURCE1,RESOURCE2,...&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-show" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache show
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-vacuum" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache vacuum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-cache-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      --cache validate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-endat-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --endat &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-excludefrom-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --excludefrom &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-excludepattern-pattern-1-pattern-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --excludepattern &lt;PATTERN 1, PATTERN 2&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      --flags
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="--flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forcefilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      forcefilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      interactive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      manuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nobrackets" class="md-nav__link">
+    <span class="md-ellipsis">
+      nobrackets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nocovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      nocovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nocropblack" class="md-nav__link">
+    <span class="md-ellipsis">
+      nocropblack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nohints" class="md-nav__link">
+    <span class="md-ellipsis">
+      nohints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nomarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      nomarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      noresize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noscreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      noscreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nosubdirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      nosubdirs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notextures" class="md-nav__link">
+    <span class="md-ellipsis">
+      notextures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notidydesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      notidydesc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nowheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      nowheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlymissing" class="md-nav__link">
+    <span class="md-ellipsis">
+      onlymissing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pretend" class="md-nav__link">
+    <span class="md-ellipsis">
+      pretend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relative" class="md-nav__link">
+    <span class="md-ellipsis">
+      relative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingcovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingcovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingmanuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingmanuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingmarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingmarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingscreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingscreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingvideos" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingvideos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipexistingwheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipexistingwheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      symlink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theinfront" class="md-nav__link">
+    <span class="md-ellipsis">
+      theinfront
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattend" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattendskip" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattendskip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      unpack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      videos
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-gamelistfilename-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --gamelistfilename &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-hint" class="md-nav__link">
+    <span class="md-ellipsis">
+      --hint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-includefrom-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --includefrom &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-includepattern-pattern-1pattern-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      --includepattern &lt;PATTERN 1,PATTERN 2&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-lang-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      --lang &lt;CODE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-maxfails-1-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      --maxfails &lt;1-200&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-query-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      --query &lt;STRING&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      --refresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-region-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      --region &lt;CODE&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-startat-filename" class="md-nav__link">
+    <span class="md-ellipsis">
+      --startat &lt;FILENAME&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-verbosity-0-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      --verbosity &lt;0-3&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>Command Line Options</h1>
+
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Look below to find a thorough description of all command line options available when using Skyscraper. These options should be used with the <code>Skyscraper</code> command.</p>
+<p>Also consider that almost all of these options are set at a useful default (and can therefore be left out) and should only be used / changed if your use case requires it.</p>
+<p>Most of the options can also be set in the <code>/home/&lt;USER&gt;/.skyscraper/config.ini</code> file thus removing the need to type them on command line all the time. Check the config.ini doc <a href="../CONFIGINI/">here</a> for more info on this.</p>
+<h3 id="programmable-completion">Programmable Completion<a class="headerlink" href="#programmable-completion" title="Permanent link">&para;</a></h3>
+<p>From version 3.9.3 onwards Skyscraper provides Bash <span class="keys"><kbd class="key-tab">Tab</kbd></span> completion (aka
+programmable completion). </p>
+<p>On RetroPie the
+<a href="https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/supplementary/skyscraper.sh">scriptmodule</a>
+will handle the installation. For the curious: It lands in
+<code>/etc/bash_completion.d/</code>.</p>
+<p>On non RaspiOS-based RetroPie-Installments put the file from
+<code>supplementary/bash-completion/Skyscraper.bash</code> to
+<code>$XDG_DATA_HOME/bash-completion/completions/</code> (respective to
+<code>$HOME/.local/share/bash-completion/completions/</code>). </p>
+<p>In either case: Open a new bash and press <span class="keys"><kbd class="key-tab">Tab</kbd></span> twice to see it in action.</p>
+<h2 id="short-options">Short Options<a class="headerlink" href="#short-options" title="Permanent link">&para;</a></h2>
+<p>The most prevalent short options you will use are most likely <code>-s</code> and <code>-p</code>. But
+you will information about the other options here too.</p>
+<h3 id="-a-filename">-a &lt;FILENAME&gt;<a class="headerlink" href="#-a-filename" title="Permanent link">&para;</a></h3>
+<p>Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file <code>/home/&lt;USER&gt;/.skyscraper/artwork.xml</code>. If you provide a relative filepath it will be expanded relative to the current working directory. Consider setting this in <a href="../CONFIGINI/#artworkxml"><code>config.ini</code></a> instead.<br />
+Read more about the artwork.xml format and customization options <a href="../ARTWORK/">here</a>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Skyscraper -p snes -a &quot;/path/to/artwork.xml&quot;
+</code></pre></div>
+<h3 id="-c-filename">-c &lt;FILENAME&gt;<a class="headerlink" href="#-c-filename" title="Permanent link">&para;</a></h3>
+<p>Sets a non-default config file. By default Skyscraper uses the file <code>/home/&lt;USER&gt;/.skyscraper/config.ini</code>. A relative filepath will be prepended with the current working directory. If you provide a config file that does not exist, Skyscraper will print a warning and will continue by using built-in default values for the configuration.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Skyscraper -p snes -c &quot;/path/to/config.ini&quot;
+</code></pre></div>
+<h3 id="-d-path">-d &lt;PATH&gt;<a class="headerlink" href="#-d-path" title="Permanent link">&para;</a></h3>
+<p>Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the <em>resource cache</em>. By default this folder is set to <code>/home/&lt;USER&gt;/.skyscraper/cache/&lt;PLATFORM&gt;</code>. Don't change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper <code>db.xml</code> file and its required subfolders inside of it (<code>covers</code>, <code>screenshots</code> etc.).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you wish to <em>always</em> use a certain location as base folder for your resource cache ((for instance if you want your cache to reside on a USB drive), it is <em>strongly</em> recommended to set this in the <code>config.ini</code> file instead. Read more about the relevant <code>config.ini</code> option <a href="../CONFIGINI/#cachefolder">here</a>.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Skyscraper -p snes -d &quot;/custom/cache/path&quot;
+</code></pre></div>
+<h3 id="-e-string">-e &lt;STRING&gt;<a class="headerlink" href="#-e-string" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This option is applicable <em>only</em> when using the <code>-f attractmode</code> or the <code>-f pegasus</code> option.</p>
+</div>
+<p>When using <code>-f attractmode</code> it is required to set the <em>emulator</em> to be used when generating the <code>attractmode</code> game list. On RetroPie the emulator name is mostly the same as the platform. Consider setting this in <a href="../CONFIGINI/#emulator"><code>config.ini</code></a> instead.</p>
+<p>It can <em>optionally</em> be used with <code>-f pegasus</code> to set the launch command used by the Pegasus game list. On RetroPie this defaults to the RetroPie launch command which works with RetroPie. Consider setting this in <a href="../CONFIGINI/#launch"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Skyscraper -p snes -f attractmode -e snes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a># On RetroPie
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Skyscraper -p snes -f pegasus -e &quot;/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ snes&quot;
+</code></pre></div>
+<h3 id="-f-frontend">-f &lt;FRONTEND&gt;<a class="headerlink" href="#-f-frontend" title="Permanent link">&para;</a></h3>
+<p>Sets the frontend you wish to export a game list for. By default Skyscraper will export an EmulationStation game list, but other frontends are supported as well. If exporting for example for the <code>attractmode</code> frontend, please also take note of the required <code>-e</code> option that goes along with using the <code>attractmode</code> frontend. Consider setting this in <a href="../CONFIGINI/#frontend"><code>config.ini</code></a> instead.</p>
+<p>Check all supported frontends with '--help' and read a more about the details concerning each of them <a href="../FRONTENDS/">here</a>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Skyscraper -p snes -f pegasus
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Skyscraper -p snes -f attractmode -e snes
+</code></pre></div>
+<h3 id="-g-path">-g &lt;PATH&gt;<a class="headerlink" href="#-g-path" title="Permanent link">&para;</a></h3>
+<p>Sets the game list export folder. By default Skyscraper exports the game list to the same directory as the rom input folder. This enables you to change that to a non-default location. Consider setting this in <a href="../CONFIGINI/#gamelistfolder"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Skyscraper -p snes -s screenscraper -g &quot;/your/desired/game list/export/path&quot;
+</code></pre></div>
+<h3 id="-h-help">-h, --help<a class="headerlink" href="#-h-help" title="Permanent link">&para;</a></h3>
+<p>Outputs the help text for all command line options to the terminal.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Skyscraper --help
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Skyscraper -h
+</code></pre></div>
+<h3 id="-i-path">-i &lt;PATH&gt;<a class="headerlink" href="#-i-path" title="Permanent link">&para;</a></h3>
+<p>Sets the rom input folder. By default Skyscraper will look for roms in the <code>/home/&lt;user&gt;/RetroPie/roms/&lt;PLATFORM&gt;</code> folder. If your roms are located in a non-default location, you can set the input path using this option. Consider setting this in <a href="../CONFIGINI/#inputfolder"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Skyscraper -p snes -i &quot;/path/to/your/snes/roms&quot;
+</code></pre></div>
+<h3 id="-l-0-10000">-l &lt;0-10000&gt;<a class="headerlink" href="#-l-0-10000" title="Permanent link">&para;</a></h3>
+<p>Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500. Consider setting this in <a href="../CONFIGINI/#maxlength"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Skyscraper -p snes -l 500
+</code></pre></div>
+<h3 id="-m-0-100">-m &lt;0-100&gt;<a class="headerlink" href="#-m-0-100" title="Permanent link">&para;</a></h3>
+<p>Some scraping modules are based on a filename or title based search. This option sets the minimum percentage any returned results need to match with in order for it to be accepted. For instance, the game <code>Wonderboy in Monsterland</code> might return the title <code>Wonder Boy in Monster Land</code> which is clearly a match. But it's not a 100% match. So it needs to be set relatively high, while still ignoring bad matches. By default it is set to 65 which has been tested to be a good middle-ground. Consider setting this in <a href="../CONFIGINI/#minmatch"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Skyscraper -p snes -s thegamesdb -m 50
+</code></pre></div>
+<h3 id="-o-path">-o &lt;PATH&gt;<a class="headerlink" href="#-o-path" title="Permanent link">&para;</a></h3>
+<p>Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder + <code>/media</code>. This allows you to change that to a non-default location. Read more about the artwork compositing <a href="../ARTWORK/">here</a>. Consider setting this in <a href="../CONFIGINI/#mediafolder"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Skyscraper -p snes -s screenscraper -o &quot;/path/to/where/you/want/the/artwork/files&quot;
+</code></pre></div>
+<h3 id="-p-platform">-p &lt;PLATFORM&gt;<a class="headerlink" href="#-p-platform" title="Permanent link">&para;</a></h3>
+<p>Sets the platform you wish to scrape. Supported platforms can be seen using the <code>--help</code> option described above.</p>
+<p>Running the following commands will scrape from all cached resources and generate a game list and composite artwork using the recipe in <code>/home/&lt;USER&gt;/.skyscraper/artwork.xml</code> (check the artwork documentation for more info on this <a href="../ARTWORK/">here</a>.</p>
+<p>Before running these commands you need to first gather some data into the cache. Please read the description of <code>-s &lt;MODULE&gt;</code> below.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Skyscraper -p amiga
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Skyscraper -p snes
+</code></pre></div>
+<h3 id="-s-module">-s &lt;MODULE&gt;<a class="headerlink" href="#-s-module" title="Permanent link">&para;</a></h3>
+<p>Sets which scraping module you wish to gather data from. All data scraped from any of the modules will be cached in the resource cache and can then later be used to generate a game list for your frontend. Read more about this in the <code>-p &lt;PLATFORM&gt;</code> description above.</p>
+<p>To generate a game list from the resource cache, just leave out the <code>-s</code> option entirely.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Skyscraper -p amiga -s openretro
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Skyscraper -p snes -s screenscraper
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Skyscraper -p amiga -s esgamelist
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Skyscraper -p snes -s import
+</code></pre></div>
+<p>To read more about each scraping module, check <a href="../SCRAPINGMODULES/">here</a>.</p>
+<h3 id="-t-1-8">-t &lt;1-8&gt;<a class="headerlink" href="#-t-1-8" title="Permanent link">&para;</a></h3>
+<p>Sets the desired number of parallel threads to be run when scraping. By default it is set to 4.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Skyscraper -p snes -s thegamesdb -t 5
+</code></pre></div>
+<h3 id="-u-key-or-useridpassword">-u &lt;KEY or USERID:PASSWORD&gt;<a class="headerlink" href="#-u-key-or-useridpassword" title="Permanent link">&para;</a></h3>
+<p>Some scraping modules require a user key or a user id + password to work. Check the scraping module overview to see the specific requirements for each module <a href="../SCRAPINGMODULES/">here</a>. Consider setting this in <a href="../CONFIGINI/#usercreds"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Skyscraper -p snes -s screenscraper -u &lt;userid:password&gt;
+</code></pre></div>
+<h2 id="long-options">Long Options<a class="headerlink" href="#long-options" title="Permanent link">&para;</a></h2>
+<h3 id="-addext-extension">--addext &lt;EXTENSION&gt;<a class="headerlink" href="#-addext-extension" title="Permanent link">&para;</a></h3>
+<p>If you have a rom that Skyscraper doesn't even try to gather data for, it might be because it has a file extension that isn't currently supported. This option allows you to temporarily add support for any file extension. If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper. Consider setting this in <a href="../CONFIGINI/#addextensions"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Skyscraper -p snes -s thegamesdb --addext *.ext
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Skyscraper -p snes -s thegamesdb --addext &quot;*.ext1 *.ext2&quot;
+</code></pre></div>
+<h3 id="-cache">--cache <COMMAND[:OPTIONS]><a class="headerlink" href="#-cache" title="Permanent link">&para;</a></h3>
+<p>This is the cache master option. It contains several subcommands that allows you to manipulate the cached data for the selected platform.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For any of these commands you can set a non-default resource cache folder with the <code>-d</code> option. The folder pointed to should be a folder with a Skyscraper <code>db.xml</code> file and its required subfolders inside of it (<code>covers</code>, <code>screenshots</code> etc.).</p>
+</div>
+<p>Read more about the resource cache <a href="../CACHE/">here</a>.</p>
+<h4 id="-cache-help">--cache help<a class="headerlink" href="#-cache-help" title="Permanent link">&para;</a></h4>
+<p>Outputs a description of all available <code>--cache</code> functions.</p>
+<h4 id="-cache-editnewtype">--cache edit[:new=&lt;TYPE&gt;]<a class="headerlink" href="#-cache-editnewtype" title="Permanent link">&para;</a></h4>
+<p>Allows editing of any cached resources connected to your roms. The editing mode will go through each of the files in the queue one by one, allowing you to add and remove resources as needed. Any resource you add manually will be prioritized above all others.</p>
+<p>You can provide one or more filenames to the end of the command line or use the <code>--includefrom</code> option to edit the resources for just those files. You can use the <code>--startat</code> and <code>--endat</code> options to edit a span of roms. If none of those options are used, it will edit all of the roms in the input folder one by one.</p>
+<p>For efficiency, when adding a lot of resources of the same type, you can also add the optional <code>new=&lt;TYPE&gt;</code> which will make it very easy to batch insert resources of the defined type to all the files you are editing. <code>&lt;TYPE&gt;</code> can be any of the known textual resources: <code>title</code>, <code>platform</code>, <code>releasedate</code>, <code>developer</code>, <code>publisher</code>, <code>players</code>, <code>ages</code>, <code>genres</code>, <code>rating</code>, <code>description</code>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Skyscraper -p snes --cache edit &lt;FILENAME 1&gt; &lt;FILENAME 2&gt;
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Skyscraper -p snes --cache edit --startat &lt;FILENAME&gt; --endat &lt;FILENAME&gt;
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Skyscraper -p snes --cache edit:new=developer --startat &lt;FILENAME&gt; --endat &lt;FILENAME&gt;
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>Skyscraper -p snes --cache edit
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Skyscraper -p snes --cache edit --includefrom &quot;/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt&quot;
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>Skyscraper -p snes --cache edit:new=ages --includefrom &quot;/home/pi/.skyscraper/reports/report-snes-missing_ages-20190708.txt&quot;
+</code></pre></div>
+<h4 id="-cache-mergepath">--cache merge:&lt;PATH&gt;<a class="headerlink" href="#-cache-mergepath" title="Permanent link">&para;</a></h4>
+<p>This option allows you to merge two resource caches together. It will merge the cache located at the <code>&lt;PATH&gt;</code> location into the default cache for the chosen platform. The path specified must be a path containing the <code>db.xml</code> file. You can also set a non-default destination to merge to with the <code>-d</code> option.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Skyscraper -p snes --cache merge:&quot;path to/source/cache/snes&quot;
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Skyscraper -p snes --cache merge:&quot;path to/source/cache/snes&quot; -d &quot;/path to/nondefault/destination/cache/snes&quot;
+</code></pre></div>
+<h4 id="-cache-purgekeywordmodule-andor-type">--cache purge:&lt;KEYWORD|MODULE and/or TYPE&gt;<a class="headerlink" href="#-cache-purgekeywordmodule-andor-type" title="Permanent link">&para;</a></h4>
+<p>This is a powerful option that allows you to purge the requested resources from the resource cache connected to the selected platform.</p>
+<p>You can purge <em>all</em> resources from the cache for the chosen platform using the keyword <code>all</code>.</p>
+<p>If no platform is specified, the <code>purge:all</code> operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.</p>
+<p>You can purge specific resources from a certain module with <code>m=&lt;MODULE&gt;</code> or of a certain type with <code>t=&lt;TYPE&gt;</code> or a combination of the two separated by a <code>,</code>.</p>
+<p>Supported modules can be seen under <code>-s</code> when using the <code>--help</code> option. Supported types are: <code>title</code>, <code>platform</code>, <code>description</code>, <code>publisher</code>, <code>developer</code>, <code>ages</code>, <code>tags</code>, <code>rating</code>, <code>releasedate</code>, <code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>marquee</code>, <code>video</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Possible dangerous command</p>
+<p>Purging anything from the cache cannot be undone, so please consider making a backup.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Skyscraper -p snes --cache purge:all
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Skyscraper -p snes --cache purge:m=thegamesdb
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Skyscraper -p snes --cache purge:t=cover
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Skyscraper -p snes --cache purge:m=thegamesdb,t=cover
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Skyscraper --cache purge:all
+</code></pre></div>
+<h4 id="-cache-refresh">--cache refresh<a class="headerlink" href="#-cache-refresh" title="Permanent link">&para;</a></h4>
+<p>Same as <a href="#-refresh">--refresh</a>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Skyscraper -p snes -s screenscraper --cache refresh
+</code></pre></div>
+<h4 id="-cache-reportmissingall-textual-artwork-media-or-resource1resource2">--cache report:missing=&lt;all, textual, artwork, media or RESOURCE1,RESOURCE2,...&gt;<a class="headerlink" href="#-cache-reportmissingall-textual-artwork-media-or-resource1resource2" title="Permanent link">&para;</a></h4>
+<p>Will create report(s) containing all filenames of games missing the selected resource type(s). File(s) will be exported to <code>/home/&lt;USER&gt;/.skyscraper/reports/report-&lt;PLATFORM&gt;-missing_&lt;RESOURCE&gt;-yyyymmdd.txt</code></p>
+<p>You can use any of the following:</p>
+<ul>
+<li><code>all</code>: Creates reports for all resource types</li>
+<li><code>textual</code>: Creates reports for all textual resource types</li>
+<li><code>artwork</code>: Creates reports for all artwork related resource types excluding 'video'</li>
+<li><code>media</code>: Creates reports for all media resource types including 'video'</li>
+<li><code>type1</code>,<code>type2</code>,<code>type3</code>,...:</li>
+</ul>
+<p>Supported resource types are: <code>title</code>, <code>platform</code>, <code>description</code>, <code>publisher</code>, <code>developer</code>, <code>ages</code>, <code>tags</code>, <code>rating</code>, <code>releasedate</code>, <code>cover</code>, <code>screenshot</code>, <code>wheel</code>, <code>marquee</code>, <code>video</code>.</p>
+<p>If no platform is specified, reports will be generated for all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The reports can be fed back into Skyscraper using the <code>--includefrom &lt;REPORTFILE&gt;</code> option, which tells Skyscraper to only work on the files contained in the report. This is useful in combination with, for instance, the <code>--cache edit</code> option or the <code>--cache refresh</code>/<code>--refresh</code> (they are the same) option(s).</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Skyscraper -p snes --cache report:missing=textual
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Skyscraper -p snes --cache report:missing=artwork
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Skyscraper -p snes --cache report:missing=developer
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Skyscraper -p snes --cache report:missing=publisher,screenshot
+</code></pre></div>
+<h4 id="-cache-show">--cache show<a class="headerlink" href="#-cache-show" title="Permanent link">&para;</a></h4>
+<p>Shows the cache stats for the chosen platform. It will list how many resources of each type you currently have cached for each scraping module.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Skyscraper -p snes --cache show
+</code></pre></div>
+<h4 id="-cache-vacuum">--cache vacuum<a class="headerlink" href="#-cache-vacuum" title="Permanent link">&para;</a></h4>
+<p>You can purge all resources that don't have any connection to your current romset for the selected platform by using the <code>vacuum</code> command. This is extremely useful if you've removed a bunch of roms from your collection and you wish to purge any cached data you don't need anymore.</p>
+<p>If no platform is specified, the vacuum operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.</p>
+<div class="admonition danger">
+<p class="admonition-title">Possible dangerous command</p>
+<p>Vacuuming the cache cannot be undone, so please consider making a backup.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Skyscraper -p snes --cache vacuum
+</code></pre></div>
+<h4 id="-cache-validate">--cache validate<a class="headerlink" href="#-cache-validate" title="Permanent link">&para;</a></h4>
+<p>This will test the integrity of the resource cache connected to the chosen platform. It will remove / clean out any stray files that aren't connected to an entry in the cache and vice versa. It's not really necessary to use this option unless you have manually deleted any of the cached files or entries in the <code>db.xml</code> file connected to the platform.</p>
+<p>If no platform is specified, the validate operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This option doesn't clean up your game list media folders. You will need to do that yourself since Skyscraper has no idea what files you might keep in those folders. This option only relates to the resource cache database and related files.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Skyscraper -p snes --cache validate
+</code></pre></div>
+<h3 id="-endat-filename">--endat &lt;FILENAME&gt;<a class="headerlink" href="#-endat-filename" title="Permanent link">&para;</a></h3>
+<p>If you wish to work on a subset of your roms you can use this option to set the rom to end at. Use it in conjunction with the <code>--startat</code> option described above to further narrow the subset of files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Enabling this option automatically sets the <code>--refresh</code> option and enables the <code>nosubdirs</code> flag.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: <code>$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"</code>. You can also use the <code>--includefrom</code> option.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Skyscraper -p snes --cache edit --endat &quot;rom name.zip&quot;
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Skyscraper -p snes -s thegamesdb --endat &quot;partial/path/to/rom name.zip&quot;
+</code></pre></div>
+<h3 id="-excludefrom-filename">--excludefrom &lt;FILENAME&gt;<a class="headerlink" href="#-excludefrom-filename" title="Permanent link">&para;</a></h3>
+<p>Tells Skyscraper to exclude the files listed in FILENAME. One filename per line (with FULL path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').</p>
+<p>This file can be generated with the <code>--cache report:missing</code> option or made manually.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You might also want to check out the <code>excludepattern</code> option.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Skyscraper -p snes -s screenscraper --excludefrom &quot;/home/pi/.skyscraper/excludes.txt&quot;
+</code></pre></div>
+<h3 id="-excludepattern-pattern-1-pattern-2">--excludepattern &lt;PATTERN 1, PATTERN 2&gt;<a class="headerlink" href="#-excludepattern-pattern-1-pattern-2" title="Permanent link">&para;</a></h3>
+<p>Per platform Skyscraper have default file extensions that it will accept. This option allows you to exclude certain files within that scope. The pattern is a simple asterisk type pattern. You can add several patterns by separating them with ','. In cases where you need to match for a comma you need to escape it as '\,' (see last example).</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Remember to double-quote the pattern as seen in the examples to avoid odd behaviour.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ol>
+<li>You might also want to check out the file extension options.</li>
+<li>You might also want to check out the <code>--excludefrom</code> option.</li>
+<li>If you create a file named <code>.skyscraperignore</code> within any subfolder of the input dir, all files from that directory will be ignored by Skyscraper.</li>
+</ol>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Skyscraper -p snes -s screenscraper --excludepattern &quot;*[BIOS]*&quot;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Skyscraper -p amiga --excludepattern &quot;AGA*&quot;
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>Skyscraper -p amiga --excludepattern &quot;*AGA*,Super*&quot;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>Skyscraper -p amiga --excludepattern &quot;*AGA*,Super*,*\, The&quot;
+</code></pre></div>
+<h3 id="-flags">--flags <FLAG1,FLAG2,...><a class="headerlink" href="#-flags" title="Permanent link">&para;</a></h3>
+<p>From Skyscraper 3.5.0 all command-line options that change the scraping behaviour have been combined into this option. Check below for a complete list of all the available flags and what they do. You can also get this list by using <code>--flags help</code>.</p>
+<p>To enable multiple flags separate them by commas (eg. <code>--flags FLAG1,FLAG2</code>) or apply <code>--flags</code> option multiple times.</p>
+<h4 id="forcefilename">forcefilename<a class="headerlink" href="#forcefilename" title="Permanent link">&para;</a></h4>
+<p>This flag forces Skyscraper to use the filename (excluding extension) instead of the cached titles when generating a game list. Consider setting this in <a href="../CONFIGINI/#forcefilename"><code>config.ini</code></a> instead.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code>nameTemplate</code> is set in <code>config.ini</code> this flag is ignored.</p>
+</div>
+<h4 id="interactive">interactive<a class="headerlink" href="#interactive" title="Permanent link">&para;</a></h4>
+<p>When gathering data from any of the scraping modules many potential entries will be returned. Normally Skyscraper chooses the best entry for you. But should you wish to choose the best entry yourself, you can enable this flag. Skyscraper will then list the returned entries and let you choose which one is the best one.</p>
+<h4 id="manuals">manuals<a class="headerlink" href="#manuals" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. You can enable it by using this flag. Consider setting this in <a href="../CONFIGINI/#manuals"><code>config.ini</code></a> instead.</p>
+<h4 id="nobrackets">nobrackets<a class="headerlink" href="#nobrackets" title="Permanent link">&para;</a></h4>
+<p>Use this flag to disable any bracket notes when generating the game list. It will disable notes such as <code>(Europe)</code> and <code>[AGA]</code> completely. This flag is only relevant when generating the game list. It makes no difference when gathering data into the resource cache. Consider setting this in <a href="../CONFIGINI/#brackets"><code>config.ini</code></a> instead.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code>nameTemplate</code> is set in <code>config.ini</code> this flag is ignored.</p>
+</div>
+<h4 id="nocovers">nocovers<a class="headerlink" href="#nocovers" title="Permanent link">&para;</a></h4>
+<p>Disables the caching of the resource type <code>cover</code> when scraping with any module. If you never use covers in your artwork configuration, this flag can save you some space. Consider setting this in <a href="../CONFIGINI/#cachecoverstrue"><code>config.ini</code></a> instead.</p>
+<h4 id="nocropblack">nocropblack<a class="headerlink" href="#nocropblack" title="Permanent link">&para;</a></h4>
+<p>Disables cropping away the black borders around screenshot resources when compositing the final frontend artwork.</p>
+<h4 id="nohints">nohints<a class="headerlink" href="#nohints" title="Permanent link">&para;</a></h4>
+<p>Disables the "Did you know" hints when running Skyscraper. Consider setting this in <a href="../CONFIGINI/#hints"><code>config.ini</code></a> instead.</p>
+<h4 id="nomarquees">nomarquees<a class="headerlink" href="#nomarquees" title="Permanent link">&para;</a></h4>
+<p>Disables the caching of the resource type <code>marquee</code> when scraping with any module. If you never use marquees in your artwork configuration, this flag can save you some space. Consider setting this in <a href="../CONFIGINI/#cachemarquees"><code>config.ini</code></a> instead.</p>
+<h4 id="noresize">noresize<a class="headerlink" href="#noresize" title="Permanent link">&para;</a></h4>
+<p>By default, to save space, Skyscraper resizes large pieces of artwork before adding them to the resource cache. Adding this flag will disable this and save the artwork files exactly as they are retrieved from the scraping module. Consider setting this in <a href="../CONFIGINI/#cacheresize"><code>config.ini</code></a> instead.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is not related to the artwork compositing that happens when generating a game list. This is <em>only</em> related to how Skyscraper handles artwork when adding it to the resource cache while gathering data from the scraping modules.</p>
+</div>
+<h4 id="noscreenshots">noscreenshots<a class="headerlink" href="#noscreenshots" title="Permanent link">&para;</a></h4>
+<p>Disables the caching of the resource type <code>screenshot</code> when scraping with any module. If you never use screenshots in your artwork configuration, this flag can save you some space. Consider setting this in <a href="../CONFIGINI/#cachescreenshots"><code>config.ini</code></a> instead.</p>
+<h4 id="nosubdirs">nosubdirs<a class="headerlink" href="#nosubdirs" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper will include roms located in subfolders. By adding this flag Skyscraper will only scrape the roms located directly in the input folder. See <code>-i &lt;PATH&gt;</code> above to read more about the rom input folder. Consider setting this in <a href="../CONFIGINI/#subdirs"><code>config.ini</code></a> instead.</p>
+<h4 id="notextures">notextures<a class="headerlink" href="#notextures" title="Permanent link">&para;</a></h4>
+<p>Disables the caching of the resource type <code>texture</code> when scraping with any module. If you never use textures (disc/cartridge) in your artwork configuration, this flag can save you some space. Consider setting this in <a href="../CONFIGINI/#cachetextures"><code>config.ini</code></a> instead.</p>
+<h4 id="notidydesc">notidydesc<a class="headerlink" href="#notidydesc" title="Permanent link">&para;</a></h4>
+<p>Disables clean up some misformatting in scraped description:</p>
+<ol>
+<li>Heading and trailing spaces are stripped</li>
+<li>Multiple spaces between sentences are reduced to one space</li>
+<li>Bulletpoint beginning with * or ● are replaced with a dash</li>
+<li>Stylized ellipsis (… Unicode:<code>&amp;#8230;</code>) is replace with three dots</li>
+<li>Multiple exclamation marks are reduced to one, unless for games titles are explicitly typed like that, like 'Super Punch-Out!!'.</li>
+</ol>
+<p>Consider setting this in <a href="../CONFIGINI/#tidydesc"><code>config.ini</code></a> instead.</p>
+<h4 id="nowheels">nowheels<a class="headerlink" href="#nowheels" title="Permanent link">&para;</a></h4>
+<p>Disables the caching of the resource type <code>wheel</code> when scraping with any module. If you never use wheels in your artwork configuration, this flag can save you some space. Consider setting this in <a href="../CONFIGINI/#cachewheels"><code>config.ini</code></a> instead.</p>
+<h4 id="onlymissing">onlymissing<a class="headerlink" href="#onlymissing" title="Permanent link">&para;</a></h4>
+<p>This flag tells Skyscraper to skip all files which already have any piece of data from any source in the cache. This is useful if you just scraped almost all files from a platform succesfully with one source, and then want to only scrape the remaining games with a different source to fill in the holes. Normally Skyscraper will scrape all files again with the second source.</p>
+<h4 id="pretend">pretend<a class="headerlink" href="#pretend" title="Permanent link">&para;</a></h4>
+<p>This flag is <em>only</em> relevant when generating a game list (by leaving out the <code>-s &lt;MODULE&gt;</code> option). It disables the game list generator and artwork compositor and only outputs the results of the potential game list generation to the terminal. It can be very useful to check exactly what and how the data will be combined from the resource cache.</p>
+<h4 id="relative">relative<a class="headerlink" href="#relative" title="Permanent link">&para;</a></h4>
+<p>Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list, with the <code>-f</code> option. Emulationstation is the default frontend when the <code>-f</code> option is left out. This forces the rom and any media paths (if they are the same as the input folder) inside the game list to be relative to the rom input folder. Consider setting this in <a href="../CONFIGINI/#relativepaths"><code>config.ini</code></a> instead.</p>
+<h4 id="skipexistingcovers">skipexistingcovers<a class="headerlink" href="#skipexistingcovers" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip processing covers that already exist in the media output folder.</p>
+<h4 id="skipexistingmanuals">skipexistingmanuals<a class="headerlink" href="#skipexistingmanuals" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip copying manuals that already exist in the media output folder.</p>
+<h4 id="skipexistingmarquees">skipexistingmarquees<a class="headerlink" href="#skipexistingmarquees" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip processing marquees that already exist in the media output folder.</p>
+<h4 id="skipexistingscreenshots">skipexistingscreenshots<a class="headerlink" href="#skipexistingscreenshots" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip processing screenshots that already exist in the media output folder.</p>
+<h4 id="skipexistingvideos">skipexistingvideos<a class="headerlink" href="#skipexistingvideos" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip copying videos that already exist in the media output folder.</p>
+<h4 id="skipexistingwheels">skipexistingwheels<a class="headerlink" href="#skipexistingwheels" title="Permanent link">&para;</a></h4>
+<p>When generating gamelists, skip processing wheels that already exist in the media output folder.</p>
+<h4 id="skipped">skipped<a class="headerlink" href="#skipped" title="Permanent link">&para;</a></h4>
+<p>If a rom has no resources attached to it in the cache, it will be left out when generating a game list file. It will still show up in the frontend (at least it does for EmulationStation) but it won't exist in the game list file. You can safely leave out this flag unless you need the empty entries for some reason. Consider setting this in <a href="../CONFIGINI/#skipped"><code>config.ini</code></a> instead.</p>
+<h4 id="symlink">symlink<a class="headerlink" href="#symlink" title="Permanent link">&para;</a></h4>
+<p>Enabling this flag is currently only relevant while also using the <code>videos</code> flag. It basically means that Skyscraper will create a link to the cached videos instead of copying them when generating the game list media files. This will save a lot of space, but has the caveat that if you somehow remove the videos from the cache, the links will be broken and the videos then won't show anymore. Consider setting this in <a href="../CONFIGINI/#symlink"><code>config.ini</code></a> instead.</p>
+<h4 id="theinfront">theinfront<a class="headerlink" href="#theinfront" title="Permanent link">&para;</a></h4>
+<p>Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this flag will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When generating gamelists Skyscraper will still sort the games as if the game titles didn't have 'The' at the beginning.</p>
+</div>
+<h4 id="unattend">unattend<a class="headerlink" href="#unattend" title="Permanent link">&para;</a></h4>
+<p>When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By using this flag Skyscraper will <em>always</em> overwrite an existing game list and <em>never</em> skip existing entries. This is useful when scripting Skyscraper to avoid the need for user input. Consider setting this in <a href="../CONFIGINI/#unattend"><code>config.ini</code></a> instead.</p>
+<h4 id="unattendskip">unattendskip<a class="headerlink" href="#unattendskip" title="Permanent link">&para;</a></h4>
+<p>When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By using this flag Skyscraper will <em>always</em> overwrite an existing game list and <em>always</em> skip existing entries. This is useful when scripting Skyscraper to avoid the need for user input. Consider setting this in <a href="../CONFIGINI/#unattendskip"><code>config.ini</code></a> instead.</p>
+<h4 id="unpack">unpack<a class="headerlink" href="#unpack" title="Permanent link">&para;</a></h4>
+<p>Some scraping modules use file checksums to identify the game in their databases. If you've compressed your roms to zip or 7z files yourself, this can pose a problem in getting a good result. You can then try to use this flag. Doing so will extract the rom and do the file checksum on the rom itself instead of the compressed file.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Only use this flag if you are having problems getting the roms identified from the compressed files. It slows down the scraping process significantly and should therefore be avoided if possible.</p>
+</div>
+<h4 id="videos">videos<a class="headerlink" href="#videos" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this flag. Consider setting this in <a href="../CONFIGINI/#videos"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Skyscraper -p amiga --flags forcefilename,nosubdirs,skipexistingwheels
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>Skyscraper -p nes --flags videos,nomarquees
+</code></pre></div>
+<h3 id="-gamelistfilename-filename">--gamelistfilename &lt;FILENAME&gt;<a class="headerlink" href="#-gamelistfilename-filename" title="Permanent link">&para;</a></h3>
+<p>Overrides the default gamelist filename of the frontend. If you are using a variant of a frontend, this switch may come in handy. Consider setting this in <a href="../CONFIGINI/#gamelistfilename"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Skyscraper -p megadrive -f pegasus --gamelistfilename metadata.txt   # default for pegasus frontend is metadata.pegasus.txt
+</code></pre></div>
+<h3 id="-hint">--hint<a class="headerlink" href="#-hint" title="Permanent link">&para;</a></h3>
+<p>Displays one of Skyscrapers's 'Did you know?' tips and exits.</p>
+<h3 id="-includefrom-filename">--includefrom &lt;FILENAME&gt;<a class="headerlink" href="#-includefrom-filename" title="Permanent link">&para;</a></h3>
+<p>Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with <em>absolute</em> path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').
+The option is the equivalent to adding a bunch of filenames to work on directly on the commandline. It reads one line at a time from <code>&lt;FILENAME&gt;</code> and adds them to the queue of files to work on. This is very useful in combination with the <code>--cache edit</code> option or if you want to refresh data for just those files using <code>-s &lt;SCRAPING MODULE&gt;</code>.</p>
+<p>This file can be generated with the '--cache report:missing' option or made manually.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You might also want to check out the <code>includepattern</code> option.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>Skyscraper -p snes -s screenscraper --includefrom &quot;/home/pi/.skyscraper/includes.txt&quot;
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a># After running --cache report:missing
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>Skyscraper -p snes --cache edit --includefrom &quot;/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt&quot;
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>Skyscraper -p snes -s screenscraper --includefrom &quot;/home/pi/.skyscraper/reports/report-snes-missing_developer-20190708.txt&quot;
+</code></pre></div>
+<h3 id="-includepattern-pattern-1pattern-2">--includepattern &lt;PATTERN 1,PATTERN 2&gt;<a class="headerlink" href="#-includepattern-pattern-1pattern-2" title="Permanent link">&para;</a></h3>
+<p>Per platform Skyscraper have default file extensions that it will accept. This option allows you to only include certain files within that scope. The pattern is a simple asterisk type pattern. You can add several patterns by separating them with ','. In cases where you need to match for a comma you need to escape it as '\,' (see last example).</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Remember to double-quote the pattern as seen in the examples to avoid odd behaviour.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You might also want to check out the file extension options.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>Skyscraper -p snes -s screenscraper --includepattern &quot;Super*&quot;
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Skyscraper -p amiga --includepattern &quot;*AGA*&quot;
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>Skyscraper -p amiga --includepattern &quot;*AGA*,Super*&quot;
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>Skyscraper -p amiga --includepattern &quot;*AGA*,Super*,*\, The&quot;
+</code></pre></div>
+<h3 id="-lang-code">--lang &lt;CODE&gt;<a class="headerlink" href="#-lang-code" title="Permanent link">&para;</a></h3>
+<p>Adds the specified language to the top of the existing default internal language priority list. Read more about languages <a href="../LANGUAGES/">here</a>. Only one language is supported with this configuration. For a permanent setup you should consider setting this in <a href="../CONFIGINI/#lang"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Skyscraper -p snes -s screenscraper --lang es
+</code></pre></div>
+<h3 id="-maxfails-1-200">--maxfails &lt;1-200&gt;<a class="headerlink" href="#-maxfails-1-200" title="Permanent link">&para;</a></h3>
+<p>Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Don't change this unless you have a very good reason to do so.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Skyscraper -p snes -s thegamesdb --maxfails 75
+</code></pre></div>
+<h3 id="-query-string">--query &lt;STRING&gt;<a class="headerlink" href="#-query-string" title="Permanent link">&para;</a></h3>
+<p>For most modules a search query is sent to the scraping module in an URL format. This means that a filename such as "Rick Dangerous.lha" becomes "rick+dangerous". The '+' here means a space. You could probably also use the URL encoded space "rick%20dangerous" but my tests show that most modules expect spaces as '+'. And it is the "rick+dangerous" part that you, as the user, can pass as the query, like so:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>$ Skyscraper -p &lt;PLATFORM&gt; -s &lt;MODULE&gt; --query &quot;rick+dangerous&quot; &lt;FILENAME&gt;
+</code></pre></div>
+<p>Remember to also add a filename that you wish to use the override with. Otherwise the query will be ignored.</p>
+<p>But not all of the scraping modules are search name based. For instance, the <code>screenscraper</code> module can use a variety of different search methods. So for screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file doesn't match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.</p>
+<p>You can use any combination of <code>crc=&lt;CHECKSUM&gt;</code>, <code>md5=&lt;CHECKSUM&gt;</code>, <code>sha1=&lt;CHECKSUM&gt;</code> and <code>romnom=&lt;FILENAME&gt;</code> (without the <code>&lt;</code> and <code>&gt;</code>! Also "romnom" is "rom name" in French - Screenscraper is operated from France). Most times you only need one of these, but you can combine them by separating them with a <code>&amp;</code>.</p>
+<p>The Mobygames scraper supports the romname directly in the <code>--query</code> parameter, but also accepts the game id from the mobygames site which you can find when manually looking up a game in the "Identifiers" section of the game details page.</p>
+<p>The <code>--query</code> option is an <em>experts only</em> option, but it's very useful to get results for those last difficult roms.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>$ Skyscraper -p snes -s thegamesdb --query &quot;rick+dangerous&quot; /full/or/partial/path/to/rom.zip
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>$ Skyscraper -p snes -s screenscraper --query &quot;md5=&lt;CHECKSUM&gt;&quot; /full/or/partial/path/to/rom.zip
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>$ Skyscraper -p snes -s screenscraper --query &quot;romnom=file%20name.zip&quot; /full/or/partial/path/to/rom.zip
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>$ Skyscraper -p snes -s screenscraper --query &quot;sha1=&lt;CHECKSUM&gt;&amp;romnom=file%20name.zip&quot; /full/or/partial/path/to/rom.zip
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>$ Skyscraper -p ports -s mobygames --query &quot;14576&quot; &quot;/home/pi/RetroPie/roms/ports/Head over Heels.sh&quot;
+</code></pre></div>
+<h3 id="-refresh">--refresh<a class="headerlink" href="#-refresh" title="Permanent link">&para;</a></h3>
+<p>Skyscraper has a resource cache which works just like the browser cache in Firefox. If you scrape and gather resources for a platform with the same scraping module twice, it will grab the data from the cache instead of hammering the online servers again. This has the advantage in the case where you scrape a rom set twice, only the roms that weren't recognized the first time around will be fetched from the online servers. Everything else will be loaded from the cache.</p>
+<p>You can force all data to be refetched from the servers by setting this option, effectively updating the cached data with new data from the source.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>Only</em> use this option if you know data has changed for several roms at the source. Otherwise you are hammering the servers for no reason.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>Skyscraper -p snes -s screenscraper --refresh
+</code></pre></div>
+<h3 id="-region-code">--region &lt;CODE&gt;<a class="headerlink" href="#-region-code" title="Permanent link">&para;</a></h3>
+<p>Adds the specified region to the top of the existing default internal region priority list. Only one region is supported with this configuration. For a permanent setup you should consider setting this in <a href="../CONFIGINI/#region"><code>config.ini</code></a> instead.</p>
+<p>Read more about how regions are handled in general <a href="../REGIONS/">here</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Setting this will overwrite any region <a href="../REGIONS/#region-auto-detection">auto-detected</a> from the file name.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Skyscraper -p snes -s screenscraper --region jp
+</code></pre></div>
+<h3 id="-startat-filename">--startat &lt;FILENAME&gt;<a class="headerlink" href="#-startat-filename" title="Permanent link">&para;</a></h3>
+<p>If you wish to work on a subset of your roms you can use this option to set the starting rom. Use it in conjunction with the <code>--endat</code> option described below to further narrow the subset of files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Enabling this option automatically sets the <code>--refresh</code> option and enables the <code>nosubdirs</code> flag.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: <code>$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"</code>. You can also use the <code>--includefrom</code> option.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>Skyscraper -p snes --cache edit --startat &quot;rom name.zip&quot;
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>Skyscraper -p snes -s thegamesdb --startat &quot;partial/path/to/rom name.zip&quot;
+</code></pre></div>
+<h3 id="-verbosity-0-3">--verbosity &lt;0-3&gt;<a class="headerlink" href="#-verbosity-0-3" title="Permanent link">&para;</a></h3>
+<p>Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Consider setting this in <a href="../CONFIGINI/#verbosity"><code>config.ini</code></a> instead.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Skyscraper -p snes -s screenscraper --verbosity 3
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  </body>
+</html>
