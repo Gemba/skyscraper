@@ -160,7 +160,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### gameListFilename
 
-Override the game list filename. This enables you to set a filename different from the default provided by the frontend modules.
+Override the game list filename. This enables you to set a filename different from the default provided by the frontend modules. For example you can specify a custom filename for the gamelist, which is particularly useful if you are using EmuDeck with the Pegasus frontend: This enhancement helps prevent duplicate entries in Pegasus by allowing users to generate a `metadata.txt` file instead of the default `metadata.pegasus.txt`.
 
 Default value: depends on [frontend](FRONTENDS.md)  
 Allowed in sections: `[<FRONTEND>]`

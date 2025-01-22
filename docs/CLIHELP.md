@@ -330,8 +330,8 @@ If no platform is specified, reports will be generated for all existing platform
 ```
 Skyscraper -p snes --cache report:missing=textual
 Skyscraper -p snes --cache report:missing=artwork
-Skyscraper -p snes --cache report:missing=developer
 Skyscraper -p snes --cache report:missing=publisher,screenshot
+Skyscraper --cache report:missing=video   # Generates a report for all platforms with missing video cache data
 ```
 
 #### --cache show
@@ -357,7 +357,8 @@ If no platform is specified, the vacuum operation will apply to all existing pla
 **Example(s)**
 
 ```
-Skyscraper -p snes --cache vacuum
+Skyscraper -p snes --cache vacuum  # one platform
+Skyscraper --cache vacuum          # all platforms
 ```
 
 #### --cache validate
@@ -373,7 +374,8 @@ If no platform is specified, the validate operation will apply to all existing p
 **Example(s)**
 
 ```
-Skyscraper -p snes --cache validate
+Skyscraper -p snes --cache validate  # one platform
+Skyscraper --cache validate          # all platforms
 ```
 
 ### --endat &lt;FILENAME&gt;

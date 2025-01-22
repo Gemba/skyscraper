@@ -11,9 +11,9 @@ Skyscraper]((https://github.com/muldjord/skyscraper?tab=readme-ov-file#code-cont
 
 ### Key New Features at a Glance
 
-- Several platforms added and supported out-of-the-box
 - Platforms to scrape can be added via configuration files
-- Support for EmulationStation Desktop Edition (ES-DE) as frontend
+- Several more platforms added and supported out-of-the-box
+- Support for EmulationStation Desktop Edition (ES-DE) Gamelist format
 - Added scraping of game manuals as PDF
 - Support for XDG Base Directory standard
 - Commandline Bash completion on Linux systems

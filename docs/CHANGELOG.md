@@ -3,6 +3,30 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.15.0 (2024-01-24)
+
+- Added: Separate local Platform configuration from upstream Platform
+  configuration. Details
+  [here](PLATFORMS.md#transferring-local-platform-changes). _To the RetroPie users_:
+  Please update the scriptmodule in the RetroPie-Setup first before updating via
+  `retropie_setup.sh`, otherwise you have to install the script named in the
+  documentation above manually. Thanks for the nudge, @s1eve-mcdichae1.
+- Added: Configuration option `gameListFilename`. See
+  [documentation](CONFIGINI.md#gamelistfilename), there is also a [command line
+  option](CLIHELP.md#-gamelistfilename-filename). Thanks #1, @Leukhos for the
+  submission.
+- Added: Support "all platform selection" for cache commands within one Skyscraper
+  run. See respective documentation for [cache
+  report:missing](CLIHELP.md#-cache-reportmissingall-textual-artwork-media-or-resource1resource2),
+  [cache validate](CLIHELP.md#-cache-validate), [cache
+  vacuum](CLIHELP.md#-cache-vacuum) and [cache
+  purge](CLIHELP.md#-cache-purgekeywordmodule-andor-type). Thanks #2, @Leukhos
+  the addition is very appreciated.
+- Fixed: Improvements to the Pegasus frontend, to avoid inconsistency with
+  existing aliases in the frontend output for the keywords `command/launch` and
+  `workdir/cwd`. Thanks, @Leukhos for your third submission.
+- Fixed: Some edge case bugs wiped out, thanks to all reporters!
+
 ### Version 3.14.0 (2024-12-08)
 
 - Added: Support for [XDG Base Directories](XDG.md), thanks for the suggestion
