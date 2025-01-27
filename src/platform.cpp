@@ -28,8 +28,10 @@
 #include "config.h"
 
 #include <QByteArray>
+#include <QCryptographicHash>
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -43,6 +45,7 @@
 static const QString fnPeas = "peas.json";
 static const QString fnPeasLocal = "peas_local.json";
 static const QString fnPlatformsIdMap = "platforms_idmap.csv";
+static const QString fnPlatformsIdMapLocal = "platforms_idmap_local.csv";
 
 Platform &Platform::get() {
     static Platform platform;
@@ -97,12 +100,6 @@ bool Platform::loadConfig() {
 
     for (auto plit = jObjLocal.constBegin(); plit != jObjLocal.constEnd();
          plit++) {
-        if (jObj.contains(plit.key())) {
-            printf("\033[1;33mWARNING: Duplicate JSON Object key detected "
-                   "'%s'. Skyscraper will continue and use last found object. "
-                   "Remove duplicate to rectify the issue.\033[0m\n",
-                   plit.key().toUtf8().constData());
-        }
         jObj.insert(plit.key(), plit.value());
     }
 
@@ -187,10 +184,14 @@ QStringList Platform::getAliases(QString platform) const {
     return aliases;
 }
 
-bool Platform::loadPlatformsIdMap() {
-    QFile configFile(fnPlatformsIdMap);
-    const char *fn = fnPlatformsIdMap.toUtf8().constData();
+bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
+
+    QFile configFile(platformsIdCsvFn);
+    const char *fn = platformsIdCsvFn.toUtf8().constData();
     if (!configFile.open(QIODevice::ReadOnly)) {
+        if (platformsIdCsvFn == fnPlatformsIdMapLocal) {
+            return true; // no platforms_idmap_local.csv, no worries
+        }
         printf("\033[1;31mFile not found '%s'. Now quitting...\033[0m\n", fn);
         return false;
     }
@@ -211,11 +212,10 @@ bool Platform::loadPlatformsIdMap() {
         QString pkey = parts[0].trimmed();
         if (pkey.isEmpty()) {
             printf(
-                "\033[1;31mFile '%s', line '%s' has empty folder/platform. "
+                "\033[1;33mFile '%s', line '%s' has empty folder/platform. "
                 "Ignoring this line. Please fix to mute this warning.\033[0m\n",
                 fn, parts.join(',').toUtf8().constData());
-            configFile.close();
-            return false;
+            continue;
         }
         parts.removeFirst();
         QVector<int> ids(QVector<int>(3));
@@ -239,18 +239,68 @@ bool Platform::loadPlatformsIdMap() {
             }
             i++;
         }
-        if (platformIdsMap.contains(pkey)) {
-            printf("\033[1;33mWARNING: Duplicate platform key detected '%s' in "
-                   "'%s'. Skyscraper will continue and uses values of that "
-                   "platform (%s). Remove duplicate to rectify the "
-                   "issue.\033[0m\n",
-                   pkey.toUtf8().constData(), fn,
-                   parts.join(',').toUtf8().constData());
-        }
         platformIdsMap.insert(pkey, ids);
     }
     configFile.close();
     return true;
+}
+
+bool Platform::loadPlatformsIdMap() {
+    return parsePlatformsIdCsv(fnPlatformsIdMap) &&
+           parsePlatformsIdCsv(fnPlatformsIdMapLocal);
+}
+
+/*
+  Interims function introduced with 3.15.2 to detect pristine platform config
+  files.
+
+  Rationale: Pristine files can be savely overwritten with the upstream version.
+  Whereas user edits in such files should go into _local files (introduced with
+  3.13).
+*/
+bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
+    QMap<QString, QStringList> sha256sums = {
+        // clang-format off
+        {"peas.json", QStringList(
+                {"67739818ca4d62f277f5c143bff89e0a0083eae96ae26692ec509af5a3db677b",
+                 "eb88759262cfa3da46f0f6ff19fba4c89a20c4089ca51294ad4554c6613d9db8",
+                 "215c8974fbd2490dedc6e6e59541bc6a36dfb12e8750031aeade99e5e4878c8d",
+                 "dfd5591107d585eeecfd3e37beb1b2d80b740caae84ac79d09c65704677740d2",
+                 "f046b81f403b132379a4f93e3e5d9482e60b69ce3d18a13539a895ea2d6583d8",
+                 "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9"}
+            )
+        },
+        {"platforms_idmap.csv", QStringList(
+                {"78ca2da2de3ee98e57d7ce9bb88504c7b45bdf72a2599a34e583ebcc0855cbef",
+                 "30c443a6a6c7583433e62e89febe8d10bae075040e5c1392623a71f348f3f476",
+                 "bf12d0f2f7161d45041f8996c44d6c3c2f666cfc33938dbcbd506c1f766062c4",
+                 "44a416856327c01c1ec73c41252f9c3318bf703c33fd717935f31b37e635f413"}
+            )
+        }
+        // clang-format on
+    };
+    QFileInfo cfgFileInfo = QFileInfo(cfgFilePath);
+    if (!cfgFileInfo.exists()) {
+        return true;
+    }
+
+    QCryptographicHash sha256 = QCryptographicHash(QCryptographicHash::Sha256);
+    QFile cfgFile(cfgFilePath);
+    bool isPristine = false;
+    if (cfgFile.open(QFile::ReadOnly)) {
+        sha256.addData(cfgFile.readAll());
+        QString currentSha256 = sha256.result().toHex();
+        QString cfgBn = cfgFileInfo.fileName();
+        isPristine = sha256sums[cfgBn].contains(currentSha256);
+        qDebug() << cfgFileInfo.absoluteFilePath() << currentSha256
+                 << "is pristine:" << isPristine;
+    } else {
+        printf("\033[1;31mFile '%s' can not be read. Please fix. "
+               "Quitting.\033[0m\n",
+               cfgFilePath.toUtf8().constData());
+        exit(1);
+    }
+    return isPristine;
 }
 
 int Platform::getPlatformIdOnScraper(const QString platform,

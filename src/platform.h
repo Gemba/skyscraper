@@ -38,6 +38,7 @@ public:
     static Platform &get();
 
     bool loadConfig();
+    bool isPlatformCfgfilePristine(const QString &platformCfgFilePath);
     void clearConfigData();
 
     QStringList getPlatforms() const;
@@ -50,6 +51,7 @@ public:
 
 private:
     bool loadPlatformsIdMap();
+    bool parsePlatformsIdCsv(const QString &fnplatformsIdCsvFn);
     QJsonObject loadLocalConfig();
 
     QStringList platforms;

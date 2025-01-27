@@ -32,7 +32,7 @@ namespace Config {
     void initSkyFolders();
     QString getSkyFolder(SkyFolderType type = SkyFolderType::CONFIG);
 
-    void copyFile(const QString &src, const QString &dest,
+    void copyFile(const QString &src, const QString &dest, bool isPristine,
                   FileOp fileOp = FileOp::OVERWRITE);
     void setupUserConfig();
     void checkLegacyFiles();

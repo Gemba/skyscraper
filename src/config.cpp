@@ -98,36 +98,36 @@ void Config::initSkyFolders() {
 
 QString Config::getSkyFolder(SkyFolderType type) { return skyFolders[type]; }
 
-void Config::copyFile(const QString &src, const QString &dest, FileOp fileOp) {
-    if (QFileInfo::exists(src)) {
-        if (QFileInfo::exists(dest)) {
-            if (fileOp == FileOp::OVERWRITE) {
-                if (QFileInfo(QFileInfo(dest).dir().path() %
-                              "/.platformcfg_overwrite_ok")
-                        .exists() &&
-                    (src.endsWith("peas.json") ||
-                     src.endsWith("platforms_idmap.csv"))) {
-                    QFile::remove(dest % ".dist");
-                }
-                QFile::remove(dest);
-                QFile::copy(src, dest);
-                qDebug() << "Overwritten file" << dest;
-            } else if (fileOp == FileOp::CREATE_DIST) {
-                QString d = QString(dest + ".dist");
-                QFile::remove(d);
-                QFile::copy(src, d);
-                qDebug() << "Copied original distribution file" << src << "as"
-                         << d;
-            }
-        } else {
-            QFile::copy(src, dest);
-            qDebug() << "Created file" << dest;
-        }
-    } else {
+void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
+                      FileOp fileOp) {
+    if (!QFileInfo::exists(src)) {
         printf("\033[1;31mSource config file not found '%s'. Please check "
                "setup, bailing out...\033[0m\n",
                src.toStdString().c_str());
         exit(1);
+    }
+
+    if (QFileInfo::exists(dest)) {
+        if (fileOp == FileOp::OVERWRITE) {
+            if (isPristine && (src.endsWith("peas.json") ||
+                               src.endsWith("platforms_idmap.csv"))) {
+                QFile::remove(dest % ".dist");
+                qDebug() << (dest % ".dist") << "removed as prisitine" << dest
+                         << "detected";
+            }
+            QFile::remove(dest);
+            QFile::copy(src, dest);
+            qDebug() << "Overwritten file" << dest
+                     << "with newer or same version";
+        } else if (fileOp == FileOp::CREATE_DIST) {
+            QString d = QString(dest + ".dist");
+            QFile::remove(d);
+            QFile::copy(src, d);
+            qDebug() << "Copied original distribution file" << src << "as" << d;
+        }
+    } else {
+        QFile::copy(src, dest);
+        qDebug() << "Created file" << dest;
     }
 }
 
@@ -164,7 +164,8 @@ void Config::setupUserConfig() {
     QString rpInst = "/opt/retropie/supplementary/skyscraper/Skyscraper";
     bool isRpInstall = QFileInfo(rpInst).isFile();
     QString manualInst = PREFIX "/bin/Skyscraper";
-    bool exeIsNotSymlink = QFileInfo(manualInst).isFile() && !QFileInfo(manualInst).isSymLink();
+    bool exeIsNotSymlink =
+        QFileInfo(manualInst).isFile() && !QFileInfo(manualInst).isSymLink();
 
     if (exeIsNotSymlink && isRpInstall) {
         printf("\033[1;31mDuplicate installation of Skyscraper found:\n%s "
@@ -217,11 +218,13 @@ void Config::setupUserConfig() {
         {"artwork.xml",                     QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"peas.json",                       QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"platforms_idmap.csv",             QPair<QString, FileOp>("", FileOp::CREATE_DIST)}
-        // clang-format off
+        // clang-format on
     };
 
+    bool isPristine;
     for (auto src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;
+        isPristine = false;
         if (dest.isEmpty()) {
             dest = src;
         }
@@ -235,12 +238,24 @@ void Config::setupUserConfig() {
         } else if (src.startsWith("resources/")) {
             tgtDir = getSkyFolder(SkyFolderType::RESOURCE);
             dest = dest.replace("resources/", "");
-        } else if (QFileInfo(tgtDir % "/.platformcfg_overwrite_ok").exists() &&
-                   (src == "peas.json" || src == "platforms_idmap.csv")) {
-            configFiles[src] = QPair<QString, FileOp>("", FileOp::OVERWRITE);
+        } else if ((src == "peas.json" || src == "platforms_idmap.csv")) {
+            isPristine =
+                Platform::get().isPlatformCfgfilePristine(tgtDir % "/" % dest);
+            if (isPristine) {
+                configFiles[src] =
+                    QPair<QString, FileOp>("", FileOp::OVERWRITE);
+            } else {
+                printf(
+                    "\033[1;33mLooks like '%s' has local changes. Please "
+                    "transfer local changes to another file to mute this "
+                    "warning. See topic 'Transferring Local Platform Changes' "
+                    "in the PLATFORM.md documentation for guidance.\033[0m\n",
+                    (tgtDir % "/" % dest).toUtf8().constData());
+            }
         }
         QString tgt = tgtDir % "/" % dest;
-        copyFile(localEtcPath % src, tgt, configFiles.value(src).second);
+        copyFile(localEtcPath % src, tgt, isPristine,
+                 configFiles.value(src).second);
     }
 }
 
