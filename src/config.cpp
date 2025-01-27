@@ -163,10 +163,10 @@ void Config::setupUserConfig() {
 
     QString rpInst = "/opt/retropie/supplementary/skyscraper/Skyscraper";
     bool isRpInstall = QFileInfo(rpInst).isFile();
-    QString manualInst = PREFIX "/Skyscraper";
-    bool exeIsSymlink = QFileInfo(manualInst).isSymLink();
+    QString manualInst = PREFIX "/bin/Skyscraper";
+    bool exeIsNotSymlink = QFileInfo(manualInst).isFile() && !QFileInfo(manualInst).isSymLink();
 
-    if (!exeIsSymlink && isRpInstall) {
+    if (exeIsNotSymlink && isRpInstall) {
         printf("\033[1;31mDuplicate installation of Skyscraper found:\n%s "
                "and\n%s\nPlease remove one or the other to avoid "
                "confusion.\033[0m\n",
