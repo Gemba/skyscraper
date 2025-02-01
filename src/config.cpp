@@ -175,12 +175,6 @@ void Config::setupUserConfig() {
         exit(1);
     }
 
-    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
-    if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
-        // RetroPie or Windows installation type: handled externally
-        return;
-    }
-
     // copy configs
     QMap<QString, QPair<QString, FileOp>> configFiles = {
         // clang-format off
@@ -222,6 +216,29 @@ void Config::setupUserConfig() {
     };
 
     bool isPristine;
+    if (isRpInstall) {
+        // just issue the warning if needed, file copy is done with scriptmodule
+        QString tgtDir = getSkyFolder();
+        for (auto src : QStringList({"peas.json", "platforms_idmap.csv"})) {
+            isPristine =
+                Platform::get().isPlatformCfgfilePristine(tgtDir % "/" % src);
+            if (!isPristine) {
+                printf(
+                    "\033[1;33mLooks like '%s' has local changes.\nPlease "
+                    "transfer local changes to another file to mute this "
+                    "warning.\nSee topic 'Transferring Local Platform Changes' "
+                    "in the PLATFORM.md documentation for guidance.\033[0m\n",
+                    (tgtDir % "/" % src).toUtf8().constData());
+            }
+        }
+    }
+
+    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
+    if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
+        // RetroPie or Windows installation type: handled externally
+        return;
+    }
+
     for (auto src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;
         isPristine = false;
@@ -246,9 +263,9 @@ void Config::setupUserConfig() {
                     QPair<QString, FileOp>("", FileOp::OVERWRITE);
             } else {
                 printf(
-                    "\033[1;33mLooks like '%s' has local changes. Please "
+                    "\033[1;33mLooks like '%s' has local changes.\nPlease "
                     "transfer local changes to another file to mute this "
-                    "warning. See topic 'Transferring Local Platform Changes' "
+                    "warning.\nSee topic 'Transferring Local Platform Changes' "
                     "in the PLATFORM.md documentation for guidance.\033[0m\n",
                     (tgtDir % "/" % dest).toUtf8().constData());
             }
