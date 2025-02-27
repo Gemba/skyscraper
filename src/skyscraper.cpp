@@ -857,13 +857,19 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                             "openretro",      "screenscraper", "thegamesdb",
                             "worldofspectrum"};
     if (parser.isSet("s")) {
-        if (scrapers.contains(parser.value("s"))) {
-            config.scraper = parser.value("s");
+        QString _scraper = parser.value("s");
+        if (_scraper == "tgdb") {
+            _scraper = "thegamesdb";
+        } else if (_scraper == "wos") {
+            _scraper = "worldofspectrum";
+        }
+        if (scrapers.contains(_scraper)) {
+            config.scraper = _scraper;
         } else {
             printf("\033[1;31mBummer! Unknown scrapingmodule '%s'. Known "
                    "scrapers are: %s.\nHint: Try TAB-completion to avoid "
                    "typos.\033[0m\n",
-                   parser.value("s").toStdString().c_str(),
+                   _scraper.toStdString().c_str(),
                    scrapers.join(", ").toStdString().c_str());
             exit(1);
         }
