@@ -49,20 +49,38 @@ QString NameTools::getScummName(const QFileInfo &info, const QString baseName,
     }
     if (!scummIniPath.isEmpty()) {
         QSettings *settings = new QSettings(scummIniPath, QSettings::IniFormat);
-        // test if ROM name is game id
+        // test if ROM name is game id e.g., "tentacle.svm" (no engine expected,
+        // no variant expected)
         settings->beginGroup(baseName);
         if (settings->contains("description")) {
-            return settings->value("description").toString();
+            return StrTools::stripBrackets(
+                settings->value("description").toString());
         }
+        settings->endGroup();
         // test the other way around: ROM name is custom but may contain
         // game id
         if (info.isFile()) {
             QFile romFile = QFile(info.absoluteFilePath());
             if (romFile.open(QIODevice::ReadOnly) && !romFile.atEnd()) {
                 QString gameId = romFile.readLine();
-                settings->beginGroup(gameId.trimmed());
+                // remove engine id and variant if present
+                gameId = gameId.split(u':', Qt::SkipEmptyParts).takeLast();
+                gameId = gameId.split(u'-', Qt::SkipEmptyParts).takeLast();
+                gameId = gameId.trimmed().toLower();
+                if (gameId.isEmpty())
+                    return baseName;
+                settings->beginGroup(gameId);
                 if (settings->contains("description")) {
-                    return settings->value("description").toString();
+                    return StrTools::stripBrackets(
+                        settings->value("description").toString());
+                }
+                settings->endGroup();
+                // corner case for lba-gb (gameid with variant in scummvm.ini)
+                for (auto const &k : settings->allKeys()) {
+                    if (k.startsWith(gameId) && k.endsWith("/description")) {
+                        return StrTools::stripBrackets(
+                            settings->value(k).toString());
+                    }
                 }
             }
         }

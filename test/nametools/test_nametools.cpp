@@ -96,36 +96,32 @@ private slots:
     void testGetScummName() {
         QString ini = "./scummvm.ini";
 
-        QMap<QString, QPair<QString, QString>> tests = {
-            {"scummvm tentacle",
-             QPair<QString, QString>(
-                 "tentacle", "Day of the Tentacle (Floppy/DOS/English)")},
-            {"scummvm dontexists",
-             QPair<QString, QString>("dontexists", "dontexists")},
-            {"scummvm dig", QPair<QString, QString>("dig", "The Dig")},
-            {"scummvm use game id from ROM file",
-             QPair<QString, QString>("lba", "Little Big Adventure")},
-            {"scummvm no valid gameid",
-             QPair<QString, QString>("Some Mighty Adventure",
-                                     "Some Mighty Adventure")},
-            {"scummvm no gameid",
-             QPair<QString, QString>("No game id in romfile",
-                                     "No game id in romfile")}
-
+        // testcase: input-basename, expected output, svm-file
+        QMap<QString, QStringList> tests = {
+            // clang-format off
+            {"scummvm resolve via scummvm.ini, ignore ROM file",
+                QStringList({"tentacle", "Day of the Tentacle", ""})},
+            {"scummvm game id non-existent in scummvm.ini",
+                QStringList({"dontexists", "dontexists", ""})},
+            {"scummvm resolve via scummvm.ini",
+                QStringList({"dig", "The Dig", "The Dig (1995).scummvm"})},
+            {"scummvm use game id from ROM file with variant",
+                QStringList({"lba", "Little Big Adventure", "Lba-Something.svm"})},
+            {"scummvm no valid gameid in ROM file",
+                QStringList({"Some Mighty Adventure", "Some Mighty Adventure", "Some Mighty Adventure.svm"})},
+            {"scummvm no gameid in ROM file",
+                QStringList({"No game id in romfile", "No game id in romfile", "No game id in romfile.svm"})},
+            {"scummvm resolve via scummvm.ini and gameid with colon/engine-id",
+                QStringList({"The Dig Colon", "The Dig Resolved from scummvm.ini", "The Dig Colon.scummvm"})}
+            // clang-format off
         };
 
-        QFile romfile("rom_samples/The Dig (1995).scummvm");
-
         for (auto t : tests.keys()) {
-            if (t == "scummvm no gameid") {
-                QFile romfile("rom_samples/Some Mighty Adventure.svm");
-            } else if (t == "scummvm no gameid") {
-                QFile romfile("rom_samples/No game id in romfile.svm");
-            }
-            QString baseName = tests.value(t).first;
-            QString exp = tests.value(t).second;
-            QString out =
-                NameTools::getScummName(QFileInfo(romfile), baseName, ini);
+            QString baseName = tests.value(t).at(0);
+            QString exp = tests.value(t).at(1);
+            QFileInfo romfile = QFileInfo("rom_samples/" + tests.value(t).at(2));
+            QString out = NameTools::getScummName(romfile, baseName, ini);
+            qDebug() << "Testcase:" << t;
             QCOMPARE(out, exp);
         }
     }

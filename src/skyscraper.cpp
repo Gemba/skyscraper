@@ -1054,6 +1054,21 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         exit(1);
     }
 
+    if (!config.scummIni.isEmpty()) {
+        if (QFileInfo(config.scummIni).isRelative()) {
+            printf("Parameter scummIni must be absolute path, got: %s.\nPlease "
+                   "fix!\n",
+                   config.scummIni.toStdString().c_str());
+            exit(1);
+        }
+        if (!QFileInfo(config.scummIni).exists()) {
+            printf("Parameter scummIni refers to a non existent file: "
+                   "%s.\nPlease fix!\n",
+                   config.scummIni.toStdString().c_str());
+            exit(1);
+        }
+    }
+
     QDir resDir(Config::getSkyFolder(Config::SkyFolderType::RESOURCE));
     QDirIterator resDirIt(resDir.absolutePath(),
                           QDir::Files | QDir::NoDotAndDotDot,

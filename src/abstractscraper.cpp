@@ -489,9 +489,8 @@ QString AbstractScraper::lookupSearchName(const QFileInfo &info,
     QString searchName = baseName;
     if (!config->aliasMap[baseName].isEmpty()) {
         debug.append("'aliasMap.csv' entry found\n");
-        QString aliasName = config->aliasMap[baseName];
-        debug.append("Alias name: '" + aliasName + "'\n");
-        searchName = aliasName;
+        searchName = config->aliasMap[baseName];
+        debug.append("Alias name: '" + searchName + "'\n");
     } else if (info.suffix() == "lha") {
         if (QString whdTitle = config->whdLoadMap[baseName].first;
             !whdTitle.isEmpty()) {
@@ -503,6 +502,8 @@ QString AbstractScraper::lookupSearchName(const QFileInfo &info,
         }
     } else if (config->platform == "scummvm") {
         searchName = NameTools::getScummName(info, baseName, config->scummIni);
+        debug.append("ScummVM ROM '" + info.fileName() + "' resolved to '" +
+                     searchName + "'\n");
     } else if (QString romTitle = lookupArcadeTitle(baseName);
                !romTitle.isEmpty()) {
         debug.append("'mameMap.csv' entry found\n");

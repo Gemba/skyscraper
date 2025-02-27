@@ -1003,9 +1003,10 @@ Allowed in sections: `[main]`
 
 #### scummIni
 
-Allows you to set a non-default path of the `scummvm.ini` file. This file is used whenever scraping the `scummvm` platform. It converts the shortname such as `monkey2` to the more search-friendly name `Monkey Island 2: LeChuck's Revenge` whenever using one of the file name search based scraping modules.
+Allows you to set a non-default path of the `scummvm.ini` file. This file is used whenever scraping the `scummvm` platform and has the highest precedence compared to the default values (see below). It converts the shortname such as `monkey2` (the ScummVM Game ID) to the more search-friendly name `Monkey Island 2: LeChuck's Revenge` (the value of the `description=` in the `scummvm.ini` file) whenever using one of the file name search based scraping modules.  
+Always provide an absolute path as value for this parameter.
 
-Default value: If `~/.scummvmrc` has precedence over `/opt/retropie/configs/scummvm/scummvm.ini`  
+Default values: `~/.scummvmrc` and `/opt/retropie/configs/scummvm/scummvm.ini`. If `~/.scummvmrc` is present, it has precedence over `/opt/retropie/configs/scummvm/scummvm.ini` (RetroPie path).
 Allowed in sections: `[main]`
 
 ---
