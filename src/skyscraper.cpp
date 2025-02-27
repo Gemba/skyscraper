@@ -360,20 +360,17 @@ void Skyscraper::run() {
         fflush(stdout);
         if (frontend->loadOldGameList(gameListFileString)) {
             printf("\033[1;32mSuccess!\033[0m\n");
-            if (!config.unattend && cliFiles.isEmpty()) {
+            if (!config.unattend && cliFiles.isEmpty() && frontend->canSkip()) {
                 std::string userInput = "";
-                if (gameListFile.exists() && frontend->canSkip()) {
-                    if (config.unattendSkip) {
-                        userInput = "y";
-                    } else {
-                        printf("\033[1;34mDo you want to skip already existing "
-                               "game list entries\033[0m (y/N)? ");
-                        getline(std::cin, userInput);
-                    }
-                    if ((userInput == "y" || userInput == "Y") &&
-                        frontend->canSkip()) {
-                        frontend->skipExisting(gameEntries, queue);
-                    }
+                if (config.unattendSkip) {
+                    userInput = "y";
+                } else {
+                    printf("\033[1;34mDo you want to skip already existing "
+                           "game list entries\033[0m (y/N)? ");
+                    getline(std::cin, userInput);
+                }
+                if ((userInput == "y" || userInput == "Y")) {
+                    frontend->skipExisting(gameEntries, queue);
                 }
             }
         } else {
