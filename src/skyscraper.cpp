@@ -383,15 +383,29 @@ void Skyscraper::run() {
 
     totalFiles = queue->length();
     if (totalFiles == 0) {
-        QString extraInfo = doCacheScraping ? "in cache "
-                                            : "matching these extensions " +
-                                                  getPlatformFileExtensions();
+        QString extraInfo =
+            doCacheScraping
+                ? "in cache"
+                : "matching these extensions '" +
+                      getPlatformFileExtensions().split(' ').join(", ") + "'";
+        QString unattendSkipStr = "";
+        if (!config.unattend && cliFiles.isEmpty()) {
+            unattendSkipStr =
+                "\nMaybe you have opted to skip existing gamelist "
+                "entries (see config: unattendSkip) from this "
+                "\nSkyscraper run and there is none remaining to ";
+            unattendSkipStr =
+                unattendSkipStr % ((doCacheScraping)
+                                       ? "generate a gamelist entry for."
+                                       : "scrape.");
+        }
         printf("\nNo files to process %s for platform "
                "'%s'.\nCheck configured and existing file extensions and cache "
-               "content.\n\n\033[1;33mSkyscraper came to an untimely "
+               "content.%s\n\n\033[1;33mSkyscraper came to an untimely "
                "end.\033[0m\n\n",
                extraInfo.toStdString().c_str(),
-               config.platform.toStdString().c_str());
+               config.platform.toStdString().c_str(),
+               unattendSkipStr.toStdString().c_str());
         exit(0);
     }
 
