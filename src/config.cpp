@@ -111,6 +111,7 @@ void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
         if (fileOp == FileOp::OVERWRITE) {
             if (isPristine && (src.endsWith("peas.json") ||
                                src.endsWith("platforms_idmap.csv"))) {
+                // remove possible destination *.dist file
                 QFile::remove(dest % ".dist");
                 qDebug() << (dest % ".dist") << "removed as prisitine" << dest
                          << "detected";
@@ -215,21 +216,13 @@ void Config::setupUserConfig() {
         // clang-format on
     };
 
-    bool isPristine;
     if (isRpInstall) {
-        // just issue the warning if needed, file copy is done with scriptmodule
         QString tgtDir = getSkyFolder();
-        for (auto src : QStringList({"peas.json", "platforms_idmap.csv"})) {
-            isPristine =
-                Platform::get().isPlatformCfgfilePristine(tgtDir % "/" % src);
-            if (!isPristine) {
-                printf(
-                    "\033[1;33mLooks like '%s' has local changes.\nPlease "
-                    "transfer local changes to another file to mute this "
-                    "warning.\nSee topic 'Transferring Local Platform Changes' "
-                    "in the PLATFORM.md documentation for guidance.\033[0m\n",
-                    (tgtDir % "/" % src).toUtf8().constData());
-            }
+        for (auto const &src :
+             QStringList({"peas.json", "platforms_idmap.csv"})) {
+            // just issue the warning if needed, file copy is done with
+            // RetroPie's scriptmodule
+            isPlatformCfgPristine(tgtDir % "/" % src);
         }
     }
 
@@ -239,6 +232,7 @@ void Config::setupUserConfig() {
         return;
     }
 
+    bool isPristine;
     for (auto src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;
         isPristine = false;
@@ -256,24 +250,30 @@ void Config::setupUserConfig() {
             tgtDir = getSkyFolder(SkyFolderType::RESOURCE);
             dest = dest.replace("resources/", "");
         } else if ((src == "peas.json" || src == "platforms_idmap.csv")) {
-            isPristine =
-                Platform::get().isPlatformCfgfilePristine(tgtDir % "/" % dest);
+            isPristine = isPlatformCfgPristine(tgtDir % "/" % dest);
             if (isPristine) {
-                configFiles[src] =
-                    QPair<QString, FileOp>("", FileOp::OVERWRITE);
-            } else {
-                printf(
-                    "\033[1;33mLooks like '%s' has local changes.\nPlease "
-                    "transfer local changes to another file to mute this "
-                    "warning.\nSee topic 'Transferring Local Platform Changes' "
-                    "in the PLATFORM.md documentation for guidance.\033[0m\n",
-                    (tgtDir % "/" % dest).toUtf8().constData());
+                configFiles[src].second = FileOp::OVERWRITE;
             }
         }
         QString tgt = tgtDir % "/" % dest;
         copyFile(localEtcPath % src, tgt, isPristine,
                  configFiles.value(src).second);
     }
+}
+
+bool Config::isPlatformCfgPristine(QString platformCfgFilePath) {
+
+    bool isPristine =
+        Platform::get().isPlatformCfgfilePristine(platformCfgFilePath);
+    if (!isPristine) {
+        printf("\033[1;33mLooks like '%s' has local changes.\nPlease "
+               "transfer local changes to another file to mute this "
+               "warning.\nSee topic 'Transferring Local Platform Changes' "
+               "in the PLATFORM.md documentation for guidance.\033[0m\n",
+               platformCfgFilePath.toUtf8().constData());
+    }
+
+    return isPristine;
 }
 
 void Config::checkLegacyFiles() {
@@ -297,7 +297,7 @@ QString Config::getSupportedPlatforms() {
 
     QString platforms;
     for (const auto &platform : Platform::get().getPlatforms()) {
-        platforms.append("'" + platform + "', ");
+        platforms.append("'" % platform % "', ");
     }
     platforms.chop(2);
     return platforms;

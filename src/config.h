@@ -36,6 +36,7 @@ namespace Config {
                   FileOp fileOp = FileOp::OVERWRITE);
     void setupUserConfig();
     void checkLegacyFiles();
+    bool isPlatformCfgPristine(QString platformCfgFilePath);
     QString getSupportedPlatforms();
     QString getRetropieVersion();
 
