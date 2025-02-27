@@ -557,9 +557,23 @@ void Skyscraper::prepareFileQueue() {
                 continue;
             }
             inputDir.setPath(subdir);
-            queue->append(inputDir.entryInfoList());
-            if (config.verbosity > 0) {
-                printf("Adding files from subdir: '%s'\n",
+            QList<QFileInfo> subFiles = inputDir.entryInfoList();
+            if (config.platform == "scummvm" &&
+                config.frontend == "emulationstation") {
+                // special case: avoid having files like
+                // .../scummvm/blarf.svm/blarf.svm added as game (as the folder
+                // blarf.svm/ acts as ROM file already)
+                for (auto i = subFiles.begin(), end = subFiles.end(); i != end;
+                     ++i) {
+                    if (subdir.contains("/" % (*i).fileName())) {
+                        subFiles.erase(i);
+                        break;
+                    }
+                }
+            }
+            queue->append(subFiles);
+            if (config.verbosity > 0 && subFiles.size() > 0) {
+                printf("Adding matching files from subdir: '%s'\n",
                        subdir.toStdString().c_str());
             }
         }
