@@ -76,7 +76,7 @@ bool AttractMode::loadOldGameList(const QString &gameListFileString) {
     return false;
 }
 
-bool AttractMode::skipExisting(QList<GameEntry> &gameEntries,
+void AttractMode::skipExisting(QList<GameEntry> &gameEntries,
                                QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
@@ -98,7 +98,6 @@ bool AttractMode::skipExisting(QList<GameEntry> &gameEntries,
         }
     }
     printf(" \033[1;32mDone!\033[0m\n");
-    return true;
 }
 
 void AttractMode::preserveFromOld(GameEntry &entry) {

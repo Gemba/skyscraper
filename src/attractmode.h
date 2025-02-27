@@ -37,7 +37,7 @@ public:
     AttractMode();
 
     void checkReqs() override;
-    bool skipExisting(QList<GameEntry> &gameEntries,
+    void skipExisting(QList<GameEntry> &gameEntries,
                       QSharedPointer<Queue> queue) override;
     void assembleList(QString &finalOutput,
                       QList<GameEntry> &gameEntries) override;

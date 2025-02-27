@@ -135,7 +135,7 @@ QString Pegasus::makeAbsolute(const QString &filePath,
     return returnPath;
 }
 
-bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
+void Pegasus::skipExisting(QList<GameEntry> &gameEntries,
                            QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
@@ -168,7 +168,6 @@ bool Pegasus::skipExisting(QList<GameEntry> &gameEntries,
             }
         }
     }
-    return true;
 }
 
 void Pegasus::preserveFromOld(GameEntry &entry) {

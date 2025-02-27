@@ -37,7 +37,7 @@ public:
     Pegasus();
     void assembleList(QString &finalOutput,
                       QList<GameEntry> &gameEntries) override;
-    bool skipExisting(QList<GameEntry> &gameEntries,
+    void skipExisting(QList<GameEntry> &gameEntries,
                       QSharedPointer<Queue> queue) override;
     bool canSkip() override;
     bool loadOldGameList(const QString &gameListFileString) override;

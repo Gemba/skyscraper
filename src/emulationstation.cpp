@@ -54,7 +54,7 @@ QStringList EmulationStation::extraGamelistTags(bool isFolder) {
     return g.extraTagNames(GameEntry::Format::RETROPIE);
 }
 
-bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
+void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
                                     QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
@@ -88,7 +88,6 @@ bool EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
             }
         }
     }
-    return true;
 }
 
 void EmulationStation::preserveFromOld(GameEntry &entry) {

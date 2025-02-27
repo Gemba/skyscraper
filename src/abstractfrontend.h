@@ -43,9 +43,7 @@ public:
     void setConfig(Settings *config);
     virtual void checkReqs(){};
     virtual void assembleList(QString &, QList<GameEntry> &){};
-    virtual bool skipExisting(QList<GameEntry> &, QSharedPointer<Queue>) {
-        return false;
-    };
+    virtual void skipExisting(QList<GameEntry> &, QSharedPointer<Queue>){};
     virtual bool canSkip() { return false; };
     virtual bool loadOldGameList(const QString &) { return false; };
     virtual void preserveFromOld(GameEntry &){};
