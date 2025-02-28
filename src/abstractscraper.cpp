@@ -483,14 +483,23 @@ QString AbstractScraper::lookupArcadeTitle(const QString &baseName) {
     return "";
 }
 
+QString AbstractScraper::lookupAliasMap(const QString &baseName,
+                                        QString &debug) {
+    if (!config->aliasMap[baseName].isEmpty()) {
+        debug.append("'aliasMap.csv' entry found\n");
+        QString aliasTitle = config->aliasMap[baseName];
+        debug.append("Alias name: '" + aliasTitle + "'\n");
+        return aliasTitle;
+    }
+    return baseName;
+}
 QString AbstractScraper::lookupSearchName(const QFileInfo &info,
                                           const QString &baseName,
                                           QString &debug) {
     QString searchName = baseName;
-    if (!config->aliasMap[baseName].isEmpty()) {
-        debug.append("'aliasMap.csv' entry found\n");
-        searchName = config->aliasMap[baseName];
-        debug.append("Alias name: '" + searchName + "'\n");
+    if (QString aliasTitle = lookupAliasMap(baseName, debug);
+        aliasTitle != searchName) {
+        searchName = aliasTitle;
     } else if (info.suffix() == "lha") {
         if (QString whdTitle = config->whdLoadMap[baseName].first;
             !whdTitle.isEmpty()) {

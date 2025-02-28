@@ -92,7 +92,9 @@ protected:
 
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);
-
+                             QString lookupAliasMap(
+                                const QString &baseName,
+                                QString &debug);
     MatchType type = ABSTRACT;
 
     QList<int> fetchOrder;

@@ -34,8 +34,8 @@ ArcadeDB::ArcadeDB(Settings *config, QSharedPointer<NetManager> manager)
     baseUrl = "http://adb.arcadeitalia.net";
 
     searchUrlPre =
-        "http://adb.arcadeitalia.net/"
-        "service_scraper.php?ajax=query_mame&lang=en&use_parent=1&game_name=";
+        baseUrl +
+        "/service_scraper.php?ajax=query_mame&lang=en&use_parent=1&game_name=";
 
     fetchOrder.append(PUBLISHER);
     fetchOrder.append(RELEASEDATE);
@@ -138,7 +138,7 @@ void ArcadeDB::getScreenshot(GameEntry &game) {
 }
 
 void ArcadeDB::getWheel(GameEntry &game) {
-    netComm->request("http://adb.arcadeitalia.net/media/mame.current/decals/" +
+    netComm->request(baseUrl + "/media/mame.current/decals/" +
                      jsonObj["game_name"].toString() + ".png");
     q.exec();
     QImage image;
@@ -181,17 +181,9 @@ void ArcadeDB::getVideo(GameEntry &game) {
 QList<QString> ArcadeDB::getSearchNames(const QFileInfo &info, QString &debug) {
     const QString baseName = info.completeBaseName();
     QList<QString> searchNames;
-    QString searchName = baseName;
-
     debug.append("Base name: '" + baseName + "'\n");
-
-    if (!config->aliasMap[baseName].isEmpty()) {
-        debug.append("'aliasMap.csv' entry found\n");
-        QString aliasName = config->aliasMap[baseName];
-        debug.append("Alias name: '" + aliasName + "'\n");
-        searchName = aliasName;
-    }
-
-    searchNames.append(searchName);
+    // don't use lookupSearchNames() to resolve ROM basename as provided MAME
+    // Game ID is sufficient for this module
+    searchNames.append(lookupAliasMap(baseName, debug));
     return searchNames;
 }

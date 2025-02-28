@@ -465,16 +465,12 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
                                              QString &debug) {
     const QString baseName = info.completeBaseName();
     QList<QString> searchNames;
-    QString searchName = baseName;
-
     debug.append("Base name: '" + baseName + "'\n");
 
-    if (!config->aliasMap[baseName].isEmpty()) {
-        debug.append("'aliasMap.csv' entry found\n");
-        QString aliasName = config->aliasMap[baseName];
-        debug.append("Alias name: '" + aliasName + "'\n");
-        searchName = "romnom=" + QUrl::toPercentEncoding(aliasName, "()");
-        searchNames.append(searchName);
+    if (QString aliasTitle = lookupAliasMap(baseName, debug);
+        aliasTitle != baseName) {
+        searchNames.append("romnom=" +
+                           QUrl::toPercentEncoding(aliasTitle, "()"));
         return searchNames;
     }
 
