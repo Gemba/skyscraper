@@ -55,11 +55,13 @@ Import file: `/home/<USER>/.skyscraper/import/textual/<EXACT ROM BASE NAME>.xml`
 ```xml
 <game>
   <title>The Game Title</title>
-  <description>This game is about yada, yada yada.</description>
+  <description>This game is about yada, yada yada.
+Yes, the closing element may be on a different line.   
+  </description>
   <developer>The game developer</developer>
   <publisher>The game publisher</publisher>
   <players>Maximum number of players supported (example '4')</players>
-  <rating>The game rating 0-5 (example '3.5')</rating>
+  <rating>The game star rating 0-5 (example '3.5') or use the percent range 0.1 ... 1.0</rating>
   <ages>Minimum age restriction as integer (example '16')</ages>
   <genre>Genres, Comma-separated</genre>
   <releasedate>The game release date (example '1985-06-01')</releasedate>
@@ -69,7 +71,7 @@ Import file: `/home/<USER>/.skyscraper/import/textual/<EXACT ROM BASE NAME>.xml`
 
 !!! tip
 
-    As with Skyscraper 3.9.2 onwards you are no longer required to have the same indention or whitespace (hard tabs, spaces) as in the XML-like `definitions.dat`. Matching is solely done via XML elements (e.g. `<title>`), which saves you headache in identifiying whitespace mismatch between the XML template and your XML import file. If you use a custom XML-like `definitions.dat`: Keep the opening and closing XML element on one line and use one line per `###tag###` as in the example definition shown above. This is the default in the provided `definitions.dat`. In your import file just assure to use also closing elements (`</title>`) and the same caSiNg in the elements between template and import file, ie. provide a valid XML file.
+    As with Skyscraper 3.9.2 onwards you are no longer required to have the same indention or whitespace (hard tabs, spaces) as in the XML-like `definitions.dat`. Matching is solely done via XML elements (e.g. `<title>`), which saves you headache in identifiying whitespace mismatch between the XML template and your XML import file. Any heading or trailing whitespace of the element value will be chopped off. If you use a custom XML-like `definitions.dat`: Use it as in the example definition shown above. In your import file assure to use also closing elements (`</title>`) and the same caSiNg in the elements between template and import file, i.e. provide a valid XML file.
 
 **Example 2**
 
@@ -136,10 +138,10 @@ For `###PLAYERS###`, `###AGES###`, `###RELEASEDATE###` and `###RATING###` a cert
     -   `MMM dd, yyyy` (MMM is Jan, Feb and so on...)
 
 -   Rating can be either a number between 0 and 5, use as fraction only .5
-    ("Star rating scale"). Examples: 3 or 4.5 but not 4.25 or 1.0. This value
+    ("Star rating scale"). Examples: 3 or 4.5, but not 4.25 or 1.0. The value
     will be divided by five to match the scale of the rating in a gamelist.
     Alternatively, a value between 0.0 and 1.0 ("Percent scale") can be used.
-    This value will not be recalculated. If you want to use 0.5 with the percent
+    This value will not be transformed. If you want to use 0.5 with the percent
     scale, provide it as .5 (note the missing zero) or as 0.50 (add redundant
     zeros). Also, do add a fraction of zero explicitly when you want to denote a
     rating of 1.0 (100%). Without this trailing fraction it will be interpreted

@@ -301,13 +301,13 @@ void ImportScraper::getTitle(GameEntry &game) {
 QString ImportScraper::getElementText(QStringList e) {
     QString v;
     if (!e.isEmpty()) {
-        QString elem = e.at(0);
+        QString elem = e.first();
         QDomDocument doc;
         doc.setContent(data);
         QDomElement root = doc.documentElement();
         QDomNode n = root.namedItem(elem);
         if (!n.isNull()) {
-            v = n.toElement().text();
+            v = n.toElement().text().trimmed();
         }
     }
     return v;
@@ -358,12 +358,18 @@ bool ImportScraper::loadDefinitions() {
 bool ImportScraper::checkForTag(QList<QString> &pre, QString &post,
                                 QString &tag, QString &line) {
     bool isXml = false;
-    if (line.indexOf(tag) != -1 && line.indexOf(tag) != 0) {
+    // tag is ###TITLE### aso.
+    if (line.indexOf(tag) > 0) {
+        // preStr must be at least 1 character
         QString preStr = line.left(line.indexOf(tag));
         QString ttmp = preStr.trimmed();
         isXml = ttmp.startsWith("<") && ttmp.endsWith(">");
         if (isXml) {
-            pre.append(ttmp.replace("<", "").replace(">", ""));
+            ttmp = ttmp.replace("<", "").replace(">", "");
+            // in case the closing element is on a different line
+            // than the opening element
+            ttmp.replace("/", "");
+            pre.append(ttmp);
         } else {
             pre.append(preStr);
         }
