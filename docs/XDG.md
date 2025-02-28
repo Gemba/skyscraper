@@ -32,8 +32,8 @@ ignored by Skyscraper. Non-existing paths will be created by Skyscraper.
 
 ### How to Enable XDG
 
-The XDG feature can be used with any modern Linux distribution, but should not
-be enabled on RetroPie-Installments as they rely on the genuine Skyscraper
+The XDG feature can be used with any modern Linux distribution, but should _not_
+be enabled on RetroPie installments as they rely on the genuine Skyscraper
 folder structure.
 
 Review the Skyscraper project file (`skyscraper.pro`). Enable the line

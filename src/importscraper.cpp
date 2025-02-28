@@ -247,7 +247,7 @@ void ImportScraper::getRating(GameEntry &game) {
     }
 
     // check for 0.0 ... 1.0 (decimal number)
-    // known limitation: to yield 0.5 this scale enter it as '.5' or '0.50'
+    // known limitation: to yield 0.5 with this scale enter it as '.5' or '0.50'
     bool toDoubleOk = false;
     double rating = game.rating.toDouble(&toDoubleOk);
     if (toDoubleOk && rating >= 0.0 && rating <= 1.0) {

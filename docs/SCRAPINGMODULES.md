@@ -15,8 +15,14 @@ For scraping modules that support or require user credentials you have the optio
 | mobygames           | Title or numeric MobyGames ID (see Identifiers section their website)                                                       |
 | openretro           | Only title                                                                                                                  |
 | screenscraper       | romnom=, crc=, md5=, sha1=; see [here](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description |
-| thegamesdb,tgdb     | Only title                                                                                                                  |
-| worldofspectrum,wos | Only title, but can be regular expression                                                                                   |
+| thegamesdb, tgdb    | Only title                                                                                                                  |
+| worldofspectrum, wos | Only title, but can be regular expression                                                                                   |
+
+
+!!! warning "World of Spectrum"
+
+    The World of Spectrum scraping module is currently not functional. See [#122](https://github.com/Gemba/skyscraper/issues/122) for workarounds.
+
 
 Below follows a description of all scraping modules.
 

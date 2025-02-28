@@ -59,7 +59,7 @@ userCreds="USER:PASSWORD"
 
 This is an alphabetical index of all configuration options including the sections they may be applied to.
 
-| Parameter                                                   | `[main]` | `[<PLATFORM>]` | `[<FRONTEND>]` | `[<SCRAPER>]` |
+| Section &rarr;<br>Parameter &darr;                          | `[main]` | `[<PLATFORM>]` | `[<FRONTEND>]` | `[<SCRAPER>]` |
 | ----------------------------------------------------------- | :------: | :------------: | :------------: | :-----------: |
 | [addExtensions](CONFIGINI.md#addextensions)                 |    Y     |       Y        |                |               |
 | [addFolders](CONFIGINI.md#addfolders)                       |          |                |       Y        |               |

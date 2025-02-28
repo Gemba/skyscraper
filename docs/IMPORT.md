@@ -135,7 +135,16 @@ For `###PLAYERS###`, `###AGES###`, `###RELEASEDATE###` and `###RATING###` a cert
     -   `MMM, yyyy` (MMM is Jan, Feb and so on...)
     -   `MMM dd, yyyy` (MMM is Jan, Feb and so on...)
 
--   Rating can be either a number between 0 and 5, use as fraction only .5. Examples: 3 or 4.5 but not 4.25 or 1.0. This value will be divided by five to match the scale of the rating in a gamelist. Additionally, a value between 0.0 and 1.0 can be used. This value will not be recalculated. If you want to use 0.5 in this metric, provide it as .5 (note the missing zero). Do add a fraction of zero explicitly to denote a rating of 1.0 (100%), without this trailing fraction it will be interpreted as if it would be in the range of 0 to 5 (thus 20% for 1).
+-   Rating can be either a number between 0 and 5, use as fraction only .5
+    ("Star rating scale"). Examples: 3 or 4.5 but not 4.25 or 1.0. This value
+    will be divided by five to match the scale of the rating in a gamelist.
+    Alternatively, a value between 0.0 and 1.0 ("Percent scale") can be used.
+    This value will not be recalculated. If you want to use 0.5 with the percent
+    scale, provide it as .5 (note the missing zero) or as 0.50 (add redundant
+    zeros). Also, do add a fraction of zero explicitly when you want to denote a
+    rating of 1.0 (100%). Without this trailing fraction it will be interpreted
+    as if it would be of the star rating scale (0 to 5), thus it will be rated
+    20% for given integer of 1.
 
 ### How to actually use the data?
 
