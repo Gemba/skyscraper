@@ -81,6 +81,7 @@ This is an alphabetical index of all configuration options including the section
 | [extensions](CONFIGINI.md#extensions)                       |          |       Y        |                |               |
 | [forceFilename](CONFIGINI.md#forcefilename)                 |    Y     |       Y        |       Y        |               |
 | [frontend](CONFIGINI.md#frontend)                           |    Y     |                |                |               |
+| [gameBaseFile](CONFIGINI.md#gamebasefile)                   |          |       Y        |                |               |
 | [gameListBackup](CONFIGINI.md#gamelistbackup)               |    Y     |                |       Y        |               |
 | [gameListFilename](CONFIGINI.md#gamelistfilename)           |          |                |       Y        |               |
 | [gameListFolder](CONFIGINI.md#gamelistfolder)               |    Y     |       Y        |       Y        |               |
@@ -1100,3 +1101,64 @@ Release year from scrape source: 1994
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
+#### gameBaseFile
+
+You must set this filepath if you want to use the [GameBase
+scraper](SCRAPINGMODULES.md#gamebase-db). As a prerequisite you obviously need
+the GameBase DB for your platform. Search the internet for it. The most popular
+and longest maintained GameBase DB is for the Commodore 64 (GB64), but you can
+also find a GameBase for other platforms. The guys at the GB64 are maintaining a
+[list of GameBase projects](http://gb64.com/forum/viewtopic.php?f=10&p=31353) for the
+various platforms/systems. Currently it lists over 100 platforms with GameBases.
+
+Once you have downloaded a GameBase DB, unpack it and put it in a folder
+accessible to Skyscraper. For example `~/GameBases/GBC_v18/`. In this folder you
+will find a `*.mdb` file (Microsoft Access DB). Note it.
+
+Also do obtain the script from Skyscraper's `supplementary/scraperdata` folder.
+The script is named
+[`mdb2sqlite.sh`](https://github.com/Gemba/skyscraper/tree/master/supplementary/scraperdata/mdb2sqlite.sh).
+RetroPie users may find the script in `/opt/retropie/supplementary/skyscraper`.
+Run it with the path to the `*.mdb` file, e.g.
+```bash
+./mdb2sqlite.sh ~/GameBases/GBC_v18/GBC_v18.mdb
+```
+After a short while you should end up with an GameBase DB in SQLite format
+`GBC_v18.sqlite3`, sibling to the `GBC_v18.mdb`. Leave it there. Now you are
+done with the one-time preparation.
+
+While you can use only the `GBC_v18.sqlite3` standalone, you will not be able to
+collect the screenshots and available covers when the `GBC_v18.sqlite3` is moved
+away from the unpacked GameBase DB.
+
+Finally, use the absolute file path of the `GBC_v18.sqlite3` in the configuration
+platform section and you are ready to scrape the GameBase DB.
+
+```ini
+[c64]
+gameBaseFile="/path/to/GBC_v18.sqlite3"
+```
+
+Default value: unset  
+Allowed in sections: Only in `[<PLATFORM>]`, must be an absolute filepath
+
+!!! tip "Tips for scraping"
+
+    1. You will get the most reliable automatic match when your game files are using
+    the same basefile stem as in the GameBase DB, for example: The game filename on
+    your filesystem is `.../c64/BIGTIMEB.d64`, the stem would be `BIGTIMEB`, this
+    will provide the match to the filename used in GameBase DB
+    (`BIGTIMEB_29819_01.zip`) for the title "Big Time Bugger".
+    2. For static mapping between game filename and title to search for you can
+    utilize, as always, the alias map which is located sibling to the `config.ini`.
+    3. In contrast, with the `--query` parameter you can use globbing wildcards (`*`
+    and `?`) for the filename or game title. You may also finetune the
+    [`minMatch`](CONFIGINI.md#minmatch) / `-m` match score when using the query
+    parameter. Keep in mind, that multiple uses of `?` will reduce the search match
+    score. The results of a query are limited to 25 games, Skyscraper will issue a
+    warning when this maximum is reached.
+    4. When providing a CRC as query parameter no wildcards are allowed.
+

@@ -683,7 +683,27 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
         getSearchResults(gameEntries, sn, config->platform);
         if (config->verbosity >= 3) {
             debug.append("Tried with: '" + sn + "'\n");
-            debug.append("Platform: " + config->platform + "\n");
+            debug.append("Platform  : " + config->platform + "\n");
+            QStringList candidates;
+            for (auto const &ge : gameEntries) {
+                QString c = ge.title;
+                QStringList extra;
+                if (!ge.releaseDate.isEmpty())
+                    extra.append(ge.releaseDate);
+                if (!ge.publisher.isEmpty())
+                    extra.append(ge.publisher);
+                if (!extra.isEmpty())
+                    c = c + " (" + extra.join(", ") + ")";
+
+                candidates.append(c);
+            }
+            if (!candidates.empty()) {
+                candidates.sort(Qt::CaseInsensitive);
+                QString pad1 = candidates.length() > 3 ? "\n  " : " ";
+                QString pad2 = candidates.length() > 3 ? "\n  " : ", ";
+                debug.append(QString("Candidates: ") + pad1 +
+                             candidates.join(pad2) + "\n");
+            }
         }
         if (!gameEntries.isEmpty()) {
             break;

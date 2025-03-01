@@ -128,9 +128,7 @@ QString ESGameList::getAbsoluteFileName(QString fileName) {
 
 QList<QString> ESGameList::getSearchNames(const QFileInfo &info,
                                           QString &debug) {
-    QList<QString> searchNames;
     QString fileName = info.fileName();
     debug.append("Filename: '" + fileName + "'\n");
-    searchNames.append(fileName);
-    return searchNames;
+    return QList<QString>({fileName});
 }

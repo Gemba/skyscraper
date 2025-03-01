@@ -114,6 +114,7 @@ struct Settings {
     bool preserveOldGameList = true;
     bool spaceCheck = true;
     QString scummIni = "";
+    QString gameBaseFile;
 
     int romLimit = -1;
 
@@ -183,6 +184,9 @@ private:
     QSet<QString> getKeys(CfgType type);
     QStringList parseFlags();
     void reportInvalidPlatform();
+    bool validateFileParameter(const QString &param, const QString &val);
+    bool scraperAllowedForMatch(const QString &providedScraper,
+                                const QString &opt);
 
     Settings *config;
     const QCommandLineParser *parser;
@@ -209,6 +213,7 @@ private:
         {"extensions",              QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},
         {"forceFilename",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"frontend",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
+        {"gameBaseFile",            QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},
         {"gameListBackup",          QPair<QString, int>("bool", CfgType::MAIN |                     CfgType::FRONTEND                    )},
         {"gameListFilename",        QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
         {"gameListFolder",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},

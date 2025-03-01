@@ -28,6 +28,7 @@
 #include "arcadedb.h"
 #include "compositor.h"
 #include "esgamelist.h"
+#include "gamebase.h"
 #include "gameentry.h"
 #include "igdb.h"
 #include "importscraper.h"
@@ -81,6 +82,15 @@ void ScraperWorker::run() {
         cacheScraper = true;
     } else if (config.scraper == "import") {
         scraper = new ImportScraper(&config, manager);
+    } else if (config.scraper == "gamebase") {
+        if (config.gameBaseFile.isEmpty()) {
+            printf("\033[0;31mBummer! No value for gameBaseFile parameter "
+                   "provided for [%s] in config.ini. Can't "
+                   "continue...\033[0m\n\n",
+                   config.platform.toStdString().c_str());
+            exit(1);
+        }
+        scraper = new GamebaseScraper(&config, manager);
     } else {
         scraper = new AbstractScraper(&config, manager);
     }
@@ -181,6 +191,7 @@ void ScraperWorker::run() {
                 }
                 gameEntries.append(cachedGame);
             } else {
+                // divert into actual scraping
                 scraper->runPasses(gameEntries, info, output, debug);
             }
         }
@@ -218,6 +229,9 @@ void ScraperWorker::run() {
                     compareYear = yyyy.toInt();
                 }
             }
+            if (!config.searchName.isEmpty()) {
+                compareTitle = config.searchName;
+            }
             game = getBestEntry(gameEntries, compareTitle, compareYear,
                                 lowestDistance, debug);
             if (config.interactive && !fromCache) {
@@ -241,8 +255,9 @@ void ScraperWorker::run() {
         game.parNotes = NameTools::getUniqueNotes(game.parNotes, '(');
 
         if (!game.found) {
-            output.append("\033[1;33m---- Game '" + info.completeBaseName() +
-                          "' not found :( ----\033[0m\n\n");
+            output.append(
+                QString("\033[1;33m---- Game '%1' not found :( ----\033[0m\n\n")
+                    .arg(info.completeBaseName()));
             game.resetMedia();
             if (!forceEnd) {
                 forceEnd = limitReached(output);
@@ -257,10 +272,16 @@ void ScraperWorker::run() {
 
         int searchMatch =
             getSearchMatch(game.title, compareTitle, lowestDistance);
+        qDebug() << "Search Match" << searchMatch;
         game.searchMatch = searchMatch;
         if (searchMatch < config.minMatch) {
-            output.append("\033[1;33m---- Game '" + info.completeBaseName() +
-                          "' match too low :| ----\033[0m\n\n");
+            output.append(
+                QString("\033[1;33m---- Game '%1' match ('%2', score: %3, "
+                        "threshold: %4) too low :| ----\033[0m\n\n")
+                    .arg(info.completeBaseName())
+                    .arg(compareTitle)
+                    .arg(searchMatch)
+                    .arg(config.minMatch));
             game.found = false;
             game.resetMedia();
             if (!forceEnd) {
@@ -274,8 +295,9 @@ void ScraperWorker::run() {
             }
         }
 
-        output.append("\033[1;34m---- Game '" + info.completeBaseName() +
-                      "' found! :) ----\033[0m\n");
+        output.append(
+            QString("\033[1;34m---- Game '%1' found! :) ----\033[0m\n")
+                .arg(info.completeBaseName()));
 
         if (!fromCache) {
             scraper->getGameData(game);
@@ -559,6 +581,7 @@ int ScraperWorker::getSearchMatch(const QString &title,
 
 unsigned int ScraperWorker::editDistance(const std::string &s1,
                                          const std::string &s2) {
+    // Levenshtein Distance
     const std::size_t len1 = s1.size(), len2 = s2.size();
     std::vector<unsigned int> col(len2 + 1), prevCol(len2 + 1);
 
@@ -567,8 +590,6 @@ unsigned int ScraperWorker::editDistance(const std::string &s1,
     for (unsigned int i = 0; i < len1; i++) {
         col[0] = i + 1;
         for (unsigned int j = 0; j < len2; j++)
-            // note that std::min({arg1, arg2, arg3}) works only in C++11,
-            // for C++98 use std::min(std::min(arg1, arg2), arg3)
             col[j + 1] = std::min({prevCol[1 + j] + 1, col[j] + 1,
                                    prevCol[j] + (s1[i] == s2[j] ? 0 : 1)});
         col.swap(prevCol);
@@ -605,7 +626,8 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
         return game;
     }
     if (config.scraper == "cache" ||
-        (config.scraper == "openretro" && gameEntries.first().url.isEmpty())) {
+        (config.scraper == "openretro" && gameEntries.first().url.isEmpty()) ||
+        (config.scraper == "gamebase" && gameEntries.size() == 1)) {
         lowestDistance = 0;
         game = gameEntries.first();
         game.title = StrTools::xmlUnescape(game.title);
@@ -807,17 +829,23 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
             suggestedShown = true;
         }
         printf("\033[1;32m%d%s\033[0m: Title:    '\033[1;32m%s\033[0m'%s\n    "
-               "platform: '\033[1;33m%s\033[0m'\n    "
-               "release date: '\033[1;33m%s\033[0m'\n",
+               "Platform: '\033[1;33m%s\033[0m'\n    "
+               "Release date: '\033[1;33m%s\033[0m'%s\n",
                a, QString((a <= 9 ? " " : "")).toStdString().c_str(),
                gameEntries.at(a - 1).title.toStdString().c_str(),
                suggested.toStdString().c_str(),
                gameEntries.at(a - 1).platform.toStdString().c_str(),
-               gameEntries.at(a - 1).releaseDate.toStdString().c_str());
+               gameEntries.at(a - 1).releaseDate.toStdString().c_str(),
+               gameEntries.at(a - 1).publisher.isEmpty()
+                   ? ""
+                   : QString(", Publisher: '\033[1;33m%1\033[0m'")
+                         .arg(gameEntries.at(a - 1).publisher)
+                         .toStdString()
+                         .c_str());
     }
     printf("\033[1;32m-1\033[0m: \033[1;33mNONE OF THE ABOVE!\033[0m\n");
     printf("\033[1;34mPlease choose the preferred entry\033[0m (Or press enter "
-           "to let Skyscraper choose):\033[0m ");
+           "to pick Skyscraper's choice):\033[0m ");
     getline(std::cin, entryStr);
     printf("\n");
     // Becomes 0 if input is not a number

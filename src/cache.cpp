@@ -1262,14 +1262,14 @@ void Cache::readPriorities() {
     for (int a = 0; a < orderNodes.length(); ++a) {
         QDomElement orderElem = orderNodes.at(a).toElement();
         if (!orderElem.hasAttribute(ATTR_TYPE)) {
-            printf("%02d. Priority 'order' node missing 'type' attribute, "
+            printf("  %02d. Priority 'order' node missing 'type' attribute, "
                    "skipping...\n",
                    ++errors);
             continue;
         }
         QString type = orderElem.attribute(ATTR_TYPE);
         if (prioMap.contains(type)) {
-            printf("%02d. another entry for type '%s' found, remove surplus "
+            printf("  %02d. another entry for type '%s' found, remove surplus "
                    "entry to fix. Skipping this one...\n",
                    ++errors, type.toStdString().c_str());
             continue;
@@ -1279,7 +1279,7 @@ void Cache::readPriorities() {
         sources.append(SRC_USER);
         QDomNodeList sourceNodes = orderNodes.at(a).childNodes();
         if (sourceNodes.isEmpty()) {
-            printf("%02d. 'source' node(s) missing for type '%s' in "
+            printf("  %02d. 'source' node(s) missing for type '%s' in "
                    "priorities.xml, skipping...\n",
                    ++errors, type.toStdString().c_str());
             continue;
@@ -1290,9 +1290,11 @@ void Cache::readPriorities() {
         prioMap[type] = sources;
     }
     printf("Priorities loaded successfully");
-    if (errors != 0) {
-        printf(", but %d error(s) encountered in %s, please correct this",
-               errors, prioFilePath().toStdString().c_str());
+    if (errors > 0) {
+        printf(", but \033[1;33m%d error%s encountered\033[0m in %s, please "
+               "correct this",
+               errors, errors == 1 ? "" : "s",
+               prioFilePath().toStdString().c_str());
     }
     printf("!\n\n");
 }

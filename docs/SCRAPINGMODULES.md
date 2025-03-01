@@ -6,25 +6,28 @@ Choosing a scraping module is as simply as setting the `-s <MODULE>` option when
 
 For scraping modules that support or require user credentials you have the option of either setting it on commandline with `-u <USER:PASSWD>` or `-u <KEY>` or better yet, by adding it permanently to the Skyscraper configuration at `/home/<USER>/.skyscraper/config.ini` as described [here](CONFIGINI.md#usercredscredentials-or-key)
 
-| Module              | Supported Formats `--query=""` Parameter                                                                                    |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| arcadedb            | Only title                                                                                                                  |
-| esgamelist          | No query supported                                                                                                          |
-| igdb                | Only title                                                                                                                  |
-| import              | No query supported                                                                                                          |
-| mobygames           | Title or numeric MobyGames ID (see Identifiers section their website)                                                       |
-| openretro           | Only title                                                                                                                  |
-| screenscraper       | romnom=, crc=, md5=, sha1=; see [here](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description |
-| thegamesdb, tgdb    | Only title                                                                                                                  |
-| worldofspectrum, wos | Only title, but can be regular expression                                                                                   |
+| Module               | Supported Formats `--query=""` Parameter                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| arcadedb             | Only title                                                                                                                     |
+| esgamelist           | No query supported                                                                                                             |
+| gamebase             | Game filename, Game title and Game CRC (automatically detected). Except for CRC, globbing patterns (`*` and `'?`) can be used. |
+| igdb                 | Only title                                                                                                                     |
+| import               | No query supported                                                                                                             |
+| mobygames            | Title or numeric MobyGames ID (see Identifiers section their website)                                                          |
+| openretro            | Only title                                                                                                                     |
+| screenscraper        | romnom=, crc=, md5=, sha1=; see [here](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description    |
+| thegamesdb, tgdb     | Only title                                                                                                                     |
+| worldofspectrum, wos | Only title, but can be regular expression                                                                                      |
 
+!!! tip "Aliases for Game Filenames"
+
+    Except for the Import and EmulationStation Gamelist scraper you can also define aliases for each game filename. If an alias is found it is applied for searching the game's metadata. Consult the file [`aliasMap.csv`](https://github.com/Gemba/skyscraper/blob/master/aliasMap.csv) for details.
 
 !!! warning "World of Spectrum"
 
     The World of Spectrum scraping module is currently not functional. See [#122](https://github.com/Gemba/skyscraper/issues/122) for workarounds.
 
-
-Below follows a description of all scraping modules.
+## Characteristics for Each Scraping Module
 
 ### ScreenScraper
 
@@ -51,9 +54,9 @@ I strongly recommend supporting them by contributing data to the database, or by
 
     _Exact_ file name matching does not work well for the `arcade` derived platforms in cases where a data checksum doesn't match. The reason being that `arcade` and other arcade-like platforms are made up of several subplatforms. Each of those subplatforms have a high chance of containing the same file name entry. In those cases ScreenScraper can't determine a unique game and will return an empty result.
 
-### TheGamesDb (TGDB)
+### TheGamesDB (TGDB)
 
-- Shortname: _`thegamesdb`_
+- Shortname: _`thegamesdb`_, _`tgdb`_
 - Type: _Online_
 - Website: _[www.thegamesdb.net](http://www.thegamesdb.net)_
 - Type: _File name search based_
@@ -167,7 +170,7 @@ Substitute CLIENTID and SECRETKEY with your own details. And that's it, you shou
 
 ### World of Spectrum
 
-- Shortname: _`worldofspectrum`_
+- Shortname: _`worldofspectrum`_, _`wos`_
 - Type: _Online_
 - Website: _[www.worldofspectrum.org](http://www.worldofspectrum.org)_
 - Type: _File name search based_
@@ -197,7 +200,7 @@ This module allows you to import data from an existing EmulationStation game lis
 
 Skyscraper will search for the `gamelist.xml` file at `<INPUT FOLDER>/gamelist.xml` which by default is `/home/<USER>/RetroPie/roms/<PLATFORM>/gamelist.xml`. If that file isn't found it will look for it at `/home/<USER>/.skyscraper/import/<PLATFORM>/gamelist.xml`.
 
-### Custom Resource Import Scraper
+### Custom Resource Import
 
 - Shortname: _`import`_
 - Type: _Local_
@@ -211,3 +214,28 @@ Skyscraper will search for the `gamelist.xml` file at `<INPUT FOLDER>/gamelist.x
 - Example use: `Skyscraper -p snes -s import`
 
 Read a thorough description of this module [here](IMPORT.md).
+
+### GameBase DB
+
+- Shortname: _`gamebase`_
+- Type: _Local_
+- Website: _[about the format](https://www.bu22.com/wiki/home)_
+- Type: _Exact filename, title or CRC match, for filename and title wildcards * and ? can be applied anywhere_
+- User credential support: _None required_
+- API request limit: _None_
+- Thread limit: 1
+- Platform support: For those platforms where the community has compiled a GameBase database, several dozen platforms do have a GameBase database. Some examples: Commodore Machines (VC-20,C64,Plus/4,Amiga), Sinclair Spectrum ("Speccy"), ...
+- Media support: _`cover`, `screenshot`_
+- Example use: `Skyscraper -p zxspectrum -s gamebase`
+
+A GameBase DB is a community driven effort to collect game information of the
+common game releases for a platform, but also more importantly for Homebrew and
+Indie released games. It is a great source to find much information about the
+games and other media in one place, which is otherwise cluttered over the
+internet. Skyscraper only uses the game information, but a GameBase DB also
+contains information and files of the platform's former magazines and short
+manuals for example. The usual GameBase DB Frontend is Windows based and a
+database is in Microsoft Access (`*.mdb`) format. Binary data is held in
+subfolders (e.g. Screenshots, Cover) on the filesystem.
+
+Read the setup and config description of this module [here](CONFIGINI.md#gamebasefile).

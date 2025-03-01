@@ -59,7 +59,9 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &,
         break;
     case QtWarningMsg:
         if (msg.contains("NetManager") ||
-            msg.contains("iCCP: known incorrect sRGB profile")) {
+            msg.contains("iCCP: known incorrect sRGB profile") ||
+            msg.contains(
+                "QSqlQuery::value: not positioned on a valid record")) {
             /* ugly, needs proper fix: */
             // NetManager "Cannot create children for a parent that is in a
             // different thread."

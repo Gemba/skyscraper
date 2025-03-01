@@ -7,7 +7,7 @@ CONFIG += release
 #DEFINES+=XDG
 # set std-C++17 for clang and gcc
 CONFIG += c++1z
-QT += core network xml
+QT += core network sql xml
 
 # Installation prefix path for bin/Skyscraper and etc/skyscraper/*
 PREFIX=$$(PREFIX)
@@ -98,6 +98,7 @@ HEADERS += src/skyscraper.h \
            src/screenscraper.h \
            src/crc32.h \
            src/mobygames.h \
+           src/gamebase.h \
            src/igdb.h \
            src/arcadedb.h \
            src/platform.h \
@@ -150,6 +151,7 @@ SOURCES += src/main.cpp \
            src/screenscraper.cpp \
            src/crc32.cpp \
            src/mobygames.cpp \
+           src/gamebase.cpp \
            src/igdb.cpp \
            src/arcadedb.cpp \
            src/platform.cpp \

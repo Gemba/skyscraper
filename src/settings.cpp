@@ -223,6 +223,12 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->importFolder = v;
                 continue;
             }
+            if (k == "gameBaseFile") {
+                if (!validateFileParameter(k, v)) {
+                    exit(1);
+                }
+                config->gameBaseFile = v;
+            }
             if (k == "gameListVariants") {
                 if (config->frontend == "emulationstation") {
                     config->gameListVariants = v;
@@ -299,6 +305,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "scummIni") {
+                if (!validateFileParameter(k, v)) {
+                    exit(1);
+                }
                 config->scummIni = v;
                 continue;
             }
@@ -505,13 +514,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "minMatch") {
-                QStringList denyScrp({"arcadedb", "cache", "esgamelist",
-                                      "import", "screenscraper"});
-                if (denyScrp.contains(config->scraper)) {
-                    printf("\033[1;33mValue of %s is ignored for scrapers "
-                           "%s.\n\033[0m",
-                           k.toUtf8().constData(),
-                           denyScrp.join(", ").toUtf8().constData());
+                if (!scraperAllowedForMatch(config->scraper, k)) {
+                    continue;
                 } else if (0 < v && v <= 100) {
                     config->minMatch = v;
                     config->minMatchSet = true;
@@ -556,7 +560,12 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->threadsSet = true;
     }
     if (parser->isSet("e")) {
-        config->frontendExtra = parser->value("e");
+        if (config->frontend == "attractmode") {
+            config->frontendExtra = parser->value("e");
+        } else {
+            printf("\033[1;33mParameter emulator is ignored. Only "
+                   "applicable with frontend=attractmode.\n\033[0m");
+        }
     }
     if (parser->isSet("i")) {
         config->inputFolder = parser->value("i");
@@ -581,8 +590,8 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->artworkConfig =
             concatPath(Config::getSkyFolder(), "artwork.xml");
     }
-    if (parser->isSet("m") && parser->value("m").toInt() >= 0 &&
-        parser->value("m").toInt() <= 100) {
+    if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m") &&
+        parser->value("m").toInt() >= 0 && parser->value("m").toInt() <= 100) {
         config->minMatch = parser->value("m").toInt();
         config->minMatchSet = true;
     }
@@ -778,6 +787,35 @@ bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
                "%s.\033[0m\n",
                providedFrontend.toStdString().c_str(),
                frontends.join(", ").toStdString().c_str());
+        return false;
+    }
+    return true;
+}
+
+bool RuntimeCfg::validateFileParameter(const QString &param,
+                                       const QString &val) {
+    if (QFileInfo(val).isRelative()) {
+        printf("Parameter %s must be absolute path, got: %s\nPlease fix!\n",
+               param.toStdString().c_str(), val.toStdString().c_str());
+        return false;
+    }
+    if (!QFileInfo(val).exists()) {
+        printf("Parameter %s refers to a non existent file: %s\nPlease fix!\n",
+               param.toStdString().c_str(), val.toStdString().c_str());
+        return false;
+    }
+    return true;
+}
+
+bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,
+                                        const QString &opt) {
+    QStringList denyScrp(
+        {"arcadedb", "cache", "esgamelist", "import", "screenscraper"});
+    if (denyScrp.contains(providedScraper)) {
+        printf("\033[1;33mValue for '%s' is ignored for scraper "
+               "%s. Only allowed for scrapers: %s\n\033[0m",
+               opt.toUtf8().constData(), providedScraper.toUtf8().constData(),
+               denyScrp.join(", ").toUtf8().constData());
         return false;
     }
     return true;

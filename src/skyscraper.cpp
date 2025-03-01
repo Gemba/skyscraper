@@ -880,10 +880,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     settings.endGroup();
 
     // Check for command line scraping module here
-    QStringList scrapers = {"arcadedb",       "cache",         "esgamelist",
-                            "igdb",           "import",        "mobygames",
-                            "openretro",      "screenscraper", "thegamesdb",
-                            "worldofspectrum"};
+    QStringList scrapers = {"arcadedb",   "cache",          "esgamelist",
+                            "gamebase",   "igdb",           "import",
+                            "mobygames",  "openretro",      "screenscraper",
+                            "thegamesdb", "worldofspectrum"};
     if (parser.isSet("s")) {
         QString _scraper = parser.value("s");
         if (_scraper == "tgdb") {
@@ -1063,7 +1063,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         // Always force the cache to be refreshed when using import scraper
         config.refresh = true;
         config.videos = true;
-        // minMatch set to 0 further up
     }
 
     if (!config.userCreds.isEmpty() && config.userCreds.contains(":")) {
@@ -1083,21 +1082,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                "check file and permissions. Now exiting...\n",
                config.artworkConfig.toStdString().c_str());
         exit(1);
-    }
-
-    if (!config.scummIni.isEmpty()) {
-        if (QFileInfo(config.scummIni).isRelative()) {
-            printf("Parameter scummIni must be absolute path, got: %s.\nPlease "
-                   "fix!\n",
-                   config.scummIni.toStdString().c_str());
-            exit(1);
-        }
-        if (!QFileInfo(config.scummIni).exists()) {
-            printf("Parameter scummIni refers to a non existent file: "
-                   "%s.\nPlease fix!\n",
-                   config.scummIni.toStdString().c_str());
-            exit(1);
-        }
     }
 
     QDir resDir(Config::getSkyFolder(Config::SkyFolderType::RESOURCE));
@@ -1179,6 +1163,8 @@ void Skyscraper::prepareScraping() {
         config.romLimit = 35;
     } else if (config.scraper == "screenscraper") {
         prepareScreenscraper(netComm, q);
+    } else if (config.scraper == "gamebase") {
+        config.threads = 1;
     }
 }
 
@@ -1229,7 +1215,6 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
         printf("\033[1;33mAdjusting to %d threads to accomodate limits in "
                "the IGDB API\033[0m\n\n",
                config.threads);
-        printf("\033[1;32mTHIS MODULE IS POWERED BY IGDB.COM\033[0m\n");
     }
     if (config.user.isEmpty() || config.password.isEmpty()) {
         printf("The IGDB scraping module requires free user credentials to "

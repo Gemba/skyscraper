@@ -3,7 +3,14 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.15.0 (2024-01-24)
+### Version 3.16.0 (2025-TBA)
+
+- Added: Support for local GameBase DB scraping. See
+  [here](SCRAPINGMODULES.md#gamebase-db) and [here](CONFIGINI.md#gamebasefile)
+  for details.
+- Fixed: Various edge cases.
+
+### Version 3.15.0 (2025-01-24)
 
 - Added: Separate local Platform configuration from upstream Platform
   configuration. Details

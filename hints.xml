@@ -26,10 +26,11 @@
   <hint>You can create reports for all files missing certain resources in the cache using the '--cache report:missing=&lt;GROUP or RESOURCE1,RESOURCE2,...&gt; option. Great ways to add missing resources that the online sources are having trouble providing are the '--cache edit' option or the '-s import' module.</hint>
   <hint>Using the '--flags theinfront' flag you can force Skyscraper to always move 'The' to the front of the game titles, regardless of how it was returned from the scraping sources.</hint>
   <hint>When importing ratings ("-s import") you can use either 5-star like scale (0.5, 1, 1.5, ... , 5) or decimal numbers scale (0.0 to 1.0) for the rating value.</hint>
-  <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;", where the &lt;gameid&gt; is the ID listed on the mobygames site in a game's detail view.</hint>
-  <hint>Skyscraper on Linux supports bash-completion (programmable completion): Check the documentation how to enable it. Afterwards press TAB twice to display options or values for options.</hint>
+  <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;", where the &lt;gameid&gt; is the ID listed on the mobygames site at the game's detail view.</hint>
+  <hint>Skyscraper on Linux supports bash-completion (programmable completion): Check the documentation how to enable it. Then press TAB twice to display completion options.</hint>
   <hint>You can scrape game manuals with Skyscraper and display them if your frontend supports this. Use manuals=true in config.ini.</hint>
   <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the XDG.md documentation.</hint>
   <hint>Skyscraper supports ES-DE frontend format.</hint>
   <hint>You can add new platforms (i.e., systems to scrape) by configuration file edits. See PLATFORMS.md.</hint>
+  <hint>You can scrape data from GameBase DB files. See SCRAPINGMODULES.md.</hint>
 </hints>

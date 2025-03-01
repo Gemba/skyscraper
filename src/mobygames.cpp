@@ -43,7 +43,7 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
 
     baseUrl = "https://api.mobygames.com";
 
-    searchUrlPre = "https://api.mobygames.com/v1/games";
+    searchUrlPre = baseUrl + "/v1/games";
 
     fetchOrder.append(PUBLISHER);
     fetchOrder.append(DEVELOPER);

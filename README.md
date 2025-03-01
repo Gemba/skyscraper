@@ -77,7 +77,7 @@ This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie
 Skyscraper needs Qt5.3 or later to compile. For a Retropie, Ubuntu or other Debian derived distro, you can install Qt5 using the following commands:
 ```
 $ sudo apt update
-$ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools p7zip-full
+$ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5sql5-sqlite p7zip-full
 # You may need these too, if they are not installed already
 $ sudo apt install make g++ gcc git
 ```
@@ -131,7 +131,7 @@ git clone --depth 1 https://github.com/Gemba/skyscraper.git
 cd skyscraper
 [[ -f Makefile ]] && make --ignore-errors clean
 rm --force .qmake.stash
-QT_SELECT=5 qmake  # Add PREFIX=/path/to if you want a different PREFIX than /usr/local
+QT_SELECT=5 qmake  # Add also PREFIX=/path/to before qmake if you want a different PREFIX than /usr/local
 make -j$(nproc)
 sudo make install
 ```
