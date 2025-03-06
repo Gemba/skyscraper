@@ -1370,6 +1370,7 @@
         "aliases": [
             "dos",
             "pc (microsoft windows)",
+            "linux",
             "pc dos",
             "pc win3.xx",
             "steamos",
@@ -1521,6 +1522,7 @@
     "ports": {
         "aliases": [
             "dos",
+            "linux",
             "pc (microsoft windows)",
             "pc dos",
             "pc win3.xx",
@@ -1754,6 +1756,7 @@
             "dos",
             "microsoft xbox one",
             "pc (microsoft windows)",
+            "linux",
             "pc dos",
             "pc win3.xx",
             "sony playstation 4",

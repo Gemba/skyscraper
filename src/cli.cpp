@@ -502,7 +502,7 @@ void Cli::showHint() {
            hintsXml
                .elementsByTagName("hint")
 #if QT_VERSION >= 0x050a00
-               .at(QRandomGenerator::global()->generate() % hintNodes.length())
+               .at(QRandomGenerator::system()->bounded(hintNodes.length()))
 #else
                .at(qrand() % hintNodes.length())
 #endif

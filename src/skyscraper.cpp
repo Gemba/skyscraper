@@ -1230,6 +1230,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
         tokenFile.close();
     }
     if (tokenData.split(';').length() != 3) {
+        // failsafe
         tokenData = "user;token;0";
     }
     bool updateToken = false;
@@ -1255,8 +1256,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
         if (jsonObj.contains("access_token") &&
             jsonObj.contains("expires_in") && jsonObj.contains("token_type")) {
             config.igdbToken = jsonObj["access_token"].toString();
-            printf("Token '%s' acquired, ready to scrape!\n",
-                   config.igdbToken.toStdString().c_str());
+            printf("...token acquired, ready to scrape!\n");
             tokenLife = (QDateTime::currentMSecsSinceEpoch() / 1000) +
                         jsonObj["expires_in"].toInt();
             if (tokenFile.open(QIODevice::WriteOnly)) {
@@ -1278,8 +1278,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
             exit(1);
         }
     } else {
-        printf("Cached token '%s' still valid, ready to scrape!\n",
-               config.igdbToken.toStdString().c_str());
+        printf("...cached token still valid, ready to scrape!\n");
     }
     printf("\n");
 }

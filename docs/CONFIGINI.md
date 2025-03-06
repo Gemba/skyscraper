@@ -978,14 +978,14 @@ Some scraping modules require a `key` or `user:password` to work. You can create
 
 ```ini
 [screenscraper]
-userCreds="user:password"
+userCreds="<account>:<password>"
 ```
 
 or
 
 ```ini
 [igdb]
-userCreds="key"
+userCreds="<Client-ID>:<Client-Secret>"
 ```
 
 Default value: unset  

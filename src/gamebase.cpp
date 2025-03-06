@@ -125,7 +125,7 @@ void GamebaseScraper::getSearchResults(QList<GameEntry> &gameEntries,
                 oper = "LIKE";
             }
             clause = clause.arg(oper);
-        } else if (c== "Filename") {
+        } else if (c == "Filename") {
             // match PIRATES!_05727_05.zip from gamefile PIRATES!.d64
             clause = clause.arg(searchNameIsFilename ? "%" : "");
         }

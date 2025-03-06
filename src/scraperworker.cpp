@@ -229,7 +229,7 @@ void ScraperWorker::run() {
                     compareYear = yyyy.toInt();
                 }
             }
-            if (!config.searchName.isEmpty()) {
+            if (!config.searchName.isEmpty() && config.scraper == "gamebase") {
                 compareTitle = config.searchName;
             }
             game = getBestEntry(gameEntries, compareTitle, compareYear,

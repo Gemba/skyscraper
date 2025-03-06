@@ -396,16 +396,15 @@ void MobyGames::getScreenshot(GameEntry &game) {
         return;
     }
     int chosen = 1;
-    if (jsonScreenshots.count() >= 3) {
+    if (jsonScreenshots.count() > 2) {
         // First 2 are almost always not ingame, so skip those if we have 3 or
         // more
 #if QT_VERSION >= 0x050a00
         chosen =
-            (QRandomGenerator::global()->generate() % jsonScreenshots.count() -
-             3) +
-            3;
+            (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2)) +
+            2;
 #else
-        chosen = (qrand() % jsonScreenshots.count() - 3) + 3;
+        chosen = (qrand() % jsonScreenshots.count() - 2) + 2;
 #endif
     }
     netComm->request(
