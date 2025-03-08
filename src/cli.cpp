@@ -27,12 +27,9 @@
 #include <QCommandLineOption>
 #include <QDomDocument>
 #include <QMapIterator>
+#include <QRandomGenerator>
 #include <QRegularExpression>
 #include <QStringBuilder>
-
-#if QT_VERSION >= 0x050a00
-#include <QRandomGenerator>
-#endif
 
 void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 
@@ -500,13 +497,8 @@ void Cli::showHint() {
     hintsFile.close();
     QDomNodeList hintNodes = hintsXml.elementsByTagName("hint");
     printf("\033[1;33mDID YOU KNOW:\033[0m %s\n\n",
-           hintsXml
-               .elementsByTagName("hint")
-#if QT_VERSION >= 0x050a00
+           hintsXml.elementsByTagName("hint")
                .at(QRandomGenerator::system()->bounded(hintNodes.length()))
-#else
-               .at(qrand() % hintNodes.length())
-#endif
                .toElement()
                .text()
                .toStdString()

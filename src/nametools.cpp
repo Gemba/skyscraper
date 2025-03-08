@@ -64,8 +64,14 @@ QString NameTools::getScummName(const QFileInfo &info, const QString baseName,
             if (romFile.open(QIODevice::ReadOnly) && !romFile.atEnd()) {
                 QString gameId = romFile.readLine();
                 // remove engine id and variant if present
-                gameId = gameId.split(u':', Qt::SkipEmptyParts).takeLast();
-                gameId = gameId.split(u'-', Qt::SkipEmptyParts).takeLast();
+#if QT_VERSION >= 0x050e00
+                const auto skipEmptyParts = Qt::SkipEmptyParts;
+#else
+                // for RP on Buster
+                const auto skipEmptyParts = QString::SkipEmptyParts;
+#endif
+                gameId = gameId.split(u':', skipEmptyParts).takeLast();
+                gameId = gameId.split(u'-', skipEmptyParts).takeLast();
                 gameId = gameId.trimmed().toLower();
                 if (gameId.isEmpty())
                     return baseName;

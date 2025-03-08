@@ -396,11 +396,8 @@ void MobyGames::getScreenshot(GameEntry &game) {
         // First 2 are almost always not ingame, so skip those if we have 3
         // or more
         chosen =
-            (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2)) +
-            2;
-#else
-        chosen = (qrand() % jsonScreenshots.count() - 2) + 2;
-#endif
+            2 +
+            (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2));
     }
     netComm->request(
         jsonScreenshots.at(chosen).toObject()["image"].toString().replace(

@@ -23,7 +23,16 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
+#include "skyscraper.h"
+
+#include "attractmode.h"
+#include "cli.h"
 #include "config.h"
+#include "emulationstation.h"
+#include "esde.h"
+#include "pegasus.h"
+#include "settings.h"
+#include "strtools.h"
 
 #include <QDebug>
 #include <QDirIterator>
@@ -34,70 +43,18 @@
 #include <QMutexLocker>
 #include <QProcess>
 #include <QSettings>
+#include <QStorageInfo>
 #include <QStringBuilder>
 #include <QThread>
 #include <QTimer>
 #include <iostream>
 
-#if QT_VERSION >= 0x050400
-#include <QStorageInfo>
-#endif
-
-#include "attractmode.h"
-#include "cli.h"
-#include "emulationstation.h"
-#include "esde.h"
-#include "pegasus.h"
-#include "settings.h"
-#include "skyscraper.h"
-#include "strtools.h"
-
-// https://stackoverflow.com/a/323302
-static inline unsigned long mix(unsigned long a, unsigned long b,
-                                unsigned long c) {
-    a = a - b;
-    a = a - c;
-    a = a ^ (c >> 13);
-    b = b - c;
-    b = b - a;
-    b = b ^ (a << 8);
-    c = c - a;
-    c = c - b;
-    c = c ^ (b >> 13);
-    a = a - b;
-    a = a - c;
-    a = a ^ (c >> 12);
-    b = b - c;
-    b = b - a;
-    b = b ^ (a << 16);
-    c = c - a;
-    c = c - b;
-    c = c ^ (b >> 5);
-    a = a - b;
-    a = a - c;
-    a = a ^ (c >> 3);
-    b = b - c;
-    b = b - a;
-    b = b ^ (a << 10);
-    c = c - a;
-    c = c - b;
-    c = c ^ (b >> 15);
-    return c;
-}
-
 Skyscraper::Skyscraper(const QString &currentDir) {
     qRegisterMetaType<GameEntry>("GameEntry");
-
     manager = QSharedPointer<NetManager>(new NetManager());
-
-    // Randomize timer
-#if QT_VERSION < 0x050a00
-    qsrand(clock(), time(NULL), QCoreApplication::applicationPid());
-#endif
+    config.currentDir = currentDir;
 
     printf("%s", StrTools::getVersionHeader().toStdString().c_str());
-
-    config.currentDir = currentDir;
 }
 
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
@@ -711,27 +668,23 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
     }
     currentFile++;
 
-#if QT_VERSION >= 0x050400
-    qint64 spaceLimit = 209715200;
+    const qint64 spaceLimit = 200 * 1024 * 1024;
     if (config.spaceCheck) {
+        QString storage;
         if (config.scraper == "cache" && !config.pretend &&
             QStorageInfo(QDir(config.screenshotsFolder)).bytesFree() <
                 spaceLimit) {
-            printf("\033[1;31mYou have very little disk space left on the "
-                   "Skyscraper media export drive, please free up some space "
-                   "and try again. Now aborting...\033[0m\n\n");
-            printf("Note! You can disable this check by setting "
-                   "'spaceCheck=\"false\"' in the '[main]' section of "
-                   "config.ini.\n\n");
-            // By clearing the queue here we basically tell Skyscraper to stop
-            // and quit nicely
-            config.pretend = true;
-            queue->clearAll();
+            storage = "media export";
         } else if (QStorageInfo(QDir(config.cacheFolder)).bytesFree() <
                    spaceLimit) {
+            storage = "resource cache";
+        }
+        if (!storage.isEmpty()) {
+
             printf("\033[1;31mYou have very little disk space left on the "
-                   "Skyscraper resource cache drive, please free up some space "
-                   "and try again. Now aborting...\033[0m\n\n");
+                   "Skyscraper %s storage, please free up some space "
+                   "and try again. Now aborting...\033[0m\n\n",
+                   storage.toStdString().c_str());
             printf("Note! You can disable this check by setting "
                    "'spaceCheck=\"false\"' in the '[main]' section of "
                    "config.ini.\n\n");
@@ -741,7 +694,6 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
             queue->clearAll();
         }
     }
-#endif
 }
 
 void Skyscraper::checkThreads() {

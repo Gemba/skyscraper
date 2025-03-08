@@ -381,13 +381,8 @@ void Igdb::getScreenshot(GameEntry &game) {
     if (mediaFiles.count() > offset) {
         // Claim: First 2 are almost always not ingame, so skip those if we have
         // 3 or more
-#if QT_VERSION >= 0x050a00
-        chosen =
-            QRandomGenerator::system()->bounded(mediaFiles.count() - offset) +
-            offset;
-#else
-        chosen = (qrand() % mediaFiles.count() - offset) + offset;
-#endif
+        chosen = offset + QRandomGenerator::system()->bounded(
+                              mediaFiles.count() - offset);
     }
     QString mediaUrl = mediaFiles.at(chosen).toObject()["url"].toString();
 

@@ -150,6 +150,7 @@ QString Platform::getFormats(QString platform, QString extensions,
 #if QT_VERSION >= 0x050e00
     addExts = addExtensions.split(" ", Qt::SkipEmptyParts);
 #else
+    // for RP on Buster
     addExts = addExtensions.split(" ", QString::SkipEmptyParts);
 #endif
     for (auto f : addExts) {

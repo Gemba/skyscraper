@@ -267,6 +267,7 @@ QString StrTools::conformTags(const QString str) {
 #if QT_VERSION >= 0x050e00
     QList<QString> tagList = str.split(',', Qt::SkipEmptyParts);
 #else
+    // RP on Buster
     QList<QString> tagList = str.split(',', QString::SkipEmptyParts);
 #endif
     for (auto &tag : tagList) {
