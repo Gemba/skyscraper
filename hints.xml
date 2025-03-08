@@ -6,7 +6,7 @@
   <hint>You can customize the artwork Skyscraper outputs completely by editing the '/home/USER/.skyscraper/artwork.xml' file. Check the full documentation online at https://gemba.github.io/skyscraper/ARTWORK. You can even set a custom artwork.xml per platform if you want in '/home/USER/.skyscraper/config.ini'.</hint>
   <hint>You can force a refresh of the locally cached data using the '--refresh' option. Skyscraper will then refetch the requested entries from the scraping sources, instead of loading it from cache. Sort of like Ctrl+F5 in a browser.</hint>
   <hint>Skyscraper caches all scraped data in the resource cache. This saves bandwidth for the scraping sources as any rescaping will make use of this cache instead of pounding the servers again.</hint>
-  <hint>You can import your own data into the resource cache using the 'import' module. You can import both textual and media data. Read more about this at https://gemba.github.io/skyscraper/ARTWORK.</hint>
+  <hint>You can import your own data into the resource cache using the 'import' module. You can import both textual and media data. Read more about this at https://gemba.github.io/skyscraper/IMPORT.</hint>
   <hint>You can prioritize the sources of each resource type by editing the '/home/USER/.skyscraper/cache/&lt;PLATFORM&gt;/priorities.xml'. Each resource type has a node with source nodes inside. If you want to prioritize a certain source for a certain resource type, just move it to the top or add it if it's not already there.</hint>
   <hint>You can turn off these hints using the '--flags nohints' command line flag.</hint>
   <hint>You can force Skyscraper to never apply any bracket notes (such as '(Europe)' or '[aga]') to the game names by using the '--flags nobrackets' command line flag.</hint>
@@ -22,15 +22,18 @@
   <hint>You can vacuum the Skyscraper cache. This removes all cached resources that don't match any files in your current romset for the selected platform. You can do this by running "Skyscraper -p &lt;PLATFORM&gt; --cache vacuum".</hint>
   <hint>If you use videos and want to save some space, you can use the "--flags symlink" flag to force Skyscraper to link the videos from the cache to the destination instead of copying them. Beware that removing the files from the cache will break the links though.</hint>
   <hint>You can import data from an EmulationStation gamelist.xml file using the "-s esgamelist" scraping module. This way you can use other scrapers to generate a gamelist.xml and then import the data into Skyscraper if you wish.</hint>
-  <hint>If you are having trouble scraping a game with a long name, consider adding an alias for it to the "/home/USER/.skyscraper/aliasMap.csv" file. Open the file in an editor to read more on how to this works.</hint>
+  <hint>If you are having trouble scraping a game with a long name, consider adding an alias for it to the '/home/USER/.skyscraper/aliasMap.csv' file. Open the file in an editor to read more on how to this works.</hint>
   <hint>You can create reports for all files missing certain resources in the cache using the '--cache report:missing=&lt;GROUP or RESOURCE1,RESOURCE2,...&gt; option. Great ways to add missing resources that the online sources are having trouble providing are the '--cache edit' option or the '-s import' module.</hint>
   <hint>Using the '--flags theinfront' flag you can force Skyscraper to always move 'The' to the front of the game titles, regardless of how it was returned from the scraping sources.</hint>
   <hint>When importing ratings ("-s import") you can use either 5-star like scale (0.5, 1, 1.5, ... , 5) or decimal numbers scale (0.0 to 1.0) for the rating value.</hint>
   <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;", where the &lt;gameid&gt; is the ID listed on the mobygames site at the game's detail view.</hint>
-  <hint>Skyscraper on Linux supports bash-completion (programmable completion): Check the documentation how to enable it. Then press TAB twice to display completion options.</hint>
+  <hint>Skyscraper on Linux supports bash-completion (aka. programmable completion): Check the documentation at https://gemba.github.io/skyscraper/CLIHELP/#programmable-completion for details. Once enabled press TAB twice to display completion options.</hint>
   <hint>You can scrape game manuals with Skyscraper and display them if your frontend supports this. Use manuals=true in config.ini.</hint>
   <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the XDG.md documentation.</hint>
-  <hint>Skyscraper supports ES-DE frontend format.</hint>
-  <hint>You can add new platforms (i.e., systems to scrape) by configuration file edits. See PLATFORMS.md.</hint>
-  <hint>You can scrape data from GameBase DB files. See SCRAPINGMODULES.md.</hint>
+  <hint>Skyscraper supports the ES-DE frontend gamelist format.</hint>
+  <hint>You can add new platforms (i.e., systems to scrape) with configuration file edits. See PLATFORMS.md.</hint>
+  <hint>You can scrape data from GameBase DB files with Skyscraper. GameBase DBs are a well of information especially for indie or homebrew games for retro systems.</hint>
+  <hint>Skyscraper supports ten scraping modules: 7 for online sources and 3 for local sources.</hint>
+  <hint>Pizza and beer go whell together.</hint>
+  <hint>Skyscraper debuted at June, 11th 2017.</hint>
 </hints>

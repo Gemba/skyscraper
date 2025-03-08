@@ -496,11 +496,36 @@ void Cli::showHint() {
     }
     hintsFile.close();
     QDomNodeList hintNodes = hintsXml.elementsByTagName("hint");
-    printf("\033[1;33mDID YOU KNOW:\033[0m %s\n\n",
-           hintsXml.elementsByTagName("hint")
-               .at(QRandomGenerator::system()->bounded(hintNodes.length()))
-               .toElement()
-               .text()
-               .toStdString()
-               .c_str());
+    QString hint =
+        hintsXml.elementsByTagName("hint")
+            .at(QRandomGenerator::system()->bounded(hintNodes.length()))
+            .toElement()
+            .text();
+
+    hint = hint.replace("/home/USER/.skyscraper/cache",
+                        Config::getSkyFolder(Config::SkyFolderType::CACHE));
+    hint = hint.replace("/home/USER/.skyscraper", Config::getSkyFolder());
+#ifdef Q_OS_LINUX
+    hint = hint.replace(QDir::homePath(), "~");
+#endif
+    hint = "\033[1;33mDID YOU KNOW:\033[0m " + hint;
+
+    QStringList hintWrapped;
+    int ptr = 0;
+    QString line;
+    for (auto const &w : hint.split(' ')) {
+        if (ptr + w.length() >= 80) {
+            ptr = 0;
+            line.chop(1);
+            hintWrapped.append(line);
+            line = "";
+        }
+        ptr += w.length() + 1;
+        line.append(w);
+        line.append(' ');
+    }
+    line.chop(1);
+    hintWrapped.append(line);
+
+    printf("%s\n\n", hintWrapped.join("\n").toStdString().c_str());
 }

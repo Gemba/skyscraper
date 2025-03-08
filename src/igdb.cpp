@@ -3,7 +3,7 @@
  *
  *  Sun Aug 26 12:00:00 CEST 2018
  *  Copyright 2018 Lars Muldjord
- *  Copyright 2015 Gemba @ Github
+ *  Copyright 2025 Gemba @ Github
  ****************************************************************************/
 /*
  *  This file is part of skyscraper.
