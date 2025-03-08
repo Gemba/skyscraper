@@ -56,11 +56,9 @@ private:
 
     int getPlatformId(const QString platform) override;
     QString getRegionShort(const QString &region);
-    void setupRegionMap();
 
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
-    QMap<QString, QString> regionMap;
 };
 
 #endif // MOBYGAMES_H

@@ -57,7 +57,7 @@ unix:resexamples.files=resources/maskexample.png resources/frameexample.png \
 unix:INSTALLS += target config examples cacheexamples impexamples \
   resexamples supplementary
 
-include(./VERSION)
+include(./VERSION.ini)
 unix:dev=$$find(VERSION, "-dev")
 unix:count(dev, 1) {
   rev=$$system(git describe --always)

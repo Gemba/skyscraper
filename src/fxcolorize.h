@@ -29,6 +29,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QObject>
 
 class FxColorize : public QObject {
     Q_OBJECT

@@ -40,7 +40,6 @@
 #include <QString>
 #include <QStringList>
 #include <QVersionNumber>
-#include <iostream>
 
 static const QString fnPeas = "peas.json";
 static const QString fnPeasLocal = "peas_local.json";
@@ -205,7 +204,8 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         if (parts.length() != 4) {
             printf("\033[1;31mFile '%s', line '%s' has not four columns, but "
                    "%d. Please fix. Now quitting...\033[0m\n",
-                   fn, parts.join(',').toUtf8().constData(), parts.length());
+                   fn, parts.join(',').toUtf8().constData(),
+                   static_cast<int>(parts.length()));
             configFile.close();
             return false;
         }
@@ -267,7 +267,8 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "215c8974fbd2490dedc6e6e59541bc6a36dfb12e8750031aeade99e5e4878c8d",
                  "dfd5591107d585eeecfd3e37beb1b2d80b740caae84ac79d09c65704677740d2",
                  "f046b81f403b132379a4f93e3e5d9482e60b69ce3d18a13539a895ea2d6583d8",
-                 "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9"}
+                 "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9",
+                 "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d"}
             )
         },
         {"platforms_idmap.csv", QStringList(

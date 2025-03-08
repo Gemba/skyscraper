@@ -30,6 +30,7 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QRegularExpression>
 
 class Igdb : public AbstractScraper {
     Q_OBJECT

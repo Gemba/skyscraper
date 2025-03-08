@@ -29,6 +29,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QObject>
 
 class FxOpacity : public QObject {
     Q_OBJECT

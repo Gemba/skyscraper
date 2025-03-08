@@ -1062,7 +1062,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (config.scraper == "import") {
         // Always force the cache to be refreshed when using import scraper
         config.refresh = true;
-        config.videos = true;
     }
 
     if (!config.userCreds.isEmpty() && config.userCreds.contains(":")) {

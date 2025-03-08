@@ -29,6 +29,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QObject>
 
 class FxRotate : public QObject {
     Q_OBJECT

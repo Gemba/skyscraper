@@ -29,6 +29,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QObject>
 
 class FxSaturation : public QObject {
     Q_OBJECT

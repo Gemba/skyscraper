@@ -25,8 +25,6 @@
 #include "xmlreader.h"
 
 #include "gameentry.h"
-#include "nametools.h"
-#include "strtools.h"
 
 #include <QDebug>
 #include <QFile>

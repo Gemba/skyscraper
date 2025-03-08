@@ -29,10 +29,28 @@
 #include "strtools.h"
 
 #include <QJsonArray>
-
-#if QT_VERSION >= 0x050a00
 #include <QRandomGenerator>
-#endif
+#include <cstdio>
+
+static inline QMap<QString, QString> mobyRegionMap() {
+    return QMap<QString, QString>(
+        {{"Australia", "au"},      {"Brazil", "br"},
+         {"Bulgaria", "bg"},       {"Canada", "ca"},
+         {"Chile", "cl"},          {"China", "cn"},
+         {"Czech Republic", "cz"}, {"Denmark", "dk"},
+         {"Finland", "fi"},        {"France", "fr"},
+         {"Germany", "de"},        {"Greece", "gr"},
+         {"Hungary", "hu"},        {"Israel", "il"},
+         {"Italy", "it"},          {"Japan", "jp"},
+         {"Netherlands", "nl"},    {"New Zealand", "nz"},
+         {"Norway", "no"},         {"Poland", "pl"},
+         {"Portugal", "pt"},       {"Russia", "ru"},
+         {"Slovakia", "sk"},       {"South Korea", "kr"},
+         {"Spain", "sp"},          {"Sweden", "se"},
+         {"Taiwan", "tw"},         {"Turkey", "tr"},
+         {"United Kingdom", "uk"}, {"United States", "us"},
+         {"Worldwide", "wor"}});
+}
 
 MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -134,7 +152,8 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
 }
 
 void MobyGames::getGameData(GameEntry &game) {
-    printf("Waiting to get game data...\n");
+    printf("Waiting to get game data... ");
+    fflush(stdout);
     limiter.exec();
     netComm->request(game.url);
     q.exec();
@@ -142,8 +161,10 @@ void MobyGames::getGameData(GameEntry &game) {
 
     jsonDoc = QJsonDocument::fromJson(data);
     if (jsonDoc.isEmpty()) {
+        printf("None found.\n");
         return;
     }
+    printf("OK\n");
 
     jsonObj = QJsonDocument::fromJson(game.miscData).object();
     populateGameEntry(game);
@@ -170,11 +191,11 @@ void MobyGames::getTags(GameEntry &game) {
     for (auto gg : jsonGenres) {
         QJsonObject jg = gg.toObject();
         int genreCatId = jg["genre_category_id"].toInt();
-        qDebug() << "Got genre cat id" << genreCatId << "\n";
+        qDebug() << "JSON genre id" << genreCatId;
         if (/*Basic Genres*/ 1 == genreCatId || /*Gameplay*/ 4 == genreCatId) {
             QString gs = jg["genre_name"].toString();
             game.tags.append(gs + ", ");
-            qDebug() << "Using" << gs;
+            qDebug() << "Using" << gs << QString("(id %1)").arg(genreCatId);
         }
     }
     game.tags.chop(2);
@@ -182,66 +203,24 @@ void MobyGames::getTags(GameEntry &game) {
 
 void MobyGames::getAges(GameEntry &game) {
     QJsonArray jsonAges = jsonDoc.object()["ratings"].toArray();
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "PEGI Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
+    QStringList ratingBodies = {"PEGI Rating",
+                                "ELSPA Rating",
+                                "ESRB Rating",
+                                "USK Rating",
+                                "OFLC (Australia) Rating",
+                                "SELL Rating",
+                                "BBFC Rating",
+                                "OFLC (New Zealand) Rating",
+                                "VRC Rating"};
+    for (auto const &ja : jsonAges) {
+        for (auto const &rb : ratingBodies) {
+            if (auto jObj = ja.toObject();
+                jObj["rating_system_name"].toString() == rb) {
+                game.ages = jObj["rating_name"].toString();
+                break;
+            }
         }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "ELSPA Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "ESRB Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "USK Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "OFLC (Australia) Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "SELL Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "BBFC Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "OFLC (New Zealand) Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
-            break;
-        }
-    }
-    for (int a = 0; a < jsonAges.count(); ++a) {
-        if (jsonAges.at(a).toObject()["rating_system_name"].toString() ==
-            "VRC Rating") {
-            game.ages = jsonAges.at(a).toObject()["rating_name"].toString();
+        if (!game.ages.isEmpty()) {
             break;
         }
     }
@@ -297,13 +276,14 @@ void MobyGames::getRating(GameEntry &game) {
 }
 
 void MobyGames::getCover(GameEntry &game) {
-    printf("Waiting to get cover data...\n");
+    printf("Waiting to get cover data... ");
+    fflush(stdout);
     limiter.exec();
     QString req = QString(
         game.url.left(game.url.indexOf("?api_key=")) + "/covers" +
         game.url.mid(game.url.indexOf("?api_key="),
                      game.url.length() - game.url.indexOf("?api_key=")));
-    qDebug() << "Covers " << req;
+    qDebug() << "Covers request" << req;
     netComm->request(req);
     q.exec();
     data = netComm->getData();
@@ -364,19 +344,34 @@ void MobyGames::getCover(GameEntry &game) {
     // are always redirected to https
     coverUrl.replace("http://", "https://");
 
-    if (!coverUrl.isEmpty()) {
-        netComm->request(coverUrl);
-        q.exec();
+    if (coverUrl.isEmpty()) {
+        printf("No cover found for platform '%s'.\n",
+               game.platform.toStdString().c_str());
+        return;
+    }
+    qDebug() << coverUrl;
+    netComm->request(coverUrl);
+    q.exec();
+    QImage image;
+    if (netComm->getError() == QNetworkReply::NoError) {
         QImage image;
-        if (netComm->getError() == QNetworkReply::NoError &&
-            image.loadFromData(netComm->getData())) {
-            game.coverData = netComm->getData();
+        if (image.loadFromData(netComm->getData())) {
+            double aspect = image.height() / (double)image.width();
+            if (aspect >= 0.8) {
+                game.coverData = netComm->getData();
+                printf("OK\n");
+            } else {
+                printf("Landscape mode detected. Cover discarded.\n");
+            }
+            return;
         }
     }
+    printf("Unexpected download or format error.\n");
 }
 
 void MobyGames::getScreenshot(GameEntry &game) {
-    printf("Waiting to get screenshot data...\n");
+    printf("Waiting to get screenshot data... ");
+    fflush(stdout);
     limiter.exec();
     netComm->request(
         game.url.left(game.url.indexOf("?api_key=")) + "/screenshots" +
@@ -393,13 +388,13 @@ void MobyGames::getScreenshot(GameEntry &game) {
     QJsonArray jsonScreenshots = jsonDoc.object()["screenshots"].toArray();
 
     if (jsonScreenshots.count() < 1) {
+        printf("No screenshots available.\n");
         return;
     }
     int chosen = 1;
     if (jsonScreenshots.count() > 2) {
-        // First 2 are almost always not ingame, so skip those if we have 3 or
-        // more
-#if QT_VERSION >= 0x050a00
+        // First 2 are almost always not ingame, so skip those if we have 3
+        // or more
         chosen =
             (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2)) +
             2;
@@ -414,7 +409,11 @@ void MobyGames::getScreenshot(GameEntry &game) {
     QImage image;
     if (netComm->getError() == QNetworkReply::NoError &&
         image.loadFromData(netComm->getData())) {
+        printf("OK. Picked screenshot #%d of %d.\n", chosen,
+               jsonScreenshots.count());
         game.screenshotData = netComm->getData();
+    } else {
+        printf("No screenshot available.\n");
     }
 }
 
@@ -423,29 +422,10 @@ int MobyGames::getPlatformId(const QString platform) {
 }
 
 QString MobyGames::getRegionShort(const QString &region) {
-    if (regionMap.contains(region)) {
-        qDebug() << "Got region" << regionMap[region];
-        return regionMap[region];
+    if (mobyRegionMap().contains(region)) {
+        qDebug() << "Got region" << mobyRegionMap()[region];
+        return mobyRegionMap()[region];
     }
+    qWarning() << "Region not matched for" << region;
     return "na";
-}
-
-void MobyGames::setupRegionMap() {
-    regionMap = QMap<QString, QString>(
-        {{"Australia", "au"},      {"Brazil", "br"},
-         {"Bulgaria", "bg"},       {"Canada", "ca"},
-         {"Chile", "cl"},          {"China", "cn"},
-         {"Czech Republic", "cz"}, {"Denmark", "dk"},
-         {"Finland", "fi"},        {"France", "fr"},
-         {"Germany", "de"},        {"Greece", "gr"},
-         {"Hungary", "hu"},        {"Israel", "il"},
-         {"Italy", "it"},          {"Japan", "jp"},
-         {"Netherlands", "nl"},    {"New Zealand", "nz"},
-         {"Norway", "no"},         {"Poland", "pl"},
-         {"Portugal", "pt"},       {"Russia", "ru"},
-         {"Slovakia", "sk"},       {"South Korea", "kr"},
-         {"Spain", "sp"},          {"Sweden", "se"},
-         {"Taiwan", "tw"},         {"Turkey", "tr"},
-         {"United Kingdom", "uk"}, {"United States", "us"},
-         {"Worldwide", "wor"}});
 }

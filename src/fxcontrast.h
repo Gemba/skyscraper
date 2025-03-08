@@ -29,6 +29,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QObject>
 
 class FxContrast : public QObject {
     Q_OBJECT

@@ -27,6 +27,7 @@
 #include <QCommandLineOption>
 #include <QDomDocument>
 #include <QMapIterator>
+#include <QRegularExpression>
 #include <QStringBuilder>
 
 #if QT_VERSION >= 0x050a00
@@ -59,7 +60,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 
     QString ht = "";
     int csr = 0;
-    for (auto w : h.split(QRegExp("\\s"))) {
+    for (auto w : h.split(QRegularExpression("\\s"))) {
         if (csr + w.length() >= 80 || w.isEmpty()) {
             csr = 0;
             ht.append('\n');

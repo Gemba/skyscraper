@@ -150,7 +150,7 @@ bool Cache::read() {
             }
         }
         printf("\033[1;32mDone!\033[0m\n");
-        printf("Cached %d files\n\n", fileEntries.count());
+        printf("Cached %d files\n\n", static_cast<int>(fileEntries.count()));
 
         printf("Reading and parsing resource cache, please wait... ");
         fflush(stdout);
@@ -213,7 +213,8 @@ bool Cache::read() {
         cacheFile.close();
         resAtLoad = resources.length();
         printf("\033[1;32mDone!\033[0m\n");
-        printf("Successfully parsed %d resources!\n\n", resources.length());
+        printf("Successfully parsed %d resources!\n\n",
+               static_cast<int>(resources.length()));
         return true;
     }
     return false;
@@ -341,7 +342,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
         while (!doneEdit) {
             printf("\033[0;32m#%d/%d\033[0m \033[1;33m\nCURRENT FILE: "
                    "\033[0m\033[1;32m%s\033[0m\033[1;33m\033[0m\n",
-                   queueLength - queue->length(), queueLength,
+                   queueLength - static_cast<int>(queue->length()), queueLength,
                    info.fileName().toStdString().c_str());
             std::string userInput = "";
             if (command.isEmpty()) {
@@ -538,7 +539,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         printf(
                             "\033[1;33m%4d\033[0m) \033[1;33m%s\033[0m (%s): "
                             "'\033[1;32m%s\033[0m'\n",
-                            rIdxList.length() + 1,
+                            static_cast<int>(rIdxList.length()) + 1,
                             res.type.toStdString().c_str(),
                             res.source.toStdString().c_str(),
                             res.value.toStdString().c_str());
@@ -988,7 +989,8 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         fileInfos.filterFiles(config.includePattern, true);
     }
     printf("%d compatible files found for the '%s' platform!\n",
-           fileInfos.length(), config.platform.toStdString().c_str());
+           static_cast<int>(fileInfos.length()),
+           config.platform.toStdString().c_str());
     printf("Creating file id list for all files, please wait...");
     QList<QString> cacheIdList = getCacheIdList(fileInfos);
     printf("\n\n");
@@ -1329,8 +1331,9 @@ bool Cache::write(const bool onlyQuickId) {
     bool result = false;
     QFile cacheFile(dbFilePath());
     if (cacheFile.open(QIODevice::WriteOnly)) {
+        int resCountNew = static_cast<int>(resources.length());
         printf("Writing %d (%d new) resources to cache, please wait... ",
-               resources.length(), resources.length() - resAtLoad);
+               resCountNew, resCountNew - resAtLoad);
         fflush(stdout);
         QXmlStreamWriter xml(&cacheFile);
         xml.setAutoFormatting(true);
@@ -1598,7 +1601,8 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                             printf("%s: '%d' > '%d', choosing resize for "
                                    "optimal result!\n",
                                    resource.type.toStdString().c_str(),
-                                   imageData->size(), resizedData.size());
+                                   static_cast<int>(imageData->size()),
+                                   static_cast<int>(resizedData.size()));
                         }
                         *imageData = resizedData;
                     }

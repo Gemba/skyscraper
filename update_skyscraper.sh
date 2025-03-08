@@ -24,14 +24,14 @@
     handle_error() {
         local EXITCODE=$?
         local ACTION=$1
-        rm -f VERSION VERSION.txt
+        rm -f VERSION VERSION.ini
         printf '%s\n' "--- Failed to $ACTION Skyscraper v${LATEST}, exiting with code $EXITCODE ---"
         popd >/dev/null 2>&1
         exit $EXITCODE
     }
 
     pushd "$(dirname -- "$(readlink -f -- "$0")")" >/dev/null 2>&1 || exit
-    source VERSION 2>/dev/null || VERSION=""
+    source VERSION.ini 2>/dev/null || VERSION=""
     if [ "$LATEST" != "$VERSION" ]; then
         printf '\n%s\n' "--- Fetching Skyscraper v$LATEST ---"
         tarball="${LATEST}.tar.gz"
@@ -58,7 +58,6 @@
 
         if [[ "$OSTYPE" == "darwin"* ]]; then
             printf '\n%s\n' "--- MacOS : Pre-building adjustment ---"
-            mv VERSION VERSION.txt
             sed -i '' "s|CC *= .*|CC             = /usr/bin/gcc|" Makefile
             sed -i '' "s|CXX *= .*|CXX           = /usr/bin/g++|" Makefile
         fi
@@ -74,14 +73,13 @@
             printf '\n%s\n' "--- MacOS : extract binary ---"
             mv Skyscraper.app/Contents/MacOS/Skyscraper Skyscraper
             rm -rf Skyscraper.app
-            mv VERSION.txt VERSION
         fi
 
         printf '\n%s\n' "--- Skyscraper has been updated to v$LATEST ---"
     else
         printf '\n%s\n' "--- Skyscraper is already the latest version, exiting ---"
-        printf '%s\n' "Hint: You can force a reinstall by removing the VERSION file by"
-        printf '%s\n' "running 'rm VERSION'. Then run $0 again."
+        printf '%s\n' "Hint: You can force a reinstall by removing the VERSION.ini file by"
+        printf '%s\n' "running 'rm VERSION.ini'. Then run $0 again."
     fi
     popd >/dev/null 2>&1 || exit
 }

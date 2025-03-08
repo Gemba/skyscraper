@@ -26,12 +26,12 @@
 #include "emulationstation.h"
 
 #include "gameentry.h"
-#include "platform.h"
 #include "strtools.h"
 #include "xmlreader.h"
 
 #include <QDebug>
 #include <QDir>
+#include <QRegExp>
 #include <QStringBuilder>
 
 EmulationStation::EmulationStation() {}

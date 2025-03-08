@@ -31,6 +31,7 @@
 
 #include <QJsonArray>
 #include <QRandomGenerator>
+#include <QRegularExpression>
 
 Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
