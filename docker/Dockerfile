@@ -16,7 +16,7 @@ RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 
 # Building skyscraper
 COPY ./* ./
-RUN rm ./VERSION
+RUN rm ./VERSION.ini
 RUN chmod +x update_skyscraper.sh  && ./update_skyscraper.sh
 
 ENTRYPOINT ["Skyscraper"]

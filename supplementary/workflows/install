@@ -6,7 +6,7 @@ export SKYSCRAPER_HOME="$(cd "$(dirname "$0")/../.." && pwd)"
 source "${SKYSCRAPER_HOME}/supplementary/workflows/core.sh"
 
 cleanup() {
-   mv VERSION.bk VERSION &>/dev/null || true
+   mv VERSION.bk VERSION.ini &>/dev/null || true
 }
 
 cleanup
@@ -22,11 +22,11 @@ run_termux_docker() {
 }
 
 build() {
-   source "VERSION"
+   source "VERSION.ini"
    LATEST="$VERSION"
 
    if [[ "$OSTYPE" == *"arwin"* ]]; then
-      mv VERSION VERSION.bk || true
+      mv VERSION.ini VERSION.bk || true
    fi
 
    cd "$SKYSCRAPER_HOME"
