@@ -3,11 +3,25 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.16.0 (2025-TBA)
+### Version 3.16.0 (2025-03-10)
 
 - Added: Support for local GameBase DB scraping. See
   [here](SCRAPINGMODULES.md#gamebase-db) and [here](CONFIGINI.md#gamebasefile)
-  for details.
+  for details. _To the RetroPie users_: Please update the scriptmodule in the
+  RetroPie-Setup first before updating Skyscraper.
+- Added: Documentation on scraper modules supplied with [scraper
+  capabilities](SCRAPINGMODULES.md#capabilities-of-scrapers).
+- Added: Documentation on options for --query parameter per scraper modules. See
+  [here](SCRAPINGMODULES.md#recognized-keywords-in-query).
+- Added: IGDB scraper now supports Screenshot and Cover scraping, plus it
+  allows querying with game ID `--query="id=..."`.
+- Updated: ArcadeDB scraper now downloads HD video if present, failsafes to
+  default video.
+- Updated: Tip of the day is now word-wrapped and uses specific paths instead of
+  `/home/USER/...`
+- Changed: Backward compability limited to Qt 5.11 (Debian Buster), earlier Qt
+  versions are no longer supported. However, Skyscraper is fully compatible to
+  Qt6 on Linux, macOS and Windows.
 - Fixed: Various edge cases.
 
 ### Version 3.15.0 (2025-01-24)

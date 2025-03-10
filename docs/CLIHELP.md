@@ -680,7 +680,7 @@ For most modules a search query is sent to the scraping module in an URL format.
 $ Skyscraper -p <PLATFORM> -s <MODULE> --query "rick+dangerous" <FILENAME>
 ```
 
-Remember to also add a filename that you wish to use the override with. Otherwise the query will be ignored.
+Remember to also add exactly one filename that you wish to use the override with. Otherwise the query will be ignored.
 
 If you apply the query option with a game filename, the flag `--refresh` (see below) is automatically set.
 
@@ -690,7 +690,7 @@ You can use any combination of `crc=<CHECKSUM>`, `md5=<CHECKSUM>`, `sha1=<CHECKS
 
 The Mobygames scraper supports the romname directly in the `--query` parameter, but also accepts the game id from the mobygames site which you can find when manually looking up a game in the "Identifiers" section of the game details page (lower third of page).
 
-For other scraping module's query capabilities see the [overview page](SCRAPINGMODULES.md#scraping-module-overview).
+For other scraping module's query capabilities see the [overview page](SCRAPINGMODULES.md#recognized-keywords-in-query).
 
 !!! tip
 

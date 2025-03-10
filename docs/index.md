@@ -21,6 +21,7 @@ Skyscraper]((https://github.com/muldjord/skyscraper?tab=readme-ov-file#code-cont
 - Various configuration options added to fine-tune scraping and gamelist
   creation
 - Skyscraper manual also available in mkdocs/material layout
+- Verified to compile and run on Linux, macOS and Windows
 
 See also [all new features](CHANGELOG.md)
 
