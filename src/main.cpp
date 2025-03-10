@@ -126,6 +126,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
 }
 #endif
 
+
 int main(int argc, char *argv[]) {
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
     struct sigaction sigIntHandler;
@@ -137,6 +138,13 @@ int main(int argc, char *argv[]) {
     sigaction(SIGINT, &sigIntHandler, NULL);
 #elif defined(Q_OS_WIN)
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE);
+
+    // enable ANSI terminal colors
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
 #endif
 
     QCoreApplication app(argc, argv);

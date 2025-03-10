@@ -11,7 +11,7 @@ win32 {
   !build_pass:message("Config files will be put into '$$(USERPROFILE)\\.skyscraper'.")
   !build_pass:message("Existing user's config files will not be overwritten, you may have to diff/merge them manually!")
 
-  WINDEPLOYQT_BIN="$$[QT_INSTALL_PREFIX]/bin/windeployqt.exe"
+  WINDEPLOYQT_BIN="$$[QT_INSTALL_PREFIX]/bin/windeployqt6.exe"
   QT_LIC_FOLDER="$$[QT_INSTALL_PREFIX]/../../Licenses"
 
   # Avoid MinGW windres.exe hiccup in generated Skyscraper_resource.rc
@@ -32,6 +32,7 @@ win32 {
 
   # determine needed libs and copy into $${DEST}
   QMAKE_POST_LINK += cmd /c $$shell_quote($$shell_path($${WINDEPLOYQT_BIN})) \
+    --no-system-dxc-compiler --no-system-d3d-compiler --no-opengl-sw \
     --$${BUILD_CFG} $$shell_quote($$shell_path($${DEST}\\Skyscraper.exe)) \
     $$escape_expand(\\n\\t)
 
