@@ -307,8 +307,7 @@ bool EmulationStation::isGameLauncher(QString &sub) {
 
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem = addEmptyElement();
-    addEmptyElem = addEmptyElement() && !entry.isFolder;
+    bool addEmptyElem = addEmptyElement() && !entry.isFolder;
     QString entryType = QString(entry.isFolder ? "folder" : "game");
     l.append("  <" % entryType % ">");
 
@@ -332,7 +331,7 @@ QString EmulationStation::createXml(GameEntry &entry) {
     l.append(elem("genre", entry.tags, addEmptyElem));
     l.append(elem("players", entry.players, addEmptyElem));
 
-    // non scraper elements
+    // write out non scraped elements
     for (const auto &t : extraGamelistTags(entry.isFolder)) {
         if (t != "kidgame") {
             l.append(elem(t, entry.getEsExtra(t), false));
