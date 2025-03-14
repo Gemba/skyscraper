@@ -53,8 +53,6 @@ enum : int {
 
 class GameEntry {
 public:
-    enum Format { RETROPIE, ESDE };
-
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
@@ -154,18 +152,10 @@ public:
         esExtras[tagName] = value;
     };
 
-    inline const QStringList extraTagNames(Format type, bool isFolder = false) {
+    inline const QStringList extraTagNames(bool isFolder = false) {
+        (void)isFolder;
         QStringList tagNames = {"favorite",   "hidden",  "playcount",
                                 "lastplayed", "kidgame", "sortname"};
-        if (type == Format::RETROPIE) {
-            return tagNames;
-        }
-        tagNames +=
-            {"collectionsortname", "completed",    "broken",     "nogamecount",
-             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
-        if (isFolder) {
-            tagNames.append("folderlink");
-        }
         return tagNames;
     };
 

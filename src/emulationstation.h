@@ -60,9 +60,7 @@ public:
 protected:
     virtual QStringList createEsVariantXml(const GameEntry &entry);
     virtual QStringList extraGamelistTags(bool isFolder /* ignored on RP ES */);
-    virtual GameEntry::Format gamelistFormat() {
-        return GameEntry::Format::RETROPIE;
-    };
+    bool addEmptyElement() { return true; };
 
 private:
     QString createXml(GameEntry &entry);

@@ -51,7 +51,7 @@ bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
 QStringList EmulationStation::extraGamelistTags(bool isFolder) {
     (void)isFolder;
     GameEntry g;
-    return g.extraTagNames(GameEntry::Format::RETROPIE);
+    return g.extraTagNames();
 }
 
 void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
@@ -303,12 +303,8 @@ bool EmulationStation::isGameLauncher(QString &sub) {
 
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem;
-    if (gamelistFormat() == GameEntry::Format::ESDE) {
-        addEmptyElem = false;
-    } else {
-        addEmptyElem = !entry.isFolder;
-    }
+    bool addEmptyElem = addEmptyElement();
+    addEmptyElem = addEmptyElement() && !entry.isFolder;
     QString entryType = QString(entry.isFolder ? "folder" : "game");
     l.append("  <" % entryType % ">");
 

@@ -86,6 +86,7 @@ HEADERS += src/skyscraper.h \
            src/localscraper.h \
            src/importscraper.h \
            src/gameentry.h \
+           src/gameentryesde.h \
            src/abstractscraper.h \
            src/abstractfrontend.h \
            src/emulationstation.h \
@@ -139,6 +140,7 @@ SOURCES += src/main.cpp \
            src/localscraper.cpp \
            src/importscraper.cpp \
            src/gameentry.cpp \
+           src/gameentryesde.cpp \
            src/abstractscraper.cpp \
            src/abstractfrontend.cpp \
            src/emulationstation.cpp \

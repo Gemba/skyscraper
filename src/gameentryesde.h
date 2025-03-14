@@ -1,10 +1,10 @@
 /*
  *  This file is part of skyscraper.
- *  Copyright 2024 Gemba @ GitHub
+ *  Copyright 2025 Gemba @ GitHub
  *
  *  skyscraper is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
+ *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
  *
  *  skyscraper is distributed in the hope that it will be useful,
@@ -17,26 +17,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef ESDE_H
-#define ESDE_H
+#ifndef GAMEENTRYESDE_H
+#define GAMEENTRYESDE_H
 
-#include "emulationstation.h"
 #include "gameentry.h"
 
-class Esde : public EmulationStation {
-    Q_OBJECT
+#include <QStringList>
 
+class GameEntryEsde : GameEntry {
 public:
-    Esde();
+    GameEntryEsde();
 
-    QString getInputFolder() override;
-    QString getGameListFolder() override;
-    QString getMediaFolder() override;
+    inline const QStringList extraTagNames(bool isFolder = false) {
+        QStringList tagNames = GameEntry::extraTagNames(isFolder);
 
-protected:
-    QStringList createEsVariantXml(const GameEntry &entry) override;
-    QStringList extraGamelistTags(bool isFolder) override;
-    bool addEmptyElem() { return false; };
+        tagNames +=
+            {"collectionsortname", "completed",    "broken",     "nogamecount",
+             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
+        if (isFolder) {
+            tagNames.append("folderlink");
+        }
+        return tagNames;
+    };
 };
 
-#endif // ESDE_H
+#endif // GAMEENTRYESDE_H
