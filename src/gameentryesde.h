@@ -29,7 +29,7 @@ public:
     GameEntryEsde();
 
     inline const QStringList extraTagNames(bool isFolder = false) {
-        QStringList tagNames = GameEntry::extraTagNames(isFolder);
+        QStringList tagNames = GameEntry::extraTagNames();
 
         tagNames +=
             {"collectionsortname", "completed",    "broken",     "nogamecount",

@@ -95,14 +95,18 @@ void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
     }
 }
 
+void EmulationStation::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
+    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+        if (entry.getEsExtra(t).isEmpty()) {
+            entry.setEsExtra(t, oldEntry.getEsExtra(t));
+        }
+    }
+}
+
 void EmulationStation::preserveFromOld(GameEntry &entry) {
     for (const auto &oldEntry : oldEntries) {
         if (entry.path == oldEntry.path) {
-            for (const auto &t : extraGamelistTags(entry.isFolder)) {
-                if (entry.getEsExtra(t).isEmpty()) {
-                    entry.setEsExtra(t, oldEntry.getEsExtra(t));
-                }
-            }
+            preserveVariants(oldEntry, entry);
             if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
             }

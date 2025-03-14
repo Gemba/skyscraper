@@ -77,7 +77,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         if (isFolder) {
             // Workaround for EmulationStation 2.11.2rp and earlier: Element
             // <path> in <folder> when denoting a relative path is saved from ES
-            // without trailing "./"
+            // without heading "./"
             QFileInfo pi(p);
             if (pi.isRelative() && !p.startsWith("./")) {
                 p = "./" + p;
