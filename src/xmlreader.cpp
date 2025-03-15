@@ -87,7 +87,6 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
 
         addTextual(entry, node);
 
-        // only for ES
         entry.coverFile = makeAbsolute(
             node.firstChildElement("thumbnail").text(), inputFolder);
         entry.screenshotFile =

@@ -46,7 +46,7 @@ GamebaseScraper::GamebaseScraper(Settings *config,
     // SCREENSHOT, COVER
 
     // other data is retrieved in one query
-    fetchOrder.append(COVER);
+    fetchOrder.append(GameEntry::Elem::COVER);
 }
 
 GamebaseScraper::~GamebaseScraper(){};

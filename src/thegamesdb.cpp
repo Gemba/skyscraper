@@ -39,17 +39,17 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     searchUrlPre = baseUrl + "/Games/ByGameName?apikey=";
     gfxUrl = "https://cdn.thegamesdb.net/images/original";
 
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(AGES);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::WHEEL);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
 }
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,

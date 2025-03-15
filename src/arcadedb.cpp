@@ -46,16 +46,16 @@ ArcadeDB::ArcadeDB(Settings *config, QSharedPointer<NetManager> manager)
         baseUrl +
         "/service_scraper.php?ajax=query_mame&lang=en&use_parent=1&game_name=";
 
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(VIDEO);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::WHEEL);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::VIDEO);
 }
 
 void ArcadeDB::getSearchResults(QList<GameEntry> &gameEntries,

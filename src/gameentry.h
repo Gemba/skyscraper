@@ -32,27 +32,29 @@
 #include <QPair>
 #include <QString>
 
-enum : int {
-    DESCRIPTION = 0,
-    DEVELOPER,
-    PUBLISHER,
-    PLAYERS,
-    TAGS,
-    RELEASEDATE,
-    COVER,
-    SCREENSHOT,
-    VIDEO,
-    RATING,
-    WHEEL,
-    MARQUEE,
-    AGES,
-    TITLE,
-    TEXTURE,
-    MANUAL
-};
 
 class GameEntry {
 public:
+    enum Elem :unsigned char {
+        DESCRIPTION = 0,
+        DEVELOPER,
+        PUBLISHER,
+        PLAYERS,
+        TAGS,
+        RELEASEDATE,
+        COVER,
+        SCREENSHOT,
+        VIDEO,
+        RATING,
+        WHEEL,
+        MARQUEE,
+        AGES,
+        TITLE,
+        TEXTURE,
+        MANUAL,
+        __LAST
+    };
+
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,

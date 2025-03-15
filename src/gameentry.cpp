@@ -29,12 +29,13 @@ GameEntry::GameEntry() {}
 
 void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled) {
     completeness = 100.0;
-    int noOfTypes = 13;
-    if (videoEnabled) {
-        noOfTypes += 1;
+    // ignore texture (currently only supported by ScreenScraper)
+    int noOfTypes = Elem::__LAST - 1;
+    if (!videoEnabled) {
+        noOfTypes -= 1;
     }
-    if (manualEnabled) {
-        noOfTypes += 1;
+    if (!manualEnabled) {
+        noOfTypes -= 1;
     }
     double valuePerType = completeness / (double)noOfTypes;
     if (title.isEmpty()) {

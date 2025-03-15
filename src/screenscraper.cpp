@@ -51,21 +51,21 @@ ScreenScraper::ScreenScraper(Settings *config,
 
     baseUrl = "http://www.screenscraper.fr";
 
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(AGES);
-    fetchOrder.append(RATING);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(TEXTURE);
-    fetchOrder.append(VIDEO);
-    fetchOrder.append(MANUAL);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::WHEEL);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::TEXTURE);
+    fetchOrder.append(GameEntry::Elem::VIDEO);
+    fetchOrder.append(GameEntry::Elem::MANUAL);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,

@@ -64,14 +64,14 @@ WorldOfSpectrum::WorldOfSpectrum(Settings *config,
     coverPost = "\" TARGET";
     screenshotPost = "\" BORDER";
 
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
 }
 
 void WorldOfSpectrum::getSearchResults(QList<GameEntry> &gameEntries,
