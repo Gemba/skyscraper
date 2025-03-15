@@ -32,10 +32,9 @@
 #include <QPair>
 #include <QString>
 
-
 class GameEntry {
 public:
-    enum Elem :unsigned char {
+    enum Elem : unsigned char {
         DESCRIPTION = 0,
         DEVELOPER,
         PUBLISHER,
@@ -108,6 +107,7 @@ public:
     QByteArray manualData = QByteArray();
     QString manualFile = "";
     QString manualSrc = "";
+    // FIXME: fanartData, fanartSrc
 
     // internal
     int searchMatch = 0;
@@ -161,8 +161,30 @@ public:
         return tagNames;
     };
 
+    static const QMap<unsigned char, QString> elements() {
+        return QMap<unsigned char, QString>{
+            {DESCRIPTION, "desc"},
+            {DEVELOPER, "developer"},
+            {PUBLISHER, "publisher"},
+            {PLAYERS, "players"},
+            {TAGS, "genre"},
+            {RELEASEDATE, "releasedate"},
+            {COVER, "thumbnail"},
+            {SCREENSHOT, "image"},
+            {VIDEO, "video"},
+            {RATING, "rating"},
+            // FIXME: wird das in ESDE oder Batocera explizit gespeichert?
+            {WHEEL, ""},
+            {MARQUEE, "marquee"},
+            // kidgame bei ES, FIXME: bei anderen frontends?
+            {AGES, ""},
+            {TITLE, "name"},
+            {TEXTURE, "texture"},
+            {MANUAL, "manual"}};
+    };
+
 private:
-    double completeness = 0;
+    double completeness = 0.0;
 };
 
 #endif // GAMEENTRY_H
