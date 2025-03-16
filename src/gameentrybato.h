@@ -22,24 +22,29 @@
 
 #include "gameentry.h"
 
+#include <QDomNamedNodeMap>
 #include <QStringList>
 
 class GameEntryBato : GameEntry {
 public:
     GameEntryBato();
 
-    // FIXME
-    inline const QStringList extraTagNames(bool isFolder = false) {
-        QStringList tagNames = GameEntry::extraTagNames();
-
-        tagNames +=
-            {"collectionsortname", "completed",    "broken",     "nogamecount",
-             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
-        if (isFolder) {
-            tagNames.append("folderlink");
-        }
-        return tagNames;
+    QPair<QString, QDomNamedNodeMap> getEsExtra(const QString &tagName) const {
+        return esExtras[tagName];
     };
+
+    void setEsExtra(const QString &tagName, const QString &value,
+                    const QDomNamedNodeMap &attrMap) {
+        esExtras[tagName] = QPair(value, attrMap);
+    };
+
+    inline const QStringList extraTagNames(bool isFolder = false) {
+        (void)isFolder;
+        return QStringList();
+    };
+
+private:
+    QMap<QString, QPair<QString, QDomNamedNodeMap>> esExtras;
 };
 
 #endif // GAMEENTRYBATO_H

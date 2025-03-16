@@ -34,6 +34,7 @@ public:
     QString getMediaFolder() override;
 
 protected:
+    // TODO
     QStringList createEsVariantXml(const GameEntry &entry) override;
     bool addEmptyElem() { return false; };
 };

@@ -30,11 +30,16 @@
 #include <QFile>
 #include <QFileInfo>
 
-XmlReader::XmlReader() {}
+template <typename T>
+XmlReader<T>::XmlReader(const QString &inputFolder,
+                        const QStringList &gamelistExtraTags) {
+    this->inputFolder = inputFolder;
+    this->gamelistExtraTags = gamelistExtraTags;
+}
 
-XmlReader::~XmlReader() {}
+template <typename T> XmlReader<T>::~XmlReader() {}
 
-bool XmlReader::setFile(QString filename) {
+template <typename T> bool XmlReader<T>::setFile(QString filename) {
     bool result = false;
 
     QFile f(filename);
@@ -52,26 +57,23 @@ bool XmlReader::setFile(QString filename) {
     return result;
 }
 
-QList<GameEntry> XmlReader::getEntries(QString inputFolder,
-                                       const QStringList &gamelistExtraTags) {
-    QList<GameEntry> gameEntries;
+template <typename T> QList<T> XmlReader<T>::getEntries() {
+    QList<T> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
     QDomNodeList pathNodes = elementsByTagName("folder");
 
-    addEntries(gameNodes, gameEntries, inputFolder, gamelistExtraTags);
-    addEntries(pathNodes, gameEntries, inputFolder, gamelistExtraTags, true);
+    addEntries(gameNodes, gameEntries);
+    addEntries(pathNodes, gameEntries, true);
 
     return gameEntries;
 }
 
-void XmlReader::addEntries(const QDomNodeList &nodes,
-                           QList<GameEntry> &gameEntries,
-                           const QString &inputFolder,
-                           const QStringList &gamelistExtraTags,
-                           bool isFolder) {
+template <typename T>
+void XmlReader<T>::addEntries(const QDomNodeList &nodes, QList<T> &gameEntries,
+                              bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
-        GameEntry entry;
+        T entry;
         const QDomNode node = nodes.at(a);
         QString p = node.firstChildElement("path").text();
         if (isFolder) {
@@ -83,36 +85,49 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
                 p = "./" + p;
             }
         }
-        entry.path = makeAbsolute(p, inputFolder);
+        entry.path = makeAbsolute(p);
 
         addTextual(entry, node);
 
-        entry.coverFile = makeAbsolute(
-            node.firstChildElement("thumbnail").text(), inputFolder);
+        entry.coverFile =
+            makeAbsolute(node.firstChildElement("thumbnail").text());
         entry.screenshotFile =
-            makeAbsolute(node.firstChildElement("image").text(), inputFolder);
+            makeAbsolute(node.firstChildElement("image").text());
         entry.marqueeFile =
-            makeAbsolute(node.firstChildElement("marquee").text(), inputFolder);
+            makeAbsolute(node.firstChildElement("marquee").text());
         entry.textureFile =
-            makeAbsolute(node.firstChildElement("texture").text(), inputFolder);
-        entry.videoFile =
-            makeAbsolute(node.firstChildElement("video").text(), inputFolder);
+            makeAbsolute(node.firstChildElement("texture").text());
+        entry.videoFile = makeAbsolute(node.firstChildElement("video").text());
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
         entry.manualFile =
-            makeAbsolute(node.firstChildElement("manual").text(), inputFolder);
+            makeAbsolute(node.firstChildElement("manual").text());
 
-        for (const auto &t : gamelistExtraTags) {
-            entry.setEsExtra(t, node.firstChildElement(t).text());
+        if (!gamelistExtraTags.isEmpty()) {
+            // ES, ES-DE
+            for (const auto &t : gamelistExtraTags)
+                entry.setEsExtra(t, node.firstChildElement(t).text());
+        } else {
+            // Bloatcera
+            QDomNodeList elems = node.childNodes();
+            for (int i = 0; i < elems.length(); i++) {
+                QString k = elems.at(i).toElement().tagName();
+                if (entry.elements().values().contains(k)) {
+                    // baseline gamelist element
+                    continue;
+                }
+                entry.setEsExtra(k, elems.at(i).toElement().text(),
+                                 elems.at(i).toElement().attributes());
+            }
         }
-
         entry.isFolder = isFolder;
         gameEntries.append(entry);
     }
 }
 
-void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
+template <typename T>
+void XmlReader<T>::addTextual(T &entry, const QDomNode &node) {
     // Do NOT get sqr and par notes here. They are not used by skipExisting
     entry.title = node.firstChildElement("name").text();
     entry.description = node.firstChildElement("desc").text();
@@ -124,10 +139,17 @@ void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
     entry.players = node.firstChildElement("players").text();
 }
 
-QString XmlReader::makeAbsolute(QString filePath, const QString &inputFolder) {
+template <typename T> QString XmlReader<T>::makeAbsolute(QString filePath) {
     if (filePath.startsWith("./")) {
         filePath.remove(0, 1);
         filePath.prepend(inputFolder);
     }
     return filePath;
 }
+
+// Make the linker happy
+template XmlReader<GameEntry>::XmlReader(const QString &inputFolder,
+                                         const QStringList &gamelistExtraTags);
+template XmlReader<GameEntry>::~XmlReader();
+template QList<GameEntry> XmlReader<GameEntry>::getEntries();
+template bool XmlReader<GameEntry>::setFile(QString);

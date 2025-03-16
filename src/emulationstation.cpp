@@ -39,10 +39,10 @@ EmulationStation::EmulationStation() {}
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // Load old game list entries so we can preserve metadata later when
     // assembling xml
-    XmlReader gameListReader;
+    XmlReader<GameEntry> gameListReader(config->inputFolder,
+                                        extraGamelistTags(true));
     if (gameListReader.setFile(gameListFileString)) {
-        oldEntries = gameListReader.getEntries(config->inputFolder,
-                                               extraGamelistTags(true));
+        oldEntries = gameListReader.getEntries();
         return true;
     }
     return false;

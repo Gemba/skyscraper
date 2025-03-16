@@ -128,6 +128,7 @@ QString Pegasus::makeAbsolute(const QString &filePath,
                               const QString &inputFolder) {
     QString returnPath = filePath;
 
+    // FIXME: replace with startsWith("./")
     if (returnPath.left(1) == ".") {
         returnPath.remove(0, 1);
         returnPath.prepend(inputFolder);

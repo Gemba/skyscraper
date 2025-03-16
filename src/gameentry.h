@@ -27,6 +27,7 @@
 #define GAMEENTRY_H
 
 #include <QByteArray>
+#include <QDomNamedNodeMap>
 #include <QList>
 #include <QMap>
 #include <QPair>
@@ -150,7 +151,9 @@ public:
         return esExtras[tagName];
     };
 
-    void setEsExtra(const QString &tagName, QString value) {
+    void setEsExtra(const QString &tagName, QString value,
+                    QDomNamedNodeMap map = QDomNamedNodeMap()) {
+        (void)map;
         esExtras[tagName] = value;
     };
 

@@ -30,21 +30,21 @@
 
 #include <QDomDocument>
 
-class XmlReader : public QDomDocument {
+template <typename T> class XmlReader : public QDomDocument {
 public:
-    XmlReader();
+    XmlReader(const QString &inputFolder, const QStringList &gamelistExtraTags);
     ~XmlReader();
     bool setFile(QString filename);
-    QList<GameEntry> getEntries(QString inputFolder,
-                                const QStringList &gamelistExtraTags);
+    QList<T> getEntries();
 
 private:
-    void addEntries(const QDomNodeList &nodes, QList<GameEntry> &gameEntries,
-                    const QString &inputFolder,
-                    const QStringList &gamelistExtraTags,
+    void addEntries(const QDomNodeList &nodes, QList<T> &gameEntries,
                     bool isFolder = false);
-    QString makeAbsolute(QString filePath, const QString &inputFolder);
-    void addTextual(GameEntry &entry, const QDomNode &node);
+    QString makeAbsolute(QString filePath);
+    void addTextual(T &entry, const QDomNode &node);
+
+    QString inputFolder;
+    QStringList gamelistExtraTags;
 };
 
 #endif // XMLREADER_H
