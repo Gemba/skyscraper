@@ -55,6 +55,8 @@ public:
         __LAST
     };
 
+    enum Format { RETROPIE, ESDE, BATOCERA };
+
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
@@ -109,7 +111,6 @@ public:
     QString manualFile = "";
     QString manualSrc = "";
     // FIXME: fanartData, fanartSrc
-
     // internal
     int searchMatch = 0;
     QString cacheId = "";
@@ -157,13 +158,20 @@ public:
         esExtras[tagName] = value;
     };
 
-    inline const QStringList extraTagNames(bool isFolder = false) {
-        (void)isFolder;
+    inline const QStringList extraTagNames(Format type, bool isFolder = false) {
         QStringList tagNames = {"favorite",   "hidden",  "playcount",
                                 "lastplayed", "kidgame", "sortname"};
+        if (type == Format::RETROPIE) {
+            return tagNames;
+        }
+        tagNames +=
+            {"collectionsortname", "completed",    "broken",     "nogamecount",
+             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
+        if (isFolder) {
+            tagNames.append("folderlink");
+        }
         return tagNames;
     };
-
     static const QMap<unsigned char, QString> elements() {
         return QMap<unsigned char, QString>{
             {DESCRIPTION, "desc"},

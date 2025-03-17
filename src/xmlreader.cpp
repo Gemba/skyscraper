@@ -30,18 +30,15 @@
 #include <QFile>
 #include <QFileInfo>
 
-template <typename T>
-XmlReader<T>::XmlReader(const QString &inputFolder,
-                        const QStringList &gamelistExtraTags) {
+XmlReader::XmlReader(const QString &inputFolder,
+                     const QStringList &gamelistExtraTags) {
     this->inputFolder = inputFolder;
     this->gamelistExtraTags = gamelistExtraTags;
 }
 
-template <typename T>
-XmlReader<T>::~XmlReader() {}
+XmlReader::~XmlReader() {}
 
-template <typename T>
-bool XmlReader<T>::setFile(QString filename) {
+bool XmlReader::setFile(QString filename) {
     bool result = false;
 
     QFile f(filename);
@@ -59,9 +56,8 @@ bool XmlReader<T>::setFile(QString filename) {
     return result;
 }
 
-template <typename T>
-QList<T> XmlReader<T>::getEntries() {
-    QList<T> gameEntries;
+QList<GameEntry> XmlReader::getEntries() {
+    QList<GameEntry> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
     QDomNodeList pathNodes = elementsByTagName("folder");
@@ -72,11 +68,10 @@ QList<T> XmlReader<T>::getEntries() {
     return gameEntries;
 }
 
-template <typename T>
-void XmlReader<T>::addEntries(const QDomNodeList &nodes, QList<T> &gameEntries,
-                              bool isFolder) {
+void XmlReader::addEntries(const QDomNodeList &nodes,
+                           QList<GameEntry> &gameEntries, bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
-        T entry;
+        GameEntry entry;
         const QDomNode node = nodes.at(a);
         QString p = node.firstChildElement("path").text();
         if (isFolder) {
@@ -129,8 +124,7 @@ void XmlReader<T>::addEntries(const QDomNodeList &nodes, QList<T> &gameEntries,
     }
 }
 
-template <typename T>
-void XmlReader<T>::addTextual(T &entry, const QDomNode &node) {
+void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
     // Do NOT get sqr and par notes here. They are not used by skipExisting
     entry.title = node.firstChildElement("name").text();
     entry.description = node.firstChildElement("desc").text();
@@ -143,18 +137,10 @@ void XmlReader<T>::addTextual(T &entry, const QDomNode &node) {
 }
 
 // FIXME: in util class
-template <typename T>
-QString XmlReader<T>::makeAbsolute(QString filePath) {
+QString XmlReader::makeAbsolute(QString filePath) {
     if (filePath.startsWith("./")) {
         filePath.remove(0, 1);
         filePath.prepend(inputFolder);
     }
     return filePath;
 }
-
-// Let the linker know
-template XmlReader<GameEntry>::XmlReader(const QString &inputFolder,
-                                         const QStringList &gamelistExtraTags);
-template XmlReader<GameEntry>::~XmlReader();
-template QList<GameEntry> XmlReader<GameEntry>::getEntries();
-template bool XmlReader<GameEntry>::setFile(QString);

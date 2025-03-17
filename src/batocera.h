@@ -21,7 +21,7 @@
 #define BATOCERA_H
 
 #include "emulationstation.h"
-#include "gameentrybato.h"
+#include "gameentry.h"
 
 class Batocera : public EmulationStation {
     Q_OBJECT
@@ -36,10 +36,9 @@ public:
 
 protected:
     // TODO
-    QStringList createEsVariantXml(const GameEntryBato &entry);
-    void preserveVariants(const GameEntryBato &oldEntry, GameEntryBato &entry);
+    QStringList createEsVariantXml(const GameEntry &entry);
+    void preserveVariants(const GameEntry &oldEntry, GameEntry &entry);
     bool addEmptyElem() { return false; };
-    QList<GameEntryBato> oldEntries;
 };
 
 #endif // BATOCERA_H

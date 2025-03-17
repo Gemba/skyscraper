@@ -37,17 +37,16 @@ QStringList Batocera::extraGamelistTags(bool isFolder) {
     return QStringList();
 }
 
-QStringList Batocera::createEsVariantXml(const GameEntryBato &entry) {
+QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
     (void)entry;
     return QStringList();
 }
 
-void Batocera::preserveVariants(const GameEntryBato &oldEntry, GameEntryBato &entry)
-{
-    //FIXME
+void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
+    // FIXME
 }
 
-
+// FIXME
 QString Batocera::getInputFolder() {
     return QDir::homePath() % "/ROMs/" % config->platform;
 }

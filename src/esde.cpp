@@ -20,7 +20,6 @@
 #include "esde.h"
 
 #include "emulationstation.h"
-#include "gameentryesde.h"
 
 #include <QDir>
 #include <QProcessEnvironment>
@@ -42,8 +41,8 @@ inline const QString baseFolder() {
 }
 
 QStringList Esde::extraGamelistTags(bool isFolder) {
-    GameEntryEsde g;
-    return g.extraTagNames(isFolder);
+    GameEntry g;
+    return g.extraTagNames(GameEntry::Format::ESDE, isFolder);
 }
 
 QStringList Esde::createEsVariantXml(const GameEntry &entry) {
