@@ -128,7 +128,7 @@ public:
 
     // Holds EmulationStation (RetroPie and derivates) specific metadata
     // for preservation. (metadata = anything which is not scrapable)
-    QMap<QString, QString> esExtras;
+    QMap<QString, QPair<QString, QDomNamedNodeMap>> esExtras;
 
     bool isFolder = false;
 
@@ -148,19 +148,28 @@ public:
     // Pegasus specific metadata for preservation
     QList<QPair<QString, QString>> pSValuePairs;
 
+    // FIXME in .cpp
     QString getEsExtra(const QString &tagName) const {
+        return esExtras[tagName].first;
+    };
+
+    QPair<QString, QDomNamedNodeMap>
+    getEsExtraAttribs(const QString &tagName) const {
         return esExtras[tagName];
     };
 
     void setEsExtra(const QString &tagName, QString value,
                     QDomNamedNodeMap map = QDomNamedNodeMap()) {
-        (void)map;
-        esExtras[tagName] = value;
+        esExtras[tagName] = QPair<QString, QDomNamedNodeMap>(value, map);
     };
 
     inline const QStringList extraTagNames(Format type, bool isFolder = false) {
-        QStringList tagNames = {"favorite",   "hidden",  "playcount",
-                                "lastplayed", "kidgame", "sortname"};
+        QStringList tagNames;
+        if (type == Format::BATOCERA) {
+            return tagNames;
+        }
+        tagNames += {"favorite",   "hidden",  "playcount",
+                     "lastplayed", "kidgame", "sortname"};
         if (type == Format::RETROPIE) {
             return tagNames;
         }
@@ -172,6 +181,7 @@ public:
         }
         return tagNames;
     };
+
     static const QMap<unsigned char, QString> elements() {
         return QMap<unsigned char, QString>{
             {DESCRIPTION, "desc"},
