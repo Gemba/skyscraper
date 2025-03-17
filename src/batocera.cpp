@@ -32,17 +32,21 @@ inline const QString baseFolder() {
     return QString(QDir::homePath() % "/FIXME");
 }
 
-/* FIXME: ANpassen auf GameEntryBato
-QStringList Esde::extraGamelistTags(bool isFolder) {
-    GameEntryEsde g;
-    return g.extraTagNames(isFolder);
+QStringList Batocera::extraGamelistTags(bool isFolder) {
+    (void)isFolder;
+    return QStringList();
 }
-*/
 
-QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
+QStringList Batocera::createEsVariantXml(const GameEntryBato &entry) {
     (void)entry;
     return QStringList();
 }
+
+void Batocera::preserveVariants(const GameEntryBato &oldEntry, GameEntryBato &entry)
+{
+    //FIXME
+}
+
 
 QString Batocera::getInputFolder() {
     return QDir::homePath() % "/ROMs/" % config->platform;

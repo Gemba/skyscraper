@@ -21,7 +21,7 @@
 #define BATOCERA_H
 
 #include "emulationstation.h"
-#include "gameentry.h" // FIXME
+#include "gameentrybato.h"
 
 class Batocera : public EmulationStation {
     Q_OBJECT
@@ -32,11 +32,14 @@ public:
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
+    QStringList extraGamelistTags(bool isFolder) override;
 
 protected:
     // TODO
-    QStringList createEsVariantXml(const GameEntry &entry) override;
+    QStringList createEsVariantXml(const GameEntryBato &entry);
+    void preserveVariants(const GameEntryBato &oldEntry, GameEntryBato &entry);
     bool addEmptyElem() { return false; };
+    QList<GameEntryBato> oldEntries;
 };
 
 #endif // BATOCERA_H

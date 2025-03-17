@@ -37,9 +37,11 @@ XmlReader<T>::XmlReader(const QString &inputFolder,
     this->gamelistExtraTags = gamelistExtraTags;
 }
 
-template <typename T> XmlReader<T>::~XmlReader() {}
+template <typename T>
+XmlReader<T>::~XmlReader() {}
 
-template <typename T> bool XmlReader<T>::setFile(QString filename) {
+template <typename T>
+bool XmlReader<T>::setFile(QString filename) {
     bool result = false;
 
     QFile f(filename);
@@ -57,7 +59,8 @@ template <typename T> bool XmlReader<T>::setFile(QString filename) {
     return result;
 }
 
-template <typename T> QList<T> XmlReader<T>::getEntries() {
+template <typename T>
+QList<T> XmlReader<T>::getEntries() {
     QList<T> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
@@ -139,7 +142,9 @@ void XmlReader<T>::addTextual(T &entry, const QDomNode &node) {
     entry.players = node.firstChildElement("players").text();
 }
 
-template <typename T> QString XmlReader<T>::makeAbsolute(QString filePath) {
+// FIXME: in util class
+template <typename T>
+QString XmlReader<T>::makeAbsolute(QString filePath) {
     if (filePath.startsWith("./")) {
         filePath.remove(0, 1);
         filePath.prepend(inputFolder);
@@ -147,7 +152,7 @@ template <typename T> QString XmlReader<T>::makeAbsolute(QString filePath) {
     return filePath;
 }
 
-// Make the linker happy
+// Let the linker know
 template XmlReader<GameEntry>::XmlReader(const QString &inputFolder,
                                          const QStringList &gamelistExtraTags);
 template XmlReader<GameEntry>::~XmlReader();

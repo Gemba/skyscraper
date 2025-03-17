@@ -30,7 +30,8 @@
 
 #include <QDomDocument>
 
-template <typename T> class XmlReader : public QDomDocument {
+template <typename T>
+class XmlReader : public QDomDocument {
 public:
     XmlReader(const QString &inputFolder, const QStringList &gamelistExtraTags);
     ~XmlReader();
