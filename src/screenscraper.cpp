@@ -369,17 +369,13 @@ void ScreenScraper::downloadBinary(const QString &url, const QString &type,
         limiter.exec();
         netComm->request(url);
         q.exec();
-        if (isVideoType) {
-            game.videoData = netComm->getData();
-        } else {
-            game.manualData = netComm->getData();
-        }
-        QByteArray contentType = netComm->getContentType();
         if (netComm->getError(config->verbosity) == QNetworkReply::NoError) {
-            // Make sure received data is actually a video file/pdf file
+            QByteArray contentType = netComm->getContentType();
+            // Make sure received data is actually a video or  PDF file
             if (isVideoType) {
-                if (contentType.contains("video/") &&
-                    game.videoData.size() > 4096) {
+                QByteArray d = netComm->getData();
+                if (contentType.contains("video/") && d.size() > 4096) {
+                    game.videoData = d;
                     game.videoFormat = contentType.mid(
                         contentType.indexOf("/") + 1,
                         contentType.length() - contentType.indexOf("/") + 1);
@@ -387,14 +383,9 @@ void ScreenScraper::downloadBinary(const QString &url, const QString &type,
                 }
             } else {
                 if (contentType.contains("application/pdf")) {
+                    game.manualData = netComm->getData();
                     break;
                 }
-            }
-        } else {
-            if (isVideoType) {
-                game.videoData = QByteArray();
-            } else {
-                game.manualData = QByteArray();
             }
         }
     }

@@ -135,7 +135,7 @@ void ArcadeDB::getCover(GameEntry &game) {
         if (netComm->getError() == QNetworkReply::NoError &&
             image.loadFromData(netComm->getData())) {
             game.coverData = netComm->getData();
-            return;
+            break;
         }
     }
 }
@@ -178,7 +178,6 @@ void ArcadeDB::getMarquee(GameEntry &game) {
 }
 
 void ArcadeDB::getVideo(GameEntry &game) {
-    game.videoData = QByteArray();
     for (auto const &key :
          QStringList({"url_video_shortplay_hd", "url_video_shortplay"})) {
         QString url = jsonObj.value(key).toString();
@@ -193,7 +192,7 @@ void ArcadeDB::getVideo(GameEntry &game) {
             game.videoFormat = "mp4";
             break;
         } else {
-            game.videoData = QByteArray();
+            game.videoData.clear();
         }
     }
 }
