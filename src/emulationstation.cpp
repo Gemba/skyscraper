@@ -48,9 +48,9 @@ bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
 }
 
 QStringList EmulationStation::extraGamelistTags(bool isFolder) {
-    (void)isFolder;
+    (void)isFolder; // don't care for ES
     GameEntry g;
-    return g.extraTagNames(GameEntry::Format::RETROPIE);
+    return g.extraTagNames(GameEntry::Format::RETROPIE, g);
 }
 
 void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
@@ -367,7 +367,6 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
             // path is equal to inputFolder which is what we want.
             d = d.replace(config->inputFolder, ".");
         }
-        d = StrTools::xmlEscape(d);
         e = QString("    <%1>%2</%1>").arg(elem, d);
     }
     return e;

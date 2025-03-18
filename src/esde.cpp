@@ -42,11 +42,14 @@ inline const QString baseFolder() {
 
 QStringList Esde::extraGamelistTags(bool isFolder) {
     GameEntry g;
-    return g.extraTagNames(GameEntry::Format::ESDE, isFolder);
+    g.isFolder = isFolder;
+    return g.extraTagNames(GameEntry::Format::ESDE, g);
 }
 
 QStringList Esde::createEsVariantXml(const GameEntry &entry) {
     (void)entry;
+    // ES-DE expects mediafiles to be on a specific location by contract and
+    // does not require extra XML elements
     return QStringList();
 }
 

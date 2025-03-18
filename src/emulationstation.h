@@ -62,14 +62,14 @@ protected:
     virtual QStringList extraGamelistTags(bool isFolder /* ignored on RP ES */);
     virtual void preserveVariants(const GameEntry &oldEntry, GameEntry &entry);
     bool addEmptyElement() { return true; };
+    QString elem(const QString &elem, const QString &data, bool addEmptyElem,
+                 bool isPath = false);
 
 private:
     QString createXml(GameEntry &entry);
     bool isGameLauncher(QString &sub);
     void addFolder(QString &base, QString sub, QList<GameEntry> &added);
     bool existingInGamelist(GameEntry &entry);
-    QString elem(const QString &elem, const QString &data, bool addEmptyElem,
-                 bool isPath = false);
 
     const inline QRegularExpression isoTimeRe() const {
         return QRegularExpression("(^$|T[0-9]{6}$)");

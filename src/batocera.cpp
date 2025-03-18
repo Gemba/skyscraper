@@ -20,6 +20,7 @@
 #include "batocera.h"
 
 #include "emulationstation.h"
+#include "gameentry.h"
 
 #include <QDir>
 #include <QStringBuilder>
@@ -39,13 +40,27 @@ QStringList Batocera::extraGamelistTags(bool isFolder) {
 }
 
 QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
-    (void)entry;
-    // no variants of Batocera
-    return QStringList();
+    QStringList l;
+    // at this point entry has already added the oldEntry elements and attribs
+    QStringList elemNames =
+        entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
+    // FIXME
+    for (auto const &t : elemNames) {
+        // if path-like info (do they have attribs?)
+        // l.append(elem("thumbnail", entry.coverFile, addEmptyElem(), true));
+        // ...
+        // else
+        // just dump with attribs (elem() method not usable)
+    }
+    return l;
 }
 
 void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
-    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+    QStringList elemNames =
+        oldEntry.extraTagNames(GameEntry::Format::BATOCERA, oldEntry);
+    for (const auto &t : elemNames) {
+        // exclude the baseline elements are already excluded
+        // add if not set in scraped/updated entry
         if (entry.getEsExtra(t).isEmpty()) {
             QPair<QString, QDomNamedNodeMap> p = oldEntry.getEsExtraAttribs(t);
             entry.setEsExtra(t, p.first, p.second);

@@ -86,10 +86,11 @@ public:
     int getCompleteness() const;
     void resetMedia();
     QString getEsExtra(const QString &tagName) const;
-    QPair<QString, QDomNamedNodeMap> getEsExtraAttribs(const QString &tagName) const;
+    QPair<QString, QDomNamedNodeMap>
+    getEsExtraAttribs(const QString &tagName) const;
     void setEsExtra(const QString &tagName, QString value,
                     QDomNamedNodeMap map = QDomNamedNodeMap());
-    const QStringList extraTagNames(Format type, bool isFolder = false);
+    const QStringList extraTagNames(Format type, const GameEntry &ge) const;
 
     // textual data
     QString id = "";
@@ -176,6 +177,7 @@ public:
     QList<QPair<QString, QString>> pSValuePairs;
 
 private:
+    const QStringList extraElemNames(Format type, bool isFolder) const;
     double completeness = 0.0;
 };
 

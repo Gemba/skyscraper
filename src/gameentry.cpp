@@ -109,16 +109,23 @@ GameEntry::getEsExtraAttribs(const QString &tagName) const {
     return esExtras[tagName];
 };
 
+const QStringList GameEntry::extraTagNames(Format type,
+                                           const GameEntry &ge) const {
+    if (type != Format::BATOCERA) {
+        // same for every <game/>
+        return extraElemNames(type, ge.isFolder);
+    }
+    // can differ for each <game/>
+    return esExtras.keys();
+}
+
 void GameEntry::setEsExtra(const QString &tagName, QString value,
-                           QDomNamedNodeMap map){
+                           QDomNamedNodeMap map) {
     esExtras[tagName] = QPair<QString, QDomNamedNodeMap>(value, map);
 };
 
-const QStringList GameEntry::extraTagNames(Format type, bool isFolder) {
+const QStringList GameEntry::extraElemNames(Format type, bool isFolder) const {
     QStringList tagNames;
-    if (type == Format::BATOCERA) {
-        return tagNames;
-    }
     tagNames += {"favorite",   "hidden",  "playcount",
                  "lastplayed", "kidgame", "sortname"};
     if (type == Format::RETROPIE) {
