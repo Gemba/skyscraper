@@ -35,9 +35,8 @@ public:
     QStringList extraGamelistTags(bool isFolder) override;
 
 protected:
-    // TODO
-    QStringList createEsVariantXml(const GameEntry &entry);
-    void preserveVariants(const GameEntry &oldEntry, GameEntry &entry);
+    QStringList createEsVariantXml(const GameEntry &entry) override;
+    void preserveVariants(const GameEntry &oldEntry, GameEntry &entry) override;
     bool addEmptyElem() { return false; };
 };
 

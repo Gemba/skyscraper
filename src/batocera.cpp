@@ -25,36 +25,38 @@
 #include <QStringBuilder>
 #include <QStringList>
 
-Batocera::Batocera() {}
-
-// FIXME
-inline const QString baseFolder() {
-    return QString(QDir::homePath() % "/FIXME");
+Batocera::Batocera() {
+    // always on
+    config->relativePaths = true;
 }
+
+inline const QString baseFolder() { return QString("/userdata/roms/"); }
 
 QStringList Batocera::extraGamelistTags(bool isFolder) {
     (void)isFolder;
+    // none, will be detected dynamically
     return QStringList();
 }
 
 QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
     (void)entry;
+    // no variants of Batocera
     return QStringList();
 }
 
 void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
-    // FIXME
+    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+        if (entry.getEsExtra(t).isEmpty()) {
+            QPair<QString, QDomNamedNodeMap> p = oldEntry.getEsExtraAttribs(t);
+            entry.setEsExtra(t, p.first, p.second);
+        }
+    }
 }
 
-// FIXME
-QString Batocera::getInputFolder() {
-    return QDir::homePath() % "/ROMs/" % config->platform;
-}
+QString Batocera::getInputFolder() { return baseFolder() % config->platform; }
 
 QString Batocera::getGameListFolder() {
-    return baseFolder() % "/gamelists/" % config->platform;
+    return baseFolder() % config->platform;
 }
 
-QString Batocera::getMediaFolder() {
-    return baseFolder() % "/downloaded_media/" % config->platform;
-}
+QString Batocera::getMediaFolder() { return baseFolder() % config->platform; }

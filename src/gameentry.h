@@ -57,12 +57,39 @@ public:
 
     enum Format { RETROPIE, ESDE, BATOCERA };
 
+    static const QMap<unsigned char, QString> elements() {
+        return QMap<unsigned char, QString>{
+            {DESCRIPTION, "desc"},
+            {DEVELOPER, "developer"},
+            {PUBLISHER, "publisher"},
+            {PLAYERS, "players"},
+            {TAGS, "genre"},
+            {RELEASEDATE, "releasedate"},
+            {COVER, "thumbnail"},
+            {SCREENSHOT, "image"},
+            {VIDEO, "video"},
+            {RATING, "rating"},
+            // FIXME: wird das in ESDE oder Batocera explizit gespeichert?
+            {WHEEL, ""},
+            {MARQUEE, "marquee"},
+            // kidgame bei ES, FIXME: bei anderen frontends?
+            {AGES, ""},
+            {TITLE, "name"},
+            {TEXTURE, "texture"},
+            {MANUAL, "manual"}};
+    };
+
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
                                bool manualEnabled = false);
     int getCompleteness() const;
     void resetMedia();
+    QString getEsExtra(const QString &tagName) const;
+    QPair<QString, QDomNamedNodeMap> getEsExtraAttribs(const QString &tagName) const;
+    void setEsExtra(const QString &tagName, QString value,
+                    QDomNamedNodeMap map = QDomNamedNodeMap());
+    const QStringList extraTagNames(Format type, bool isFolder = false);
 
     // textual data
     QString id = "";
@@ -147,62 +174,6 @@ public:
 
     // Pegasus specific metadata for preservation
     QList<QPair<QString, QString>> pSValuePairs;
-
-    // FIXME in .cpp
-    QString getEsExtra(const QString &tagName) const {
-        return esExtras[tagName].first;
-    };
-
-    QPair<QString, QDomNamedNodeMap>
-    getEsExtraAttribs(const QString &tagName) const {
-        return esExtras[tagName];
-    };
-
-    void setEsExtra(const QString &tagName, QString value,
-                    QDomNamedNodeMap map = QDomNamedNodeMap()) {
-        esExtras[tagName] = QPair<QString, QDomNamedNodeMap>(value, map);
-    };
-
-    inline const QStringList extraTagNames(Format type, bool isFolder = false) {
-        QStringList tagNames;
-        if (type == Format::BATOCERA) {
-            return tagNames;
-        }
-        tagNames += {"favorite",   "hidden",  "playcount",
-                     "lastplayed", "kidgame", "sortname"};
-        if (type == Format::RETROPIE) {
-            return tagNames;
-        }
-        tagNames +=
-            {"collectionsortname", "completed",    "broken",     "nogamecount",
-             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
-        if (isFolder) {
-            tagNames.append("folderlink");
-        }
-        return tagNames;
-    };
-
-    static const QMap<unsigned char, QString> elements() {
-        return QMap<unsigned char, QString>{
-            {DESCRIPTION, "desc"},
-            {DEVELOPER, "developer"},
-            {PUBLISHER, "publisher"},
-            {PLAYERS, "players"},
-            {TAGS, "genre"},
-            {RELEASEDATE, "releasedate"},
-            {COVER, "thumbnail"},
-            {SCREENSHOT, "image"},
-            {VIDEO, "video"},
-            {RATING, "rating"},
-            // FIXME: wird das in ESDE oder Batocera explizit gespeichert?
-            {WHEEL, ""},
-            {MARQUEE, "marquee"},
-            // kidgame bei ES, FIXME: bei anderen frontends?
-            {AGES, ""},
-            {TITLE, "name"},
-            {TEXTURE, "texture"},
-            {MANUAL, "manual"}};
-    };
 
 private:
     double completeness = 0.0;

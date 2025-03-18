@@ -99,3 +99,36 @@ void GameEntry::resetMedia() {
     videoData.clear();
     manualData.clear();
 }
+
+QString GameEntry::getEsExtra(const QString &tagName) const {
+    return esExtras[tagName].first;
+};
+
+QPair<QString, QDomNamedNodeMap>
+GameEntry::getEsExtraAttribs(const QString &tagName) const {
+    return esExtras[tagName];
+};
+
+void GameEntry::setEsExtra(const QString &tagName, QString value,
+                           QDomNamedNodeMap map){
+    esExtras[tagName] = QPair<QString, QDomNamedNodeMap>(value, map);
+};
+
+const QStringList GameEntry::extraTagNames(Format type, bool isFolder) {
+    QStringList tagNames;
+    if (type == Format::BATOCERA) {
+        return tagNames;
+    }
+    tagNames += {"favorite",   "hidden",  "playcount",
+                 "lastplayed", "kidgame", "sortname"};
+    if (type == Format::RETROPIE) {
+        return tagNames;
+    }
+    tagNames +=
+        {"collectionsortname", "completed",    "broken",     "nogamecount",
+         "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
+    if (isFolder) {
+        tagNames.append("folderlink");
+    }
+    return tagNames;
+};
