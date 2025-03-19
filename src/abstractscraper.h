@@ -89,6 +89,7 @@ protected:
 
     virtual bool platformMatch(QString found, QString platform);
     virtual int getPlatformId(const QString);
+    virtual QString applyQuerySearchName(QString query) { return query; };
 
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);

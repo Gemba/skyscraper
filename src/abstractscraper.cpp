@@ -639,8 +639,8 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
 
     QList<QString> searchNames;
     if (!config->searchName.isEmpty()) {
-        // Add the string provided by "--query"
-        searchNames.append(config->searchName);
+        // set the string provided by "--query"
+        searchNames.append(applyQuerySearchName(config->searchName));
     } else {
         searchNames = getSearchNames(info, debug);
     }

@@ -5,6 +5,9 @@ humans](https://keepachangelog.com).
 
 ### Version 3.17.0 (2025-TBA)
 
+- Updated: Query keyword `romnom=` in `--query='...'` for scraper Screenscraper
+  is now optional. It gets added automagically when no other query keyword is
+  applied.
 - Updated: `mamemap.csv` for MAME 0.275
 
 ### Version 3.16.0 (2025-03-10)

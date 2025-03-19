@@ -576,6 +576,14 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
     return searchNames;
 }
 
+QString ScreenScraper::applyQuerySearchName(QString query) {
+    if (query.startsWith("romnom=") || query.contains("=")) {
+        return query;
+    } else {
+        return "romnom=" + query;
+    }
+}
+
 QString ScreenScraper::getUrlOrTextPropertyValue(const QJsonObject &jsonObj,
                                                  const QString &locationKey,
                                                  const QString &locationValue) {

@@ -42,6 +42,9 @@ class ScreenScraper : public AbstractScraper {
 public:
     ScreenScraper(Settings *config, QSharedPointer<NetManager> manager);
 
+protected:
+    QString applyQuerySearchName(QString query) override;
+
 private:
     QTimer limitTimer;
     QEventLoop limiter;
