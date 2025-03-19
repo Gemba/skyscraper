@@ -34,6 +34,8 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
+static const QRegExp REGEX_OPENELEM = QRegExp("<(\\w+)");
+
 EmulationStation::EmulationStation() {}
 
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
@@ -316,40 +318,49 @@ QString EmulationStation::createXml(GameEntry &entry) {
     l.append(openingElement(entry));
 
     l.append(elem("path", entry.path, addEmptyElem));
-    l.append(elem("name", entry.title, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TITLE), entry.title,
+                  addEmptyElem));
 
     l += createEsVariantXml(entry);
 
-    l.append(elem("rating", entry.rating, addEmptyElem));
-    l.append(elem("desc", entry.description, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DESCRIPTION),
+                  entry.description, addEmptyElem));
 
     QString released = entry.releaseDate;
     QRegularExpressionMatch m = isoTimeRe().match(released);
     if (!m.hasMatch()) {
         released = released % "T000000";
     }
-    l.append(elem("releasedate", released, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RELEASEDATE), released,
+                  addEmptyElem));
 
-    l.append(elem("developer", entry.developer, addEmptyElem));
-    l.append(elem("publisher", entry.publisher, addEmptyElem));
-    l.append(elem("genre", entry.tags, addEmptyElem));
-    l.append(elem("players", entry.players, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DEVELOPER),
+                  entry.developer, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PUBLISHER),
+                  entry.publisher, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TAGS), entry.tags,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PLAYERS), entry.players,
+                  addEmptyElem));
 
     // write out non scraped elements
+    const QString tagKidgame = GameEntry::getTag(GameEntry::Elem::AGES);
     for (const auto &t : extraGamelistTags(entry.isFolder)) {
-        if (t != "kidgame") {
+        if (t != tagKidgame) {
             l.append(elem(t, entry.getEsExtra(t), false));
         }
     }
-    QString kidGame = entry.getEsExtra("kidgame");
+    QString kidGame = entry.getEsExtra(tagKidgame);
     if (kidGame.isEmpty() && entry.ages.toInt() >= 1 &&
         entry.ages.toInt() <= 10) {
         kidGame = "true";
     }
 
-    l.append(elem("kidgame", kidGame, false));
+    l.append(elem(tagKidgame, kidGame, false));
 
-    l.append("  </" % entryType % ">");
+    l.append(l[0].replace(REGEX_OPENELEM, "</\\1>"));
     l.removeAll("");
 
     return l.join("\n") % "\n";

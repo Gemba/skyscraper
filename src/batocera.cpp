@@ -26,6 +26,12 @@
 #include <QStringBuilder>
 #include <QStringList>
 
+/*
+- game.path  nicht in esExtras speichern
+- GameEntry::Elem:: "eine Ebene weniger" -> readability
+ */
+
+
 Batocera::Batocera() {
     // always on
     config->relativePaths = true;

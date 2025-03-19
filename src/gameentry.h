@@ -81,6 +81,8 @@ public:
             {FANART, "fanart"}};
     };
 
+    static const QString getTag(GameEntry::Elem e) { return elements()[e]; };
+
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
