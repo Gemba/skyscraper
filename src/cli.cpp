@@ -446,11 +446,12 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "of the game title when generating gamelists. By default 'The' "
              "will be moved to the end of the game titles."},
             {"unattend",
-             "Skip initial questions when scraping. It will then always "
-             "overwrite existing gamelist and not skip existing entries."},
+             "Do not ask to confirm gamelist overwrite: It will then always "
+             "overwrite existing gamelist and _never_ skip existing entries."},
             {"unattendskip",
-             "Skip initial questions when scraping. It will then always "
-             "overwrite existing gamelist and always skip existing entries."},
+             "Do not ask for gamelist overwrite but do skip existing entries: "
+             "If set it will always overwrite existing gamelist and _always_ "
+             "skip existing entries."},
             {"unpack",
              "Unpacks and checksums the file inside 7z or zip files instead of "
              "the compressed file itself. Be aware that this option requires "

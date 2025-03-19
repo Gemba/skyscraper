@@ -14,48 +14,49 @@ When configuring regions be sure to use the short-names as shown (eg. 'fr' for F
 
 ## List of supported regions
 
-| Region Key | Country/Region (supported by scraping site)  |
-| :--------: | -------------------------------------------- |
-|    ame     | American continent (screenscraper)           |
-|    asi     | Asia (screenscraper, igdb)                   |
-|     au     | Australia (screenscraper, igdb, mobygames)   |
-|     bg     | Bulgaria (screenscraper, mobygames)          |
-|     br     | Brazil (screenscraper, mobygames)            |
-|     ca     | Canada (screenscraper, mobygames)            |
-|     cl     | Chile (screenscraper, mobygames)             |
-|     cn     | China (screenscraper, igdb, mobygames)       |
-|    cus     | Custom (screenscraper)                       |
-|     cz     | Czech republic (screenscraper, mobygames)    |
-|     de     | Germany (screenscraper, mobygames)           |
-|     dk     | Denmark (screenscraper, mobygames)           |
-|     eu     | Europe (screenscraper, igdb)                 |
-|     fi     | Finland (screenscraper, mobygames)           |
-|     fr     | France (screenscraper, mobygames)            |
-|     gr     | Greece (screenscraper, mobygames)            |
-|     hu     | Hungary (screenscraper, mobygames)           |
-|     il     | Israel (screenscraper, mobygames)            |
-|     it     | Italy (screenscraper, mobygames)             |
-|     jp     | Japan (screenscraper, igdb, mobygames)       |
-|     kr     | Korea (screenscraper, mobygames)             |
-|     kw     | Kuwait (screenscraper)                       |
-|    mor     | Middle East (screenscraper)                  |
-|     nl     | Netherlands (screenscraper, mobygames)       |
-|     no     | Norway (screenscraper, mobygames)            |
-|     nz     | New Zealand (screenscraper, igdb, mobygames) |
-|    oce     | Oceania (screenscraper)                      |
-|     pe     | Peru (screenscraper)                         |
-|     pl     | Poland (screenscraper, mobygames)            |
-|     pt     | Portugal (screenscraper, mobygames)          |
-|     ru     | Russia (screenscraper, mobygames)            |
-|     se     | Sweden (screenscraper, mobygames)            |
-|     sk     | Slovakia (screenscraper, mobygames)          |
-|     sp     | Spain (screenscraper, mobygames)             |
-|     ss     | ScreenScraper (screenscraper)                |
-|     tr     | Turkey (screenscraper, mobygames)            |
-|     tw     | Taiwan (screenscraper, mobygames)            |
-|     uk     | United Kingdom (screenscraper, mobygames)    |
-|     us     | USA (screenscraper, igdb, mobygames)         |
-|    wor     | World (screenscraper, igdb, mobygames)       |
+| Region Key | Country/Region     | ScreenScraper | IGDB | MobyGames |
+| :--------: | ------------------ | :-----------: | :--: | :-------: |
+|    ame     | American continent |       ✓       |      |           |
+|    asi     | Asia               |       ✓       |  ✓   |           |
+|     au     | Australia          |       ✓       |  ✓   |     ✓     |
+|     bg     | Bulgaria           |       ✓       |      |     ✓     |
+|     br     | Brazil             |       ✓       |      |     ✓     |
+|     ca     | Canada             |       ✓       |      |     ✓     |
+|     cl     | Chile              |       ✓       |      |     ✓     |
+|     cn     | China              |       ✓       |  ✓   |     ✓     |
+|    cus     | Custom             |       ✓       |      |           |
+|     cz     | Czech republic     |       ✓       |      |     ✓     |
+|     de     | Germany            |       ✓       |      |     ✓     |
+|     dk     | Denmark            |       ✓       |      |     ✓     |
+|     eu     | Europe             |       ✓       |  ✓   |           |
+|     fi     | Finland            |       ✓       |      |     ✓     |
+|     fr     | France             |       ✓       |      |     ✓     |
+|     gr     | Greece             |       ✓       |      |     ✓     |
+|     hu     | Hungary            |       ✓       |      |     ✓     |
+|     il     | Israel             |       ✓       |      |     ✓     |
+|     it     | Italy              |       ✓       |      |     ✓     |
+|     jp     | Japan              |       ✓       |  ✓   |     ✓     |
+|     kr     | Korea              |       ✓       |      |     ✓     |
+|     kw     | Kuwait             |       ✓       |      |           |
+|    mor     | Middle East        |       ✓       |      |           |
+|     nl     | Netherlands        |       ✓       |      |     ✓     |
+|     no     | Norway             |       ✓       |      |     ✓     |
+|     nz     | New Zealand        |       ✓       |  ✓   |     ✓     |
+|    oce     | Oceania            |       ✓       |      |           |
+|     pe     | Peru               |       ✓       |      |           |
+|     pl     | Poland             |       ✓       |      |     ✓     |
+|     pt     | Portugal           |       ✓       |      |     ✓     |
+|     ru     | Russia             |       ✓       |      |     ✓     |
+|     se     | Sweden             |       ✓       |      |     ✓     |
+|     sk     | Slovakia           |       ✓       |      |     ✓     |
+|     sp     | Spain              |       ✓       |      |     ✓     |
+|     ss     | ScreenScraper      |       ✓       |      |           |
+|     tr     | Turkey             |       ✓       |      |     ✓     |
+|     tw     | Taiwan             |       ✓       |      |     ✓     |
+|     uk     | United Kingdom     |       ✓       |      |     ✓     |
+|     us     | USA                |       ✓       |  ✓   |     ✓     |
+|    wor     | World              |       ✓       |  ✓   |     ✓     |
+
 
 ### Region auto-detection
 
@@ -72,35 +73,9 @@ So if your files are named like `Game Name (Europe).zip`, there's no need to con
 
 Skyscraper's default internal region priority list is as follows. Topmost region has highest priority and so forth.
 
--   User-specified region set with `--region REGION` (command line) or `region="REGION"` (config.ini)
+-   User-specified region set with `--region <REGION>` (command line) or `region="<REGION>"` (config.ini)
 -   If no user-specified region is set, the [auto-detected](REGIONS.md#region-auto-detection) region will be added here
--   eu
--   us
--   ss
--   uk
--   wor
--   jp
--   au
--   ame
--   de
--   cus
--   cn
--   kr
--   asi
--   br
--   sp
--   fr
--   gr
--   it
--   no
--   dk
--   nz
--   nl
--   pl
--   ru
--   se
--   tw
--   ca
+-   Then this list is processed in order: eu, us, ss (Screenscraper specific), uk, wor, jp, au, ame, de, cus, cn, kr, asi, br, sp, fr, gr, it, no, dk, nz, nl, pl, ru, se, tw, ca
 
 ## Configuring Region Manually
 
@@ -108,8 +83,8 @@ If you insist, of course you can configure the region manually. You can either d
 
 ### config.ini
 
-Read [this](CONFIGINI.md#region) and [this](CONFIGINI.md#regionprios).
+Read about the [`region`](CONFIGINI.md#region) and [`regionprios`](CONFIGINI.md#regionprios) setting.
 
 ### Command line
 
-Read [this](CLIHELP.md#-region-code).
+Read about the [`--region`](CLIHELP.md#-region-code) option.

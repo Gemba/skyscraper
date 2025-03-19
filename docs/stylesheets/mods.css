@@ -2,6 +2,7 @@
   --md-primary-fg-color: #292d4e;
   --md-accent-fg-color: #f39200;
   --md-code-font: "DejaVu Sans Mono";
+  .md-typeset { h1, h2, h3 { font-weight: 700; } }
 }
 
 :root, [data-md-color-scheme="slate"] {
@@ -43,8 +44,15 @@
   font-size: .72rem;
 }
 
+[data-md-color-scheme="slate"] .md-nav__link.md-nav__link--active:not(:hover) {
+  color: #454e9a;
+}
 .md-nav__link.md-nav__link--active:not(:hover) {
   color: #454e9a;
+}
+
+.md-nav__link[data-md-state="blur"] {
+  color: var(--md-default-fg-color--lighter);
 }
 
 .md-typeset a {
@@ -61,14 +69,14 @@ article a:hover {
 {
   /* mdi:open-in-new */
   /* white fill*/
-  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'><path fill='white' d='M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7Z'/%3E%3C/svg%3E");
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='0.95em' height='0.95em' viewBox='0 0 24 24'><path fill='white' d='M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7Z'/%3E%3C/svg%3E");
   white-space: nowrap;
 }
 .md-typeset a:not([href^="https://github.com/Gemba"]):not([href^="#"]):not([href^="/"]):not([href^=".."]):not([href^="./#"]):not([href^="CHANGELOG"]):not([href^="USECASE"]):after
 {
   /* mdi:open-in-new */
   /* black / currentColor fill */
-  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'><path fill='currentColor' d='M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7Z'/%3E%3C/svg%3E");
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='0.95em' height='0.95em' viewBox='0 0 24 24'><path fill='currentColor' d='M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7Z'/%3E%3C/svg%3E");
   white-space: nowrap;
 }
 

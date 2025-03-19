@@ -195,10 +195,13 @@ void Igdb::getReleaseDate(GameEntry &game) {
                                      "cn", "asi", "wor", "kr", "br"};
     for (const auto &region : regionPrios) {
         for (const auto &jsonDate : jsonDates) {
-            // cf. https://api.igdb.com/v4/release_date_regions
+            /* http --print bH https://api.igdb.com/v4/release_date_regions
+             * "Client-ID:<>" "Authorization: Bearer <>" --raw='fields region;'
+             */
             int regionEnum = jsonDate.toObject()["region"].toInt();
             QString curRegion = "";
             if (regionEnum > 0 && regionEnum < skyscraperRegions.length()) {
+                // resolve to skyscraper region identifier
                 curRegion = skyscraperRegions.at(regionEnum);
             }
             if (QString::number(jsonDate.toObject()["platform"].toInt()) ==
