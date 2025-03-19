@@ -128,72 +128,45 @@ void ArcadeDB::getCover(GameEntry &game) {
         if (url.isEmpty()) {
             continue;
         }
-
-        netComm->request(url);
-        q.exec();
-        QImage image;
-        if (netComm->getError() == QNetworkReply::NoError &&
-            image.loadFromData(netComm->getData())) {
-            game.coverData = netComm->getData();
-            return;
+        game.coverData = downloadMedia(url);
+        if (!game.coverData.isEmpty()) {
+            break;
         }
     }
 }
 
 void ArcadeDB::getScreenshot(GameEntry &game) {
-    if (jsonObj.value("url_image_ingame").toString().isEmpty()) {
-        return;
-    }
-    netComm->request(jsonObj.value("url_image_ingame").toString());
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.screenshotData = netComm->getData();
+    QString url = jsonObj.value("url_image_ingame").toString();
+    if (!url.isEmpty()) {
+        game.screenshotData = downloadMedia(url);
     }
 }
 
 void ArcadeDB::getWheel(GameEntry &game) {
-    netComm->request(baseUrl + "/media/mame.current/decals/" +
-                     jsonObj["game_name"].toString() + ".png");
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.wheelData = netComm->getData();
-    }
+    game.wheelData = downloadMedia(baseUrl + "/media/mame.current/decals/" +
+                                   jsonObj["game_name"].toString() + ".png");
 }
 
 void ArcadeDB::getMarquee(GameEntry &game) {
-    if (jsonObj.value("url_image_marquee").toString().isEmpty()) {
-        return;
-    }
-    netComm->request(jsonObj.value("url_image_marquee").toString());
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.marqueeData = netComm->getData();
+    QString url = jsonObj.value("url_image_marquee").toString();
+    if (!url.isEmpty()) {
+        game.marqueeData =
+            downloadMedia(jsonObj.value("url_image_marquee").toString());
     }
 }
 
 void ArcadeDB::getVideo(GameEntry &game) {
-    game.videoData = QByteArray();
     for (auto const &key :
          QStringList({"url_video_shortplay_hd", "url_video_shortplay"})) {
         QString url = jsonObj.value(key).toString();
-        if (url.isEmpty()) {
-            continue;
-        }
-        netComm->request(url);
-        q.exec();
-        if (game.videoData = netComm->getData();
-            netComm->getError() == QNetworkReply::NoError &&
-            game.videoData.length() > 4096) {
-            game.videoFormat = "mp4";
-            break;
-        } else {
-            game.videoData = QByteArray();
+        if (!url.isEmpty()) {
+            game.videoData = downloadMedia(url, false);
+            if (game.videoData.length() > 4096) {
+                game.videoFormat = "mp4";
+                break;
+            } else {
+                game.videoData = QByteArray();
+            }
         }
     }
 }

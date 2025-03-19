@@ -307,13 +307,7 @@ void OpenRetro::getCover(GameEntry &game) {
     if (coverUrl.left(4) != "http") {
         coverUrl.prepend(baseUrl + (coverUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(coverUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.coverData = netComm->getData();
-    }
+    game.coverData = downloadMedia(coverUrl);
 }
 
 void OpenRetro::getMarquee(GameEntry &game) {
@@ -334,13 +328,7 @@ void OpenRetro::getMarquee(GameEntry &game) {
     if (marqueeUrl.left(4) != "http") {
         marqueeUrl.prepend(baseUrl + (marqueeUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(marqueeUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.marqueeData = netComm->getData();
-    }
+    game.marqueeData = downloadMedia(marqueeUrl);
 }
 
 QList<QString> OpenRetro::getSearchNames(const QFileInfo &info,

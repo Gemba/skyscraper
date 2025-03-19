@@ -25,6 +25,7 @@
 
 #include "mobygames.h"
 
+#include "netcomm.h"
 #include "platform.h"
 #include "strtools.h"
 
@@ -350,23 +351,20 @@ void MobyGames::getCover(GameEntry &game) {
         return;
     }
     qDebug() << coverUrl;
-    netComm->request(coverUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError) {
-        QImage image;
-        if (image.loadFromData(netComm->getData())) {
-            double aspect = image.height() / (double)image.width();
-            if (aspect >= 0.8) {
-                game.coverData = netComm->getData();
-                printf("OK\n");
-            } else {
-                printf("Landscape mode detected. Cover discarded.\n");
-            }
-            return;
-        }
+    game.coverData = downloadMedia(coverUrl);
+    if (game.coverData.isEmpty()) {
+        printf("Unexpected download or format error.\n");
+        return;
     }
-    printf("Unexpected download or format error.\n");
+    QImage image;
+    image.loadFromData(game.coverData);
+    double aspect = image.height() / (double)image.width();
+    if (aspect >= 0.8) {
+        printf("OK\n");
+    } else {
+        printf("Landscape mode detected. Cover discarded.\n");
+        game.coverData.clear();
+    }
 }
 
 void MobyGames::getScreenshot(GameEntry &game) {
@@ -399,16 +397,12 @@ void MobyGames::getScreenshot(GameEntry &game) {
             2 +
             (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2));
     }
-    netComm->request(
+    game.screenshotData = downloadMedia(
         jsonScreenshots.at(chosen).toObject()["image"].toString().replace(
             "http://", "https://"));
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
+    if (!game.screenshotData.isEmpty()) {
         printf("OK. Picked screenshot #%d of %d.\n", chosen,
                jsonScreenshots.count());
-        game.screenshotData = netComm->getData();
     } else {
         printf("No screenshot available.\n");
     }

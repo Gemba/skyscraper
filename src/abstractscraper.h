@@ -93,6 +93,8 @@ protected:
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);
     QString lookupAliasMap(const QString &baseName, QString &debug);
+    QByteArray downloadMedia(const QString &url, bool isImage = true);
+
     MatchType type = ABSTRACT;
 
     QList<int> fetchOrder;

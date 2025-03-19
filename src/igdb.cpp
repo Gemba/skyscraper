@@ -415,13 +415,5 @@ QByteArray Igdb::mediaFromJsonRef(QString gameMedia, QString mediaUrl) {
     mediaUrl = mediaUrl.replace(QRegularExpression("^//"), "https://");
     mediaUrl = mediaUrl.replace("/t_thumb/", "/t_1080p/");
     qDebug() << gameMedia << mediaUrl;
-    netComm->request(mediaUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        qDebug() << "success!";
-        return netComm->getData();
-    }
-    return QByteArray();
+    return downloadMedia(mediaUrl);
 }

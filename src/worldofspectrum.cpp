@@ -135,16 +135,10 @@ void WorldOfSpectrum::getCover(GameEntry &game) {
     nomNom("<A HREF=\"");
     QString coverUrl = data.left(data.indexOf(coverPost.toUtf8()));
     if (coverUrl.indexOf("http") != -1) {
-        netComm->request(coverUrl);
+        game.coverData = downloadMedia(coverUrl);
     } else {
-        netComm->request(baseUrl + (coverUrl.left(1) == "/" ? "" : "/") +
-                         coverUrl);
-    }
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.coverData = netComm->getData();
+        game.coverData = downloadMedia(
+            baseUrl + (coverUrl.left(1) == "/" ? "" : "/") + coverUrl);
     }
 }
 
@@ -156,16 +150,11 @@ void WorldOfSpectrum::getScreenshot(GameEntry &game) {
     nomNom("<IMG SRC=\"");
     QString screenshotUrl = data.left(data.indexOf(screenshotPost.toUtf8()));
     if (screenshotUrl.indexOf("http") != -1) {
-        netComm->request(screenshotUrl);
+        game.screenshotData = downloadMedia(screenshotUrl);
     } else {
-        netComm->request(baseUrl + (screenshotUrl.left(1) == "/" ? "" : "/") +
-                         screenshotUrl);
-    }
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.screenshotData = netComm->getData();
+        game.screenshotData =
+            downloadMedia(baseUrl + (screenshotUrl.left(1) == "/" ? "" : "/") +
+                          screenshotUrl);
     }
 }
 

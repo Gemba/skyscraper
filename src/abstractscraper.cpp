@@ -317,13 +317,7 @@ void AbstractScraper::getCover(GameEntry &game) {
     if (coverUrl.left(4) != "http") {
         coverUrl.prepend(baseUrl + (coverUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(coverUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.coverData = netComm->getData();
-    }
+    game.coverData = downloadMedia(coverUrl);
 }
 
 // TODO: openretro only
@@ -345,13 +339,7 @@ void AbstractScraper::getScreenshot(GameEntry &game) {
             screenshotUrl.prepend(baseUrl +
                                   (screenshotUrl.left(1) == "/" ? "" : "/"));
         }
-        netComm->request(screenshotUrl);
-        q.exec();
-        QImage image;
-        if (netComm->getError() == QNetworkReply::NoError &&
-            image.loadFromData(netComm->getData())) {
-            game.screenshotData = netComm->getData();
-        }
+        game.screenshotData = downloadMedia(screenshotUrl);
     }
 }
 
@@ -373,13 +361,7 @@ void AbstractScraper::getWheel(GameEntry &game) {
     if (wheelUrl.left(4) != "http") {
         wheelUrl.prepend(baseUrl + (wheelUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(wheelUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.wheelData = netComm->getData();
-    }
+    game.wheelData = downloadMedia(wheelUrl);
 }
 
 // TODO: openretro only
@@ -400,13 +382,7 @@ void AbstractScraper::getMarquee(GameEntry &game) {
     if (marqueeUrl.left(4) != "http") {
         marqueeUrl.prepend(baseUrl + (marqueeUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(marqueeUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.marqueeData = netComm->getData();
-    }
+    game.marqueeData = downloadMedia(marqueeUrl);
 }
 
 // TODO: only for html scrape modules (currently none)
@@ -430,13 +406,7 @@ void AbstractScraper::getTexture(GameEntry &game) {
     if (textureUrl.left(4) != "http") {
         textureUrl.prepend(baseUrl + (textureUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(textureUrl);
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.textureData = netComm->getData();
-    }
+    game.textureData = downloadMedia(textureUrl);
 }
 
 // TODO: only for html scrape modules (currently none)
@@ -457,12 +427,22 @@ void AbstractScraper::getVideo(GameEntry &game) {
     if (videoUrl.left(4) != "http") {
         videoUrl.prepend(baseUrl + (videoUrl.left(1) == "/" ? "" : "/"));
     }
-    netComm->request(videoUrl);
-    q.exec();
-    if (netComm->getError() == QNetworkReply::NoError) {
-        game.videoData = netComm->getData();
+
+    game.videoData = downloadMedia(videoUrl, false);
+    if (!game.videoData.isEmpty())
         game.videoFormat = videoUrl.right(3);
+}
+
+QByteArray AbstractScraper::downloadMedia(const QString &url, bool isImage) {
+    netComm->request(url);
+    q.exec();
+    QByteArray d;
+    QImage img;
+    if (netComm->getError() == QNetworkReply::NoError &&
+        (!isImage || img.loadFromData(netComm->getData()))) {
+        d = netComm->getData();
     }
+    return d;
 }
 
 void AbstractScraper::nomNom(const QString nom, bool including) {

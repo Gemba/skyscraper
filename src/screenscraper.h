@@ -69,7 +69,7 @@ private:
 
     QString getJsonText(QJsonArray array, int attr,
                         QList<QString> types = QList<QString>());
-    QByteArray downloadMedia(const QString &url);
+    QByteArray downloadImageWithRetry(const QString &url);
     void downloadBinary(const QString &url, const QString &type,
                         GameEntry &game);
     QString getUrlOrTextPropertyValue(const QJsonObject &jsonVal,

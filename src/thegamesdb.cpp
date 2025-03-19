@@ -201,16 +201,9 @@ void TheGamesDb::getTags(GameEntry &game) {
 
 void TheGamesDb::getCover(GameEntry &game) {
     QString req = gfxUrl + "/boxart/front/" + game.id + "-1";
-    netComm->request(req + ".jpg");
-    q.exec();
-    if (netComm->getError() != QNetworkReply::NoError) {
-        netComm->request(req + ".png");
-        q.exec();
-    }
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.coverData = netComm->getData();
+    game.coverData = downloadMedia(req + ".jpg");
+    if (game.coverData.isEmpty()) {
+        game.coverData = downloadMedia(req + ".png");
     }
 }
 
@@ -241,27 +234,14 @@ void TheGamesDb::getScreenshot(GameEntry &game) {
 
 void TheGamesDb::getWheel(GameEntry &game) {
     QString req = gfxUrl + "/clearlogo/" + game.id;
-    netComm->request(req + ".png");
-    q.exec();
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.wheelData = netComm->getData();
-    }
+    game.wheelData = downloadMedia(req + ".png");
 }
 
 void TheGamesDb::getMarquee(GameEntry &game) {
     QString req = gfxUrl + "/graphical/" + game.id + "-g";
-    netComm->request(req + ".jpg");
-    q.exec();
-    if (netComm->getError() != QNetworkReply::NoError) {
-        netComm->request(req + ".png");
-        q.exec();
-    }
-    QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
-        game.marqueeData = netComm->getData();
+    game.marqueeData = downloadMedia(req + ".jpg");
+    if (game.marqueeData.isEmpty()) {
+        game.marqueeData = downloadMedia(req + ".png");
     }
 }
 
