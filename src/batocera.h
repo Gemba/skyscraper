@@ -38,6 +38,12 @@ protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
     void preserveVariants(const GameEntry &oldEntry, GameEntry &entry) override;
     bool addEmptyElem() { return false; };
+    QString openingElement(GameEntry &entry) override;
+
+private:
+    QString
+    elemWithAttribs(const QString &t,
+                    const QPair<QString, QDomNamedNodeMap> &elemAttribs);
 };
 
 #endif // BATOCERA_H

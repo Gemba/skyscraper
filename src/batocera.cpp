@@ -31,7 +31,18 @@ Batocera::Batocera() {
     config->relativePaths = true;
 }
 
-inline const QString baseFolder() { return QString("/userdata/roms/"); }
+static const QString baseFolder() { return QString("/userdata/roms/"); }
+
+inline const QStringList pathGamelistElems() {
+    return QStringList({GameEntry::elements()[GameEntry::Elem::COVER],
+                        GameEntry::elements()[GameEntry::Elem::SCREENSHOT],
+                        GameEntry::elements()[GameEntry::Elem::MARQUEE],
+                        GameEntry::elements()[GameEntry::Elem::FANART],
+                        GameEntry::elements()[GameEntry::Elem::MANUAL],
+                        GameEntry::elements()[GameEntry::Elem::VIDEO],
+                        "boxback", "boxart", "map", "bezel", "cartridge",
+                        "titleshot", "magazine", "mix", "music"});
+};
 
 QStringList Batocera::extraGamelistTags(bool isFolder) {
     (void)isFolder;
@@ -44,15 +55,58 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
     // at this point entry has already added the oldEntry elements and attribs
     QStringList elemNames =
         entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
-    // FIXME
+
+    const QMap<QString, QString> scrapedValues = {
+        {GameEntry::elements()[GameEntry::Elem::COVER], entry.coverFile},
+        {GameEntry::elements()[GameEntry::Elem::SCREENSHOT],
+         entry.screenshotFile},
+        {GameEntry::elements()[GameEntry::Elem::MARQUEE], entry.marqueeFile},
+        {GameEntry::elements()[GameEntry::Elem::FANART], "" /* FIXME */},
+        {GameEntry::elements()[GameEntry::Elem::MANUAL], entry.manualFile},
+        {GameEntry::elements()[GameEntry::Elem::VIDEO], entry.videoFile}};
+
     for (auto const &t : elemNames) {
-        // if path-like info (do they have attribs?)
-        // l.append(elem("thumbnail", entry.coverFile, addEmptyElem(), true));
-        // ...
-        // else
-        // just dump with attribs (elem() method not usable)
+        if (pathGamelistElems().contains(t)) {
+            if (scrapedValues.keys().contains(t)) {
+                l.append(elem(t, scrapedValues[t], addEmptyElem(), true));
+            } else {
+                l.append(elem(t, entry.getEsExtra(t), addEmptyElem(), true));
+            }
+        } else {
+            l.append(elemWithAttribs(t, entry.getEsExtraAttribs(t)));
+        }
     }
     return l;
+}
+
+QString Batocera::openingElement(GameEntry &entry) {
+    // PENDING: Assuming Bato allows <folder/> elements
+    QString entryType = QString(entry.isFolder ? "folder" : "game");
+    if (config->scraper == "screenscraper") {
+        return QString("  <" % entryType % " id=\"" % entry.id % "\">");
+    } else {
+        return QString("  <" % entryType % ">");
+    }
+}
+
+QString
+Batocera::elemWithAttribs(const QString &t,
+                          const QPair<QString, QDomNamedNodeMap> &elemAttribs) {
+    const QString elemVal = elemAttribs.first;
+    QDomNamedNodeMap attribs = elemAttribs.second;
+    if (attribs.isEmpty()) {
+        return elem(t, elemVal, addEmptyElement());
+    }
+    QStringList attrs;
+    for (int i = 0; i < attribs.length(); i++) {
+        QDomAttr attr = attribs.item(i).toAttr();
+        attrs.append(QString("%1=\"%2\"").arg(attr.name(), attr.value()));
+    }
+    QString elemWithAttrs = t % " " % attrs.join(" ");
+    if (elemVal.isEmpty()) {
+        return QString("    <%1/>").arg(elemWithAttrs);
+    }
+    return QString("    <%1>%2</%3>").arg(elemWithAttrs, elemVal, t);
 }
 
 void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {

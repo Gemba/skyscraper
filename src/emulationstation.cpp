@@ -305,11 +305,15 @@ bool EmulationStation::isGameLauncher(QString &sub) {
     return folderIsGameLauncher;
 }
 
+QString EmulationStation::openingElement(GameEntry &entry) {
+    QString entryType = QString(entry.isFolder ? "folder" : "game");
+    return QString("  <" % entryType % ">");
+}
+
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
     bool addEmptyElem = addEmptyElement() && !entry.isFolder;
-    QString entryType = QString(entry.isFolder ? "folder" : "game");
-    l.append("  <" % entryType % ">");
+    l.append(openingElement(entry));
 
     l.append(elem("path", entry.path, addEmptyElem));
     l.append(elem("name", entry.title, addEmptyElem));

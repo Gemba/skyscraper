@@ -64,6 +64,7 @@ protected:
     bool addEmptyElement() { return true; };
     QString elem(const QString &elem, const QString &data, bool addEmptyElem,
                  bool isPath = false);
+    virtual QString openingElement(GameEntry &entry);
 
 private:
     QString createXml(GameEntry &entry);

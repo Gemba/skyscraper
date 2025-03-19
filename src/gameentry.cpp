@@ -100,7 +100,7 @@ void GameEntry::resetMedia() {
     manualData.clear();
 }
 
-QString GameEntry::getEsExtra(const QString &tagName) const {
+const QString GameEntry::getEsExtra(const QString &tagName) const {
     return esExtras[tagName].first;
 };
 

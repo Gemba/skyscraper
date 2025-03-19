@@ -52,6 +52,7 @@ public:
         TITLE,
         TEXTURE,
         MANUAL,
+        FANART,
         __LAST
     };
 
@@ -72,11 +73,12 @@ public:
             // FIXME: wird das in ESDE oder Batocera explizit gespeichert?
             {WHEEL, ""},
             {MARQUEE, "marquee"},
-            // kidgame bei ES, FIXME: bei anderen frontends?
-            {AGES, ""},
+            // ES, ES-DE and Batocera
+            {AGES, "kidgame"},
             {TITLE, "name"},
             {TEXTURE, "texture"},
-            {MANUAL, "manual"}};
+            {MANUAL, "manual"},
+            {FANART, "fanart"}};
     };
 
     GameEntry();
@@ -85,7 +87,7 @@ public:
                                bool manualEnabled = false);
     int getCompleteness() const;
     void resetMedia();
-    QString getEsExtra(const QString &tagName) const;
+    const QString getEsExtra(const QString &tagName) const;
     QPair<QString, QDomNamedNodeMap>
     getEsExtraAttribs(const QString &tagName) const;
     void setEsExtra(const QString &tagName, QString value,
