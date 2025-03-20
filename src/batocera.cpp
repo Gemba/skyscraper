@@ -31,7 +31,6 @@
 - GameEntry::Elem:: "eine Ebene weniger" -> readability
  */
 
-
 Batocera::Batocera() {
     // always on
     config->relativePaths = true;
@@ -40,14 +39,15 @@ Batocera::Batocera() {
 static const QString baseFolder() { return QString("/userdata/roms/"); }
 
 inline const QStringList pathGamelistElems() {
-    return QStringList({GameEntry::elements()[GameEntry::Elem::COVER],
-                        GameEntry::elements()[GameEntry::Elem::SCREENSHOT],
-                        GameEntry::elements()[GameEntry::Elem::MARQUEE],
-                        GameEntry::elements()[GameEntry::Elem::FANART],
-                        GameEntry::elements()[GameEntry::Elem::MANUAL],
-                        GameEntry::elements()[GameEntry::Elem::VIDEO],
-                        "boxback", "boxart", "map", "bezel", "cartridge",
-                        "titleshot", "magazine", "mix", "music"});
+    // using enum GameEntry::Elem; // std-c++-20 onwards
+    return QStringList({GameEntry::getTag(GameEntry::Elem::COVER),
+                        GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
+                        GameEntry::getTag(GameEntry::Elem::MARQUEE),
+                        GameEntry::getTag(GameEntry::Elem::FANART),
+                        GameEntry::getTag(GameEntry::Elem::MANUAL),
+                        GameEntry::getTag(GameEntry::Elem::VIDEO), "boxback",
+                        "boxart", "map", "bezel", "cartridge", "titleshot",
+                        "magazine", "mix", "music"});
 };
 
 QStringList Batocera::extraGamelistTags(bool isFolder) {
@@ -63,13 +63,12 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
         entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
 
     const QMap<QString, QString> scrapedValues = {
-        {GameEntry::elements()[GameEntry::Elem::COVER], entry.coverFile},
-        {GameEntry::elements()[GameEntry::Elem::SCREENSHOT],
-         entry.screenshotFile},
-        {GameEntry::elements()[GameEntry::Elem::MARQUEE], entry.marqueeFile},
-        {GameEntry::elements()[GameEntry::Elem::FANART], "" /* FIXME */},
-        {GameEntry::elements()[GameEntry::Elem::MANUAL], entry.manualFile},
-        {GameEntry::elements()[GameEntry::Elem::VIDEO], entry.videoFile}};
+        {GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile},
+        {GameEntry::getTag(GameEntry::Elem::SCREENSHOT), entry.screenshotFile},
+        {GameEntry::getTag(GameEntry::Elem::MARQUEE), entry.marqueeFile},
+        {GameEntry::getTag(GameEntry::Elem::FANART), "" /* FIXME */},
+        {GameEntry::getTag(GameEntry::Elem::MANUAL), entry.manualFile},
+        {GameEntry::getTag(GameEntry::Elem::VIDEO), entry.videoFile}};
 
     for (auto const &t : elemNames) {
         if (pathGamelistElems().contains(t)) {
