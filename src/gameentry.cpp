@@ -90,10 +90,11 @@ void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled) {
 int GameEntry::getCompleteness() const { return (int)completeness; }
 
 void GameEntry::resetMedia() {
-    coverData = QByteArray();
-    screenshotData = QByteArray();
-    wheelData = QByteArray();
-    marqueeData = QByteArray();
-    videoData = QByteArray();
-    manualData = QByteArray();
+    coverData.clear();
+    screenshotData.clear();
+    wheelData.clear();
+    marqueeData.clear();
+    textureData.clear();
+    videoData.clear();
+    manualData.clear();
 }

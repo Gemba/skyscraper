@@ -918,7 +918,7 @@ void ScraperWorker::copyMedia(const QString &mediaType,
         if (isVideoType) {
             game.videoFormat = "";
         } else {
-            game.manualData = QByteArray();
+            game.manualData.clear();
             game.manualFile = "";
         }
     }

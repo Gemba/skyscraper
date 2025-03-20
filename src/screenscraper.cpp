@@ -367,10 +367,11 @@ void ScreenScraper::downloadBinary(const QString &url, const QString &type,
         q.exec();
         if (netComm->getError(config->verbosity) == QNetworkReply::NoError) {
             QByteArray contentType = netComm->getContentType();
-            // Make sure received data is actually a video file/pdf file
+            // Make sure received data is actually a video or  PDF file
             if (isVideoType) {
-                if (contentType.contains("video/") &&
-                    game.videoData.size() > 4096) {
+                QByteArray d = netComm->getData();
+                if (contentType.contains("video/") && d.size() > 4096) {
+                    game.videoData = d;
                     game.videoFormat = contentType.mid(
                         contentType.indexOf("/") + 1,
                         contentType.length() - contentType.indexOf("/") + 1);

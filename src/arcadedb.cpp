@@ -165,8 +165,9 @@ void ArcadeDB::getVideo(GameEntry &game) {
                 game.videoFormat = "mp4";
                 break;
             } else {
-                game.videoData = QByteArray();
+                game.videoData.clear();
             }
+
         }
     }
 }
