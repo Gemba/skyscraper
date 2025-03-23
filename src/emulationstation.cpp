@@ -31,7 +31,7 @@
 
 #include <QDebug>
 #include <QDir>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringBuilder>
 
 EmulationStation::EmulationStation() {}
@@ -288,10 +288,8 @@ bool EmulationStation::isGameLauncher(QString &sub) {
     bool folderIsGameLauncher = false;
     if (config->platform == "scummvm") {
         QStringList exts = platformFileExtensions().split(" ");
-        for (auto ext : exts) {
-            QRegExp re(ext);
-            re.setPatternSyntax(QRegExp::Wildcard);
-            if (re.exactMatch(sub.toLower())) {
+        for (auto &ext : exts) {
+            if (sub.toLower().endsWith(ext.replace("*.", "."))) {
                 qDebug() << "Match: " << sub;
                 // do not add if .svm or other extension is used in
                 // fs-foldername

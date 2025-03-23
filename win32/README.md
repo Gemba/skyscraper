@@ -41,9 +41,6 @@ you don't need Cygwin for colorized/ANSI output any longer (see below).
 2. Set Compiler (via _Manage Kits..._ in Qt Creator) to
    "Desktop Qt <version> LLVM MinGW 64-Bit" (set Default)
 3. Open skyscraper project (Projects (Wrench icon) from toolbar left):
-   - In _Build and Run_ -> _Build Steps_ (expand _Details_) enter into
-     _Additional Arguments_: `QT+=core5compat`, do this for Debug and Release
-     build configuration
    - Adjust Build directory (e.g. `<skyscraper_git>\build`), do this for Debug
      and Release build configuration
 4. Hit build (Hammer icon)
@@ -54,8 +51,9 @@ you don't need Cygwin for colorized/ANSI output any longer (see below).
 1. Open a command prompt (cmd.exe or powershell.exe)
 2. Add LLVM MinGW to the path, for example `set
    PATH=<qt6-installfolder>\<qt-version>\llvm-mingw_64\bin;%PATH%`. If unsure
-   what to add to the PATH run `qmake -query "QT_INSTALL_PREFIX"` and add
-   `\bin`. Consider persisting this environment setting.
+   what to add to the `PATH` run e.g., `c:\qt6\6.8.2\llvm-mingw_64\bin\qmake
+   -query "QT_INSTALL_PREFIX"` and add `\bin` to the output. Consider persisting
+   this environment setting.
 3. Change to `<skyscraper_git>\build\release`
 4. Run `.\Skyscraper.exe --help`
 5. Check that the supported platforms (`-p`) are listed and are not empty

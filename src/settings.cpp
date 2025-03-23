@@ -27,11 +27,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QStringBuilder>
-#ifdef __MINGW32__
-#include <experimental/filesystem>
-#else
 #include <filesystem>
-#endif
 
 static inline bool isArcadePlatform(const QString &platform) {
     const QStringList arcadePlatforms = {"arcade",        "fba",

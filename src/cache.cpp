@@ -46,17 +46,17 @@
 #include <iostream>
 
 // user defined resource cache entries
-const auto SRC_USER = "user";
+const QString SRC_USER = "user";
 
 // quickids.xml and db.xml
-const auto Q_ELEM = "quickid";
-const auto R_ELEM = "resource";
-const auto ATTR_FILEPATH = "filepath";
-const auto ATTR_ID = "id";
-const auto ATTR_SHA1_LEGACY = "sha1";
-const auto ATTR_SRC = "source";
-const auto ATTR_TS = "timestamp";
-const auto ATTR_TYPE = "type";
+const QString Q_ELEM = "quickid";
+const QString R_ELEM = "resource";
+const QString ATTR_FILEPATH = "filepath";
+const QString ATTR_ID = "id";
+const QString ATTR_SHA1_LEGACY = "sha1";
+const QString ATTR_SRC = "source";
+const QString ATTR_TS = "timestamp";
+const QString ATTR_TYPE = "type";
 
 static inline QStringList txtTypes(bool useGenres = true) {
     // keep order for cache edit menu

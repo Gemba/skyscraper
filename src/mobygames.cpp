@@ -385,24 +385,23 @@ void MobyGames::getScreenshot(GameEntry &game) {
 
     QJsonArray jsonScreenshots = jsonDoc.object()["screenshots"].toArray();
 
-    if (jsonScreenshots.count() < 1) {
+    const int screenCount = static_cast<int>(jsonScreenshots.count());
+
+    if (screenCount < 1) {
         printf("No screenshots available.\n");
         return;
     }
     int chosen = 1;
-    if (jsonScreenshots.count() > 2) {
+    if (screenCount > 2) {
         // First 2 are almost always not ingame, so skip those if we have 3
         // or more
-        chosen =
-            2 +
-            (QRandomGenerator::system()->bounded(jsonScreenshots.count() - 2));
+        chosen = 2 + (QRandomGenerator::system()->bounded(screenCount - 2));
     }
     game.screenshotData = downloadMedia(
         jsonScreenshots.at(chosen).toObject()["image"].toString().replace(
             "http://", "https://"));
     if (!game.screenshotData.isEmpty()) {
-        printf("OK. Picked screenshot #%d of %d.\n", chosen,
-               jsonScreenshots.count());
+        printf("OK. Picked screenshot #%d of %d.\n", chosen, screenCount);
     } else {
         printf("No screenshot available.\n");
     }

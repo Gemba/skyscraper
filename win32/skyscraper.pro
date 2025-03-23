@@ -33,7 +33,7 @@ win32 {
   # determine needed libs and copy into $${DEST}
   QMAKE_POST_LINK += cmd /c $$shell_quote($$shell_path($${WINDEPLOYQT_BIN})) \
     --no-system-dxc-compiler --no-system-d3d-compiler --no-opengl-sw \
-    --$${BUILD_CFG} $$shell_quote($$shell_path($${DEST}\\Skyscraper.exe)) \
+    $$shell_quote($$shell_path($${DEST}\\Skyscraper.exe)) \
     $$escape_expand(\\n\\t)
 
   # create mandatory folders and deploy mandatory files

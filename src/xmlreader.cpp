@@ -39,7 +39,12 @@ bool XmlReader::setFile(QString filename) {
 
     QFile f(filename);
     if (f.open(QIODevice::ReadOnly)) {
+#if QT_VERSION < 0x060800
         if (setContent(f.readAll(), false)) {
+#else
+        if (QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
+            p) {
+#endif
             result = true;
         }
         f.close();

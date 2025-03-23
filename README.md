@@ -74,8 +74,8 @@ This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie
 
 ### Installation Prerequisites on Other Systems or Architectures
 #### Linux
-Skyscraper needs Qt5.3 or later to compile. For a Retropie, Ubuntu or other Debian derived distro, you can install Qt5 using the following commands:
-```
+Skyscraper needs Qt5.11 or later to compile. For a Retropie, Ubuntu or other Debian derived distro, you can install Qt5 using the following commands:
+```bash
 $ sudo apt update
 $ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5sql5-sqlite p7zip-full
 # You may need these too, if they are not installed already
@@ -99,7 +99,7 @@ Two Docker setups exist: One general in the `docker/` folder. The other resides 
 
 ### Download, compile and install
 When you've installed the prerequisites as described above for Linux or macOS, you can install Skyscraper by typing in the following commands:
-```
+```bash
 $ cd
 $ mkdir -p skysource && cd skysource
 $ wget -q -O - https://raw.githubusercontent.com/Gemba/skyscraper/master/update_skyscraper.sh | bash -s --
@@ -113,7 +113,7 @@ When the script has completed you are ready to run Skyscraper!
 
 ### Updating Skyscraper
 From Skyscraper 2.3.2 and newer you can update to the latest version simply by running the following commands:
-```
+```bash
 $ cd
 $ cd skysource
 $ ./update_skyscraper.sh
@@ -126,19 +126,24 @@ If your version is older than 2.3.2 (check with `--help`) you need to follow the
 
 ### Installing the Development Version
 If you want to build the latest `main/HEAD` version use the following commands. Make sure to have the before mentioned packages installed:
-```
+```bash
 git clone --depth 1 https://github.com/Gemba/skyscraper.git
 cd skyscraper
 [[ -f Makefile ]] && make --ignore-errors clean
 rm --force .qmake.stash
-QT_SELECT=5 qmake  # Add also PREFIX=/path/to before qmake if you want a different PREFIX than /usr/local
+qmake  # Add also PREFIX=/path/to before qmake if you want a different PREFIX than /usr/local
 make -j$(nproc)
 sudo make install
 ```
 
+For _Qt6_ on Debian Bookworm install this and replace `qmake` in the above commands with `qmake6`:
+```bash
+sudo apt install qt6-base-dev qmake6 qt6-base-dev-tools libqt6sql6-sqlite p7zip-full
+```
+
 ### How to uninstall Skyscraper
 If you've installed Skyscraper using the instructions in this readme, you can uninstall it using the following commands:
-```
+```bash
 $ cd
 $ cd skysource
 $ sudo make uninstall
@@ -161,7 +166,7 @@ For first-time users I recommend reading the short and to-the-point [use case](h
 
 ### A quick run-down of Skyscraper
 Skyscraper is a command line tool, and has many, many options for you to fiddle around with. I recommend taking a look at all of them to familiarize yourself with the possibilites:
-```
+```bash
 $ Skyscraper --help
 $ Skyscraper --flags help
 $ Skyscraper --cache help
