@@ -233,8 +233,13 @@ void TheGamesDb::getScreenshot(GameEntry &game) {
 }
 
 void TheGamesDb::getWheel(GameEntry &game) {
-    QString req = gfxUrl + "/clearlogo/" + game.id;
+    QString req = gfxUrl + "/clearlogo/" + game.id + "-1";
     game.wheelData = downloadMedia(req + ".png");
+    if (game.wheelData.isEmpty()) {
+        // legacy, try without "-1"
+        req.chop(2);
+        game.wheelData = downloadMedia(req + ".png");
+    }
 }
 
 void TheGamesDb::getMarquee(GameEntry &game) {

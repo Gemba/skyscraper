@@ -9,6 +9,8 @@ humans](https://keepachangelog.com).
   is now optional. It gets added automagically when no other query keyword is
   applied.
 - Updated: `mamemap.csv` for MAME 0.275
+- Fixed: Make media file detection more solid for The Games DB. TGDB scraper now
+  uses the web API to pinpoint mediafiles. Thanks for reporting, @joyrider3774.
 
 ### Version 3.16.0 (2025-03-10)
 
