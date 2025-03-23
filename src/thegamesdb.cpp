@@ -46,7 +46,6 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(AGES);
     fetchOrder.append(DEVELOPER);
     fetchOrder.append(PUBLISHER);
-    // fetchOrder.append(RATING);
     fetchOrder.append(COVER);
     fetchOrder.append(SCREENSHOT);
     fetchOrder.append(WHEEL);
