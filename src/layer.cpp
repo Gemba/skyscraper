@@ -25,7 +25,16 @@
 
 #include "layer.h"
 
+#include <QMap>
 #include <math.h>
+
+static const QMap<QString, Qt::AspectRatioMode> aspectMap = {
+    // clang-format off
+    {"ignore", Qt::IgnoreAspectRatio},
+    {"keep", Qt::KeepAspectRatio},
+    {"keepexpand", Qt::KeepAspectRatioByExpanding}
+    // clang-format on
+};
 
 Layer::Layer() {}
 
@@ -104,6 +113,11 @@ void Layer::setHeight(const int &height) { this->height = height; }
 
 void Layer::setMPixels(const double &mPixels) { this->mPixels = mPixels; }
 
+void Layer::setAspect(const QString &key) {
+    if (aspectMap.contains(key))
+        this->aspect = aspectMap[key];
+}
+
 void Layer::setValue(const int &value) { this->value = value; }
 
 void Layer::setDelta(const int &delta) { this->delta = delta; }
@@ -134,7 +148,7 @@ QList<Layer> Layer::getLayers() { return layers; }
 void Layer::makeTransparent() { canvas.fill(Qt::transparent); }
 
 void Layer::scale() {
-    if (mPixels != -1.0) {
+    if (mPixels > 0.0) {
         double currentMPixels = canvas.width() * canvas.height() / 1000000.0;
         double scaleFactor = sqrt(mPixels / currentMPixels);
         canvas = canvas.scaledToWidth(canvas.width() * scaleFactor,
@@ -146,8 +160,7 @@ void Layer::scale() {
     } else if (width != -1 && height == -1) {
         canvas = canvas.scaledToWidth(width, Qt::SmoothTransformation);
     } else if (width != -1 && height != -1) {
-        canvas = canvas.scaled(width, height, Qt::IgnoreAspectRatio,
-                               Qt::SmoothTransformation);
+        canvas = canvas.scaled(width, height, aspect, Qt::SmoothTransformation);
     }
 }
 

@@ -167,7 +167,6 @@ void ArcadeDB::getVideo(GameEntry &game) {
             } else {
                 game.videoData.clear();
             }
-
         }
     }
 }

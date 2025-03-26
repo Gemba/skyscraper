@@ -45,7 +45,7 @@ QImage FxFrame::applyEffect(const QImage &src, const Layer &layer,
     } else if (layer.width != -1 && layer.height == -1) {
         frame = frame.scaledToWidth(layer.width, Qt::SmoothTransformation);
     } else if (layer.width != -1 && layer.height != -1) {
-        frame = frame.scaled(layer.width, layer.height, Qt::IgnoreAspectRatio,
+        frame = frame.scaled(layer.width, layer.height, layer.aspect,
                              Qt::SmoothTransformation);
     }
 

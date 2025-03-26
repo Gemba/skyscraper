@@ -77,6 +77,7 @@ public:
     QPainter::CompositionMode mode = QPainter::CompositionMode_SourceOver;
     Qt::Axis axis = Qt::ZAxis;
     int saturation = 127;
+    Qt::AspectRatioMode aspect = Qt::IgnoreAspectRatio;
 
     // Setters
     void setMode(const QString &mode);
@@ -93,6 +94,7 @@ public:
     void setWidth(const int &width);
     void setHeight(const int &height);
     void setMPixels(const double &mPixels);
+    void setAspect(const QString &key);
     void setDelta(const int &delta);
     void setValue(const int &value);
     void setRed(const int &red);

@@ -94,6 +94,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                 newLayer.setHeight(attribs.value("height").toInt());
             if (attribs.hasAttribute("mpixels"))
                 newLayer.setMPixels(attribs.value("mpixels").toDouble());
+            if (attribs.hasAttribute("aspect"))
+                newLayer.setAspect(attribs.value("aspect").toString());
 
             if (newLayer.type != T_NONE) {
                 addChildLayers(newLayer, xml);
@@ -114,6 +116,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                 newLayer.setHeight(attribs.value("height").toInt());
             if (attribs.hasAttribute("mpixels"))
                 newLayer.setMPixels(attribs.value("mpixels").toDouble());
+            if (attribs.hasAttribute("aspect"))
+                newLayer.setAspect(attribs.value("aspect").toString());
             if (attribs.hasAttribute("align"))
                 newLayer.setAlign(attribs.value("align").toString());
             if (attribs.hasAttribute("valign"))
@@ -151,6 +155,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                     newLayer.setWidth(attribs.value("width").toInt());
                 if (attribs.hasAttribute("height"))
                     newLayer.setHeight(attribs.value("height").toInt());
+                if (attribs.hasAttribute("aspect"))
+                    newLayer.setAspect(attribs.value("aspect").toString());
                 if (attribs.hasAttribute("x"))
                     newLayer.setX(attribs.value("x").toInt());
                 if (attribs.hasAttribute("y"))
@@ -166,6 +172,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                     newLayer.setWidth(attribs.value("width").toInt());
                 if (attribs.hasAttribute("height"))
                     newLayer.setHeight(attribs.value("height").toInt());
+                if (attribs.hasAttribute("aspect"))
+                    newLayer.setAspect(attribs.value("aspect").toString());
                 if (attribs.hasAttribute("x"))
                     newLayer.setX(attribs.value("x").toInt());
                 if (attribs.hasAttribute("y"))

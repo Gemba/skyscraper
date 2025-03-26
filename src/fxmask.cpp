@@ -45,7 +45,7 @@ QImage FxMask::applyEffect(const QImage &src, const Layer &layer,
     } else if (layer.width != -1 && layer.height == -1) {
         mask = mask.scaledToWidth(layer.width, Qt::SmoothTransformation);
     } else if (layer.width != -1 && layer.height != -1) {
-        mask = mask.scaled(layer.width, layer.height, Qt::IgnoreAspectRatio,
+        mask = mask.scaled(layer.width, layer.height, layer.aspect,
                            Qt::SmoothTransformation);
     }
 
