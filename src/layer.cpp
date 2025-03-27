@@ -118,6 +118,13 @@ void Layer::setAspect(const QString &key) {
         this->aspect = aspectMap[key];
 }
 
+void Layer::setTransform(const QString &transform) {
+    if (transform == "smooth")
+        this->transform = Qt::SmoothTransformation;
+    else if (transform == "fast")
+        this->transform = Qt::FastTransformation;
+}
+
 void Layer::setValue(const int &value) { this->value = value; }
 
 void Layer::setDelta(const int &delta) { this->delta = delta; }
@@ -151,16 +158,15 @@ void Layer::scale() {
     if (mPixels > 0.0) {
         double currentMPixels = canvas.width() * canvas.height() / 1000000.0;
         double scaleFactor = sqrt(mPixels / currentMPixels);
-        canvas = canvas.scaledToWidth(canvas.width() * scaleFactor,
-                                      Qt::SmoothTransformation);
+        canvas = canvas.scaledToWidth(canvas.width() * scaleFactor, transform);
         return;
     }
     if (width == -1 && height != -1) {
-        canvas = canvas.scaledToHeight(height, Qt::SmoothTransformation);
+        canvas = canvas.scaledToHeight(height, transform);
     } else if (width != -1 && height == -1) {
-        canvas = canvas.scaledToWidth(width, Qt::SmoothTransformation);
+        canvas = canvas.scaledToWidth(width, transform);
     } else if (width != -1 && height != -1) {
-        canvas = canvas.scaled(width, height, aspect, Qt::SmoothTransformation);
+        canvas = canvas.scaled(width, height, aspect, transform);
     }
 }
 

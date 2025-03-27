@@ -96,6 +96,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                 newLayer.setMPixels(attribs.value("mpixels").toDouble());
             if (attribs.hasAttribute("aspect"))
                 newLayer.setAspect(attribs.value("aspect").toString());
+            if (attribs.hasAttribute("transform"))
+                newLayer.setTransform(attribs.value("transform").toString());
 
             if (newLayer.type != T_NONE) {
                 addChildLayers(newLayer, xml);
@@ -118,6 +120,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
                 newLayer.setMPixels(attribs.value("mpixels").toDouble());
             if (attribs.hasAttribute("aspect"))
                 newLayer.setAspect(attribs.value("aspect").toString());
+            if (attribs.hasAttribute("transform"))
+                newLayer.setTransform(attribs.value("transform").toString());
             if (attribs.hasAttribute("align"))
                 newLayer.setAlign(attribs.value("align").toString());
             if (attribs.hasAttribute("valign"))
