@@ -4,7 +4,7 @@ Skyscraper allows you to fully customize how you want the final frontend artwork
 
 -   Each `<output>` node exports a single piece of artwork.
 -   If no `<layer>` nodes are nested in an output node, it will simply export the defined type as raw unmanipulated artwork.
--   All layer nodes and their nested effects are rendered / applied top-to-bottom.
+-   All layer nodes and their nested effects (outmost to innermost) are rendered / applied top-to-bottom.
 
 Read on for an example `artwork.xml` and a more thorough description of the `<output>`, `<layer>` and the various available effect nodes.
 
@@ -52,21 +52,34 @@ Which results in a screenshot being exported to look like this:
 
 Click the following links to quickly go to a desired section:
 
-Nodes: [XML Preamble](#xml-preamble-mandatory), [Artwork node](#artwork-node-mandatory), [Output node](#output-nodes-optional), [Layer node](#layer-nodes-optional)
+!!! tip "Notation in this guide"
 
-Effects: [Blur effect](#blur-effect-node-optional), [Brightness effect](#brightness-effect-node-optional), [Color balance effect](#balance-effect-node-optional), [Colorize effect](#colorize-effect-node-from-v233-optional), [Contrast effect](#contrast-effect-node-optional), [Frame effect](#frame-effect-node-optional), [Gamebox effect](#gamebox-effect-node-optional), [Hue effect](#hue-effect-node-from-v233-optional), [Mask effect](#mask-effect-node-optional), [Opacity effect](#opacity-effect-node-optional), [Rotate effect](#rotate-effect-node-from-v233-optional), [Rounded effect](#rounded-effect-node-optional), [Saturation effect](#saturation-effect-node-from-v233-optional), [Scanlines effect](#scanlines-effect-node-from-v290-optional), [Shadow effect](#shadow-effect-node-optional), [Stroke effect](#stroke-effect-node-optional).
+    This guide uses [m] in the headings for any node or node attribute that is
+    mandatory in your artwork XML file. An [o] indicates an optional node or
+    node attribute.
+
+Nodes: [XML Preamble](#xml-preamble-m), [Artwork node](#artwork-node-m), [Output node](#output-nodes-o), [Layer node](#layer-nodes-o)
+
+Effects: [Blur effect](#blur-effect-node-o), [Brightness effect](#brightness-effect-node-o),
+[Color balance effect](#balance-effect-node-o), [Colorize effect](#colorize-effect-node-o),
+[Contrast effect](#contrast-effect-node-o), [Frame effect](#frame-effect-node-o),
+[Gamebox effect](#gamebox-effect-node-o), [Hue effect](#hue-effect-node-o),
+[Mask effect](#mask-effect-node-o), [Opacity effect](#opacity-effect-node-o),
+[Rotate effect](#rotate-effect-node-o), [Rounded effect](#rounded-effect-node-o),
+[Saturation effect](#saturation-effect-node-o), [Scanlines effect](#scanlines-effect-node-o),
+[Shadow effect](#shadow-effect-node-o), [Stroke effect](#stroke-effect-node-o).
 
 Other: [Custom image resources](#custom-image-resources).
 
-#### XML Preamble (Mandatory)
+#### XML Preamble [m]
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 ```
 
 This is a special node used to describe the XML language used in the document. Don't change it.
 
-#### 'artwork' node (Mandatory)
+#### 'artwork' node [m]
 
 ```xml
 <artwork>
@@ -76,7 +89,7 @@ This is a special node used to describe the XML language used in the document. D
 
 This node is the document base node. It contains all other nodes. Don't change or delete it.
 
-#### 'output' node(s) (Optional)
+#### 'output' node(s) [o]
 
 ```xml
 <output type="screenshot" resource="wheel" mpixels="0.1" width="640" height="400">
@@ -88,7 +101,7 @@ The output node describes a single piece of artwork to be exported when scraping
 
 An output node with no nested 'layer' nodes will export the type with no compositing.
 
-##### 'type' attribute (Mandatory)
+##### 'type' attribute [m]
 
 The type to be exported. Can be:
 
@@ -98,7 +111,7 @@ The type to be exported. Can be:
 -   marquee
 -   texture
 
-##### 'resource' attribute [from v2.7.6] (Optional)
+##### 'resource' attribute [o]
 
 The resource attribute can be set to one of the following:
 
@@ -108,35 +121,45 @@ The resource attribute can be set to one of the following:
 -   marquee
 -   texture
 
-For instance, if you wish to export a 'marquee' image but want it to make use of the 'wheel' resource instead, you can set `<output type="marquee" resource="wheel"/>`. It will then export a 'marquee' but use the raw unmanipulated 'wheel' image when doing so. So if your frontend theme, such as some EmulationStation themes, makes use of the 'marquee' artwork, it will then be using the 'wheel' for it. If this attribute is left out, 'resource' will be set to the same as 'type'.
+Why type and resource? For instance, if you wish to export a 'marquee' image but want it to make use of the 'wheel' resource instead, you can set `<output type="marquee" resource="wheel"/>`. It will then export a 'marquee' but use the raw unmanipulated 'wheel' image when doing so. So if your frontend theme, such as some EmulationStation themes, makes use of the 'marquee' artwork, it will then be using the 'wheel' for it. If this attribute is left out, 'resource' will be set to the same as 'type'.
 
 !!! info
 
-    The `screenshot`, `cover`, `wheel` and `marquee` types are hardcoded. It's not currently possible to create custom types.
+    The `screenshot`, `cover`, `wheel`, `marquee` and `texture` types are hardcoded. It's not currently possible to create custom types.
 
-##### 'mpixels' attribute [from v2.7.8] (Optional)
+##### 'mpixels' attribute [o]
 
-Set the desired area size for the image resource in mpixels (eg '0.1'). This can be used as an alternative to setting width or height and is useful in cases where images vary a lot in size. 'width' and 'height' attributes will be ignored if this is set.
+Set the desired area size for the image resource in mega pixels (eg '0.1'). This can be used as an alternative to setting width or height and is useful in cases where images vary a lot in size. 'width' and 'height' attributes will be ignored if this is set.
 
-##### 'width' and 'height' attributes (Optional)
+##### 'width' and 'height' attributes [o]
 
 Sets the width and height of the artwork export. If both are left out it will use the original size of the scraped artwork. If one is left out, it will keep the aspect ratio relative to that.
 
-#### 'layer' node(s) (Optional)
+##### 'aspect' attribute [o]
+
+Can be applied. See description in [layer](#aspect-attribute-o_1)
+
+##### 'transform' attribute [o]
+
+Can be applied. See description in [layer](#transform-attribute-o_1)
+
+
+#### 'layer' node(s) [o]
 
 ```xml
-<layer resource="cover" mode="overlay" opacity="50" x="5" y="5" mpixels="0.1" width="10" height="10" align="center" valign="middle"/>
+<layer resource="cover" mode="overlay" opacity="50" x="5" y="5"
+       mpixels="0.1" width="10" height="10" align="center" valign="middle"/>
 ...
 </layer>
 ```
 
-Like layers in Gimp or almost any other respectable photo manipulation software, you can add as many of these nodes as you like. You can even nest them inside of each other, in which case the child layer will be anchored to the topleft corner of the parent layer, making it easier to align.
+Like layers in GIMP or almost any other respectable photo manipulation software, you can add as many of these nodes as you like. You can even nest them inside of each other, in which case the child layer will be anchored to the topleft corner of the parent layer, making it easier to align.
 
 !!! note
 
     Layer and effect nodes are rendered from top to bottom.
 
-##### 'resource' attribute (Optional)
+##### 'resource' attribute [o]
 
 The artwork resource to be used by the layer. It can be:
 
@@ -144,56 +167,68 @@ The artwork resource to be used by the layer. It can be:
 -   cover
 -   wheel
 -   marquee
+-   texture
 
 If the resource attribute is left out the layer will simply be transparent. This is useful when aligning nested layers that differ in size across games.
 
-##### 'mode' attribute [from v2.3.3] (Optional)
-
-Sets the layer render mode. It can be:
-
--   multiply
--   screen
--   overlay
--   darken
--   lighten
--   colordodge
--   colorburn
--   hardlight
--   softlight
--   difference
--   exclusion
--   sourcein
--   destinationin
--   sourceout
--   destinationout
--   sourceatop
--   destinationatop
--   xor
-
-If left out the layer is simply rendered as is on top of the parent layer.
+##### 'mode' attribute [o]
 
 <figure markdown>
   ![Mode examples](resources/layer_modes.png)
-  <figcaption>Mode examples (note the in-image captions)</figcaption>
+  <figcaption>Mode examples (note the in-image captions or table below)</figcaption>
 </figure>
 
-##### 'opacity' attribute [from v2.3.3] (Optional)
+Sets the layer render mode. It can be:
+
+| Fig. Col. 1 | Fig. Col. 2   | Fig. Col. 3 | Fig. Col. 4    | Fig. Col. 5 | Fig. Col. 6     |
+| ----------- | ------------- | ----------- | -------------- | ----------- | --------------- |
+| multiply    | screen        | overlay     | darken         | lighten     | difference      |
+| colordodge  | colorburn     | hardlight   | softlight      | exclusion   | xor             |
+| sourcein    | destinationin | sourceout   | destinationout | sourceatop  | destinationatop |
+
+If left out the layer is simply rendered as is on top of the parent layer.
+
+##### 'opacity' attribute [o]
 
 Defines the opacity of the layer. 100 is completely visible. 0 is completely transparent.
 
-##### 'x' and 'y' attributes (Optional)
+##### 'x' and 'y' attributes [o]
 
 X and Y coordinates for placement. Relative to 'align' and 'valign' and the parent layer. Either can be left out in which case it will be set to 0.
 
-##### 'mpixels' attribute [from v2.7.8] (Optional)
+##### 'mpixels' attribute [o]
 
-Set the desired area size for the image resource in mpixels (eg '0.1'). This can be used as an alternative to setting width or height and is useful in cases where images vary a lot in size. 'width' and 'height' attributes will be ignored if this is set.
+Set the desired area size for the image resource in mega pixels (eg '0.1'). This can be used as an alternative to setting width or height and is useful in cases where images vary a lot in size. 'width' and 'height' attributes will be ignored if this is set.
 
-##### 'width' and 'height' attributes (Optional)
+##### 'width' and 'height' attributes [o]
 
 Sets the width and height of the layer. If either is left out it will keep the aspect ratio relative to the other. If both are left out it will use the original dimensions of the scraped resource.
 
-##### 'align' attribute (Optional)
+##### 'aspect' attribute [o]
+
+<figure markdown>
+  ![Aspect ratio example](resources/aspectexample.png)
+  <figcaption>From left to right: source image, ignore, keep, keepexpand<br>(aspect=... combined with align="center" and valign="middle")</figcaption>
+</figure>
+
+When you have set width _and_ height you can control with this attribute how the image is fit into the defined dimensions. Possible values for the attribute are `aspect="ignore"`, `aspect="keep"` or `aspect="keepexpand"` (see figure). If the attribute is absent the default is `"ignore"`.  
+Setting this a non default value comes in handy if you have for example a more complex artwork definition and you want the available space best used while maintaining the aspect ratio and don't care about possible blank space (e.g., letterboxing, pillarboxing) as you may have put an extra mask layer. For more information see the [Qt documentation on this topic](https://doc.qt.io/qt-6/qt.html#AspectRatioMode-enum).
+
+This attribute can also be applied on 'mask', 'frame' and 'output' nodes.
+
+##### 'transform' attribute [o]
+
+<figure markdown>
+  ![Transform example](resources/transformexample.png)
+  <figcaption>Transformation mode: transform="fast" (l.), transform="smooth" (r.) applied to resource="screenshot"<br>(images 200% enlarged from original size)</figcaption>
+</figure>
+
+Controls the how the scaling of an image is done. Two values are recognized: Value `"fast"` does not apply an extra processing step after scaling whereas value `"smooth"` does apply bilinear filtering to the scaled image.  
+When this attribute is unset, the default is smooth transformation. Setting this attribute to `"fast"` may result in preferrable screenshots when upscaling a small source image from a pixel game (see figure). However, Skyscraper does not deal with potential compression artifacts from the scraping source.
+
+This attribute can also be applied on 'output' nodes.
+
+##### 'align' attribute [o]
 
 The horizontal alignment of the layer. It can be:
 
@@ -203,7 +238,7 @@ The horizontal alignment of the layer. It can be:
 
 The alignment is relative to the parent layer.
 
-##### 'valign' attribute (Optional)
+##### 'valign' attribute [o]
 
 The vertical alignment of the layer. It can be:
 
@@ -213,7 +248,7 @@ The vertical alignment of the layer. It can be:
 
 The alignment is relative to the parent layer.
 
-#### 'balance' effect node (Optional)
+#### 'balance' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/balance.png)
@@ -228,19 +263,19 @@ The alignment is relative to the parent layer.
 
 Must be nested inside a layer node. Adjusts the color balance of the parent layer.
 
-##### 'red' attribute (Optional)
+##### 'red' attribute [o]
 
 The red color adjustment. Can be -255 to 255.
 
-##### 'green' attribute (Optional)
+##### 'green' attribute [o]
 
 The green color adjustment. Can be -255 to 255.
 
-##### 'blue' attribute (Optional)
+##### 'blue' attribute [o]
 
 The blue color adjustment. Can be -255 to 255.
 
-#### 'blur' effect node (Optional)
+#### 'blur' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/blur.png)
@@ -255,11 +290,11 @@ The blue color adjustment. Can be -255 to 255.
 
 Must be nested inside a layer node. Blurs the parent layer.
 
-##### 'softness' attribute (Mandatory)
+##### 'softness' attribute [m]
 
 Defines the radius of the blur. Higher means blurrier.
 
-#### 'brightness' effect node (Optional)
+#### 'brightness' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/brightness.png)
@@ -274,11 +309,11 @@ Defines the radius of the blur. Higher means blurrier.
 
 Must be nested inside a layer node. Adjusts the brightness of the parent layer.
 
-##### 'value' attribute (Mandatory)
+##### 'value' attribute [m]
 
 The difference value for the adjustment. Can be -255 to 255.
 
-#### 'colorize' effect node [from v2.3.3] (Optional)
+#### 'colorize' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/colorize.png)
@@ -293,15 +328,15 @@ The difference value for the adjustment. Can be -255 to 255.
 
 Must be nested inside a layer node. Colorizes the parent layer with a single hue.
 
-##### 'hue' attribute (Mandatory)
+##### 'hue' attribute [m]
 
 Sets the hue in degrees. Can be 0 to 360.
 
-##### 'saturation' attribute (Optional)
+##### 'saturation' attribute [o]
 
 Sets the saturation delta value of the colorize effect. Can be -127 to 127.
 
-#### 'contrast' effect node (Optional)
+#### 'contrast' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/contrast.png)
@@ -316,11 +351,11 @@ Sets the saturation delta value of the colorize effect. Can be -127 to 127.
 
 Must be nested inside a layer node. Adjusts the contrast of the parent layer.
 
-##### 'value' attribute (Mandatory)
+##### 'value' attribute [m]
 
 The difference value for the adjustment. Can be -255 to 255.
 
-#### 'frame' effect node (Optional)
+#### 'frame' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/frame.png)
@@ -339,27 +374,31 @@ Must be nested inside a layer node. This applies a frame to the parent layer.
 
     You can get some cool results by first applying a mask, then applying a frame. This is useful for frames that aren't square.
 
-##### 'file' attribute (Mandatory)
+##### 'file' attribute [m]
 
 The filename of the [custom image resource](#custom-image-resources) to be used as frame.
 
-##### 'width' attribute (Optional)
+##### 'width' attribute [o]
 
 Sets the width of the frame in pixels. If left out it will be set to the width of the parent layer.
 
-##### 'height' attribute (Optional)
+##### 'height' attribute [o]
 
 Sets the height of the frame in pixels. If left out it will be set to the height of the parent layer.
 
-##### 'x' attribute (Optional)
+##### 'x' attribute [o]
 
 Sets the x coordinate of the frame relative to the parent layer. If left out it will be set to 0.
 
-##### 'y' attribute (Optional)
+##### 'y' attribute [o]
 
 Sets the y coordinate of the frame relative to the parent layer. If left out it will be set to 0.
 
-#### 'gamebox' effect node (Optional)
+##### 'aspect' attribute [o]
+
+Can be applied. See description in [layer](#aspect-attribute-o_1)
+
+#### 'gamebox' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/gamebox.png)
@@ -376,19 +415,19 @@ Left image shows the result with the wheel artwork applied to the side. Right im
 
 Must be nested inside a layer node. Renders a nifty looking 3D game box. It uses the parent layer image on the front of the box.
 
-##### 'side' attribute (Optional)
+##### 'side' attribute [o]
 
 The filename of the [custom image resource](#custom-image-resources) to be used on the side of the box.
 
-##### 'rotate' attribute (Optional)
+##### 'rotate' attribute [o]
 
 Defines the rotation of the side image in degrees.
 
-##### 'sidescaling' attribute [from v2.7.1] (Optional)
+##### 'sidescaling' attribute [o]
 
 Defines how to scale the side / spine image. If left out, it will autoscale depending on the size of the artwork resource. Can be 'width', 'height' or 'both'.
 
-#### 'hue' effect node [from v2.3.3] (Optional)
+#### 'hue' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/hue.png)
@@ -403,11 +442,11 @@ Defines how to scale the side / spine image. If left out, it will autoscale depe
 
 Must be nested inside a layer node. Rotates the hue of the parent layer.
 
-##### 'value' attribute (Mandatory)
+##### 'value' attribute [m]
 
 The difference value for the adjustment. Can be 0 to 359.
 
-#### 'mask' effect node (Optional)
+#### 'mask' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/mask.png)
@@ -424,27 +463,31 @@ Left image shows the result. Right image shows the mask used. The white part of 
 
 Must be nested inside a layer node. This applies a mask to the parent layer.
 
-##### 'file' attribute (Mandatory)
+##### 'file' attribute [m]
 
 The filename of the [custom image resource](#custom-image-resources) to be used as mask. The alpha channel of the mask will blind out the underlying parts of the parent layer.
 
-##### 'width' attribute (Optional)
+##### 'width' attribute [o]
 
 Sets the width of the mask in pixels. If left out it will be set to the width of the parent layer.
 
-##### 'height' attribute (Optional)
+##### 'height' attribute [o]
 
 Sets the height of the mask in pixels. If left out it will be set to the height of the parent layer.
 
-##### 'x' attribute (Optional)
+##### 'x' attribute [o]
 
 Sets the x coordinate of the mask relative to the parent layer. If left out it will be set to 0.
 
-##### 'y' attribute (Optional)
+##### 'y' attribute [o]
 
 Sets the y coordinate of the mask relative to the parent layer. If left out it will be set to 0.
 
-#### 'opacity' effect node (Optional)
+##### 'aspect' attribute [o]
+
+Can be applied. See description in [layer](#aspect-attribute-o_1)
+
+#### 'opacity' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/opacity.png)
@@ -459,11 +502,11 @@ Sets the y coordinate of the mask relative to the parent layer. If left out it w
 
 Must be nested inside a layer node. Adjusts the opacity of the parent layer.
 
-##### 'value' attribute (Mandatory)
+##### 'value' attribute [m]
 
 The opacity of the layer. Can be 0-100 where 0 is completely transparent and 100 is opaque.
 
-#### 'rotate' effect node [from v2.3.3] (Optional)
+#### 'rotate' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/rotate.png)
@@ -478,15 +521,15 @@ The opacity of the layer. Can be 0-100 where 0 is completely transparent and 100
 
 Must be nested inside a layer node. Rotates the parent layer around the x, y or z axis.
 
-##### 'degrees' attribute (Mandatory)
+##### 'degrees' attribute [m]
 
 Sets how many degrees the parent layer will be rotated. Can be -360 to 360.
 
-##### 'axis' attribute (Optional)
+##### 'axis' attribute [o]
 
 Sets which axis the parent layer should be rotated around. Can be 'x', 'y' or 'z'. If left out it will be set to 'z'.
 
-#### 'rounded' effect node (Optional)
+#### 'rounded' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/rounded.png)
@@ -501,11 +544,11 @@ Sets which axis the parent layer should be rotated around. Can be 'x', 'y' or 'z
 
 Must be nested inside a layer node. Rounds the corners of the parent layer.
 
-##### 'radius' attribute (Mandatory)
+##### 'radius' attribute [m]
 
 Defines the radius of the corners in pixels.
 
-#### 'saturation' effect node [from v2.3.3] (Optional)
+#### 'saturation' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/saturation.png)
@@ -524,11 +567,11 @@ Must be nested inside a layer node. Adjusts the color saturation of the parent l
 
     If you want to completely greyscale your layer I highly recommend using the 'saturation' attribute of the 'colorize' effect instead. It uses a better estimation of percieved luminance.
 
-##### 'value' attribute (Mandatory)
+##### 'value' attribute [m]
 
 The difference value for the adjustment. Can be -255 to 255.
 
-#### 'scanlines' effect node [from v2.9.0] (Optional)
+#### 'scanlines' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/scanlines.png)
@@ -543,19 +586,19 @@ The difference value for the adjustment. Can be -255 to 255.
 
 Must be nested inside a layer node. Adds a CRT monitor scanline effect to the parent layer.
 
-##### 'file' attribute (Optional)
+##### 'file' attribute [o]
 
 The filename of the [custom image resource](#custom-image-resources) to be used as the scanline overlay. If left out it defaults to `scanlines1.png`.
 
-##### 'scale' attribute (Optional)
+##### 'scale' attribute [o]
 
 Sets the scale factor of the overlay. Can be 0.1 to 2.0. If left out it defaults to 1.0.
 
-##### 'opacity' attribute (Optional)
+##### 'opacity' attribute [o]
 
 Sets the opacity of the overlay. Can be 0 to 100. If left out it defaults to 100.
 
-##### 'mode' attribute (Optional)
+##### 'mode' attribute [o]
 
 Sets the overlay compositing mode. It can be:
 
@@ -585,7 +628,7 @@ If left out the overlay is rendered using the `overlay` method.
   <figcaption>Layering examples (note the in-image captions)</figcaption>
 </figure>
 
-#### 'shadow' effect node (Optional)
+#### 'shadow' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/shadow.png)
@@ -600,19 +643,19 @@ If left out the overlay is rendered using the `overlay` method.
 
 Must be nested inside a layer node. Renders a dropshadow on the parent layer using the attributes provided. If either of the attributes are left out, the shadow won't be drawn.
 
-##### 'distance' attribute (Mandatory)
+##### 'distance' attribute [m]
 
 Distance in pixels from the layer. The distance is always down to the right.
 
-##### 'softness' attribute (Mandatory)
+##### 'softness' attribute [m]
 
 Defines how soft (radius) the shadow will appear. A value of 0 is sharpest.
 
-##### 'opacity' attribute (Mandatory)
+##### 'opacity' attribute [m]
 
 Defines the opacity of the shadow. 100 is completely visible. 0 is completely transparent.
 
-#### 'stroke' effect node (Optional)
+#### 'stroke' effect node [o]
 
 <figure markdown>
   ![Effect example](resources/stroke.png)
@@ -627,29 +670,29 @@ Defines the opacity of the shadow. 100 is completely visible. 0 is completely tr
 
 Must be nested inside a layer node. Renders a colored outline on the parent layer. If all color attributes are left out, it averages a suitable color from the parent layer.
 
-##### 'width' attribute (Mandatory)
+##### 'width' attribute [m]
 
 The width of the outline in pixels.
 
-##### 'red' attribute (Optional)
+##### 'red' attribute [o]
 
 The red color value for the outline. Can be 0-255. If left out it is set to 0.
 
-##### 'green' attribute (Optional)
+##### 'green' attribute [o]
 
 The green color value for the outline. Can be 0-255. If left out it is set to 0.
 
-##### 'blue' attribute (Optional)
+##### 'blue' attribute [o]
 
 The blue color value for the outline. Can be 0-255. If left out it is set to 0.
 
-##### 'color' attribute [from v2.3.1] (Optional)
+##### 'color' attribute [o]
 
-Provides the color to use hex-style. This can be used instead of the 'red', 'green' and 'blue' attributes described above. An example could be 'color="#ff0099"'.
+Provides the color to use RGB hexadecimal notation. This can be used instead of the 'red', 'green' and 'blue' attributes described above. An example could be 'color="#ff0099"'.
 
 ### Custom image resources
 
-From Skyscraper version 2.3.0 you can use custom image resources wherever the documentation says so. Place your custom resources in the '`/home/<USER>/.skyscraper/resources`' folder and use it by adding the filename to the attribute.
+You can also use custom image resources wherever the documentation says so. Place your custom resources in the '`/home/<USER>/.skyscraper/resources`' folder and use it by adding the filename to the attribute.
 
 Example:
 

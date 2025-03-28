@@ -5,6 +5,12 @@ humans](https://keepachangelog.com).
 
 ### Version 3.17.0 (2025-TBA)
 
+- Added: Artwork finetuning, added option to [control aspect ratio when
+  scaling images](ARTWORK.md#aspect-attribute-o). Thanks to
+  @joyrider3774 for the suggestion.
+- Added: More Artwork finetuning, added option to [disable smoothing of
+  screenshots](ARTWORK.md#transform-attribute-o) (and other
+  images). Thanks to @moritzauge for the idea.
 - Updated: Query keyword `romnom=` in `--query='...'` for scraper Screenscraper
   is now optional. It gets added automagically when no other query keyword is
   applied.
