@@ -250,7 +250,7 @@ Read a thorough description of this module [here](IMPORT.md).
 - User credential support: _None required_
 - API request limit: _None_
 - Thread limit: 1
-- Platform support: For those platforms where the community has compiled a GameBase database, several dozen platforms do have a GameBase database. Some examples: Commodore Machines (VC-20,C64,Plus/4,Amiga), Sinclair Spectrum ("Speccy"), ...
+- Platform support: For those platforms where the community has compiled a GameBase database, several dozen platforms do have a GameBase database. Some examples: Commodore Machines (VC-20,C64,Plus/4,Amiga), Sinclair Spectrum ("Speccy"), see the [most comprehensive list](http://gb64.com/forum/viewtopic.php?f=10&p=31353)
 - Media support: _`cover`, `screenshot`_
 - Example use: `Skyscraper -p zxspectrum -s gamebase`
 

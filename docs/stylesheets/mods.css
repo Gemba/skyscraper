@@ -109,3 +109,11 @@ article a:hover {
 .md-typeset h4 {
   margin-bottom: -0.7em;
 }
+
+.md-typeset h5 {
+  margin-top: 1.3em;
+  margin-bottom: -0.9em;
+  font-size: .72rem;
+  letter-spacing: 0.08em;
+  word-spacing: 0.2em;  
+}

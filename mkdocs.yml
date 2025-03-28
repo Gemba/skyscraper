@@ -73,10 +73,13 @@ extra_css:
 nav:
 - Home: index.md
 - Sample Use Case: USECASE.md
+- FAQ: FAQ.md
 - XDG Base Directory Support: XDG.md
 - Skyscraper Input:
   - Scrapers: SCRAPINGMODULES.md
   - Import of Game Data: IMPORT.md
+- Skyscraper Cache:
+  - The Cache: CACHE.md
 - Skyscraper Output:
   - Artwork & Layout: ARTWORK.md
   - Frontends: FRONTENDS.md
@@ -86,9 +89,6 @@ nav:
   - Platforms: PLATFORMS.md
   - Languages: LANGUAGES.md
   - Regions: REGIONS.md
-- Varia:
-  - FAQ: FAQ.md
-  - Skyscraper Cache: CACHE.md
 - About:
   - Changelog: CHANGELOG.md
   - Contributing: CONTRIBUTING.md
