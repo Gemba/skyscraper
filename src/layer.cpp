@@ -219,10 +219,16 @@ void Layer::colorFromHex(QString color) {
         return;
 
     if (color.length() == 3) {
+#if QT_VERSION >= 0x050e00
+        const auto skipEmptyParts = Qt::SkipEmptyParts;
+#else
+        // for RP on Buster
+        const auto skipEmptyParts = QString::SkipEmptyParts;
+#endif
         QString tmpPiggy;
-        tmpPiggy.append(color.at(0) + color.at(0));
-        tmpPiggy.append(color.at(1) + color.at(1));
-        tmpPiggy.append(color.at(2) + color.at(2));
+        for (QString const &c : color.split(QString(), skipEmptyParts)) {
+            tmpPiggy.append(c).append(c);
+        }
         color = tmpPiggy;
     }
 
