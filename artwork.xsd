@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This file is part of Skyscraper.
+
+  Copyright 2025 Gemba @ GitHub
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="qualified"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:simpleType name="align_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="left" />
+      <xs:enumeration value="center" />
+      <xs:enumeration value="right" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="aspect_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ignore" />
+      <xs:enumeration value="keep" />
+      <xs:enumeration value="keepexpand" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="axis_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="x" />
+      <xs:enumeration value="y" />
+      <xs:enumeration value="z" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="degree_type">
+    <xs:restriction base="xs:short">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="359" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mode_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="colorburn" />
+      <xs:enumeration value="colordoge" />
+      <xs:enumeration value="darken" />
+      <xs:enumeration value="destinationin" />
+      <xs:enumeration value="destinationout" />
+      <xs:enumeration value="destinationtop" />
+      <xs:enumeration value="difference" />
+      <xs:enumeration value="exclusion" />
+      <xs:enumeration value="hardlight" />
+      <xs:enumeration value="lighten" />
+      <xs:enumeration value="multiply" />
+      <xs:enumeration value="overlay" />
+      <xs:enumeration value="screen" />
+      <xs:enumeration value="softlight" />
+      <xs:enumeration value="sourcein" />
+      <xs:enumeration value="sourceout" />
+      <xs:enumeration value="sourcetop" />
+      <xs:enumeration value="xor" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mpixel_type">
+    <xs:restriction base="xs:double">
+      <xs:minExclusive value="0" />
+      <xs:maxExclusive value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="numRange255_type">
+    <xs:restriction base="xs:short">
+      <xs:minInclusive value="-255" />
+      <xs:maxInclusive value="255" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="resource_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cover" />
+      <xs:enumeration value="marquee" />
+      <xs:enumeration value="screenshot" />
+      <xs:enumeration value="texture" />
+      <xs:enumeration value="wheel" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="rgbhex_type">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sidescaling_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="width" />
+      <xs:enumeration value="height" />
+      <xs:enumeration value="both" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="transform_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="fast" />
+      <xs:enumeration value="smooth" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="uNumRange100_type">
+    <xs:restriction base="xs:byte">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="valign_type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="top" />
+      <xs:enumeration value="middle" />
+      <xs:enumeration value="bottom" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- element definitions -->
+  <xs:element name="artwork">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="output" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="output">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="layer" />
+      </xs:sequence>
+      <xs:attribute name="type" use="required" type="resource_type" />
+      <xs:attribute name="resource" type="resource_type" />
+      <xs:attribute name="width" type="xs:unsignedShort" />
+      <xs:attribute name="height" type="xs:unsignedShort" />
+      <xs:attribute name="mpixels" type="mpixel_type" />
+      <xs:attribute name="transform" type="transform_type" />
+      <xs:attribute name="aspect" type="aspect_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="layer">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="balance" />
+        <xs:element name="blur" />
+        <xs:element name="brightness" />
+        <xs:element name="colorize" />
+        <xs:element name="contrast" />
+        <xs:element name="frame" />
+        <xs:element name="gamebox" />
+        <xs:element name="hue" />
+        <xs:element name="mask" />
+        <xs:element name="opacity" />
+        <xs:element name="rotate" />
+        <xs:element name="rounded" />
+        <xs:element name="saturation" />
+        <xs:element name="scanlines" />
+        <xs:element name="shadow" />
+        <xs:element name="stroke" />
+      </xs:choice>
+      <xs:attribute name="resource" type="resource_type" />
+      <xs:attribute name="mode" type="mode_type" />
+      <xs:attribute name="opacity" type="uNumRange100_type" />
+      <xs:attribute name="x" type="xs:short" />
+      <xs:attribute name="y" type="xs:short" />
+      <xs:attribute name="mpixels" type="mpixel_type" />
+      <xs:attribute name="width" type="xs:unsignedShort" />
+      <xs:attribute name="height" type="xs:unsignedShort" />
+      <xs:attribute name="aspect" type="aspect_type" />
+      <xs:attribute name="transform" type="transform_type" />
+      <xs:attribute name="align" type="align_type" />
+      <xs:attribute name="valign" type="valign_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="balance">
+    <xs:complexType>
+      <xs:attribute name="red" type="numRange255_type" />
+      <xs:attribute name="green" type="numRange255_type" />
+      <xs:attribute name="blue" type="numRange255_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="blur">
+    <xs:complexType>
+      <xs:attribute name="softness" use="required" type="uNumRange100_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="brightness">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="numRange255_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="colorize">
+    <xs:complexType>
+      <xs:attribute name="hue" use="required" type="degree_type" />
+      <xs:attribute name="saturation" type="xs:unsignedByte" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="contrast">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="numRange255_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="frame">
+    <xs:complexType>
+      <xs:attribute name="file" use="required" type="xs:string" />
+      <xs:attribute name="x" type="xs:short" />
+      <xs:attribute name="y" type="xs:short" />
+      <xs:attribute name="width" type="xs:unsignedShort" />
+      <xs:attribute name="height" type="xs:unsignedShort" />
+      <xs:attribute name="aspect" type="aspect_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="gamebox">
+    <xs:complexType>
+      <xs:attribute name="rotate" type="degree_type" />
+      <xs:attribute name="side" type="xs:string" />
+      <xs:attribute name="sidescaling" type="sidescaling_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="hue">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="degree_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="mask">
+    <xs:complexType>
+      <xs:attribute name="file" use="required" type="xs:string" />
+      <xs:attribute name="x" type="xs:short" />
+      <xs:attribute name="y" type="xs:short" />
+      <xs:attribute name="width" type="xs:unsignedShort" />
+      <xs:attribute name="height" type="xs:unsignedShort" />
+      <xs:attribute name="aspect" type="aspect_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="opacity">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="uNumRange100_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="rotate">
+    <xs:complexType>
+      <xs:attribute name="degree" use="required" type="degree_type" />
+      <xs:attribute name="axis" type="axis_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="rounded">
+    <xs:complexType>
+      <xs:attribute name="radius" use="required" type="xs:unsignedShort" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="saturation">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="numRange255_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="scanlines">
+    <xs:complexType>
+      <xs:attribute name="file" type="xs:string" />
+      <xs:attribute name="scale" type="mpixel_type" />
+      <xs:attribute name="opacity" type="uNumRange100_type" />
+      <xs:attribute name="mode" type="mode_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="shadow">
+    <xs:complexType>
+      <xs:attribute name="distance" use="required" type="xs:unsignedByte" />
+      <xs:attribute name="softness" use="required" type="uNumRange100_type" />
+      <xs:attribute name="opacity" use="required" type="uNumRange100_type" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="stroke">
+    <xs:complexType>
+      <xs:attribute name="width" use="required" type="xs:unsignedShort" />
+      <xs:attribute name="red" type="xs:unsignedByte" />
+      <xs:attribute name="green" type="xs:unsignedByte" />
+      <xs:attribute name="blue" type="xs:unsignedByte" />
+      <xs:attribute name="color" type="rgbhex_type" />
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

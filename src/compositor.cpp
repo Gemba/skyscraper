@@ -189,14 +189,16 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
             if (attribs.hasAttribute("width")) {
                 newLayer.setType(T_STROKE);
                 newLayer.setWidth(attribs.value("width").toInt());
-                if (attribs.hasAttribute("color"))
+                if (attribs.hasAttribute("color")) {
                     newLayer.colorFromHex(attribs.value("color").toString());
-                if (attribs.hasAttribute("red"))
-                    newLayer.setRed(attribs.value("red").toInt());
-                if (attribs.hasAttribute("green"))
-                    newLayer.setGreen(attribs.value("green").toInt());
-                if (attribs.hasAttribute("blue"))
-                    newLayer.setBlue(attribs.value("blue").toInt());
+                } else {
+                    if (attribs.hasAttribute("red"))
+                        newLayer.setRed(attribs.value("red").toInt());
+                    if (attribs.hasAttribute("green"))
+                        newLayer.setGreen(attribs.value("green").toInt());
+                    if (attribs.hasAttribute("blue"))
+                        newLayer.setBlue(attribs.value("blue").toInt());
+                }
                 layer.addLayer(newLayer);
             }
         } else if (xml.isStartElement() && xml.name() == QString("rounded")) {

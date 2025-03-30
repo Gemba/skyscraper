@@ -11,6 +11,8 @@ humans](https://keepachangelog.com).
 - Added: More Artwork finetuning, added option to [disable smoothing of
   screenshots](ARTWORK.md#transform-attribute-o) (and other
   images). Thanks to @moritzauge for the idea.
+- Added: XML schema file `artwork.xsd` for XML artwork validation, beneficial
+  for use in your favorite XML editor.
 - Updated: Query keyword `romnom=` in `--query='...'` for scraper Screenscraper
   is now optional. It gets added automagically when no other query keyword is
   applied.

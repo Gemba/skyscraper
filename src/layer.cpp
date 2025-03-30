@@ -215,8 +215,16 @@ bool Layer::save(QString filename) {
 void Layer::colorFromHex(QString color) {
     color = color.replace("#", "");
 
-    if (color.length() != 6)
+    if (color.length() != 6 && color.length() != 3)
         return;
+
+    if (color.length() == 3) {
+        QString tmpPiggy;
+        tmpPiggy.append(color.at(0) + color.at(0));
+        tmpPiggy.append(color.at(1) + color.at(1));
+        tmpPiggy.append(color.at(2) + color.at(2));
+        color = tmpPiggy;
+    }
 
     red = color.left(2).toInt(Q_NULLPTR, 16);
     green = color.mid(2, 2).toInt(Q_NULLPTR, 16);

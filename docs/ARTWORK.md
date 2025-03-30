@@ -50,17 +50,11 @@ Which results in a screenshot being exported to look like this:
 
 ### XML Definitions
 
-Click the following links to quickly go to a desired section:
+Click the following links to quickly go to a desired section.
 
-!!! tip "Notation in this guide"
-
-    This guide uses [m] in the headings for any node or node attribute that is
-    mandatory in your artwork XML file. An [o] indicates an optional node or
-    node attribute.
-
-Nodes: [XML Preamble](#xml-preamble-m), [Artwork node](#artwork-node-m), [Output node](#output-nodes-o), [Layer node](#layer-nodes-o)
-
-Effects: [Blur effect](#blur-effect-node-o), [Brightness effect](#brightness-effect-node-o),
+- Nodes: [XML Preamble](#xml-preamble-m), [Artwork node](#artwork-node-m), [Output node](#output-nodes-o), [Layer node](#layer-nodes-o)
+- Effects: [Blur effect](#blur-effect-node-o), [Balance effect](#balance-effect-node-o),
+[Brightness effect](#brightness-effect-node-o),
 [Color balance effect](#balance-effect-node-o), [Colorize effect](#colorize-effect-node-o),
 [Contrast effect](#contrast-effect-node-o), [Frame effect](#frame-effect-node-o),
 [Gamebox effect](#gamebox-effect-node-o), [Hue effect](#hue-effect-node-o),
@@ -68,8 +62,18 @@ Effects: [Blur effect](#blur-effect-node-o), [Brightness effect](#brightness-eff
 [Rotate effect](#rotate-effect-node-o), [Rounded effect](#rounded-effect-node-o),
 [Saturation effect](#saturation-effect-node-o), [Scanlines effect](#scanlines-effect-node-o),
 [Shadow effect](#shadow-effect-node-o), [Stroke effect](#stroke-effect-node-o).
+- Other: [Custom image resources](#custom-image-resources).
 
-Other: [Custom image resources](#custom-image-resources).
+You can also find a XML schema file named `artwork.xsd` sibling to the
+`artwork.xml` file in the configuration folder of Skyscraper. The schema file
+may come in handy for validation of your artwork file with your favorite XML
+editor.
+
+!!! tip "Notation in this guide"
+
+    This guide uses [m] in the headings for any node or node attribute that is
+    mandatory in your artwork XML file. An [o] indicates an optional node or
+    node attribute.
 
 #### XML Preamble [m]
 
@@ -600,33 +604,9 @@ Sets the opacity of the overlay. Can be 0 to 100. If left out it defaults to 100
 
 ##### 'mode' attribute [o]
 
-Sets the overlay compositing mode. It can be:
-
--   multiply
--   screen
--   overlay
--   darken
--   lighten
--   colordodge
--   colorburn
--   hardlight
--   softlight
--   difference
--   exclusion
--   sourcein
--   destinationin
--   sourceout
--   destinationout
--   sourceatop
--   destinationatop
--   xor
+Sets the overlay compositing mode. The values are the same as in the [layer 'mode' attribute](#mode-attribute-o).
 
 If left out the overlay is rendered using the `overlay` method.
-
-<figure markdown>
-  ![Mode examples](resources/layer_modes.png)
-  <figcaption>Layering examples (note the in-image captions)</figcaption>
-</figure>
 
 #### 'shadow' effect node [o]
 
@@ -688,7 +668,7 @@ The blue color value for the outline. Can be 0-255. If left out it is set to 0.
 
 ##### 'color' attribute [o]
 
-Provides the color to use RGB hexadecimal notation. This can be used instead of the 'red', 'green' and 'blue' attributes described above. An example could be 'color="#ff0099"'.
+Provides the color to use RGB hexadecimal notation. This can be used instead of the 'red', 'green' and 'blue' attributes described above. An example could be 'color="#ff0099"'. You may also use the [shorthand form](https://en.wikipedia.org/wiki/Web_colors#Shorthand_hexadecimal_form), thus `#f06` will be expanded to `#ff0066`. If the 'color' attribute is provided, then 'red', 'green', 'blue' values are ignored if they are also present.
 
 ### Custom image resources
 
