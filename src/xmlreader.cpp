@@ -103,7 +103,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             makeAbsolute(node.firstChildElement("manual").text());
 
         if (!gamelistExtraTags.isEmpty()) {
-            // ES, ES-DE
+            // preserve only allowed: ES and ES-DE
             for (const auto &t : gamelistExtraTags)
                 entry.setEsExtra(t, node.firstChildElement(t).text());
         } else {
@@ -111,10 +111,12 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             QDomNodeList elems = node.childNodes();
             for (int i = 0; i < elems.length(); i++) {
                 QString k = elems.at(i).toElement().tagName();
-                if (entry.elements().values().contains(k)) {
-                    // baseline gamelist element
+                if (entry.commonGamelistElems().values().contains(k) ||
+                    k == "path") {
+                    // common/baseline gamelist element, do not keep in esExtra
                     continue;
                 }
+                // preserve everything else with attributes
                 entry.setEsExtra(k, elems.at(i).toElement().text(),
                                  elems.at(i).toElement().attributes());
             }
@@ -125,7 +127,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
 }
 
 void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
-    // Do NOT get sqr and par notes here. They are not used by skipExisting
+    // Do NOT get sqr[] and par() notes here. They are not used by skipExisting
     entry.title = node.firstChildElement("name").text();
     entry.description = node.firstChildElement("desc").text();
     entry.releaseDate = node.firstChildElement("releasedate").text();

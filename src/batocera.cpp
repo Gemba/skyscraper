@@ -22,14 +22,10 @@
 #include "emulationstation.h"
 #include "gameentry.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QStringBuilder>
 #include <QStringList>
-
-/*
-- game.path  nicht in esExtras speichern
-- GameEntry::Elem:: "eine Ebene weniger" -> readability
- */
 
 Batocera::Batocera() {
     // always on
@@ -38,16 +34,26 @@ Batocera::Batocera() {
 
 static const QString baseFolder() { return QString("/userdata/roms/"); }
 
-inline const QStringList pathGamelistElems() {
-    // using enum GameEntry::Elem; // std-c++-20 onwards
-    return QStringList({GameEntry::getTag(GameEntry::Elem::COVER),
+QString Batocera::getInputFolder() { return baseFolder() % config->platform; }
+
+QString Batocera::getGameListFolder() {
+    return baseFolder() % config->platform;
+}
+
+QString Batocera::getMediaFolder() { return baseFolder() % config->platform; }
+
+// FIXME: overwrite getScreenshotsFolder(), und andere
+
+inline const QStringList binaryGamelistElems() {
+    // using enum GameEntry::Elem; TODO --> std-c++-20 onwards
+    return QStringList({GameEntry::getTag(GameEntry::Elem::COVER, true),
                         GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
                         GameEntry::getTag(GameEntry::Elem::MARQUEE),
                         GameEntry::getTag(GameEntry::Elem::FANART),
                         GameEntry::getTag(GameEntry::Elem::MANUAL),
-                        GameEntry::getTag(GameEntry::Elem::VIDEO), "boxback",
-                        "boxart", "map", "bezel", "cartridge", "titleshot",
-                        "magazine", "mix", "music"});
+                        GameEntry::getTag(GameEntry::Elem::VIDEO), "bezel",
+                        "boxart", "boxback", "cartridge", "magazine", "map",
+                        "mix", "music", "thumbnail", "titleshot"});
 };
 
 QStringList Batocera::extraGamelistTags(bool isFolder) {
@@ -62,30 +68,36 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
     QStringList elemNames =
         entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
 
-    const QMap<QString, QString> scrapedValues = {
-        {GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile},
+    const QMap<QString, QString> scrapedBinsMap = {
+        {GameEntry::getTag(GameEntry::Elem::COVER, true), entry.coverFile},
         {GameEntry::getTag(GameEntry::Elem::SCREENSHOT), entry.screenshotFile},
         {GameEntry::getTag(GameEntry::Elem::MARQUEE), entry.marqueeFile},
         {GameEntry::getTag(GameEntry::Elem::FANART), "" /* FIXME */},
         {GameEntry::getTag(GameEntry::Elem::MANUAL), entry.manualFile},
         {GameEntry::getTag(GameEntry::Elem::VIDEO), entry.videoFile}};
 
-    for (auto const &t : elemNames) {
-        if (pathGamelistElems().contains(t)) {
-            if (scrapedValues.keys().contains(t)) {
-                l.append(elem(t, scrapedValues[t], addEmptyElem(), true));
+    for (auto const &el : scrapedBinsMap.keys()) {
+        l.append(elem(el, scrapedBinsMap[el], addEmptyElem(), true));
+    }
+
+    for (auto const &el : elemNames) {
+        if (binaryGamelistElems().contains(el)) {
+            if (!scrapedBinsMap.keys().contains(el)) {
+                // only write unscrapeable elements
+                l.append(elem(el, entry.getEsExtra(el), addEmptyElem(), true));
             } else {
-                l.append(elem(t, entry.getEsExtra(t), addEmptyElem(), true));
+                qWarning() << "Element" << el
+                           << "detected in extra-elements for" << entry.path;
             }
         } else {
-            l.append(elemWithAttribs(t, entry.getEsExtraAttribs(t)));
+            l.append(elemWithAttribs(el, entry.getEsExtraAttribs(el)));
         }
     }
     return l;
 }
 
 QString Batocera::openingElement(GameEntry &entry) {
-    // PENDING: Assuming Bato allows <folder/> elements
+    // PENDING: Assuming Bato uses/allows <folder/> elements
     QString entryType = QString(entry.isFolder ? "folder" : "game");
     if (config->scraper == "screenscraper") {
         return QString("  <" % entryType % " id=\"" % entry.id % "\">");
@@ -126,11 +138,3 @@ void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
         }
     }
 }
-
-QString Batocera::getInputFolder() { return baseFolder() % config->platform; }
-
-QString Batocera::getGameListFolder() {
-    return baseFolder() % config->platform;
-}
-
-QString Batocera::getMediaFolder() { return baseFolder() % config->platform; }

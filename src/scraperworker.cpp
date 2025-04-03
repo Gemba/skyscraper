@@ -309,8 +309,9 @@ void ScraperWorker::run() {
             // extra media files (not part of compositor)
             const QString baseName = info.completeBaseName();
             const QString subPath = compositor.getSubpath(game.path);
-            copyMedia("video", baseName, subPath, game);
-            copyMedia("manual", baseName, subPath, game);
+            copyMedia(MediaHint::VIDEO, baseName, subPath, game);
+            copyMedia(MediaHint::MANUAL, baseName, subPath, game);
+            copyMedia(MediaHint::FANART, baseName, subPath, game);
         }
 
         // Add all resources to the cache
@@ -866,29 +867,46 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
     return suggestedGame;
 }
 
-void ScraperWorker::copyMedia(const QString &mediaType,
+void ScraperWorker::copyMedia(MediaHint mediaHint,
                               const QString &completeBaseName,
                               const QString &subPath, GameEntry &game) {
+    QString fn, fnExt, mediaTypeFolder;
+    bool mediaTypeEnabled = false;
+    bool skipExisting = false;
+    QByteArray data;
 
-    // false means "game manual"
-    const bool isVideoType = mediaType == "video";
-
-    const QString fmt = isVideoType ? game.videoFormat : "pdf";
-    const QString fn = isVideoType ? game.videoFile : game.manualFile;
-    const QByteArray data = isVideoType ? game.videoData : game.manualData;
-    const bool mediaTypeEnabled = isVideoType ? config.videos : config.manuals;
-    const bool skipExisting =
-        isVideoType ? config.skipExistingVideos : config.skipExistingManuals;
-    const QString mediaTypeFolder =
-        isVideoType ? config.videosFolder : config.manualsFolder;
+    if (mediaHint & MediaHint::VIDEO) {
+        fnExt = game.videoFormat;
+        fn = game.videoFile;
+        mediaTypeEnabled = config.videos;
+        data = game.videoData;
+        mediaTypeFolder = config.videosFolder;
+        skipExisting = config.skipExistingVideos;
+    } else if (mediaHint & MediaHint::MANUAL) {
+        fnExt = QFileInfo(game.manualFile).suffix();
+        fn = game.manualFile;
+        mediaTypeEnabled = config.manuals;
+        data = game.manualData;
+        mediaTypeFolder = config.manualsFolder;
+        skipExisting = config.skipExistingManuals;
+    } else if (mediaHint & MediaHint::FANART) {
+        fnExt = QFileInfo(game.fanartFile).suffix();
+        fn = game.fanartFile;
+        mediaTypeEnabled = config.fanart;
+        data = game.fanartData;
+        mediaTypeFolder = config.fanartFolder;
+        skipExisting = config.skipExistingFanart;
+    }
 
     bool noCopy = true;
-    if (mediaTypeEnabled && fmt != "" && !fn.isEmpty() && QFile::exists(fn)) {
-        QString absMediaFn = completeBaseName % "." % fmt;
+    if (mediaTypeEnabled && !fnExt.isEmpty() && !fn.isEmpty() &&
+        QFile::exists(fn)) {
+        // FIXME: hier MediaHint::BATOCERA checken
+        QString absMediaFn = completeBaseName % "." % fnExt;
         if (subPath != ".") {
             absMediaFn = subPath % "/" % absMediaFn;
-            QFileInfo fi = QFileInfo(mediaTypeFolder % "/" % absMediaFn);
-            if (!QDir().mkpath(fi.absolutePath())) {
+            if (QFileInfo fi = QFileInfo(mediaTypeFolder % "/" % absMediaFn);
+                !QDir().mkpath(fi.absolutePath())) {
                 qWarning() << "Path could not be created" << fi.absolutePath()
                            << " Check file permissions, gamelist binary data "
                               "maybe incomplete.";
@@ -898,7 +916,7 @@ void ScraperWorker::copyMedia(const QString &mediaType,
 
         if (!(skipExisting && QFile::exists(absMediaFn))) {
             QFile::remove(absMediaFn);
-            if (config.symlink && isVideoType) {
+            if (config.symlink && mediaHint & MediaHint::VIDEO) {
                 // symlink
                 if (QFile::link(fn, absMediaFn)) {
                     noCopy = false;
@@ -915,11 +933,14 @@ void ScraperWorker::copyMedia(const QString &mediaType,
         }
     }
     if (noCopy) {
-        if (isVideoType) {
+        if (mediaHint & MediaHint::VIDEO) {
             game.videoFormat = "";
-        } else {
+        } else if (mediaHint & MediaHint::MANUAL) {
             game.manualData.clear();
             game.manualFile = "";
+        } else {
+            game.fanartData.clear();
+            game.fanartFile = "";
         }
     }
 }

@@ -58,7 +58,7 @@ public:
 
     enum Format { RETROPIE, ESDE, BATOCERA };
 
-    static const QMap<unsigned char, QString> elements() {
+    static const QMap<unsigned char, QString> commonGamelistElems() {
         return QMap<unsigned char, QString>{
             {DESCRIPTION, "desc"},
             {DEVELOPER, "developer"},
@@ -66,12 +66,12 @@ public:
             {PLAYERS, "players"},
             {TAGS, "genre"},
             {RELEASEDATE, "releasedate"},
-            {COVER, "thumbnail"},
+            {COVER, "thumbnail"}, // Batocera uses "<boxart/>"
             {SCREENSHOT, "image"},
             {VIDEO, "video"},
             {RATING, "rating"},
-            // FIXME: wird das in ESDE oder Batocera explizit gespeichert?
-            {WHEEL, ""},
+            // PENDING: does ES-DE utilize <wheel/>? (ES: No, Bato: Yes)
+            {WHEEL, "wheel"},
             {MARQUEE, "marquee"},
             // ES, ES-DE and Batocera
             {AGES, "kidgame"},
@@ -81,7 +81,12 @@ public:
             {FANART, "fanart"}};
     };
 
-    static const QString getTag(GameEntry::Elem e) { return elements()[e]; };
+    static const QString getTag(GameEntry::Elem e, bool isBatocera = false) {
+        QString elemName = commonGamelistElems()[e];
+        if (isBatocera and e == COVER)
+            elemName = "boxart";
+        return elemName;
+    };
 
     GameEntry();
 
@@ -142,7 +147,10 @@ public:
     QByteArray manualData = QByteArray();
     QString manualFile = "";
     QString manualSrc = "";
-    // FIXME: fanartData, fanartSrc
+    QByteArray fanartData = QByteArray();
+    QString fanartFile = "";
+    QString fanartSrc = "";
+
     // internal
     int searchMatch = 0;
     QString cacheId = "";

@@ -34,7 +34,7 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-static const QRegExp REGEX_OPENELEM = QRegExp("<(\\w+)");
+static const QRegularExpression REGEX_OPENELEM = QRegularExpression("<(\\w+)");
 
 EmulationStation::EmulationStation() {}
 
@@ -366,23 +366,23 @@ QString EmulationStation::createXml(GameEntry &entry) {
     return l.join("\n") % "\n";
 }
 
-QString EmulationStation::elem(const QString &elem, const QString &data,
+QString EmulationStation::elem(const QString &elem, const QString &text,
                                bool addEmptyElem, bool isPath) {
     QString e;
-    if (data.isEmpty()) {
+    if (text.isEmpty()) {
         if (addEmptyElem) {
             e = QString("    <%1/>").arg(elem);
         }
     } else {
-        QString d = data;
+        QString t = text;
         if (isPath && config->relativePaths) {
             // The replace here IS supposed to be 'inputFolder' and not
             // 'mediaFolder' because we only want the path to be relative if
             // '-o' hasn't been set. So this will only make it relative if the
             // path is equal to inputFolder which is what we want.
-            d = d.replace(config->inputFolder, ".");
+            t = t.replace(config->inputFolder, ".");
         }
-        e = QString("    <%1>%2</%1>").arg(elem, d);
+        e = QString("    <%1>%2</%1>").arg(elem, t);
     }
     return e;
 }

@@ -69,6 +69,7 @@ struct Settings {
     QString texturesFolder = "";
     QString videosFolder = "";
     QString manualsFolder = "";
+    QString fanartFolder = "";
     QString importFolder = Config::getSkyFolder(Config::SkyFolderType::IMPORT);
     QString nameTemplate = "";
     int doneThreads = 0;
@@ -119,6 +120,7 @@ struct Settings {
     int romLimit = -1;
 
     bool manuals = false;
+    bool fanart = false;
     QString gameListVariants = "";
     bool videos = false;
     bool videoPreferNormalized = true;
@@ -140,6 +142,8 @@ struct Settings {
     bool skipExistingTextures = false;
     bool cacheTextures = true;
     bool skipExistingManuals = false;
+    bool skipExistingFanart = false;
+
     QString innerBracketsReplace = "";
     QString innerParenthesesReplace = "";
 
