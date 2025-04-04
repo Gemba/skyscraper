@@ -17,18 +17,20 @@ has a brief section on the topic.
 
 ### File Locations: Genuine- and XDG-Skyscraper
 
-|   Type   | Genuine Skyscraper Loation                                            | XDG BDS Location                       |
-| :------: | --------------------------------------------------------------------- | -------------------------------------- |
-|  CONFIG  | All files, but no subfolders of `~/.skyscraper/*`                     | `$XDG_CONFIG_HOME/skyscraper/`         |
-|  CACHE   | All of `~/.skyscraper/cache/`                                         | `$XDG_CACHE_HOME/skyscraper/`          |
-|  IMPORT  | All of `~/.skyscraper/import/`                                        | `$XDG_DATA_HOME/skyscraper/import/`    |
-| RESOURCE | All of `~/.skyscraper/resources/`                                     | `$XDG_DATA_HOME/skyscraper/resources/` |
-|   LOG    | Skipped files/games during processing `~/.skyscraper/skipped*.txt`    | `$XDG_STATE_HOME/skyscraper/`          |
-|  REPORT  | Cache reports `~/.skyscraper/reports/*`                               | `$XDG_STATE_HOME/skyscraper/reports/`  |
-|   LOG    | Rare Screenscraper Error Log `~/.skyscraper/screenscraper_error.json` | `$XDG_STATE_HOME/skyscraper/`          |
+|   Type   | Genuine Skyscraper Location                                          | XDG BDS Location                       |
+| :------: | -------------------------------------------------------------------- | -------------------------------------- |
+|  CONFIG  | All files, but no subfolders of `~/.skyscraper/*`                    | `$XDG_CONFIG_HOME/skyscraper/`         |
+|  CACHE   | All of `~/.skyscraper/cache/`                                        | `$XDG_CACHE_HOME/skyscraper/`          |
+|  IMPORT  | All of `~/.skyscraper/import/`                                       | `$XDG_DATA_HOME/skyscraper/import/`    |
+| RESOURCE | All of `~/.skyscraper/resources/`                                    | `$XDG_DATA_HOME/skyscraper/resources/` |
+|   LOG    | Skipped files/games during processing `~/.skyscraper/skipped*.txt`   | `$XDG_STATE_HOME/skyscraper/`          |
+|  REPORT  | Cache reports `~/.skyscraper/reports/*`                              | `$XDG_STATE_HOME/skyscraper/reports/`  |
+|   LOG    | Rare Screenscraper error log `~/.skyscraper/screenscraper_error.txt` | `$XDG_STATE_HOME/skyscraper/`          |
 
-As the per specifications: All paths must be absolute, relative paths will be
-ignored by Skyscraper. Non-existing paths will be created by Skyscraper.
+!!! warning "Skyscraper is strict"
+
+    As per specification: All paths must be absolute, relative paths will be
+    ignored by Skyscraper. Non-existing paths will be created by Skyscraper.
 
 ### How to Enable XDG
 
@@ -43,8 +45,8 @@ Skyscraper will be deploy its configuration files to the XDG destinations (by
 default sourced from `/usr/local/etc/skyscraper`).
 
 If you want to verify if Skyscraper is compiled with XDG support run `Skyscraper
---version`. If you see a XDG label below the version it means XDG is enabled and
-supported.
+--version`. If you see a XDG label below the version number it means XDG is
+enabled and supported.
 
 To disable XDG support undo the steps above.
 

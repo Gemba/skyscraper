@@ -25,6 +25,7 @@
 
 #include "emulationstation.h"
 
+#include "config.h"
 #include "gameentry.h"
 #include "strtools.h"
 #include "xmlreader.h"
@@ -34,15 +35,16 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
+static const QString INDENT = "  ";
+
 EmulationStation::EmulationStation() {}
 
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // Load old game list entries so we can preserve metadata later when
     // assembling xml
-    XmlReader gameListReader;
+    XmlReader gameListReader = XmlReader(config->gameListFolder);
     if (gameListReader.setFile(gameListFileString)) {
-        oldEntries = gameListReader.getEntries(config->inputFolder,
-                                               extraGamelistTags(true));
+        oldEntries = gameListReader.getEntries(extraGamelistTags(true));
         return true;
     }
     return false;
@@ -237,7 +239,8 @@ void EmulationStation::assembleList(QString &finalOutput,
         preserveFromOld(entry);
 
         if (config->relativePaths) {
-            entry.path.replace(config->inputFolder, ".");
+            entry.path = "./" + Config::lexicallyRelativePath(
+                                    config->gameListFolder, entry.path);
         }
         finalOutput.append(createXml(entry));
     }
@@ -303,14 +306,12 @@ bool EmulationStation::isGameLauncher(QString &sub) {
 
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem;
+    bool addEmptyElem = !entry.isFolder;
     if (gamelistFormat() == GameEntry::Format::ESDE) {
         addEmptyElem = false;
-    } else {
-        addEmptyElem = !entry.isFolder;
     }
     QString entryType = QString(entry.isFolder ? "folder" : "game");
-    l.append("  <" % entryType % ">");
+    l.append(INDENT % "<" % entryType % ">");
 
     l.append(elem("path", entry.path, addEmptyElem));
     l.append(elem("name", entry.title, addEmptyElem));
@@ -346,7 +347,7 @@ QString EmulationStation::createXml(GameEntry &entry) {
 
     l.append(elem("kidgame", kidGame, false));
 
-    l.append("  </" % entryType % ">");
+    l.append(INDENT % "</" % entryType % ">");
     l.removeAll("");
 
     return l.join("\n") % "\n";
@@ -357,19 +358,15 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
     QString e;
     if (data.isEmpty()) {
         if (addEmptyElem) {
-            e = QString("    <%1/>").arg(elem);
+            e = QString(INDENT % INDENT % "<%1/>").arg(elem);
         }
     } else {
         QString d = data;
         if (isPath && config->relativePaths) {
-            // The replace here IS supposed to be 'inputFolder' and not
-            // 'mediaFolder' because we only want the path to be relative if
-            // '-o' hasn't been set. So this will only make it relative if the
-            // path is equal to inputFolder which is what we want.
-            d = d.replace(config->inputFolder, ".");
+            d = "./" + Config::lexicallyRelativePath(config->gameListFolder, d);
         }
         d = StrTools::xmlEscape(d);
-        e = QString("    <%1>%2</%1>").arg(elem, d);
+        e = QString(INDENT % INDENT % "<%1>%2</%1>").arg(elem, d);
     }
     return e;
 }
@@ -407,7 +404,9 @@ QString EmulationStation::getInputFolder() {
     return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
 }
 
-QString EmulationStation::getGameListFolder() { return config->inputFolder; }
+QString EmulationStation::getGameListFolder() {
+    return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
+}
 
 QString EmulationStation::getCoversFolder() {
     return config->mediaFolder % "/covers";

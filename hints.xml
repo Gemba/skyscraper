@@ -29,11 +29,13 @@
   <hint>You can pinpoint a game with the Mobygames scraper with "-s mobygames --query &lt;gameid&gt;", where the &lt;gameid&gt; is the ID listed on the mobygames site at the game's detail view.</hint>
   <hint>Skyscraper on Linux supports bash-completion (aka. programmable completion): Check the documentation at https://gemba.github.io/skyscraper/CLIHELP/#programmable-completion for details. Once enabled press TAB twice to display completion options.</hint>
   <hint>You can scrape game manuals with Skyscraper and display them if your frontend supports this. Use manuals=true in config.ini.</hint>
-  <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the XDG.md documentation.</hint>
+  <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the https://gemba.github.io/skyscraper/XDG documentation.</hint>
   <hint>Skyscraper supports the ES-DE frontend gamelist format.</hint>
-  <hint>You can add new platforms (i.e., systems to scrape) with configuration file edits. See PLATFORMS.md.</hint>
+  <hint>You can add new platforms (i.e., systems to scrape) with configuration file edits. See https://gemba.github.io/skyscraper/PLATFORMS</hint>
   <hint>You can scrape data from GameBase DB files with Skyscraper. GameBase DBs are a well of information especially for indie or homebrew games for retro systems.</hint>
   <hint>Skyscraper supports ten scraping modules: 7 for online sources and 3 for local sources.</hint>
   <hint>Pizza and beer go well together.</hint>
   <hint>Skyscraper debuted at June, 11th 2017.</hint>
+  <hint>Skyscraper runs on Linux, macOS and Windows.</hint>
+  <hint>You can use relative paths for almost every path related option. See https://gemba.github.io/skyscraper/PATHHANDLING</hint>
 </hints>

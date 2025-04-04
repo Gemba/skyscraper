@@ -152,23 +152,38 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
         QVariant ss = settings->value(k);
         if (conv == "str") {
             QString v = ss.toString();
+            if (v.isEmpty())
+                continue;
             if (k == "addExtensions") {
                 config->addExtensions = v;
                 continue;
             }
             if (k == "artworkXml") {
-                if (!v.isEmpty() && QFileInfo(v).isRelative()) {
+                if (QFileInfo(v).isRelative()) {
+                    QString configIniAbsPath =
+                        QFileInfo(config->configFile).absolutePath();
                     config->artworkConfig =
-                        concatPath(Config::getSkyFolder(), v);
+                        Config::concatPath(configIniAbsPath, v);
                 } else {
                     config->artworkConfig = v;
                 }
+                config->artworkConfig =
+                    Config::lexicallyNormalPath(config->artworkConfig);
                 continue;
             }
             if (k == "cacheFolder") {
-                config->cacheFolder = (type == CfgType::MAIN)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                config->cacheFolder =
+                    (type == CfgType::MAIN)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
+                if (QFileInfo(config->cacheFolder).isRelative()) {
+                    QString configIniAbsPath =
+                        QFileInfo(config->configFile).absolutePath();
+                    config->cacheFolder = Config::concatPath(
+                        configIniAbsPath, config->cacheFolder);
+                }
+                config->cacheFolder =
+                    Config::lexicallyNormalPath(config->cacheFolder);
                 continue;
             }
             if (k == "emulator") {
@@ -201,10 +216,19 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "gameListFolder") {
-                config->gameListFolder = (type == CfgType::MAIN ||
-                                          type == CfgType::FRONTEND /* #68 */)
-                                             ? concatPath(v, config->platform)
-                                             : v;
+                config->gameListFolder =
+                    (type == CfgType::MAIN ||
+                     type == CfgType::FRONTEND /* #68 */)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
+                if (QFileInfo(config->gameListFolder).isRelative()) {
+                    QString configIniAbsPath =
+                        QFileInfo(config->configFile).absolutePath();
+                    config->gameListFolder = Config::concatPath(
+                        configIniAbsPath, config->gameListFolder);
+                }
+                config->gameListFolder =
+                    Config::lexicallyNormalPath(config->gameListFolder);
                 gameListFolderSet = true;
                 continue;
             }
@@ -217,6 +241,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "importFolder") {
                 config->importFolder = v;
+                if (QFileInfo(config->importFolder).isRelative()) {
+                    QString configIniAbsPath =
+                        QFileInfo(config->configFile).absolutePath();
+                    config->importFolder = Config::concatPath(
+                        configIniAbsPath, config->importFolder);
+                }
+                config->importFolder =
+                    Config::lexicallyNormalPath(config->importFolder);
                 continue;
             }
             if (k == "gameBaseFile") {
@@ -253,9 +285,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "inputFolder") {
-                config->inputFolder = (type == CfgType::MAIN)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                config->inputFolder =
+                    (type == CfgType::MAIN)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
                 inputFolderSet = true;
                 continue;
             }
@@ -269,7 +302,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "launch") {
                 if (config->frontend == "pegasus") {
-                    config->frontendExtra = v;
+                    config->frontendExtra = v.trimmed();
                 } else {
                     printf("\033[1;33mParameter launch is ignored. Only "
                            "applicable with frontend=pegasus.\n\033[0m");
@@ -277,10 +310,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "mediaFolder") {
-                config->mediaFolder = (type == CfgType::MAIN ||
-                                       type == CfgType::FRONTEND /* #68 */)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                config->mediaFolder =
+                    (type == CfgType::MAIN ||
+                     type == CfgType::FRONTEND /* #68 */)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
                 mediaFolderSet = true;
                 continue;
             }
@@ -568,7 +602,14 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         inputFolderSet = true;
     }
     if (parser->isSet("g")) {
-        config->gameListFolder = parser->value("g");
+        config->gameListFolder = parser->value("g"); // assume absolute
+        if (QFileInfo(config->gameListFolder).isRelative()) {
+            // make absolute
+            config->gameListFolder =
+                Config::concatPath(config->currentDir, config->gameListFolder);
+        }
+        config->gameListFolder =
+            Config::lexicallyNormalPath(config->gameListFolder);
         gameListFolderSet = true;
     }
     if (parser->isSet("o")) {
@@ -576,15 +617,15 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         mediaFolderSet = true;
     }
     if (parser->isSet("a")) {
-        config->artworkConfig = parser->value("a");
+        config->artworkConfig = parser->value("a"); // assume absolute
         if (QFileInfo(config->artworkConfig).isRelative()) {
             config->artworkConfig =
-                concatPath(config->currentDir, config->artworkConfig);
+                Config::concatPath(config->currentDir, config->artworkConfig);
         }
     } else if (config->artworkConfig.isEmpty()) {
         // failsafe: no CLI and no config.ini artworkConfig provided
         config->artworkConfig =
-            concatPath(Config::getSkyFolder(), "artwork.xml");
+            Config::concatPath(Config::getSkyFolder(), "artwork.xml");
     }
     if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m") &&
         parser->value("m").toInt() >= 0 && parser->value("m").toInt() <= 100) {
@@ -598,13 +639,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->cacheFolder = parser->value("d");
         if (QFileInfo(config->cacheFolder).isRelative()) {
             config->cacheFolder =
-                concatPath(config->currentDir, config->cacheFolder);
+                Config::concatPath(config->currentDir, config->cacheFolder);
         }
     } else if (config->cacheFolder.isEmpty()) {
         // failsafe: no CLI and no config.ini cacheFolder provided
-        config->cacheFolder =
-            concatPath(Config::getSkyFolder(Config::SkyFolderType::CACHE),
-                       config->platform);
+        config->cacheFolder = Config::concatPath(
+            Config::getSkyFolder(Config::SkyFolderType::CACHE),
+            config->platform);
     }
     QStringList flags = parseFlags();
     if (flags.contains("help")) {
@@ -754,13 +795,6 @@ QSet<QString> RuntimeCfg::getKeys(CfgType type) {
         }
     }
     return ret;
-}
-
-QString RuntimeCfg::concatPath(QString absPath, QString platformFolder) {
-    if (absPath.right(1) != "/") {
-        return absPath % "/" % platformFolder;
-    }
-    return absPath % platformFolder;
 }
 
 QStringList RuntimeCfg::parseFlags() {

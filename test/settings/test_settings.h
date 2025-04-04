@@ -1,4 +1,3 @@
-#include "src/settings.h"
 
 #include <QtTest/QtTest>
 
@@ -12,4 +11,5 @@ private slots:
     void testConfigIniPlatform();
     void testConfigIniFrontend();
     void testConfigIniScraper();
+    void testConfigIniPaths();
 };

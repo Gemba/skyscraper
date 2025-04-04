@@ -8,7 +8,7 @@ QMAKE_CXXFLAGS += -std=c++17
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
-include(../../VERSION)
+include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 HEADERS += ../../src/strtools.h 

@@ -143,8 +143,7 @@ private slots:
                   {"Mature", "18"},
                   {"", ""},
                   {"Not rated", ""},
-                  {"Not Rated", ""}
-        };
+                  {"Not Rated", ""}};
         QMapIterator<QString, QString> i(ageMap);
         while (i.hasNext()) {
             i.next();

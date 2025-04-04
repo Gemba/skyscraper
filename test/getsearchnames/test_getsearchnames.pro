@@ -10,7 +10,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 PREFIX = /usr/local
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
 
-include(../../VERSION)
+include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 # set if testing against v3.10.3 or earlier

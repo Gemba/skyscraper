@@ -22,15 +22,17 @@
 ; Also remember to uncomment or create the sections they belong to such as '[snes]'.
 
 [main]
-;inputFolder="/home/pi/RetroPie/roms"
+;gameListFolder="/home/pi/RetroPie/roms"
+# next two are relative to 'gameListFolder'
+;inputFolder="."
+;mediaFolder="./media"
 ;excludePattern="*[BIOS]*"
 ;includePattern="Super*"
-;excludeFrom="/home/pi/.skyscraper/excludes.txt"
-;includeFrom="/home/pi/.skyscraper/includes.txt"
-;gameListFolder="/home/pi/RetroPie/roms"
+# relative to this config.ini path, also for other path parameters
+;excludeFrom="./excludes.txt"
+;includeFrom="./includes.txt"
 ;gameListBackup="false"
-;mediaFolder="/home/pi/RetroPie/roms"
-;cacheFolder="/home/pi/.skyscraper/cache"
+;cacheFolder="./cache"
 ;cacheResize="false"
 ;nameTemplate="%t [%f], %P player(s)"
 ;jpgQuality="95"
@@ -39,7 +41,7 @@
 ;cacheWheels="true"
 ;cacheMarquees="true"
 ;cacheTextures="true"
-;importFolder="/home/pi/.skyscraper/import"
+;importFolder="./import"
 ;unpack="false"
 ;frontend="emulationstation"
 ;emulator=""
@@ -73,6 +75,7 @@
 ;hints="false"
 ;subdirs="true"
 ;spaceCheck="true"
+# only absolute path allowed
 ;scummIni="/full/path/to/scummvm.ini"
 ;tidyDesc="true"
 ;onlyMissing="false"
