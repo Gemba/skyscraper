@@ -30,6 +30,7 @@
 #include <QStringBuilder>
 #include <QStringList>
 #include <QTextStream>
+#include <filesystem>
 
 Config::SkyFolders skyFolders;
 
@@ -133,7 +134,6 @@ void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
 }
 
 void Config::setupUserConfig() {
-    // Set the working directory to the applications own path
     QDir skyDir(getSkyFolder());
     if (!skyDir.exists()) {
         if (!skyDir.mkpath(".")) {
@@ -143,6 +143,12 @@ void Config::setupUserConfig() {
             exit(1);
         }
     }
+
+    // Set the working directory to the applications own path
+    // defaults to the folder containing config.ini, artwork.xml, hints.xml, ...
+    // any file outside this folder or subfolders to this folder shall use
+    // Config::getSkyFolder(type ...)
+    QDir::setCurrent(skyDir.absolutePath());
 
     // Create import paths
     QStringList paths = {"covers",  "manuals",  "marquees", "screenshots",
@@ -156,11 +162,6 @@ void Config::setupUserConfig() {
 
     // Create cache folder
     QDir(getSkyFolder(SkyFolderType::CACHE)).mkpath(".");
-
-    // defaults to the folder containing config.ini, artwork.xml, hints.xml, ...
-    // any file outside this folder or subfolders to this folder shall use
-    // Config::getSkyFolder(type ...)
-    QDir::setCurrent(getSkyFolder());
 
     QString rpInst = "/opt/retropie/supplementary/skyscraper/Skyscraper";
     bool isRpInstall = QFileInfo(rpInst).isFile();
@@ -316,4 +317,54 @@ QString Config::getRetropieVersion() {
         rpVer.close();
     }
     return ver;
+}
+
+QString Config::concatPath(QString path, QString subPath) {
+    if (!subPath.isEmpty()) {
+        while (subPath.left(1) == "/")
+            subPath.remove(0, 1);
+    }
+    if (!path.isEmpty()) {
+        while (path.right(1) == "/")
+            path.chop(1);
+    }
+    if (subPath == "." || subPath.isEmpty())
+        return path;
+    if (!path.isEmpty() && path.right(1) != "/") {
+        return path % "/" % subPath;
+    }
+    return path % subPath;
+}
+
+QString Config::makeAbsolutePath(const QString &prePath, QString subPath) {
+    if (subPath.isEmpty())
+        return subPath;
+
+    Q_ASSERT(QFileInfo(prePath).isAbsolute());
+
+    if (QFileInfo(subPath).isAbsolute())
+        return subPath;
+
+    if (subPath.startsWith("../"))
+        return concatPath(prePath, subPath);
+
+    if (subPath.startsWith("./"))
+        subPath.remove(0, 1);
+
+    return concatPath(prePath, subPath);
+}
+
+QString Config::lexicallyRelativePath(const QString &base,
+                                      const QString &other) {
+    std::filesystem::path result = std::filesystem::path(other.toStdString())
+                                       .lexically_relative(base.toStdString());
+    return QString(result.string().c_str());
+}
+
+QString Config::lexicallyNormalPath(const QString &pathWithDots) {
+    // not using QFileInfo::canonicalFilePath() as it would resolve symlinks
+    // which is not wanted
+    std::filesystem::path result =
+        std::filesystem::path(pathWithDots.toStdString()).lexically_normal();
+    return QString(result.string().c_str());
 }

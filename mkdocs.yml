@@ -86,6 +86,7 @@ nav:
 - Configuration:  
   - The config.ini File: CONFIGINI.md
   - Command Line Options: CLIHELP.md
+  - Path Processing: PATHHANDLING.md
   - Platforms: PLATFORMS.md
   - Languages: LANGUAGES.md
   - Regions: REGIONS.md

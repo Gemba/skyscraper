@@ -93,12 +93,10 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "frontend to set the emulator and optionally for the 'pegasus' "
         "frontend to set the launch command. Default: unset",
         "STRING", "");
-    QCommandLineOption iOption(
-        "i",
-        "Folder which contains the game/rom files. Default: "
-        "'" %
-            QDir::homePath() % "/RetroPie/roms/PLATFORM'",
-        "PATH", "");
+    QCommandLineOption iOption("i",
+                               "Folder which contains the game/rom "
+                               "files.\n(default depends on frontend)",
+                               "PATH", "");
     QCommandLineOption gOption(
         "g", "Game list export folder.\n(default depends on frontend)", "PATH",
         "");

@@ -57,8 +57,9 @@ private slots:
             // to spot possible errors (MotherX)
             {"Mother 25th Restoration Hack", {"MotherX (Japan)"}},
             {"Dot1.dot2", {"Dot1x Dot2x"}},
-            {"Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n]", {"Arle No Bouken - Mahou No Jewel"}}
-        };
+            {"Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB "
+             "Compatible) [T-En by Jazz v1.0] [n]",
+             {"Arle No Bouken - Mahou No Jewel"}}};
     }
 
     void testArcadeDB() {
@@ -70,9 +71,8 @@ private slots:
                  "./rom_samples/Mother 25th Restoration Hack.zip",
                  {"MotherX (Japan)"})},
             {"ArcadeDB, with aliasMap match (completeBaseName)",
-             QPair<QString, QStringList>(
-                 "./rom_samples/Dot1.dot2.zip",
-                 {"Dot1x Dot2x"})},
+             QPair<QString, QStringList>("./rom_samples/Dot1.dot2.zip",
+                                         {"Dot1x Dot2x"})},
 #endif
             {"ArcadeDB, w/o  aliasMap match",
              QPair<QString, QStringList>("./rom_samples/1942.zip", {"1942"})},
@@ -302,7 +302,8 @@ private slots:
                  {"romnom=MotherX%20(Japan)"})},
             {"Screenscraper, with aliasMap match (completeBaseName)",
              QPair<QString, QStringList>(
-                 "./rom_samples/Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n].zip",
+                 "./rom_samples/Arle's Adventure - Magical Jewels (Japan) (SGB "
+                 "Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n].zip",
                  {"romnom=Arle%20No%20Bouken%20-%20Mahou%20No%20Jewel"})},
 #endif
             {"Screenscraper, with arcade match",

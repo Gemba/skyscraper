@@ -18,7 +18,7 @@ Settings in the `[main]` section will always be set regardless of selected platf
 
 `<SCRAPER>` can be any of the supported scraping modules (check list with `--help` under the `-s` option), in which case the settings will only be applied while scraping with that particular scraping module.
 
-Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline option which relates to an configuration setting in `config.ini` has highest precedence, regardless of the other four levels respective sections.
+Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline (CLI) option which relates to an configuration setting in `config.ini` has highest precedence, regardless of the other four levels respective sections.
 
 You can find an example config file at `/home/<USER>/.skyscraper/config.ini.example`. This file contains all available options. Just copy the file to `config.ini` and uncomment and edit the ones you wish to use by removing the `#` or `;` in front of the variables. Remember to also uncomment the section the option relates to such as `[main]` or `[amiga]`.
 
@@ -812,7 +812,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### relativePaths
 
-Enabling this forces the rom and any media paths inside the game list to be relative to the rom input folder. Currently only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list (see also [frontend](#frontend) option).
+Enabling this forces the rom and any media paths inside the game list to be relative to the path of the gamelist file. Currently only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list (see also [frontend](#frontend) option).
 
 !!! info
 

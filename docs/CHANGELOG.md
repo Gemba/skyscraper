@@ -5,6 +5,11 @@ humans](https://keepachangelog.com).
 
 ### Version 3.17.0 (2025-TBA)
 
+- Changed: Handling of relative path in configuration options adapted to enable
+  that gamelist, ROM folder and media folder can be moved easier around or can
+  be moved to other devices. Also, the config INI file can be provided with a
+  relative path, as all other path options. See details [here](PATHHANDLING.md).
+  Thanks to @cameronhimself for nudging me.
 - Added: Artwork finetuning, added option to [control aspect ratio when
   scaling images](ARTWORK.md#aspect-attribute-o_1). Thanks to
   @joyrider3774 for the suggestion.
@@ -32,7 +37,7 @@ humans](https://keepachangelog.com).
   RetroPie-Setup first before updating Skyscraper.
 - Added: Documentation on scraper modules supplied with [scraper
   capabilities](SCRAPINGMODULES.md#capabilities-of-scrapers).
-- Added: Documentation on options for --query parameter per scraper modules. See
+- Added: Documentation on options for `--query` parameter per scraper modules. See
   [here](SCRAPINGMODULES.md#recognized-keywords-in-query).
 - Added: IGDB scraper now supports Screenshot and Cover scraping, plus it
   allows querying with game ID `--query="id=..."`.

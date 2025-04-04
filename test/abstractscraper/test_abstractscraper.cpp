@@ -19,7 +19,7 @@ private:
     }
 
 private slots:
-    void initTestCase() {};
+    void initTestCase(){};
 
     void testDetectRegionsFromFilename1() {
         scraper = new AbstractScraper(&settings, NULL);

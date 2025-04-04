@@ -150,21 +150,21 @@ void Skyscraper::run() {
         }
     }
 
-    if (!config.cacheFolder.isEmpty()) {
-        cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
-        if (cacheScrapeMode || cache->createFolders(config.scraper)) {
-            if (!cache->read() && cacheScrapeMode) {
-                printf("No resources for this platform found in the resource "
-                       "cache. Please specify a scraping module with '-s' to "
-                       "gather some resources before trying to generate a game "
-                       "list. Check all available modules with '--help'.\n");
-                exit(1);
-            }
-        } else {
-            printf("Couldn't create cache folders, please check folder "
-                   "permissions and try again...\n");
+    cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
+    if (cacheScrapeMode || cache->createFolders(config.scraper)) {
+        if (cacheScrapeMode && !cache->read()) {
+            printf("No resources for this platform found in the resource "
+                   "cache ('%s'). Please verify the path of the cache or "
+                   "specify a scraping module with '-s' to gather some "
+                   "resources before trying to generate a game list. Check "
+                   "all available modules with '--help'.\n",
+                   config.cacheFolder.toStdString().c_str());
             exit(1);
         }
+    } else {
+        printf("Couldn't create cache folders, please check folder "
+               "permissions and try again...\n");
+        exit(1);
     }
 
     if (config.verbosity || config.cacheOptions == "show") {
@@ -445,7 +445,6 @@ void Skyscraper::prepareFileQueue() {
                inputDir.absolutePath().toStdString().c_str());
         exit(1);
     }
-    config.inputFolder = inputDir.absolutePath();
 
     setFolder(doCacheScraping, config.gameListFolder);
     setFolder(doCacheScraping, config.coversFolder);
@@ -473,7 +472,7 @@ void Skyscraper::prepareFileQueue() {
             startAt.setFile(config.currentDir + "/" + config.startAt);
         }
         if (!startAt.exists()) {
-            startAt.setFile(inputDir.absolutePath() + "/" + config.startAt);
+            startAt.setFile(config.inputFolder + "/" + config.startAt);
         }
         if (startAt.exists()) {
             while (infoList.first().fileName() != startAt.fileName() &&
@@ -488,7 +487,7 @@ void Skyscraper::prepareFileQueue() {
             endAt.setFile(config.currentDir + "/" + config.endAt);
         }
         if (!endAt.exists()) {
-            endAt.setFile(inputDir.absolutePath() + "/" + config.endAt);
+            endAt.setFile(config.inputFolder + "/" + config.endAt);
         }
         if (endAt.exists()) {
             while (infoList.last().fileName() != endAt.fileName() &&
@@ -706,11 +705,9 @@ void Skyscraper::checkThreads() {
     if (!config.pretend && config.scraper == "cache") {
         printf("\033[1;34m---- Game list generation run completed! YAY! "
                "----\033[0m\n");
-        if (!config.cacheFolder.isEmpty()) {
-            state = NO_INTR; // Ignore ctrl+c
-            cache->write(true);
-            state = SINGLE;
-        }
+        state = NO_INTR;
+        cache->write(true);
+        state = SINGLE;
         frontend->sortEntries(gameEntries);
         printf("Assembling game list...");
         QString finalOutput;
@@ -721,7 +718,7 @@ void Skyscraper::checkThreads() {
                gameListFileString.toStdString().c_str());
         fflush(stdout);
         if (gameListFile.open(QIODevice::WriteOnly)) {
-            state = NO_INTR; // Ignore ctrl+c
+            state = NO_INTR;
             gameListFile.write(finalOutput.toUtf8());
             state = SINGLE;
             gameListFile.close();
@@ -733,11 +730,9 @@ void Skyscraper::checkThreads() {
     } else {
         printf("\033[1;34m---- Resource gathering run completed! YAY! "
                "----\033[0m\n");
-        if (!config.cacheFolder.isEmpty()) {
-            state = NO_INTR; // Ignore ctrl+c
-            cache->write();
-            state = SINGLE;
-        }
+        state = NO_INTR;
+        cache->write();
+        state = SINGLE;
     }
 
     if (!doCacheScraping || totalFiles > 0) {
@@ -784,9 +779,14 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
                 fileList.append(QString(f.readLine().simplified()));
             }
             f.close();
+        } else {
+            printf("File '\033[1;32m%s\033[0m' can not be read.\n\nPlease "
+                   "verify the file permissions and try again...\n",
+                   fnInfo.absoluteFilePath().toStdString().c_str());
+            exit(1);
         }
     } else {
-        printf("File: '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
+        printf("File '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
                "verify the filename and try again...\n",
                fnInfo.absoluteFilePath().toStdString().c_str());
         exit(1);
@@ -796,13 +796,18 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
 
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     QString iniFile = parser.isSet("c") ? parser.value("c") : "config.ini";
-    if (!QFileInfo(iniFile).exists()) {
+    QString absIniFile = Config::makeAbsolutePath(
+        parser.isSet("c") ? config.currentDir : Config::getSkyFolder(),
+        iniFile);
+    absIniFile = Config::lexicallyNormalPath(absIniFile);
+    if (!QFileInfo(absIniFile).exists()) {
         printf(
             "\nWARNING! Provided config file '\033[1;33m%s\033[0m' does not "
             "exist.\nSkyscraper will use default configuration values...\n\n",
             iniFile.toStdString().c_str());
     }
-    QSettings settings(iniFile, QSettings::IniFormat);
+    config.configFile = absIniFile;
+    QSettings settings(absIniFile, QSettings::IniFormat);
 
     RuntimeCfg *rtConf = new RuntimeCfg(&config, &parser);
     // Start by setting frontend, since we need it to set default for game list
@@ -892,7 +897,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     frontend->setConfig(&config);
     frontend->checkReqs();
 
-    // Change config defaults if they aren't already set, find the rest in
+    // Fallback to defaults if they aren't already set, find the rest in
     // settings.h
     if (!inputFolderSet) {
         config.inputFolder = frontend->getInputFolder();
@@ -909,9 +914,20 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             if (config.mediaFolderHidden) {
                 mf = "." + mf;
             }
-            config.mediaFolder = rtConf->concatPath(config.gameListFolder, mf);
+            config.mediaFolder = Config::concatPath(config.gameListFolder, mf);
         }
     }
+
+    // defaults are always absolute, thus input and mediafolder will be
+    // unchanged by these calls
+    config.inputFolder =
+        Config::makeAbsolutePath(config.gameListFolder, config.inputFolder);
+    config.mediaFolder =
+        Config::makeAbsolutePath(config.gameListFolder, config.mediaFolder);
+
+    config.inputFolder = Config::lexicallyNormalPath(config.inputFolder);
+    config.mediaFolder = Config::lexicallyNormalPath(config.mediaFolder);
+
     // only resolve after config.mediaFolder is set
     config.coversFolder = frontend->getCoversFolder();
     config.screenshotsFolder = frontend->getScreenshotsFolder();
@@ -926,11 +942,14 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.scraper = "cache";
     }
 
+    if (config.importFolder.isEmpty()) {
+        config.importFolder = Config::getSkyFolder(Config::SkyFolderType::IMPORT);
+    }
     // If platform subfolder exists for import path, use it
     QDir importFolder(config.importFolder);
     if (importFolder.exists(config.platform)) {
         config.importFolder =
-            rtConf->concatPath(config.importFolder, config.platform);
+            Config::concatPath(config.importFolder, config.platform);
     }
 
     // Set minMatch to 0 for cache, arcadedb and screenscraper
@@ -977,9 +996,11 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             }
         }
         printf("Filename: '\033[1;32m%s\033[0m' requested either on "
-               "command line or with '--includefrom' not found!\n\nPlease "
-               "verify the filename and try again...\n",
-               requestedFile.toStdString().c_str());
+               "command line or with '--includefrom' neither found in platform "
+               "folder '%s' nor in current directory!\n\nPlease verify the "
+               "filename and try again...\n",
+               requestedFile.toStdString().c_str(),
+               config.platform.toStdString().c_str());
         exit(1);
     }
 

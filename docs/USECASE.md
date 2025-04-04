@@ -16,7 +16,10 @@ Now, let's dig in!
 
 You probably installed Skyscraper in order to get some data and artwork on your frontend game lists. So let's say that you have a bunch of Super Nintendo files you wish to populate with data. You'd first gather some data into the Skyscraper resource cache and then generate a game list using the cached data afterwards. So it's a two-step process.
 
-![Skyscraper flowchart](resources/skyscraper_overview_chart.png)
+<figure markdown>
+  ![Skyscraper flowchart](resources/skyscraper_overview_chart.png)
+  <figcaption>Skyscraper flowchart</figcaption>
+</figure>
 
 #### The Gathering Phase
 

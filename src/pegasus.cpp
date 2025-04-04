@@ -25,15 +25,21 @@
 
 #include "pegasus.h"
 
+#include "config.h"
 #include "nametools.h"
 #include "strtools.h"
 
 #include <QDate>
+#include <QDebug>
 #include <QDir>
 #include <QMap>
 #include <QRegularExpression>
 #include <QStringBuilder>
 #include <QTextStream>
+
+static const QString PAD = "  ";
+static const QRegularExpression RE_DOUBLE_NL =
+    QRegularExpression("\\n[\\t ]*\\n");
 
 Pegasus::Pegasus() {}
 
@@ -126,13 +132,7 @@ bool Pegasus::loadOldGameList(const QString &gameListFileString) {
 
 QString Pegasus::makeAbsolute(const QString &filePath,
                               const QString &inputFolder) {
-    QString returnPath = filePath;
-
-    if (returnPath.left(1) == ".") {
-        returnPath.remove(0, 1);
-        returnPath.prepend(inputFolder);
-    }
-    return returnPath;
+    return Config::makeAbsolutePath(inputFolder, QString(filePath));
 }
 
 void Pegasus::skipExisting(QList<GameEntry> &gameEntries,
@@ -208,60 +208,54 @@ QString Pegasus::fromPreservedHeader(const QString &key,
         headerPairs.erase(it);
         return preserved;
     }
-
     return suggested;
 }
 
 void Pegasus::removePreservedHeader(const QString &key) {
-    if (auto it = headerPairs.find(key); it != headerPairs.end()) {
+    if (auto it = headerPairs.find(key); it != headerPairs.end())
         headerPairs.erase(it);
-    }
 }
 
 QString Pegasus::toPegasusFormat(const QString &key, const QString &value) {
     QString pegasusFormat = value;
 
     QRegularExpressionMatch match;
-    match = QRegularExpression("\\n[\\t ]*\\n").match(pegasusFormat);
+    match = RE_DOUBLE_NL.match(pegasusFormat);
     for (const auto &capture : match.capturedTexts()) {
         pegasusFormat.replace(capture,
-                              "###NEWLINE###" % tab % ".###NEWLINE###" % tab);
+                              "###NEWLINE###" % PAD % ".###NEWLINE###" % PAD);
     }
-    pegasusFormat.replace("\n", "\n" % tab);
+    pegasusFormat.replace("\n", "\n" % PAD);
     pegasusFormat.replace("###NEWLINE###", "\n");
     pegasusFormat = key % ": " % pegasusFormat;
-    return pegasusFormat.trimmed() % "\n";
+    return pegasusFormat.trimmed();
 }
 
 void Pegasus::assembleList(QString &finalOutput,
                            QList<GameEntry> &gameEntries) {
-    if (!gameEntries.isEmpty()) {
-        finalOutput =
-            finalOutput % "collection: " %
-            fromPreservedHeader("collection", gameEntries.first().platform) %
-            "\n";
-        finalOutput = finalOutput % "shortname: " %
-                      fromPreservedHeader("shortname", config->platform) % "\n";
-        if (config->frontendExtra.isEmpty()) {
-            finalOutput =
-                finalOutput % "launch: " %
-                fromPreservedHeader("launch",
-                                    "/opt/retropie/supplementary/runcommand/"
-                                    "runcommand.sh 0 _SYS_ " %
-                                        config->platform % " \"{file.path}\"") %
-                "\n";
-        } else {
-            finalOutput =
-                finalOutput % "launch: " % config->frontendExtra % "\n";
-            removePreservedHeader("launch");
-        }
+    if (gameEntries.isEmpty())
+        return;
 
-        for (auto it = headerPairs.begin(); it != headerPairs.end(); it++) {
-            finalOutput = finalOutput % toPegasusFormat(it.key(), it.value());
-        }
-
-        finalOutput = finalOutput % "\n";
+    QStringList out;
+    out.append("collection: " %
+               fromPreservedHeader("collection", gameEntries.first().platform));
+    out.append("shortname: " %
+               fromPreservedHeader("shortname", config->platform));
+    if (config->frontendExtra.isEmpty()) {
+        out.append("launch: " %
+                   fromPreservedHeader(
+                       "launch", "/opt/retropie/supplementary/runcommand/"
+                                 "runcommand.sh 0 _SYS_ " %
+                                     config->platform % " \"{file.path}\""));
+    } else {
+        out.append("launch: " % config->frontendExtra);
+        removePreservedHeader("launch");
     }
+
+    for (auto it = headerPairs.begin(); it != headerPairs.end(); it++) {
+        out.append(toPegasusFormat(it.key(), it.value()));
+    }
+
     int dots = -1;
     int dotMod = gameEntries.length() * 0.1 + 1;
     const bool useRelPath = config->relativePaths;
@@ -274,95 +268,112 @@ void Pegasus::assembleList(QString &finalOutput,
 
         preserveFromOld(entry);
 
+        out.append("");
+        out.append(toPegasusFormat("game", entry.title));
+
         if (useRelPath) {
-            entry.path.replace(config->inputFolder, ".");
+            entry.path = Config::lexicallyRelativePath(config->gameListFolder,
+                                                       entry.path);
         }
 
-        finalOutput = finalOutput % toPegasusFormat("game", entry.title);
-        finalOutput = finalOutput % toPegasusFormat("file", entry.path);
-        // The replace here IS supposed to be 'inputFolder' and not
-        // 'mediaFolder' because we only want the path to be relative if
-        // '-o' hasn't been set. So this will only make it relative if the
-        // path is equal to inputFolder which is what we want.
+        out.append(toPegasusFormat("file", entry.path));
+
         if (!entry.rating.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                toPegasusFormat(
-                    "rating",
-                    QString::number((int)(entry.rating.toDouble() * 100)) %
-                        "%");
+            out.append(toPegasusFormat(
+                "rating",
+                QString::number((int)(entry.rating.toDouble() * 100)) % "%"));
         }
         if (!entry.description.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                toPegasusFormat("description",
-                                entry.description.left(config->maxLength));
+            QString desc = entry.description.left(config->maxLength);
+            replaceColon(desc, entry.title);
+            out.append(toPegasusFormat("description", desc));
         }
         if (!entry.releaseDate.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                toPegasusFormat("release",
-                                QDate::fromString(entry.releaseDate, "yyyyMMdd")
-                                    .toString("yyyy-MM-dd"));
+            out.append(toPegasusFormat(
+                "release", QDate::fromString(entry.releaseDate, "yyyyMMdd")
+                               .toString("yyyy-MM-dd")));
         }
         if (!entry.developer.isEmpty()) {
-            finalOutput =
-                finalOutput % toPegasusFormat("developer", entry.developer);
+            out.append(toPegasusFormat("developer", entry.developer));
         }
         if (!entry.publisher.isEmpty()) {
-            finalOutput =
-                finalOutput % toPegasusFormat("publisher", entry.publisher);
+            out.append(toPegasusFormat("publisher", entry.publisher));
         }
         if (!entry.tags.isEmpty()) {
-            finalOutput = finalOutput % toPegasusFormat("genre", entry.tags);
+            out.append(toPegasusFormat("genre", entry.tags));
         }
         if (!entry.players.isEmpty()) {
-            finalOutput =
-                finalOutput % toPegasusFormat("players", entry.players);
+            out.append(toPegasusFormat("players", entry.players));
         }
         if (!entry.screenshotFile.isEmpty()) {
-            finalOutput =
-                finalOutput % addMediaFile("assets.screenshot", useRelPath,
-                                           entry.screenshotFile);
+            out.append(addMediaFile("assets.screenshot", useRelPath,
+                                    entry.screenshotFile));
         }
         if (!entry.coverFile.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                addMediaFile("assets.boxFront", useRelPath, entry.coverFile);
+            out.append(
+                addMediaFile("assets.boxFront", useRelPath, entry.coverFile));
         }
         if (!entry.marqueeFile.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                addMediaFile("assets.marquee", useRelPath, entry.marqueeFile);
+            out.append(
+                addMediaFile("assets.marquee", useRelPath, entry.marqueeFile));
         }
         if (!entry.textureFile.isEmpty()) {
-            finalOutput =
-                finalOutput %
-                addMediaFile("assets.cartridge", useRelPath, entry.textureFile);
+            out.append(addMediaFile("assets.cartridge", useRelPath,
+                                    entry.textureFile));
         }
         if (!entry.wheelFile.isEmpty()) {
-            finalOutput = finalOutput % addMediaFile("assets.wheel", useRelPath,
-                                                     entry.wheelFile);
+            out.append(
+                addMediaFile("assets.wheel", useRelPath, entry.wheelFile));
         }
         if (!entry.videoFormat.isEmpty() && config->videos) {
-            finalOutput = finalOutput % addMediaFile("assets.video", useRelPath,
-                                                     entry.videoFile);
+            out.append(
+                addMediaFile("assets.video", useRelPath, entry.videoFile));
         }
         if (!entry.pSValuePairs.isEmpty()) {
             for (const auto &pair : entry.pSValuePairs) {
-                finalOutput =
-                    finalOutput % toPegasusFormat(pair.first, pair.second);
+                out.append(toPegasusFormat(pair.first, pair.second));
             }
         }
-        finalOutput = finalOutput % "\n\n";
     }
+    finalOutput = out.join("\n") + "\n";
 }
 
 QString Pegasus::addMediaFile(const QString &asset, bool useRelativePath,
-                              QString &mediaFile) {
-    return toPegasusFormat(
-        asset, (useRelativePath ? mediaFile.replace(config->inputFolder, ".")
-                                : mediaFile));
+                              QString mediaFile) {
+    if (useRelativePath) {
+        mediaFile =
+            Config::lexicallyRelativePath(config->gameListFolder, mediaFile);
+    }
+    return toPegasusFormat(asset, mediaFile);
+}
+
+void Pegasus::replaceColon(QString &value, const QString &gameTitle) {
+    int idx = value.indexOf(':');
+    while (idx != -1) {
+        QString ctxStr;
+        int begin = 0;
+        int end = value.length();
+        if (idx - 12 > 0) {
+            ctxStr = "...";
+            begin = idx - 12;
+        }
+        QString endStr = "";
+        if (idx + 13 < end) {
+            end = idx + 13;
+            endStr = "...";
+        }
+        // TODO: use sliced() instead of mid() when Qt5
+        // is no longer supported
+        ctxStr = ctxStr % value.mid(begin, end - begin) % endStr;
+        value.replace(idx, 1, ".");
+        qWarning() << QString(
+                          "Description of '%1' contains a colon (:) at '%2', "
+                          "Skyscraper replaced it with '.'. Consider "
+                          "editing the description to remediate this warning.")
+                          .arg(gameTitle)
+                          .arg(ctxStr);
+        idx = value.indexOf(':');
+    }
 }
 
 bool Pegasus::canSkip() { return true; }
@@ -376,7 +387,9 @@ QString Pegasus::getInputFolder() {
     return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
 }
 
-QString Pegasus::getGameListFolder() { return config->inputFolder; }
+QString Pegasus::getGameListFolder() {
+    return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
+}
 
 QString Pegasus::getCoversFolder() { return config->mediaFolder % "/covers"; }
 

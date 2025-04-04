@@ -344,9 +344,11 @@ void ScraperWorker::run() {
         }
 
         // Don't unescape title since we already did that in getBestEntry()
-        game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
-                                               info.completeBaseName() + "." +
-                                               game.videoFormat);
+        if (!game.videoFormat.isEmpty()) {
+            game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
+                                                   info.completeBaseName() +
+                                                   "." + game.videoFormat);
+        }
         game.manualFile = StrTools::xmlUnescape(
             config.manualsFolder + "/" + info.completeBaseName() + ".pdf");
         game.description = StrTools::xmlUnescape(game.description);
@@ -921,6 +923,7 @@ void ScraperWorker::copyMedia(const QString &mediaType,
     if (noCopy) {
         if (isVideoType) {
             game.videoFormat = "";
+            game.videoFile = "";
         } else {
             game.manualData.clear();
             game.manualFile = "";

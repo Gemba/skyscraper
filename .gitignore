@@ -55,6 +55,7 @@ compile_commands.json
 
 moc_*
 *.tmp
+*.bkp
 *.bk
 .qmake*
 Skyscraper
@@ -64,6 +65,7 @@ packages
 target
 build
 peas_local.json
+platforms_idmap_local.csv
 
 # macOS
 .DS_Store
