@@ -899,7 +899,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.gameListFolder = frontend->getGameListFolder();
     }
     if (!mediaFolderSet) {
-        if (config.frontend == "esde") {
+        if (config.frontend == "esde" || config.frontend == "batocera") {
             config.mediaFolder = frontend->getMediaFolder();
         } else {
             // defaults to <gamelistfolder>/[.]media/

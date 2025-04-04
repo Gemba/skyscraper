@@ -42,7 +42,15 @@ QString Batocera::getGameListFolder() {
 
 QString Batocera::getMediaFolder() { return baseFolder() % config->platform; }
 
-// FIXME: overwrite getScreenshotsFolder(), und andere
+QString Batocera::getCoversFolder() { return config->mediaFolder % "/images"; }
+
+QString Batocera::getScreenshotsFolder() { return getCoversFolder(); }
+
+QString Batocera::getWheelsFolder() { return getCoversFolder(); }
+
+QString Batocera::getMarqueesFolder() { return getCoversFolder(); }
+
+QString Batocera::getTexturesFolder() { return getCoversFolder(); }
 
 inline const QStringList binaryGamelistElems() {
     // using enum GameEntry::Elem; TODO --> std-c++-20 onwards
