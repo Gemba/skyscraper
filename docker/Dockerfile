@@ -7,7 +7,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Installing Qt5
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends build-essential qt5-default wget sudo
+RUN apt-get install -y --no-install-recommends build-essential qt5-default wget sudo python3
 RUN apt-get install ca-certificates -y
 RUN rm -rf /var/lib/apt/lists/*
 
