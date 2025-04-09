@@ -361,7 +361,7 @@ void Pegasus::assembleList(QString &finalOutput,
 QString Pegasus::addMediaFile(const QString &asset, bool useRelativePath,
                               QString &mediaFile) {
     return toPegasusFormat(
-        asset, (useRelativePath ? mediaFile.replace(config->inputFolder, ".")
+        asset, (useRelativePath ? mediaFile.replace(config->mediaFolder, ".")
                                 : mediaFile));
 }
 
