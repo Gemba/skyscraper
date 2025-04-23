@@ -40,7 +40,7 @@
 #include "settings.h"
 #include "strtools.h"
 #include "thegamesdb.h"
-#include "worldofspectrum.h"
+#include "zxinfodk.h"
 
 #include <QDate>
 #include <QRegularExpression>
@@ -74,7 +74,7 @@ void ScraperWorker::run() {
     } else if (config.scraper == "mobygames") {
         scraper = new MobyGames(&config, manager);
     } else if (config.scraper == "worldofspectrum") {
-        scraper = new WorldOfSpectrum(&config, manager);
+        scraper = new ZxInfoDk(&config, manager);
     } else if (config.scraper == "esgamelist") {
         scraper = new ESGameList(&config, manager);
     } else if (config.scraper == "cache") {
@@ -369,7 +369,11 @@ void ScraperWorker::run() {
         // Make sure we have the correct format of 'ages'
         game.ages = StrTools::conformAges(game.ages);
 
-        output.append("Scraper:        " + config.scraper + "\n");
+        QString scrpr = config.scraper;
+        if (scrpr == "worldofspectrum") {
+            scrpr = "zxinfo (formerly: worldofspectrum)";
+        }
+        output.append("Scraper:        " + scrpr + "\n");
         if (!cacheScraper && config.scraper != "import") {
             output.append(
                 "From cache:     " +

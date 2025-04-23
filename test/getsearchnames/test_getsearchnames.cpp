@@ -11,7 +11,7 @@
 
 /*
  Tests the getSearchNames() method of the different scrapers.
- WorldOfSpectrum and Import-Scraper and TGDB are covered by Mobygames scraper:
+ ZxInfoDk and Import-Scraper and TGDB are covered by Mobygames scraper:
  These use getSearchNames() in the AbstractScraper.
 
  If testing against v3.10.3 or earlier set the define VER_3_10_3 in the *.pro

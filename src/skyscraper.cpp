@@ -840,7 +840,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         QString _scraper = parser.value("s");
         if (_scraper == "tgdb") {
             _scraper = "thegamesdb";
-        } else if (_scraper == "wos") {
+        } else if (_scraper == "wos" || _scraper == "zxinfo") {
+            /* not using zxinfo bc. backward compability, esp. for resource
+             * cache */
             _scraper = "worldofspectrum";
         }
         if (scrapers.contains(_scraper)) {
@@ -985,6 +987,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (parser.isSet("query")) {
         if (cliFiles.length() == 1) {
             config.searchName = parser.value("query");
+            config.threads = 1;
         } else {
             printf("'--query' requires a single rom filename to be added at "
                    "the end of the command-line. You either forgot to set one, "

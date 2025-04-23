@@ -94,7 +94,7 @@ HEADERS += src/skyscraper.h \
            src/pegasus.h \
            src/openretro.h \
            src/thegamesdb.h \
-           src/worldofspectrum.h \
+           src/zxinfodk.h \
            src/screenscraper.h \
            src/crc32.h \
            src/mobygames.h \
@@ -147,7 +147,7 @@ SOURCES += src/main.cpp \
            src/pegasus.cpp \
            src/openretro.cpp \
            src/thegamesdb.cpp \
-           src/worldofspectrum.cpp \
+           src/zxinfodk.cpp \
            src/screenscraper.cpp \
            src/crc32.cpp \
            src/mobygames.cpp \

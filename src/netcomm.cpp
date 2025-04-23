@@ -41,18 +41,22 @@ void NetComm::request(QString query, QString postData,
                       QList<QPair<QString, QString>> headers) {
     QUrl url(query);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::UserAgentHeader,
-                      "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) "
-                      "Gecko/20100101 Firefox/74.0");
 
+    QString ua = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) "
+                 "Gecko/20100101 Firefox/74.0";
     if (!headers.isEmpty()) {
         for (const auto &header : headers) {
+            if (header.first == "User-Agent") {
+                ua = header.second.toUtf8();
+                continue;
+            }
             request.setRawHeader(header.first.toUtf8(), header.second.toUtf8());
         }
     }
+    request.setHeader(QNetworkRequest::UserAgentHeader, ua);
 
     if (postData.isNull()) {
-        // GET
+        // GET iff postData is null, as "" is in use for POST w/o postData
         // No body -> no Content-Type
         reply = manager->getRequest(request);
     } else if (postData == "HEAD") {

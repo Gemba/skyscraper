@@ -17,7 +17,11 @@ humans](https://keepachangelog.com).
   is now optional. It gets added automagically when no other query keyword is
   applied.
 - Updated: `mamemap.csv` for MAME 0.275
-- Fixed: TGDB scraper now tries harder to get wheel/logo mediafiles.
+- Fixed: (#122) Updated ZX-Spectrum scraper module. It uses now the site
+  `zxinfo.dk` and a web API. The API provides at least the same information as
+  the defunct search on `worldofspectrum.org`. Check out the added `--query=`
+  options for the [ZXInfo scraper](CLIHELP.md#-query-string).
+- Fixed: (#136) TGDB scraper now tries harder to get wheel/logo mediafiles.
   Thanks for reporting, @joyrider3774.
 
 ### Version 3.16.0 (2025-03-10)

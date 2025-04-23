@@ -111,7 +111,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "platform set with '-p'.\nLeave the '-s' option out to enable "
         "Skyscraper's gamelist generation mode.\n(WEB: 'arcadedb', 'igdb', "
         "'mobygames', 'openretro', 'screenscraper', 'thegamesdb' and "
-        "'worldofspectrum', LOCAL: 'esgamelist' and 'import')",
+        "'zxinfo' ('wos' and 'worldofspectrum' are also accepted), LOCAL: "
+        "'esgamelist' and 'import')",
         "MODULE", "");
     QCommandLineOption uOption(
         "u",

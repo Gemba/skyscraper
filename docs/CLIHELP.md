@@ -686,25 +686,32 @@ If you apply the query option with a game filename, the flag `--refresh` (see be
 
 Not all of the scraping modules are search name based. For instance, the `screenscraper` module can use a variety of different search methods. So for screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file doesn't match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.
 
-You can use any combination of `crc=<CHECKSUM>`, `md5=<CHECKSUM>`, `sha1=<CHECKSUM>` and `romnom=<FILENAME>` (without the `<` and `>`! Also "romnom" is "rom name" in French - Screenscraper is operated from France). Most times you only need one of these, but you can combine them by separating them with a `&`.
+You can use any combination of `crc=<CHECKSUM>`, `md5=<CHECKSUM>`, `sha1=<CHECKSUM>` and `romnom=<FILENAME>` (without the `<` and `>`! Also "romnom" is "rom name" in French - Screenscraper is operated from France). From Skyscraper 3.17 onwards you can also omit the `romnom=` search keyword when using the title search. Most times you only need one of these, but you can combine them by separating them with a `&`.
 
-The Mobygames scraper supports the romname directly in the `--query` parameter, but also accepts the game id from the mobygames site which you can find when manually looking up a game in the "Identifiers" section of the game details page (lower third of page).
+The `mobygames` scraper supports the romname directly in the `--query` parameter, but also accepts the game id from the mobygames site which you can find when manually looking up a game in the _"_Identifiers_"_ section of the game details page (lower third of page).
+
+The `zxinfo` (formerly `worldofspectrum`) scraper supports the romname directly in the `--query` parameter, but also accepts the game id from the ZXInfo site in URL of the detail page of a game. E.g., `https://zxinfo.dk/details/0001303`, has the id `1303` in the URL path, valid queries with id are either `--query="id=1303"` or `--query="01303"`. Note the heading `0` in the latter case, if it is missing Skyscraper will search with a game title containing _1303_. Also you can search by MD5 or SHA512 (sic!) hash of your local ZX-Spectrum game file. To do so, provide either the 32 character hexstring of `md5sum <gamefile>` hash or the 128 character hexstring of `sha512sum <gamefile>`.
 
 For other scraping module's query capabilities see the [overview page](SCRAPINGMODULES.md#recognized-keywords-in-query).
 
 !!! tip
 
-    The `--query` option is an advanced option, but it's very useful to get results for those last difficult roms missing in your gamelist.
+    The `--query` option is an advanced option, but it's very useful to get results for those last difficult roms missing in your gamelist. You may also want to add `--flags interactive` to overrule the automatic matching of gametitle and gamefile of Skyscraper.
 
 **Example(s)**
 
 ```
 $ Skyscraper -p snes -s thegamesdb --query "rick+dangerous" /absolute/or/relative/path/to/rom.zip
 $ Skyscraper -p snes -s screenscraper --query "md5=<CHECKSUM>" /absolute/or/relative/path/to/rom.zip
-$ Skyscraper -p snes -s screenscraper --query "romnom=file%20name.zip" /absolute/or/relative/path/to/rom.zip
-$ Skyscraper -p snes -s screenscraper --query "sha1=<CHECKSUM>&romnom=file%20name.zip" /absolute/or/relative/path/to/rom.zip
+$ Skyscraper -p snes -s screenscraper --query "<game title> or <romfile>" /absolute/or/relative/path/to/rom.zip
+$ Skyscraper -p snes -s screenscraper --query "sha1=<CHECKSUM>&romnom=yaddayadda" /absolute/or/relative/path/to/rom.zip
+# 14576 is the MobyGames Game Id
 $ Skyscraper -p ports -s mobygames --query "14576" "~/RetroPie/roms/ports/Head over Heels.sh"
 $ Skyscraper -p zxspectrum -s gamebase --query "*Deathc*" --verbosity 3 "~/RetroPie/roms/zxspectrum/game.tzx
+# 1303 is the ZXInfo / World of Spectrum Game Id
+$ Skyscraper -p zxspectrum -s zxinfo --query "01303" "~/RetroPie/roms/zxspectrum/Deathchase.zip
+# 4443397... is the MD5 hashsum of Deathchase.zip for example
+$ Skyscraper -p zxspectrum -s zxinfo --query "4443397ad973cc066e06d9854cc69035" "~/RetroPie/roms/zxspectrum/Deathchase.zip
 ```
 
 ### --refresh

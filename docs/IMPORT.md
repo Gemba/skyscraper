@@ -8,7 +8,7 @@ The following describes how to import your own custom textual, artwork and / or 
 
 !!! info
 
-    Be sure to also check the `--cache edit` option [here](CLIHELP.md#--cache-editnewtype).
+    Be sure to also check the `--cache edit` option [here](CLIHELP.md#-cache-editnewtype).
 
 ### Images, Videos and Game Manuals
 
