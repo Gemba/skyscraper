@@ -943,7 +943,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     if (config.importFolder.isEmpty()) {
-        config.importFolder = Config::getSkyFolder(Config::SkyFolderType::IMPORT);
+        config.importFolder =
+            Config::getSkyFolder(Config::SkyFolderType::IMPORT);
     }
     // If platform subfolder exists for import path, use it
     QDir importFolder(config.importFolder);
@@ -1040,11 +1041,14 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.refresh = true;
     }
 
-    if (!config.userCreds.isEmpty() && config.userCreds.contains(":")) {
+    if (!config.userCreds.isEmpty()) {
         QList<QString> userCreds = config.userCreds.split(":");
         if (userCreds.length() == 2) {
             config.user = userCreds.at(0);
             config.password = userCreds.at(1);
+        } else if (userCreds.length() == 1) {
+            // API key
+            config.password = userCreds.at(0);
         }
     }
 
@@ -1129,13 +1133,17 @@ void Skyscraper::prepareScraping() {
         prepareIgdb(netComm, q);
     } else if (config.scraper == "mobygames" && config.threads != 1) {
         printf(
-            "\033[1;33mForcing 1 thread to accomodate limits in MobyGames "
+            "\033[1;33mForcing one thread to accomodate limits in MobyGames "
             "scraping module. Also be aware that MobyGames has a request limit "
-            "of 360 requests per hour for the entire Skyscraper user base. So "
-            "if someone else is currently using it, it will quit.\033[0m\n\n");
-        // Don't change these! This limit was set by request from Mobygames
+            "of 720 requests per hour for a Hobbyist subscription.\033[0m\n\n");
         config.threads = 1;
-        config.romLimit = 35;
+        if (config.password.isEmpty()) {
+            printf("The MobyGames scraping module requires an API key to "
+                   "work. Read more about that here: "
+                   "'https://gemba.github.io/skyscraper/"
+                   "SCRAPINGMODULES#mobygames'\n");
+            exit(1);
+        }
     } else if (config.scraper == "screenscraper") {
         prepareScreenscraper(netComm, q);
     } else if (config.scraper == "gamebase") {

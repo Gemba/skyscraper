@@ -31,6 +31,7 @@
 
 #include <QJsonArray>
 #include <QRandomGenerator>
+#include <QStringBuilder>
 #include <cstdio>
 
 static inline QMap<QString, QString> mobyRegionMap() {
@@ -56,7 +57,7 @@ static inline QMap<QString, QString> mobyRegionMap() {
 MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
     connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
-    limitTimer.setInterval(10000); // 10 second request limit
+    limitTimer.setInterval(5000); // 5 second request limit (Hobbyist API)
     limitTimer.setSingleShot(false);
     limitTimer.start();
 
@@ -82,24 +83,15 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
 
     printf("Waiting as advised by MobyGames api restrictions...\n");
     limiter.exec();
-    bool ok;
-    int queryGameId = searchName.toInt(&ok);
-    QString req;
-    if (ok) {
-        req = QString(searchUrlPre + "?api_key=" +
-                      StrTools::unMagic(
-                          "175;229;170;189;188;202;211;117;164;165;185;209;164;"
-                          "234;180;155;199;209;224;231;193;190;173;175") +
-                      "&id=" + QString::number(queryGameId));
+    QString req = QString(searchUrlPre % "?api_key=" % config->password);
+    bool isMobyGameId;
+    int queryGameId = searchName.toInt(&isMobyGameId);
+    if (isMobyGameId) {
+        req = req % "&id=" % QString::number(queryGameId);
     } else {
-        req = QString(searchUrlPre + "?api_key=" +
-                      StrTools::unMagic(
-                          "175;229;170;189;188;202;211;117;164;165;185;209;164;"
-                          "234;180;155;199;209;224;231;193;190;173;175") +
-                      "&title=" + searchName +
-                      (platformId == -1
-                           ? ""
-                           : "&platform=" + QString::number(platformId)));
+        req = req % "&title=" % searchName %
+              (platformId == -1 ? ""
+                                : "&platform=" + QString::number(platformId));
         queryGameId = 0;
     }
     qDebug() << "Request: " << req;
@@ -113,10 +105,8 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
     }
 
     if (jsonDoc.object()["code"].toInt() == 429) {
-        printf(
-            "\033[1;31mToo many requests! This is probably because some other "
-            "Skyscraper user is currently using the 'mobygames' module. Please "
-            "wait a while and try again.\n\nNow quitting...\033[0m\n");
+        printf("\033[1;31mToo many requests! Please wait a while and try "
+               "again.\n\nNow quitting...\033[0m\n");
         reqRemaining = 0;
     }
 
@@ -135,11 +125,9 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
         while (!jsonPlatforms.isEmpty()) {
             QJsonObject jsonPlatform = jsonPlatforms.first().toObject();
             int gamePlafId = jsonPlatform["platform_id"].toInt();
-            game.url = searchUrlPre + "/" + game.id + "/platforms/" +
-                       QString::number(gamePlafId) + "?api_key=" +
-                       StrTools::unMagic(
-                           "175;229;170;189;188;202;211;117;164;165;185;209;"
-                           "164;234;180;155;199;209;224;231;193;190;173;175");
+            game.url = searchUrlPre % "/" % game.id % "/platforms/" %
+                       QString::number(gamePlafId) % "?api_key=" %
+                       config->password;
             game.releaseDate = jsonPlatform["first_release_date"].toString();
             game.platform = jsonPlatform["platform_name"].toString();
             bool matchPlafId = gamePlafId == platformId;
@@ -281,7 +269,7 @@ void MobyGames::getCover(GameEntry &game) {
     fflush(stdout);
     limiter.exec();
     QString req = QString(
-        game.url.left(game.url.indexOf("?api_key=")) + "/covers" +
+        game.url.left(game.url.indexOf("?api_key=")) % "/covers" %
         game.url.mid(game.url.indexOf("?api_key="),
                      game.url.length() - game.url.indexOf("?api_key=")));
     qDebug() << "Covers request" << req;
@@ -372,7 +360,7 @@ void MobyGames::getScreenshot(GameEntry &game) {
     fflush(stdout);
     limiter.exec();
     netComm->request(
-        game.url.left(game.url.indexOf("?api_key=")) + "/screenshots" +
+        game.url.left(game.url.indexOf("?api_key=")) % "/screenshots" %
         game.url.mid(game.url.indexOf("?api_key="),
                      game.url.length() - game.url.indexOf("?api_key=")));
     q.exec();

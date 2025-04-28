@@ -144,10 +144,9 @@ The database also supports many non-Amiga platforms, but there's no doubt that A
 - Shortname: _`mobygames`_
 - Type: _Online_
 - Website: _[www.mobygames.com](https://www.mobygames.com)_
-- Type: _File name search based_
+- Type: _File name_ or _Moby Games ID_ search based
 - User credential support: _None required_
-- API request limit: _1 request per 10 seconds_
-- Rom limit per run: _35_
+- API request limit: _1 request per 5 seconds (Hobbyist subscription)_
 - Thread limit: _1_
 - Platform support: _[List](https://www.mobygames.com/browse/games)_ or see `mobygames_platforms.json` sibling to your `config.ini`
 - Media support: _`cover`, `screenshot`_
@@ -157,9 +156,7 @@ The database also supports many non-Amiga platforms, but there's no doubt that A
 
 MobyGames. What can I say. If you haven't heard about this database before you've been missing out. It's one of the best and oldest games databases on the internet. You'll probably come across references to MobyGames on other sites when searching for retro games. There's a reason for that - it's that good.
 
-There's a caveat to the module as it has quite strong restrictions for the number of requests that are allowed at any given time. This restriction is global for the entire Skyscraper user base, which means that it might quit on you if other users are currently scraping from it. For this reason it has been strongly limited inside of Skyscraper by forcing a maximum number of rom scrapings per run.
-
-Please use this module sparingly. And only ever use it to scrape those last few roms you can't get any data for using any of the other sources.
+There's a caveat to the module as it requires a subscription to get an API key, but you get well curated game information especially for hard to find titles. Examine the possible options: https://www.mobygames.com/api/subscribe/. Once you have obtained an API key add it to the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the [mobygames] INI section.
 
 ### IGDB
 
@@ -168,7 +165,7 @@ Please use this module sparingly. And only ever use it to scrape those last few 
 - Shortname: _`igdb`_
 - Type: _Online_
 - Website: _[www.igdb.com](https://www.igdb.com)_
-- Type: _File name search based_
+- Type: _File name_ or _IGDB Game Id_ search based
 - User credential support: _Yes, free private API client-id and secret-key required! Read more below_
 - API request limit: _A maximum of 4 requests per seconds is allowed_
 - Thread limit: _4 (each being limited to 1 request per second)_
@@ -202,7 +199,7 @@ Substitute CLIENTID and SECRETKEY with your own details. And that's it, you shou
 - Shortname:  _`zxinfo`_, _`worldofspectrum`_, _`wos`_
 - Type: _Online_
 - Website: _[zxinfo.dk](https://zxinfo.dk)_
-- Type: _File name search based_
+- Type: _File name search_, _Game Id search_ or _Game hash search_
 - User credential support: _None required_
 - API request limit: _None_
 - Thread limit: _None_
@@ -249,7 +246,7 @@ Read a thorough description of this module [here](IMPORT.md).
 - Shortname: _`gamebase`_
 - Type: _Local_
 - Website: _[about the format](https://www.bu22.com/wiki/home)_
-- Type: _Exact filename, title or CRC match, for filename and title wildcards * and ? can be applied anywhere_
+- Type: _filename, title or CRC match, for filename and title wildcards '*' and '?' can be applied anywhere_
 - User credential support: _None required_
 - API request limit: _None_
 - Thread limit: 1

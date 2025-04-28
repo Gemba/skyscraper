@@ -22,6 +22,8 @@ humans](https://keepachangelog.com).
   is now optional. It gets added automagically when no other query keyword is
   applied.
 - Updated: `mamemap.csv` for MAME 0.275
+- Fixed: (#150) Enable MobyGames scraper usage with personal API key. Thanks,
+  @risalt and to the constructive support at MobyGames.
 - Fixed: (#122) Updated ZX-Spectrum scraper module. It uses now the site
   `zxinfo.dk` and a web API. The API provides at least the same information as
   the defunct search on `worldofspectrum.org`. Check out the added `--query=`
