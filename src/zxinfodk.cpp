@@ -38,7 +38,7 @@
 #include <QStringBuilder>
 
 static const QList<QPair<QString, QString>>
-    headers({QPair("User-Agent", "Skyscraper / " VERSION)});
+    headers({QPair(QString("User-Agent"), QString("Skyscraper / ").append(VERSION))});
 static const QString mediaUrl = "https://zxinfo.dk/media";
 
 ZxInfoDk::ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager)

@@ -8,6 +8,8 @@ CONFIG += release
 # set std-C++17 for clang and gcc
 CONFIG += c++1z
 QT += core network sql xml
+# for GCC8 (RetroPie Buster)
+LIBS += -lstdc++fs
 
 # Installation prefix path for bin/Skyscraper and etc/skyscraper/*
 PREFIX=$$(PREFIX)
