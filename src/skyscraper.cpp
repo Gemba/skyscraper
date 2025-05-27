@@ -152,7 +152,7 @@ void Skyscraper::run() {
 
     cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
     if (cacheScrapeMode || cache->createFolders(config.scraper)) {
-        if (cacheScrapeMode && !cache->read()) {
+        if (!cache->read() && cacheScrapeMode) {
             printf("No resources for this platform found in the resource "
                    "cache ('%s'). Please verify the path of the cache or "
                    "specify a scraping module with '-s' to gather some "
