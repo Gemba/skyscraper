@@ -9,9 +9,11 @@ CONFIG += release
 CONFIG += c++1z
 QT += core network sql xml
 
-# for GCC8 (RetroPie Buster)
-system( g++ --version | grep "^g++" | grep -c "8.3." ) {
-  LIBS += -lstdc++fs
+unix {
+  # for GCC8 (RetroPie Buster)
+  system( g++ --version | grep "^g++" | grep -c "8.3." >/dev/null ) {
+    LIBS += -lstdc++fs
+  }
 }
 
 # Installation prefix path for bin/Skyscraper and etc/skyscraper/*
