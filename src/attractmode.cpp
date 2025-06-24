@@ -31,6 +31,7 @@
 #include "strtools.h"
 
 #include <QDate>
+#include <QDebug>
 #include <QStringBuilder>
 #include <QStringList>
 
@@ -272,10 +273,16 @@ QString AttractMode::getInputFolder() {
 QString AttractMode::getGameListFolder() {
     // For RetroPie this is linked directly to
     // /opt/retropie/configs/all/attractmode/romlists/
-    if (QFileInfo::exists(QDir::homePath() % "/.attract/romlists")) {
-        return QString(QDir::homePath() % "/.attract/romlists");
+    const QString romlists = QDir::homePath() % "/.attract/romlists";
+    if (QFileInfo::exists(romlists)) {
+        return romlists;
     }
-    return QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
+
+    const QString altRomlists =
+        QString(QDir::homePath() % "/RetroPie/roms/" % config->platform);
+    qWarning() << "Attractmode default folder not existing" << romlists
+               << " Using " << altRomlists;
+    return altRomlists;
 }
 
 QString AttractMode::getCoversFolder() { return getMediaTypeFolder("flyer"); }
