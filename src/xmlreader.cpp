@@ -31,9 +31,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-XmlReader::XmlReader(QString gameListFolder) {
-    this->gameListFolder = gameListFolder;
-}
+XmlReader::XmlReader(QString inputFolder) { this->inputFolder = inputFolder; }
 
 XmlReader::~XmlReader() {}
 
@@ -76,27 +74,27 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         const QDomNode node = nodes.at(a);
 
         entry.path = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("path").text());
+            inputFolder, node.firstChildElement("path").text());
 
         addTextual(entry, node);
 
         // thumbnail only for ES
         entry.coverFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("thumbnail").text());
+            inputFolder, node.firstChildElement("thumbnail").text());
 
         entry.screenshotFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("image").text());
+            inputFolder, node.firstChildElement("image").text());
         entry.marqueeFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("marquee").text());
+            inputFolder, node.firstChildElement("marquee").text());
         entry.textureFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("texture").text());
+            inputFolder, node.firstChildElement("texture").text());
         entry.videoFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("video").text());
+            inputFolder, node.firstChildElement("video").text());
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
         entry.manualFile = Config::makeAbsolutePath(
-            gameListFolder, node.firstChildElement("manual").text());
+            inputFolder, node.firstChildElement("manual").text());
 
         for (const auto &t : gamelistExtraTags) {
             entry.setEsExtra(t, node.firstChildElement(t).text());

@@ -342,7 +342,7 @@ QString Config::makeAbsolutePath(const QString &prePath, QString subPath) {
 
     Q_ASSERT(QFileInfo(prePath).isAbsolute());
 
-    if (QFileInfo(subPath).isAbsolute())
+    if (QFileInfo(subPath).isAbsolute() || subPath.startsWith("~/"))
         return subPath;
 
     if (subPath.startsWith("../"))

@@ -920,11 +920,32 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // defaults are always absolute, thus input and mediafolder will be
     // unchanged by these calls
-    config.inputFolder =
-        Config::makeAbsolutePath(config.gameListFolder, config.inputFolder);
-    config.mediaFolder =
-        Config::makeAbsolutePath(config.gameListFolder, config.mediaFolder);
-
+    if (config.frontend == "pegasus") {
+        config.inputFolder =
+            Config::makeAbsolutePath(config.gameListFolder, config.inputFolder);
+        config.mediaFolder =
+            Config::makeAbsolutePath(config.gameListFolder, config.mediaFolder);
+    } else {
+        QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
+        if (inputDirFileInfo.isRelative()) {
+            printf("Bummer! The parameter 'inputFolder' is provided as "
+                   "relative path which is not valid for this frontend. "
+                   "Provide the input folder as absolute path to remediate. "
+                   "Now quitting...\n");
+            exit(1);
+        }
+        if (config.inputFolder != config.gameListFolder &&
+            inputDirFileInfo.canonicalFilePath() ==
+                frontend->getInputFolder()) {
+            // edge case: user has provided a inputFolder symlink which expands
+            // to frontend->getInputFolder() and mediafolder is relative.
+            // Rationale: ES expects relative paths to media files defined in
+            // gamelist.xml relative to frontend->getInputFolder()
+            config.inputFolder = frontend->getInputFolder();
+        }
+        config.mediaFolder =
+            Config::makeAbsolutePath(config.inputFolder, config.mediaFolder);
+    }
     config.inputFolder = Config::lexicallyNormalPath(config.inputFolder);
     config.mediaFolder = Config::lexicallyNormalPath(config.mediaFolder);
 

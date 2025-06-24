@@ -3,7 +3,7 @@
 This page describes how Skyscraper processes the different paths and especially
 how the absolute path is calculated when a you provide a relative path.
 
-Do not get confused by the lenghty flow diagram below. It covers gamelist folder,
+Do not get confused by the lenghty flow diagram below. It covers game list folder,
 input folder and media folder handling. You wiil notice that input folder and
 media folder are processed in the same manner.
 
@@ -23,14 +23,6 @@ symbolic links are not resolved.
 Remember the precedence of [CLI and configuration
 options](CONFIGINI.md#configini-options) when you read through this document.
 
-!!! tip "In a Nutshell"
-
-    Key takeaway is that a relative input folder and relative media folder are
-    always calculated to an absolute folder in relation to the absolute gamelist
-    folder. When you apply [`relativePaths="true"`](CONFIGINI.md#relativepaths),
-    they will be generated with the relative path in respect to the gamelist-
-    or metadata-output (in Pegasus terms) path.
-
 Now, let's see how Skyscraper handles relative path configuration options.
 
 ### Computing the Absolute Path from ...
@@ -38,72 +30,81 @@ Now, let's see how Skyscraper handles relative path configuration options.
 a relative path provided. The next subsections are summarizing the absolute path
 calculation of the different path and file options.
 
-#### Current Working Directory
+#### ... Current Working Directory
 
 The current working directory (CWD) is the directory from where you run
-Skyscraper. The absolute path is computed as `<CWD>/<option-value>` for these
-CLI options and their values:
+Skyscraper. The absolute path is computed as `<CWD>/<parameter-value>` for these
+CLI parameters and their values:
 
 `-a <artwork.xml>`  
 `-c <configfile>`  
 `-g <gamelistfolder>`  
 `-d <cachefolder>`
 
-This means the first part of the flow diagram (Gamelist folder) also applies to
-`-a` and `-d` options and their configfile counterparts.
+This means the first part of the flow diagram (resolution of Gamelist folder)
+also applies to `-a` and `-d` options and their configfile counterparts.
 
-In contrast, when you provide these three (`<artwork.xml>`,`<gamelistfolder>`
-and `<cachefolder>`) in a configuration INI-file the absolute path it determined
-from the absolute path of the config file. See
-[below](#an-option-in-a-configuration-ini-file).
+In contrast, when you use one of the three parameters
+(`<artwork.xml>`,`<gamelistfolder>` and `<cachefolder>`) in a configuration
+INI-file the absolute path it determined from the absolute path of the config
+file. See [below](#an-option-in-a-configuration-ini-file).
 
-#### Skyscraper Built-in Config Directory
+#### ... Skyscraper Built-in Config Directory
 
-This is usually `/home/<USER>/.skyscraper/` (base). With [XDG](XDG.md) it is
+This is usually `/home/<USER>/.skyscraper/` (=_base_). With [XDG](XDG.md) it is
 slightly different. The files provided with these options
 
 `--excludeFrom <excludes.txt>`  
 `--includeFrom <includes.txt>`
 
-are searched in that directory by concatenating the base and for example the
-exclude file. If not found, Skyscraper tries to access them with the current
-working directory as base.
+are searched by concatenating the _base_ and for example the exclude file. If
+not found, Skyscraper tries to access it with the current working directory as
+_base_. If it is not found in any of these locations Skyscraper end with an
+error message.
 
-#### the Gamelist Folder
+#### ... the Gamelist Folder
 
 If you define a Gamelist folder either via `-g` or via `gameListFolder=`
-(INI-file) this is the base for the relative paths of
+(INI-file) and are using a frontend for EmulationStation (or any other frontend,
+which is not Pegasus) then the input folder must provided absolute and can not
+be relative. The media folder, if relative, is then assumed to be relative to
+the input folder.
 
-`-i <folder>` or `inputFolder=<folder>`  
-`-o <folder>` or `mediaFolder=<folder>`
+However, if you selected the Pegasus frontend then the input folder may be
+relative. The input folder and media folder, when relative, are then interpreted
+by Skyscraper to be relative to the game list folder.
 
 This is also depicted in the diagram above.
 
-#### Input Folder (ROM-/gamefile-path)
+#### ... Input Folder (ROM-/gamefile-path)
 
 The files provided with these options
 
-`--startAt <game-file-A>`  
-`--endAr <game-file-B>`
+`--startAt <ROM-or-game-file-A>`  
+`--endAt <ROM-or-game-file-B>`
 
-are first searched in the current working directory. If not found,
-Skyscraper tries to access them in the input folder.
+are first searched in the current working directory. If not found, Skyscraper
+tries to access them in the input folder. If they are not found at all
+Skyscraper silently assumes that `--startAt` respective `--endAt` are not set.
 
-#### an Option in a Configuration INI File
+#### ... an Option in a Configuration INI File
 
-When you have set one of the following parameters in the default configuration
-file (`/home/<USER>/.skyscraper/config.ini`) or in a custom config file defined
-with `-c <configfile>` the path is calculated from the absolute path of
-the location of the config INI-file.
+When you have set one of the four following parameters in the default
+configuration file (`/home/<USER>/.skyscraper/config.ini`) or in a custom config
+file defined with `-c <configfile>` the path is calculated from the absolute
+path of the location of the config INI-file.
 
-`artworkXml=<artwork.xml>`  
-`gameListFolder=<gamelistfolder>`  
-`cacheFolder<cachefolder>`
-`importFolder<importfolder>`
+```ini
+artworkXml=<artwork.xml>
+gameListFolder=<gamelistfolder>
+cacheFolder=cachefolder>
+importFolder=<importfolder>
+```
+
+Remember, that the path calculation for the paramters `artworkXml`,
+`gameListFolder` and `cacheFolder` differs when using their CLI
+counterparts, see [CLI options](#current-working-directory) above.
 
 !!! note
 
     The `importFolder=` parameter has no counterpart on the command line.
-
-Remember, that this path calculation is different than the logic when using [CLI
-options](#current-working-directory).

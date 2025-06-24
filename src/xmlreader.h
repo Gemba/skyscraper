@@ -32,7 +32,7 @@
 
 class XmlReader : public QDomDocument {
 public:
-    XmlReader(QString gameListFolder);
+    XmlReader(QString inputFolder);
     ~XmlReader();
     bool setFile(QString filename);
     QList<GameEntry> getEntries(const QStringList &gamelistExtraTags);
@@ -42,7 +42,7 @@ private:
                     const QStringList &gamelistExtraTags,
                     bool isFolder = false);
     void addTextual(GameEntry &entry, const QDomNode &node);
-    QString gameListFolder;
+    QString inputFolder;
 };
 
 #endif // XMLREADER_H

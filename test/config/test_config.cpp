@@ -37,6 +37,10 @@ private slots:
         // -> complete value is empty -> do not output in/for frontend
         QCOMPARE(Config::makeAbsolutePath("/blarf/blubb////", ""),
                  "");
+        // ES writes ~/bla in some circumstance instead of absolute path /home/foo/bla
+        // --> return unchanged        
+        QCOMPARE(Config::makeAbsolutePath("/home/pi/RetroPie/roms", "~/.emulationstation/downloaded_media/apple2/videos/loderunr.mp4"),
+                 "~/.emulationstation/downloaded_media/apple2/videos/loderunr.mp4");
     }
 
     void testAbsWithRel() {
@@ -62,6 +66,13 @@ private slots:
         QString actual = Config::lexicallyRelativePath(
             "/home/pi/RetroPie/roms", "/home/pi/RetroPie/roms/amiga");
         QCOMPARE(actual, "amiga");
+        actual = Config::lexicallyRelativePath(
+            "/home/pi/RetroPie/roms/amiga", "/home/pi/RetroPie/roms/amiga/screen.png");
+        QCOMPARE(actual, "screen.png");
+        // inputFolder is not the default
+        actual = Config::lexicallyRelativePath(
+            "/home/pi/inputfolder/some/where/else/amiga", "/home/pi/RetroPie/roms/amiga");
+        QCOMPARE(actual, "../../../../../RetroPie/roms/amiga");
         actual = Config::lexicallyRelativePath("/path/to/pegasus/",
                                                "/path/to/pegasus/../roms/snes");
         QCOMPARE(actual, "../roms/snes");

@@ -74,7 +74,7 @@ void TestSettings::testConfigIniPaths() {
     params.append("../rel/artworks/artwork.xml");
     parser->parse(params);
     rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
-    exp = Config::makeAbsolutePath(config.currentDir, params.last());
+    exp = Config::lexicallyNormalPath(Config::makeAbsolutePath(config.currentDir, params.last()));
     QCOMPARE(config.artworkConfig, exp);
 
     params.removeLast();
@@ -104,6 +104,9 @@ void TestSettings::testConfigIniPaths() {
     rtConf->applyConfigIni(RuntimeCfg::CfgType::PLATFORM, &settings,
                            inputFolderSet, gameListFolderSet, mediaFolderSet);
     settings.endGroup();
+
+    exp = Config::makeAbsolutePath(config.currentDir, "amiga_artwork.xml");
+    QCOMPARE(config.artworkConfig, exp);
 
     exp = Config::makeAbsolutePath(config.currentDir, "cfgini/rel/gamelist");
     QCOMPARE(config.gameListFolder, exp);

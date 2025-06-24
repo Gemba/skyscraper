@@ -42,7 +42,7 @@ EmulationStation::EmulationStation() {}
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // Load old game list entries so we can preserve metadata later when
     // assembling xml
-    XmlReader gameListReader = XmlReader(config->gameListFolder);
+    XmlReader gameListReader = XmlReader(config->inputFolder);
     if (gameListReader.setFile(gameListFileString)) {
         oldEntries = gameListReader.getEntries(extraGamelistTags(true));
         return true;
@@ -240,7 +240,7 @@ void EmulationStation::assembleList(QString &finalOutput,
 
         if (config->relativePaths) {
             entry.path = "./" + Config::lexicallyRelativePath(
-                                    config->gameListFolder, entry.path);
+                                    config->inputFolder, entry.path);
         }
         finalOutput.append(createXml(entry));
     }
@@ -361,12 +361,15 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
             e = QString(INDENT % INDENT % "<%1/>").arg(elem);
         }
     } else {
-        QString d = data;
+        QString fp = data;
         if (isPath && config->relativePaths) {
-            d = "./" + Config::lexicallyRelativePath(config->gameListFolder, d);
+            // fp is absolute, inputFolder is absolute
+            // fp is always different from inputFolder
+            // save to add "./" as it will always return sth relative
+            fp = "./" + Config::lexicallyRelativePath(config->inputFolder, fp);
         }
-        d = StrTools::xmlEscape(d);
-        e = QString(INDENT % INDENT % "<%1>%2</%1>").arg(elem, d);
+        fp = StrTools::xmlEscape(fp);
+        e = QString(INDENT % INDENT % "<%1>%2</%1>").arg(elem, fp);
     }
     return e;
 }

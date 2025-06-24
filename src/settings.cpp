@@ -159,31 +159,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "artworkXml") {
-                if (QFileInfo(v).isRelative()) {
-                    QString configIniAbsPath =
-                        QFileInfo(config->configFile).absolutePath();
-                    config->artworkConfig =
-                        Config::concatPath(configIniAbsPath, v);
-                } else {
-                    config->artworkConfig = v;
-                }
-                config->artworkConfig =
-                    Config::lexicallyNormalPath(config->artworkConfig);
+                config->artworkConfig = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "cacheFolder") {
-                config->cacheFolder =
-                    (type == CfgType::MAIN)
+                v = (type == CfgType::MAIN)
                         ? Config::concatPath(v, config->platform)
                         : v;
-                if (QFileInfo(config->cacheFolder).isRelative()) {
-                    QString configIniAbsPath =
-                        QFileInfo(config->configFile).absolutePath();
-                    config->cacheFolder = Config::concatPath(
-                        configIniAbsPath, config->cacheFolder);
-                }
-                config->cacheFolder =
-                    Config::lexicallyNormalPath(config->cacheFolder);
+                config->cacheFolder = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "emulator") {
@@ -216,19 +199,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "gameListFolder") {
-                config->gameListFolder =
-                    (type == CfgType::MAIN ||
+                v = (type == CfgType::MAIN ||
                      type == CfgType::FRONTEND /* #68 */)
                         ? Config::concatPath(v, config->platform)
                         : v;
-                if (QFileInfo(config->gameListFolder).isRelative()) {
-                    QString configIniAbsPath =
-                        QFileInfo(config->configFile).absolutePath();
-                    config->gameListFolder = Config::concatPath(
-                        configIniAbsPath, config->gameListFolder);
-                }
-                config->gameListFolder =
-                    Config::lexicallyNormalPath(config->gameListFolder);
+                config->gameListFolder = toAbsolutePath(false, v);
                 gameListFolderSet = true;
                 continue;
             }
@@ -240,15 +215,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "importFolder") {
-                config->importFolder = v;
-                if (QFileInfo(config->importFolder).isRelative()) {
-                    QString configIniAbsPath =
-                        QFileInfo(config->configFile).absolutePath();
-                    config->importFolder = Config::concatPath(
-                        configIniAbsPath, config->importFolder);
-                }
-                config->importFolder =
-                    Config::lexicallyNormalPath(config->importFolder);
+                config->importFolder = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "gameBaseFile") {
@@ -602,14 +569,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         inputFolderSet = true;
     }
     if (parser->isSet("g")) {
-        config->gameListFolder = parser->value("g"); // assume absolute
-        if (QFileInfo(config->gameListFolder).isRelative()) {
-            // make absolute
-            config->gameListFolder =
-                Config::concatPath(config->currentDir, config->gameListFolder);
-        }
-        config->gameListFolder =
-            Config::lexicallyNormalPath(config->gameListFolder);
+        config->gameListFolder = toAbsolutePath(true, parser->value("g"));
         gameListFolderSet = true;
     }
     if (parser->isSet("o")) {
@@ -617,11 +577,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         mediaFolderSet = true;
     }
     if (parser->isSet("a")) {
-        config->artworkConfig = parser->value("a"); // assume absolute
-        if (QFileInfo(config->artworkConfig).isRelative()) {
-            config->artworkConfig =
-                Config::concatPath(config->currentDir, config->artworkConfig);
-        }
+        config->artworkConfig = toAbsolutePath(true, parser->value("a"));
     } else if (config->artworkConfig.isEmpty()) {
         // failsafe: no CLI and no config.ini artworkConfig provided
         config->artworkConfig =
@@ -636,11 +592,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->userCreds = parser->value("u");
     }
     if (parser->isSet("d")) {
-        config->cacheFolder = parser->value("d");
-        if (QFileInfo(config->cacheFolder).isRelative()) {
-            config->cacheFolder =
-                Config::concatPath(config->currentDir, config->cacheFolder);
-        }
+        config->cacheFolder = toAbsolutePath(true, parser->value("d"));
     } else if (config->cacheFolder.isEmpty()) {
         // failsafe: no CLI and no config.ini cacheFolder provided
         config->cacheFolder = Config::concatPath(
@@ -849,4 +801,15 @@ bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,
         return false;
     }
     return true;
+}
+
+QString RuntimeCfg::toAbsolutePath(bool isCliOpt, QString optionVal) {
+    if (QFileInfo(optionVal).isRelative()) {
+        // make absolute
+        const QString configIniAbsPath =
+            QFileInfo(config->configFile).absolutePath();
+        optionVal = Config::concatPath(
+            isCliOpt ? config->currentDir : configIniAbsPath, optionVal);
+    }
+    return Config::lexicallyNormalPath(optionVal);
 }
