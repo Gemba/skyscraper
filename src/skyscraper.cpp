@@ -111,7 +111,7 @@ void Skyscraper::run() {
         printf("Videos folder:      '\033[1;32m%s\033[0m'\n",
                config.videosFolder.toStdString().c_str());
     }
-    if (config.manuals) {
+    if (config.manuals && !config.manualsFolder.isEmpty()) {
         printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
                config.manualsFolder.toStdString().c_str());
     }
