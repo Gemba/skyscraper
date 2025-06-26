@@ -627,7 +627,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 #### unattend
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _never_ skip existing entries, in other words: the game list will be newly created. This is flag useful for example when scripting Skyscraper to avoid the need for user input.
+Before a game list creation Skyscraper will check if it already exists and ask if you want to overwrite it, when neither the `unattend` nor the `unattendskip` option is set true. By setting this option or `unattendskip` to true Skyscraper will overwrite an existing game list without confirmation question. This is useful when scripting Skyscraper to avoid the need for user input. Additionally, if this option or `unattendskip` is set to true, the cache operations `purge:all` and `vacuum` will _not_ prompt you with a confirmation question.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
@@ -636,7 +636,13 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
 
 #### unattendSkip
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By enabling this option Skyscraper will _always_ overwrite an existing game list and _always_ skip existing entries, in other words: game list entries are added if not present in the gamelist, existing entries are left untouched. This flag is useful for example when scripting Skyscraper to avoid the need for user input.
+Before a game list creation Skyscraper will ask if you want to skip existing game entries (i.e. not recreate from cache) in an existing game list, when the `unattend` and the `unattendskip` option are set false. By setting this option to true and having `unattend` set to false, Skyscraper will skip existing entries without prompting you. This is useful when scripting Skyscraper to avoid the need for user input. This option has no effect (i.e. an existing game list entry will be always recreated) when either
+
+- `unattend` is set to true or
+- you use the `--query` parameter or
+- the frontend generator does not support preserving a complete gameentry.
+
+If this option or the `unattend` option is true, the cache operations `purge:all` and `vacuum` will _not_ prompt you with a confirmation question.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`

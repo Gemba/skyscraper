@@ -572,11 +572,17 @@ Game titles are returned from the scraping sources sometimes as 'The Game' and o
 
 #### unattend
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By using this flag Skyscraper will _always_ overwrite an existing game list and _never_ skip existing entries. This is useful when scripting Skyscraper to avoid the need for user input. Consider setting this in [`config.ini`](CONFIGINI.md#unattend) instead.
+Before a game list creation Skyscraper will check if it already exists and ask if you want to overwrite it, when neither `unattend` nor `unattendskip` are set. By setting this flag or `unattendskip` Skyscraper will overwrite an existing game list without confirmation question. This is useful when scripting Skyscraper to avoid the need for user input. Additionally, if this flag or `unattendskip` is set on the cache operations `purge:all` and `vacuum` you will _not_ get a confirmation question. Consider setting this in [`config.ini`](CONFIGINI.md#unattend) instead.
 
 #### unattendskip
 
-When generating a game list Skyscraper will check if it already exists and ask if you want to overwrite it. And it will also ask if you wish to skip existing game list entries. By using this flag Skyscraper will _always_ overwrite an existing game list and _always_ skip existing entries. This is useful when scripting Skyscraper to avoid the need for user input. Consider setting this in [`config.ini`](CONFIGINI.md#unattendskip) instead.
+Before a game list creation Skyscraper will ask if you want to skip existing game entries (i.e. not recreate from cache) in an existing game list, when neither `unattend` nor `unattendskip` are set. By setting this flag and not having set `unattend` Skyscraper will skip existing entries. This is useful when scripting Skyscraper to avoid the need for user input. This flag has no effect (i.e. an existing game list entry will be always recreated) when either
+
+- `unattend` is set or
+- you use the `--query` parameter or
+- the frontend generator does not support preserving a complete gameentry.
+
+If this flag or `unattend` is set on the cache operations `purge:all` and `vacuum` you will _not_ get a confirmation question. Consider setting this in [`config.ini`](CONFIGINI.md#unattendskip) instead.
 
 #### unpack
 
