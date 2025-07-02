@@ -362,11 +362,19 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
         }
     } else {
         QString fp = data;
-        if (isPath && config->relativePaths) {
-            // fp is absolute, inputFolder is absolute
-            // fp is always different from inputFolder
-            // save to add "./" as it will always return sth relative
-            fp = "./" + Config::lexicallyRelativePath(config->inputFolder, fp);
+        if (isPath) {
+            if (config->relativePaths) {
+                // fp is absolute, inputFolder is absolute
+                // fp is always different from inputFolder
+                // save to add "./" as it will always return sth relative
+                fp = "./" +
+                     Config::lexicallyRelativePath(config->inputFolder, fp);
+            } else {
+                // edge case when unattendSkip=true and a new game is added to
+                // an existing gamelist with relative paths and relativePaths
+                // has been changed from also true to false in the same run
+                fp = Config::lexicallyNormalPath(fp);
+            }
         }
         fp = StrTools::xmlEscape(fp);
         e = QString(INDENT % INDENT % "<%1>%2</%1>").arg(elem, fp);
