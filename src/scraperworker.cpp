@@ -26,6 +26,7 @@
 #include "scraperworker.h"
 
 #include "arcadedb.h"
+#include "cache.h"
 #include "compositor.h"
 #include "esgamelist.h"
 #include "gamebase.h"
@@ -46,6 +47,7 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 #include <QTimer>
+#include <ios>
 #include <iostream>
 
 constexpr int UNDEF_YEAR = -1;
@@ -888,8 +890,12 @@ void ScraperWorker::copyMedia(const QString &mediaType,
     const QString mediaTypeFolder =
         isVideoType ? config.videosFolder : config.manualsFolder;
 
-    bool noCopy = true;
-    if (mediaTypeEnabled && fmt != "" && !fn.isEmpty() && QFile::exists(fn)) {
+    // assume to ignore the media in gamelist output if skip existing videos /
+    // manuals is _not_ set or media type is not enabled at all. NB: if
+    // skipExisting is false the zap flag will be set false iff copy/symlink
+    // fails
+    bool zapInGamelist = !skipExisting || !mediaTypeEnabled;
+    if (mediaTypeEnabled && fmt != "" && QFile::exists(fn)) {
         QString absMediaFn = completeBaseName % "." % fmt;
         if (subPath != ".") {
             absMediaFn = subPath % "/" % absMediaFn;
@@ -905,22 +911,30 @@ void ScraperWorker::copyMedia(const QString &mediaType,
         if (!(skipExisting && QFile::exists(absMediaFn))) {
             QFile::remove(absMediaFn);
             if (config.symlink && isVideoType) {
-                // symlink
                 if (QFile::link(fn, absMediaFn)) {
-                    noCopy = false;
+                    zapInGamelist = false;
+                } else {
+                    qWarning() << "Symlink failed, media entry will be not in "
+                                  "game list: "
+                               << absMediaFn << "->" << fn;
                 }
             } else {
-                // copy
                 QFile fh(absMediaFn);
                 if (fh.open(QIODevice::WriteOnly)) {
                     fh.write(data);
                     fh.close();
-                    noCopy = false;
+                    zapInGamelist = false;
+                } else {
+                    qWarning()
+                        << "Copy failed, media entry will be not in game list: "
+                        << fn << "to" << absMediaFn;
                 }
             }
         }
     }
-    if (noCopy) {
+
+    if (zapInGamelist) {
+        // empty values to avoid game list output
         if (isVideoType) {
             game.videoFormat = "";
             game.videoFile = "";
