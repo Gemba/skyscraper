@@ -28,7 +28,6 @@
 #include "zxinfodk.h"
 
 #include "gameentry.h"
-#include "strtools.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -37,8 +36,8 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-static const QList<QPair<QString, QString>> headers(
-    {QPair(QString("User-Agent"), QString("Skyscraper / ").append(VERSION))});
+static const QList<QPair<QString, QString>>
+    headers({QPair<QString, QString>("User-Agent", "Skyscraper / " VERSION)});
 static const QString mediaUrl = "https://zxinfo.dk/media";
 
 ZxInfoDk::ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager)

@@ -348,7 +348,7 @@ QList<QString> OpenRetro::getSearchNames(const QFileInfo &info,
             searchNames.prepend("/game/" + config->whdLoadMap[baseName].second);
         }
     }
-    searchName = NameTools::getUrlQueryName(searchName, 2);
+    searchName = NameTools::getUrlQueryName(searchName, 3);
     qDebug() << "searchName, after UrlQueryname" << searchName;
 
     Q_ASSERT(!searchName.isEmpty());
