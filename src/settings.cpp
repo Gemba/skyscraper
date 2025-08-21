@@ -557,7 +557,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->threadsSet = true;
     }
     if (parser->isSet("e")) {
-        if (config->frontend == "attractmode") {
+        if (config->frontend == "attractmode" || config->frontend == "pegasus") {
             config->frontendExtra = parser->value("e");
         } else {
             printf("\033[1;33mParameter emulator is ignored. Only "
