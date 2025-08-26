@@ -557,11 +557,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->threadsSet = true;
     }
     if (parser->isSet("e")) {
-        if (config->frontend == "attractmode" || config->frontend == "pegasus") {
+        QStringList allowedFe({"attractmode", "pegasus"});
+        if (allowedFe.contains(config->frontend)) {
             config->frontendExtra = parser->value("e");
         } else {
-            printf("\033[1;33mParameter emulator is ignored. Only "
-                   "applicable with frontend=attractmode.\n\033[0m");
+            printf("\033[1;33mParameter -e is ignored. Only applicable "
+                    "with frontend %s.\n\033[0m",
+                    allowedFe.join(" or ").toUtf8().constData());
         }
     }
     if (parser->isSet("i")) {
