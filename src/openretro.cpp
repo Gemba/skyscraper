@@ -30,6 +30,7 @@
 
 #include <QDebug>
 #include <QRegularExpression>
+#include <QStringBuilder>
 
 OpenRetro::OpenRetro(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -98,9 +99,9 @@ void OpenRetro::getSearchResults(QList<GameEntry> &gameEntries,
     bool hasWhdlUuid = searchName.left(6) == "/game/";
     QString lookupReq = QString(searchUrlPre);
     if (hasWhdlUuid) {
-        lookupReq = lookupReq + searchName;
+        lookupReq = lookupReq % searchName;
     } else {
-        lookupReq = lookupReq + "/browse?q=" + searchName + searchUrlPost;
+        lookupReq = lookupReq % "/browse?q=" % searchName % searchUrlPost;
     }
     netComm->request(lookupReq);
     q.exec();
@@ -146,8 +147,8 @@ void OpenRetro::getSearchResults(QList<GameEntry> &gameEntries,
             for (const auto &nom : urlPre) {
                 nomNom(nom);
             }
-            game.url = baseUrl + "/" +
-                       data.left(data.indexOf(urlPost.toUtf8())) + "/edit";
+            game.url = baseUrl % "/" %
+                       data.left(data.indexOf(urlPost.toUtf8())) % "/edit";
 
             // Digest until title
             for (const auto &nom : titlePre) {
@@ -227,7 +228,7 @@ void OpenRetro::getTags(GameEntry &game) {
     while (data.indexOf(tagBegin.toUtf8()) != -1) {
         nomNom(tagBegin);
         nomNom("\">");
-        tags.append(data.left(data.indexOf("</a>")) + ", ");
+        tags.append(data.left(data.indexOf("</a>")) % ", ");
     }
     if (!tags.isEmpty()) {
         tags.chop(2); // Remove last ", "
@@ -302,10 +303,10 @@ void OpenRetro::getCover(GameEntry &game) {
         nomNom(nom);
     }
     QString coverUrl =
-        data.left(data.indexOf(coverPost.toUtf8())).replace("&amp;", "&") +
-        "?s=512";
+        data.left(data.indexOf(coverPost.toUtf8())).replace("&amp;", "&") %
+        QString("?s=512");
     if (coverUrl.left(4) != "http") {
-        coverUrl.prepend(baseUrl + (coverUrl.left(1) == "/" ? "" : "/"));
+        coverUrl.prepend(baseUrl % (coverUrl.left(1) == "/" ? "" : "/"));
     }
     game.coverData = downloadMedia(coverUrl);
 }
@@ -323,10 +324,10 @@ void OpenRetro::getMarquee(GameEntry &game) {
         nomNom(nom);
     }
     QString marqueeUrl =
-        data.left(data.indexOf(marqueePost.toUtf8())).replace("&amp;", "&") +
-        "?s=512";
+        data.left(data.indexOf(marqueePost.toUtf8())).replace("&amp;", "&") %
+        QString("?s=512");
     if (marqueeUrl.left(4) != "http") {
-        marqueeUrl.prepend(baseUrl + (marqueeUrl.left(1) == "/" ? "" : "/"));
+        marqueeUrl.prepend(baseUrl % (marqueeUrl.left(1) == "/" ? "" : "/"));
     }
     game.marqueeData = downloadMedia(marqueeUrl);
 }
@@ -337,17 +338,20 @@ QList<QString> OpenRetro::getSearchNames(const QFileInfo &info,
     QList<QString> searchNames;
     QString searchName = baseName;
 
-    debug.append("Base name: '" + baseName + "'\n");
+    debug.append("Base name: '" % baseName % "'\n");
     qDebug() << "baseName" << baseName;
 
     searchName = lookupSearchName(info, baseName, debug);
     qDebug() << "searchName, after lookup SearchName" << searchName;
-    if (info.suffix() == "lha") {
+    if (info.suffix() == "lha" &&
+        !config->whdLoadMap[baseName].second.isEmpty()) {
         // Insert uuid from whdload_db.xml first
-        if (!config->whdLoadMap[baseName].second.isEmpty()) {
-            searchNames.prepend("/game/" + config->whdLoadMap[baseName].second);
-        }
+        searchNames.prepend("/game/" % config->whdLoadMap[baseName].second);
     }
+    // openretro handles "'s" as additional word, remove "'"
+    searchName = searchName.remove("'");
+    // remove " of" and " the" as OpenRetro ignores them anyway
+    searchName = searchName.toLower().remove(" of").remove(" the");
     searchName = NameTools::getUrlQueryName(searchName, 3);
     qDebug() << "searchName, after UrlQueryname" << searchName;
 
@@ -358,14 +362,31 @@ QList<QString> OpenRetro::getSearchNames(const QFileInfo &info,
         QRegularExpression("[_[]{1}(Aga|AGA)[_\\]]{0,1}")
             .match(baseName)
             .hasMatch()) {
-        searchNames.append("/browse?q=" + searchName + "+aga");
+        QStringList words = searchName.split('+');
+        int wc = 0;
+        QStringList wordList;
+        for (auto const &w : words) {
+            if (w == "aga")
+                continue;
+            wordList.append(w);
+            wc++;
+            // OpenRetro may refuse queries with more than 3 words
+            if (wc > 2)
+                break;
+        }
+        QString searchNameMax = wordList.join("+");
+        if (wordList.size() > 2)
+            wordList.removeLast();
+        searchNames.append(wordList.join("+") % "+aga");
+        searchNames.append(searchNameMax);
+    } else {
+        searchNames.append(searchName);
     }
-    searchNames.append("/browse?q=" + searchName);
 
     if (searchName.indexOf(":") != -1 || searchName.indexOf("-") != -1) {
         searchName = searchName.left(searchName.indexOf(":")).simplified();
         searchName = searchName.left(searchName.indexOf("-")).simplified();
-        searchNames.append("/browse?q=" + searchName);
+        searchNames.append(searchName);
     }
 
     return searchNames;
