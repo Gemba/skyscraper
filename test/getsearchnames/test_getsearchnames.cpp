@@ -326,9 +326,13 @@ private slots:
              QPair<QString, QStringList>(
                  "./rom_samples/BillsTomatoGame_v2.0_1748.lha",
                  {"romnom=BillsTomatoGame_v2.0_1748.lha"})},
+            {"Screenscraper, ROM with uncommon suffix and size greater zero",
+             QPair<QString, QStringList>("./rom_samples/Pac Man.desktop",
+                                         {"romnom=Pac%20Man"})},
 
         };
         settings.mameMap.insert("zaxxon.zip", "Should not break the test.zip");
+        settings.addExtensions = "*.desktop";
 
         match(tests);
     }

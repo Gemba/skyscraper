@@ -562,8 +562,8 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             config->frontendExtra = parser->value("e");
         } else {
             printf("\033[1;33mParameter -e is ignored. Only applicable "
-                    "with frontend %s.\n\033[0m",
-                    allowedFe.join(" or ").toUtf8().constData());
+                   "with frontend %s.\n\033[0m",
+                   allowedFe.join(" or ").toUtf8().constData());
         }
     }
     if (parser->isSet("i")) {
