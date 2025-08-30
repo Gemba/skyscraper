@@ -18,8 +18,10 @@ The following instructions are provided as-is by Gemba @ GitHub.
 >
 > Good luck!
 
-Nothing I (Gemba) have to add here, well, at least this: With a recent Windows
-you don't need Cygwin for colorized/ANSI output any longer (see below).
+Nothing I (Gemba) have to add here, except this: With a recent Windows you don't
+need Cygwin for colorized/ANSI output any longer as Windows eventually does
+support this and Skyscraper will be build to use the colored terminal
+capabilities. :)
 
 ## Install Software
 

@@ -2,7 +2,7 @@
 
 Look below to find a thorough description of all options and sections available in the `/home/<USER>/.skyscraper/config.ini` configuration file. These options will then be applied whenever running Skyscraper with the `Skyscraper` command.
 
-Please take note that almost all of these options are set at a useful default as documented here (and can therefore be left out) and should only be set if your use case requires it.
+Almost all of these options are set at a useful default as documented here (and can therefore be left out) and should only be set if your use case requires it.
 
 !!! warning
 
@@ -24,7 +24,7 @@ You can find an example config file at `/home/<USER>/.skyscraper/config.ini.exam
 
 !!! note
 
-    You can set a custom configuration file with the `-c <FILENAME>` command line option. Read more about all available command line options [here](CLIHELP.md).
+    You can set a custom configuration file with the `-c <FILENAME>` command line option. Read more about [all available command line options](CLIHELP.md).
 
 **Example `config.ini`**:
 
@@ -181,7 +181,7 @@ Allowed in sections: `[main]`, `[<FRONTEND>]`
 
 Sets the artwork / media output folder. By default (ie. if the option `mediaFolder` is not explicitly set or pre-defined by the frontend) Skyscraper outputs the composited artwork files to the game list export folder concatenated with `/media`. The `mediaFolder` setting enables you to change that to a non-default location.
 
-Read more about the artwork compositing [here](ARTWORK.md).
+Read more about the [artwork compositing](ARTWORK.md).
 
 !!! note
 
@@ -228,7 +228,7 @@ By default, to save space, Skyscraper resizes large pieces of artwork before add
 
     This is not related to the artwork compositing that happens when generating a game list. This is _only_ related to how Skyscraper handles artwork when adding it to the resource cache while gathering data from the scraping modules.
 
-To read about artwork compositing go [here](ARTWORK.md) instead.
+To read about artwork compositing see the [artwork documentation](ARTWORK.md) instead.
 
 Default value: `true`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
@@ -367,7 +367,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 #### importFolder
 
-Sets a non-default folder when scraping using the `-s import` module. By default this is set to `/home/<USER>/.skyscraper/import` and will also look for a `/<PLATFORM>` inside of the chosen folder. Read more about the `-s import` module [here](IMPORT.md).
+Sets a non-default folder when scraping using the `-s import` module. By default this is set to `/home/<USER>/.skyscraper/import` and will also look for a `/<PLATFORM>` inside of the chosen folder. Read more about the [`-s import` module](IMPORT.md).
 
 Default value: `/home/<USER>/.skyscraper/import/<PLATFORM>`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
@@ -395,7 +395,7 @@ If exporting for the `attractmode` frontend, please also take note of the requir
 
 If exporting for the `pegasus` frontend, please also take note of the optional `launch=""` option that allows you to set the launch parameter used by Pegasus.
 
-Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`, aso. Check all supported frontends with '--help' and read a more about the details concerning each of them [here](FRONTENDS.md).
+Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`, aso. Check all supported frontends with '--help' and read a more about the [details concerning each of them](FRONTENDS.md).
 
 Default value: `emulationstation`  
 Allowed in sections: `[main]`
@@ -704,7 +704,7 @@ Allowed in sections: `[main]`
 
 #### region
 
-Adds the specified region to the top of the existing default internal region priority list. Only one region is supported with this configuration. To overwrite the internal default region priority list entirely check [here](CONFIGINI.md#regionprios). Read more about how regions are handled in general [here](REGIONS.md).
+Adds the specified region to the top of the existing default internal region priority list. Only one region is supported with this configuration. To overwrite the internal default region priority list entirely use the setting [regionprios](CONFIGINI.md#regionprios). Read more about how [regions are handled in general](REGIONS.md).
 
 !!! info
 
@@ -731,7 +731,7 @@ region="de"
 
 #### regionPrios
 
-Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how regions are handled in general [here](REGIONS.md).
+Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how [regions are handled in general](REGIONS.md).
 
 !!! info
 
@@ -758,7 +758,7 @@ regionPrios="de,us,jp"
 
 #### lang
 
-Adds the specified language to the top of the existing default internal language priority list. Only one language is supported with this configuration. Read more about how languages are handles in general [here](LANGUAGES.md).
+Adds the specified language to the top of the existing default internal language priority list. Only one language is supported with this configuration. Read more about how [languages are handles in general](LANGUAGES.md).
 
 Default value: unset  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
@@ -781,7 +781,7 @@ lang="it"
 
 #### langPrios
 
-Completely overwrites the internal language priority list inside of Skyscraper. Multiple languages can be configured here separated by commas. Read more about how languages are handles in general [here](LANGUAGES.md).
+Completely overwrites the internal language priority list inside of Skyscraper. Multiple languages can be configured here separated by commas. Read more about how [languages are handles in general](LANGUAGES.md).
 
 Default value: `en, de, fr, es`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
@@ -805,7 +805,7 @@ langPrios="it,en"
 #### artworkXml
 
 Sets a non-default xml file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded to `/home/<USER>/.skyscraper/<artworkXml>`, respective to `$XDG_CONFIG_HOME/skyscraper/<artworkXml>`, if you use Skyscraper in [XDG](XDG.md) mode.  
-Read more about the artwork.xml format and customization options [here](ARTWORK.md).
+Read more about the [artwork.xml format and customization options](ARTWORK.md).
 
 !!! tip
 
@@ -978,7 +978,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 #### userCreds
 
-Some scraping modules require a `key` or `user:password` to work. You can create a `[<SCRAPER>]` section and add a `userCreds="user:pass"` or `userCreds="key"` line beneath it. Doing this will always use these credentials when scraping from the module in question. Check the scraping module overview to see the specific requirements for each module [here](SCRAPINGMODULES.md).
+Some scraping modules require a `key` or `user:password` to work. You can create a `[<SCRAPER>]` section and add a `userCreds="user:pass"` or `userCreds="key"` line beneath it. Doing this will always use these credentials when scraping from the module in question. Check the [scraping module overview](SCRAPINGMODULES.md) to see the specific requirements for each module.
 
 **Example(s)**
 

@@ -4,7 +4,7 @@ Look below to find a thorough description of all command line options available 
 
 Also consider that almost all of these options are set at a useful default (and can therefore be left out) and should only be used / changed if your use case requires it.
 
-Most of the options can also be set in the `/home/<USER>/.skyscraper/config.ini` file thus removing the need to type them on command line all the time. Check the config.ini doc [here](CONFIGINI.md) for more info on this.
+Most of the options can also be set in the `/home/<USER>/.skyscraper/config.ini` file thus removing the need to type them on command line all the time. Check the [config.ini doc](CONFIGINI.md) for more info on this.
 
 ### Programmable Completion
 
@@ -31,7 +31,7 @@ you will information about the other options here too.
 ### -a &lt;FILENAME&gt;
 
 Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded relative to the current working directory. Consider setting this in [`config.ini`](CONFIGINI.md#artworkxml) instead.  
-Read more about the artwork.xml format and customization options [here](ARTWORK.md).
+Read more about the artwork.xml [format and customization options](ARTWORK.md).
 
 **Example(s)**
 
@@ -55,7 +55,7 @@ Sets a non-default location for the storing and loading of cached game resources
 
 !!! note
 
-    If you wish to _always_ use a certain location as base folder for your resource cache ((for instance if you want your cache to reside on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant `config.ini` option [here](CONFIGINI.md#cachefolder).
+    If you wish to _always_ use a certain location as base folder for your resource cache ((for instance if you want your cache to reside on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant [`config.ini` option](CONFIGINI.md#cachefolder).
 
 **Example(s)**
 
@@ -65,13 +65,15 @@ Skyscraper -p snes -d "/custom/cache/path"
 
 ### -e &lt;STRING&gt;
 
+This sets the extra command (or emulator command) for some frontends.
+
 !!! info
 
     This option is applicable _only_ when using the `-f attractmode` or the `-f pegasus` option.
 
-When using `-f attractmode` it is required to set the _emulator_ to be used when generating the `attractmode` game list. On RetroPie the emulator name is mostly the same as the platform. Consider setting this in [`config.ini`](CONFIGINI.md#emulator) instead.
+When using `-f attractmode` it is **required** to set the _emulator_ to be used when generating the `attractmode` game list. On RetroPie the emulator name is mostly the same as the platform. Consider setting this in [`config.ini`](CONFIGINI.md#emulator) instead.
 
-It can _optionally_ be used with `-f pegasus` to set the launch command used by the Pegasus game list. On RetroPie this defaults to the RetroPie launch command which works with RetroPie. Consider setting this in [`config.ini`](CONFIGINI.md#launch) instead.
+The extra command can **optionally** be used with `-f pegasus` to set the launch command used by the Pegasus game list. On RetroPie this defaults to the RetroPie launch command which works with RetroPie, if this parameter is unset. Consider setting this in [`config.ini`](CONFIGINI.md#launch) instead.
 
 **Example(s)**
 
@@ -85,7 +87,7 @@ Skyscraper -p snes -f pegasus -e "/opt/retropie/supplementary/runcommand/runcomm
 
 Sets the frontend you wish to export a game list for. By default Skyscraper will export an EmulationStation game list, but other frontends are supported as well. If exporting for example for the `attractmode` frontend, please also take note of the required `-e` option that goes along with using the `attractmode` frontend. Consider setting this in [`config.ini`](CONFIGINI.md#frontend) instead.
 
-Check all supported frontends with '--help' and read a more about the details concerning each of them [here](FRONTENDS.md).
+Check all supported frontends with '--help' and read a more about the details concerning each of them in the [frontend documentation](FRONTENDS.md).
 
 **Example(s)**
 
@@ -147,7 +149,7 @@ Skyscraper -p snes -s thegamesdb -m 50
 
 ### -o &lt;PATH&gt;
 
-Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder + `/media`. This allows you to change that to a non-default location. Read more about the artwork compositing [here](ARTWORK.md). Consider setting this in [`config.ini`](CONFIGINI.md#mediafolder) instead.
+Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder + `/media`. This allows you to change that to a non-default location. Read more about the [artwork compositing](ARTWORK.md). Consider setting this in [`config.ini`](CONFIGINI.md#mediafolder) instead.
 
 **Example(s)**
 
@@ -159,7 +161,7 @@ Skyscraper -p snes -s screenscraper -o "/path/to/where/you/want/the/artwork/file
 
 Sets the platform you wish to scrape. Supported platforms can be seen using the `--help` option described above.
 
-Running the following commands will scrape from all cached resources and generate a game list and composite artwork using the recipe in `/home/<USER>/.skyscraper/artwork.xml` (check the artwork documentation for more info on this [here](ARTWORK.md).
+Running the following commands will scrape from all cached resources and generate a game list and composite artwork using the recipe in `/home/<USER>/.skyscraper/artwork.xml` (check the [artwork documentation](ARTWORK.md) for more info on this.
 
 Before running these commands you need to first gather some data into the cache. Please read the description of `-s <MODULE>` below.
 
@@ -186,7 +188,7 @@ Skyscraper -p amiga -s esgamelist
 Skyscraper -p snes -s import
 ```
 
-To read more about each scraping module, check [here](SCRAPINGMODULES.md).
+Read more about [each scraping module](SCRAPINGMODULES.md).
 
 ### -t &lt;1-8&gt;
 
@@ -204,7 +206,7 @@ Skyscraper -p snes -s thegamesdb -t 5
 
 ### -u &lt;KEY or USERID:PASSWORD&gt;
 
-Some scraping modules require a user key or a user id + password to work. Check the scraping module overview to see the specific requirements for each module [here](SCRAPINGMODULES.md). Consider setting this in [`config.ini`](CONFIGINI.md#usercreds) instead.
+Some scraping modules require a user key or a user id + password to work. Check the scraping module overview to see the specific requirements for [each module](SCRAPINGMODULES.md). Consider setting this in [`config.ini`](CONFIGINI.md#usercreds) instead.
 
 **Example(s)**
 
@@ -222,7 +224,7 @@ If you have a rom that Skyscraper doesn't even try to gather data for, it might 
 
 ```
 Skyscraper -p snes -s thegamesdb --addext *.ext
-Skyscraper -p snes -s thegamesdb --addext "*.ext1 *.ext2"
+Skyscraper -p snes -s thegamesdb --addext '*.ext1 *.ext2'
 ```
 
 ### --cache <COMMAND[:OPTIONS]>
@@ -233,7 +235,7 @@ This is the cache master option. It contains several subcommands that allows you
 
     For any of these commands you can set a non-default resource cache folder with the `-d` option. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.).
 
-Read more about the resource cache [here](CACHE.md).
+Read more about the resource cache at the [cache documentation](CACHE.md).
 
 #### --cache help
 
@@ -660,7 +662,7 @@ Skyscraper -p amiga --includepattern "*AGA*,Super*,*\, The"
 
 ### --lang &lt;CODE&gt;
 
-Adds the specified language to the top of the existing default internal language priority list. Read more about languages [here](LANGUAGES.md). Only one language is supported with this configuration. For a permanent setup you should consider setting this in [`config.ini`](CONFIGINI.md#lang) instead.
+Adds the specified language to the top of the existing default internal language priority list. Read more about it in the [languages documentation](LANGUAGES.md). Only one language is supported with this configuration. For a permanent setup you should consider setting this in [`config.ini`](CONFIGINI.md#lang) instead.
 
 **Example(s)**
 
@@ -740,7 +742,7 @@ Skyscraper -p snes -s screenscraper --refresh
 
 Adds the specified region to the top of the existing default internal region priority list. Only one region is supported with this configuration. For a permanent setup you should consider setting this in [`config.ini`](CONFIGINI.md#region) instead.
 
-Read more about how regions are handled in general [here](REGIONS.md).
+Read more about how [regions are handled in general](REGIONS.md) in this user manual.
 
 !!! info
 

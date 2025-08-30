@@ -13,8 +13,8 @@ humans](https://keepachangelog.com).
 - Changed: Handling of relative path in configuration options adapted to enable
   that gamelist, ROM folder and media folder can be moved easier around or can
   be moved to other devices. Also, the config INI file can be provided with a
-  relative path, as all other path options. See details [here](PATHHANDLING.md).
-  Thanks to @cameronhimself for nudging me.
+  relative path, as all other path options. See details in the [path handling
+  doc](PATHHANDLING.md). Thanks to @cameronhimself for nudging me.
 - Added: Artwork finetuning, added option to [control aspect ratio when
   scaling images](ARTWORK.md#aspect-attribute-o_1). Thanks to
   @joyrider3774 for the suggestion.
@@ -39,14 +39,16 @@ humans](https://keepachangelog.com).
 
 ### Version 3.16.0 (2025-03-10)
 
-- Added: Support for local GameBase DB scraping. See
-  [here](SCRAPINGMODULES.md#gamebase-db) and [here](CONFIGINI.md#gamebasefile)
-  for details. _To the RetroPie users_: Please update the scriptmodule in the
-  RetroPie-Setup first before updating Skyscraper.
+- Added: Support for local GameBase DB scraping. See the [module
+  description](SCRAPINGMODULES.md#gamebase-db) and [the config
+  setting](CONFIGINI.md#gamebasefile) for details. _To the RetroPie users_:
+  Please update the scriptmodule in the RetroPie-Setup first before updating
+  Skyscraper.
 - Added: Documentation on scraper modules supplied with [scraper
   capabilities](SCRAPINGMODULES.md#capabilities-of-scrapers).
-- Added: Documentation on options for `--query` parameter per scraper modules. See
-  [here](SCRAPINGMODULES.md#recognized-keywords-in-query).
+- Added: Documentation on options for `--query` parameter per scraper modules.
+  See the [recognized query keywords per scraping
+  module](SCRAPINGMODULES.md#recognized-keywords-in-query).
 - Added: IGDB scraper now supports Screenshot and Cover scraping, plus it
   allows querying with game ID `--query="id=..."`.
 - Updated: ArcadeDB scraper now downloads HD video if present, failsafes to
@@ -61,17 +63,18 @@ humans](https://keepachangelog.com).
 ### Version 3.15.0 (2025-01-24)
 
 - Added: Separate local Platform configuration from upstream Platform
-  configuration. Details
-  [here](PLATFORMS.md#transferring-local-platform-changes). _To the RetroPie users_:
-  Please update the scriptmodule in the RetroPie-Setup first before updating via
-  `retropie_setup.sh`, otherwise you have to install the script named in the
-  documentation above manually. Thanks for the nudge, @s1eve-mcdichae1.
+  configuration. Details in the [platform config
+  documentation](PLATFORMS.md#transferring-local-platform-changes). _For the
+  RetroPie users_: Please update the scriptmodule in the RetroPie-Setup first
+  before updating via `retropie_setup.sh`, otherwise you have to install the
+  script named in the documentation above manually. Thanks for the nudge,
+  @s1eve-mcdichae1.
 - Added: Configuration option `gameListFilename`. See
   [documentation](CONFIGINI.md#gamelistfilename), there is also a [command line
   option](CLIHELP.md#-gamelistfilename-filename). Thanks #1, @Leukhos for the
   submission.
-- Added: Support "all platform selection" for cache commands within one Skyscraper
-  run. See respective documentation for [cache
+- Added: Support "all platform selection" for cache commands within one
+  Skyscraper run. See respective documentation for [cache
   report:missing](CLIHELP.md#-cache-reportmissingall-textual-artwork-media-or-resource1resource2),
   [cache validate](CLIHELP.md#-cache-validate), [cache
   vacuum](CLIHELP.md#-cache-vacuum) and [cache
@@ -151,8 +154,9 @@ humans](https://keepachangelog.com).
   games which do not have any game data in the cache. This is a commodity config
   option to the already existing flag with the same name. Plus: If you use a
   scraper with a scraping limit for games to be scraped at once (e.g. MobyGames)
-  you may stay below that limit. Documentation [here](CONFIGINI.md#onlymissing).
-  Thanks for the suggestion, @s1eve-mcdichae1
+  you may stay below that limit. See also documentation of
+  [onlymissing](CONFIGINI.md#onlymissing). Thanks for the suggestion,
+  @s1eve-mcdichae1
 - Update: Valid extensions (= `formats` in Skyscraper's `peas.json` file) with
   info from RetroPie's `platform.cfg` (commit
   [`5e0ab1f`](https://github.com/RetroPie/RetroPie-Setup/blob/5e0ab1f85994cbb51eb5539d2a7592a3578c15b8/platforms.cfg))
@@ -205,14 +209,15 @@ humans](https://keepachangelog.com).
 ### 2023-12-01 (Version 3.9.2)
 
 - Feature: Import of data in XML format is now more lax (does not rely on
-  strict identical indention). Read also the hint
-  [here](IMPORT.md#textual-data-definitions-file)
-- Feature: Configuration option `tidyDesc` added. See documentation
-  [here](CONFIGINI.md#tidydesc)
-- Feature: Documentation reviewed and hosted with mkdocs for ease of access.
-  See [here](https://gemba.github.io/skyscraper)
-- Update: Added index of configuration parameters to `CONFIGINI.md`. Details
-  see [here](CONFIGINI.md#index-of-options-with-applicable-sections)
+  strict identical indention). Read also the hint in the
+  [import scraper module](IMPORT.md#textual-data-definitions-file)
+- Feature: Configuration option `tidyDesc` added. See [config
+  documentation](CONFIGINI.md#tidydesc)
+- Feature: Documentation reviewed and hosted with mkdocs for ease of access at
+  https://gemba.github.io/skyscraper
+- Update: Added index of configuration parameters to `CONFIGINI.md`. Find
+  details at the top of the [config
+  documentation](CONFIGINI.md#index-of-options-with-applicable-sections)
 - Update: Refactored `skyscraper.cpp` class. Factorised configuration settings
   into `settings.cpp`
 - Update: Various other refactorings to remove duplicated code

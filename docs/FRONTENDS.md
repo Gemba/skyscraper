@@ -2,11 +2,11 @@
 
 When generating a game list with Skyscraper you have the option of generating it for several different frontends. A frontend is the graphical interface that lists and launches your games.
 
-Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [here](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [here](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
+Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [in the commandline documentation](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [config file documentation](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
 
 !!! warning
 
-    Skyscraper will overwrite your game list (obviously). So if you have spend a lot of time hand-crafting metadata in a game list for any frontend, please remember to create a backup before overwriting it with Skyscraper. You can also tell Skyscraper to auto-backup old game lists prior to overwriting them. Read more about that [here](CONFIGINI.md#gamelistbackup).
+    Skyscraper will overwrite your game list (obviously). So if you have spend a lot of time hand-crafting metadata in a game list for any frontend, please remember to create a backup before overwriting it with Skyscraper. You can also tell Skyscraper to auto-backup old game lists prior to overwriting them. Read more about the [`gamelistbackup` config option](CONFIGINI.md#gamelistbackup).
 
 When generating a game list for any frontend, Skyscraper will try to preserve certain metadata. Check the frontend sections below for more information on what metadata is preserved per frontend.
 
@@ -62,7 +62,7 @@ If at least one ROM is within a subfolder and this subfolder is not yet part of 
         </folder>
     [...]
     ```
-    Note that the `Retail` folder is added even if it does not contain a ROM because it is part of the path to the ROMs in the lowest folders.
+    The `Retail` folder is added even if it does not contain a ROM because it is part of the path to the ROMs in the lowest folders.
 
 ### EmulationStation Desktop Edition (ES-DE)
 
@@ -79,17 +79,17 @@ Media filepaths (screenshots, marquees, videos, aso.) are not explicitly stored
 in the gamelist file. This is ES-DE default. However, Skyscraper will put the
 media files into the `downloaded_media` folder (e.g.
 `~/ES-DE/downloaded_media/<PLATFORM>/screenshots/` for screenshots) from where
-ES-DE will pick them up. Note that ES-DE does not support textures currently.
+ES-DE will pick them up. ES-DE does not support textures currently.
 
 !!! tip
 
     You may override the default storage folder of ES-DE (`/home/<USER>/ES-DE`)
     on a non-Windows build by setting the environment variable `ESDE_APPDATA_DIR`
-    to a different folder as documented in the ES-DE documentation [here](https://gitlab.com/es-de/emulationstation-de/-/blob/v3.0.2/INSTALL.md#changing-the-application-data-directory).
+    to a different folder as documented in the [ES-DE documentation](https://gitlab.com/es-de/emulationstation-de/-/blob/v3.0.2/INSTALL.md#changing-the-application-data-directory).
 
 All the gory details of ES-DE's gamelist file format you can find in the section
-"Gamelist Reference"
-[here](https://gitlab.com/es-de/emulationstation-de/-/blob/master/INSTALL.md?ref_type=heads#gamelistxml).
+"Gamelist Reference" in the [ES-DE documentation]
+(https://gitlab.com/es-de/emulationstation-de/-/blob/master/INSTALL.md?ref_type=heads#gamelistxml).
 
 #### Metadata preservation
 

@@ -73,6 +73,7 @@ extra_css:
 nav:
 - Home: index.md
 - Sample Use Case: USECASE.md
+- Installation: INSTALLATION.md
 - FAQ: FAQ.md
 - XDG Base Directory Support: XDG.md
 - Skyscraper Input:

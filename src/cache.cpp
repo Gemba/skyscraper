@@ -324,7 +324,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
     int queueLength = queue->length();
     printf("\033[1;33mEntering resource cache editing mode! This mode allows "
            "you to edit textual resources for your files. To add media "
-           "resources use the 'import' scraping module instead.\nNote that you "
+           "resources use the 'import' scraping module instead.\nYou "
            "can provide one or more file names on command line to edit "
            "resources for just those specific files. You can also use the "
            "'--startat' and '--endat' command line options to narrow down the "

@@ -1,12 +1,11 @@
 ## Overview
 
 If you are a fellow Linux user you may be familiar with the XDG Base Directory
-Specification (BDS) as part of the freedesktop.org project. If not, you can find
-the short specification
-[here](https://specifications.freedesktop.org/basedir-spec/latest/), the
+Specification (BDS) as part of the freedesktop.org project. If not, you may read
+the [brief specification](https://specifications.freedesktop.org/basedir-spec/latest/), the
 [ArchWiki](https://wiki.archlinux.org/title/XDG_Base_Directory) has also
-additional information and list tools that support the specification. Also,
-[wikipedia](https://en.wikipedia.org/wiki/Freedesktop.org#Base_Directory_Specification)
+additional information and list tools that support the specification. You may also bend over to
+[wikipedia](https://en.wikipedia.org/wiki/Freedesktop.org#Base_Directory_Specification) which
 has a brief section on the topic.
 
 !!! tip

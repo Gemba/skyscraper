@@ -10,13 +10,13 @@ Read on for an example `artwork.xml` and a more thorough description of the `<ou
 
 !!! warning
 
-    Some users seem to have a habbit of editing the `/home/<USER>/skysource/artwork.xml` file. _This is not the correct file!_ Please read the first paragraph. :)
+    Some users seem to have a habbit of editing the `/home/<USER>/skysource/artwork.xml` file. _This is not the correct file!_ Please re-read the first paragraph. :)
 
 !!! tip
 
-     Every time you change the artwork configuration, remember to regenerate the game list. Your changes won't take effect until you do so. Read more about this [here](USECASE.md#the-game-list-generation-phase).
+     Every time you change the artwork configuration, remember to regenerate the game list. Your changes won't take effect until you do so. Read more about this in the [outlined usecase](USECASE.md#the-game-list-generation-phase).
 
-Watch a video demonstrating the artwork compositing features [here](https://youtu.be/TIDD8EFSz50). Note that the video is quite old and only demonstrates a fraction of the possibilities you have with the Skyscraper compositor. It's all thoroughly documented below.
+Watch a [video demonstrating the artwork compositing features](https://youtu.be/TIDD8EFSz50). The video is quite old and only demonstrates a fraction of the possibilities you have with the Skyscraper compositor. It's all thoroughly documented below.
 
 ### Example artwork.xml
 

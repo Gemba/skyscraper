@@ -8,17 +8,17 @@ The following describes how to import your own custom textual, artwork and / or 
 
 !!! info
 
-    Be sure to also check the `--cache edit` option [here](CLIHELP.md#-cache-editnewtype).
+    Be sure to also check the [`--cache edit` option](CLIHELP.md#-cache-editnewtype).
 
 ### Images, Videos and Game Manuals
 
 To import videos or images into the resource cache, use the following procedure:
 
--   Name your image or video file with the _exact_ base name of the rom you wish to connect it to. Example: `Bubble Bobble.nes` will import images with a filename of `Bubble Bobble.jpg` or `Bubble Bobble.png` or other well-known image formats. As long as the base name is an _exact_ match. Same goes for video files. I recommend only making use of well-known video formats since Skyscraper imports them directly without conversion (unless you convert them as described [here](CONFIGINI.md#videoconvertcommand)), so they need to be supported directly by the frontend you plan to use.
+-   Name your image or video file with the _exact_ base name of the rom you wish to connect it to. Example: `Bubble Bobble.nes` will import images with a filename of `Bubble Bobble.jpg` or `Bubble Bobble.png` or other well-known image formats. As long as the base name is an _exact_ match. Same goes for video files. I recommend only making use of well-known video formats since Skyscraper imports them directly without conversion (unless you [convert them](CONFIGINI.md#videoconvertcommand)), so they need to be supported directly by the frontend you plan to use.
 -   Game manuals are expected to use PDF format and have the extension `.pdf`. The base name must match the ROM file, thus the game manual of the example is `Bubble Bobble.pdf`.
 -   Place all of your images, videos or game manuals in the `/home/<USER>/.skyscraper/import/<PLATFORM>/screenshots`, `covers`, `wheels`, `marquees`, `videos` or `manuals` folders.
 -   Now run Skyscraper with `Skyscraper -p <PLATFORM> -s import`. If you named your files correctly, they will now be imported. Look for the green 'YES' in the output at the rom(s) you've placed files for. This will tell you if it succeeded or not.
--   The data is now imported into the resource cache. To make use of if read [here](#how-to-actually-use-the-data).
+-   The data is now imported into the resource cache. To make use of it read the section [How to actually use the data?](#how-to-actually-use-the-data) below.
 
 #### Special Note for Videos
 
@@ -150,4 +150,4 @@ For `###PLAYERS###`, `###AGES###`, `###RELEASEDATE###` and `###RATING###` a cert
 
 ### How to actually use the data?
 
-When you've imported all of your data into the resource cache, you can make use of it by enabling Skyscrapers _game list generation_ mode simply by leaving out the `-s` command line option (eg. `Skyscraper -p <PLATFORM>`). The game list generator will then make use of your imported data. If you don't know what the resource cache is, read more about it [here](CACHE.md).
+When you've imported all of your data into the resource cache, you can make use of it by enabling Skyscrapers _game list generation_ mode simply by leaving out the `-s` command line option (eg. `Skyscraper -p <PLATFORM>`). The game list generator will then make use of your imported data and cached data. As the resource cache is a crucial component of Skyscraper you may want to [read more about it](CACHE.md).

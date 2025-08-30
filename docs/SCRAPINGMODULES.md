@@ -2,9 +2,9 @@
 
 Skyscraper supports several online and local sources when scraping data for your roms. This makes Skyscraper a hugely versatile tool since it also caches any resources that are gathered from any of the modules. The cached data can then be used to generate a game list and composite artwork later.
 
-Choosing a scraping module is as simply as setting the `-s <MODULE>` option when running Skyscraper on the command line. It also requires a platform to be set with `-p <PLATFORM>`. If you leave out the `-s` option Skyscraper goes into _game list generation_ mode and combines your cached data into a game list for the chosen platform and frontend. Read more about the resource cache [here](CACHE.md).
+Choosing a scraping module is as simply as setting the `-s <MODULE>` option when running Skyscraper on the command line. It also requires a platform to be set with `-p <PLATFORM>`. If you leave out the `-s` option Skyscraper goes into _game list generation_ mode and combines your cached data into a game list for the chosen platform and frontend. Read more about the [resource cache](CACHE.md) if needed.
 
-For scraping modules that support or require user credentials you have the option of either setting it on commandline with `-u <USER:PASSWD>` or `-u <KEY>` or better yet, by adding it permanently to the Skyscraper configuration at `/home/<USER>/.skyscraper/config.ini` as described [here](CONFIGINI.md#usercredscredentials-or-key)
+For scraping modules that support or require user credentials you have the option of either setting it on commandline with `-u <USER:PASSWD>` or `-u <KEY>` or better yet, by adding it permanently to the Skyscraper configuration at `/home/<USER>/.skyscraper/config.ini` as described in the [configuration documentation](CONFIGINI.md#usercredscredentials-or-key)
 
 ### Capabilities of Scrapers
 
@@ -42,7 +42,7 @@ over a table cell to display the scraper as tooltip:
 | import                   | No query supported                                                                                                             |
 | mobygames                | Title or numeric MobyGames ID (see _Identifiers_ section their website / on game details)                                      |
 | openretro                | Only title                                                                                                                     |
-| screenscraper            | romnom=, crc=, md5=, sha1=; see [here](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description    |
+| screenscraper            | romnom=, crc=, md5=, sha1=; see [Screenscraper documentation](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description    |
 | thegamesdb, tgdb         | Only title                                                                                                                     |
 | zxinfo (worldofspectrum) | Title, game Id (id=...) or game filehash (MD5 or SHA512)                                                            |
 
@@ -179,12 +179,12 @@ IGDB is a relatively new database on the market. But absolutely not a bad one at
 
 It is _required_ to register with the Twitch dev program (IGDB is owned by Twitch) and create a free client-id and secret-key pair for use with Skyscraper. The process of getting this free client-id and secret-key pair is quite easy. Just follow the following steps:
 
-- Go [here](https://dev.twitch.tv/login) and sign up for an account
-- [Enable](https://www.twitch.tv/settings/security) two-factor authentication (required)
-- [Register](https://dev.twitch.tv/console/apps/create) an application (call it whatever you like)
-- [Manage](https://dev.twitch.tv/console/apps) the application
+- [Signup at Twitch](https://dev.twitch.tv/login)
+- [Enable two-factor authentication](https://www.twitch.tv/settings/security) (mandatory)
+- [Register an application](https://dev.twitch.tv/console/apps/create) (call it whatever you like)
+- [Manage](https://dev.twitch.tv/console/apps) your newly created application
 - Add `https://localhost` as OAuth redirect URL
-- Generate a secret-key by clicking `New secret`
+- Generate a secret-key by selecting the button `New secret`
 - Add your client-id and secret-key pair to the Skyscraper config ini (`/home/<USER>/.skyscraper/config.ini`):
 
 ```
@@ -239,7 +239,7 @@ Skyscraper will search for the `gamelist.xml` file at `<INPUT FOLDER>/gamelist.x
 - Media support: _`cover`, `screenshot`, `wheel`, `manual`, `marquee`, `video`_
 - Example use: `Skyscraper -p snes -s import`
 
-Read a thorough description of this module [here](IMPORT.md).
+Read a thorough description of the [import module](IMPORT.md) to recognize all capabilities.
 
 ### GameBase DB
 
@@ -264,4 +264,4 @@ manuals for example. The usual GameBase DB Frontend is Windows based and a
 database is in Microsoft Access (`*.mdb`) format. Binary data is held in
 subfolders (e.g. Screenshots, Cover) on the filesystem.
 
-Read the setup and config description of this module [here](CONFIGINI.md#gamebasefile).
+Read the setup and config description of the [GameBase DB module](CONFIGINI.md#gamebasefile).

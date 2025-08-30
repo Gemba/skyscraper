@@ -100,8 +100,8 @@ Outline:
    `folder,screenscraper_id,mobygames_id,tgdb_id` (i.e. the first line of
    `platforms_idmap.csv`) . See also below for details of this CSV-file.
 4. If you use RetroPie do add the platform/system also to your `es_systems.cfg`
-   as documented
-   [here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
+   as documented in the 
+   [RetroPie documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
 
 There is also a an verbatim example, you may skip the next section initially and
 can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
@@ -147,7 +147,7 @@ folder on your filesystem where you keep your games.
 ### Sample Usecase: Adding Platform _Satellaview_
 
 Let the platform/systemname be `satellaview`. You may read about this SNES
-enhancing peripheral [here](https://en.wikipedia.org/wiki/Satellaview).
+enhancing peripheral [in Wikipedia](https://en.wikipedia.org/wiki/Satellaview).
 
 #### Step 1: Add a Section to `peas_local.json`
 
@@ -205,9 +205,10 @@ satellaview,107,-1,-1
 
 #### Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder
 
-This part should be added to your `~/.emulationstation/es_systems.cfg`. See
-[here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/) for
-additional information on this.
+This part should be added to your `~/.emulationstation/es_systems.cfg`. See the
+[RetroPie
+documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/)
+for additional information on this.
 
 !!! warning
 
