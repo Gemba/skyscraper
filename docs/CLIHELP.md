@@ -221,8 +221,10 @@ If you have a rom that Skyscraper doesn't even try to gather data for, it might 
 **Example(s)**
 
 ```
-Skyscraper -p snes -s thegamesdb --addext *.ext
-Skyscraper -p snes -s thegamesdb --addext "*.ext1 *.ext2"
+Skyscraper -p snes -s thegamesdb --addext '*.ext'
+Skyscraper -p snes -s thegamesdb --addext '*.ext1 *.ext2'
+# or even
+Skyscraper -p snes -s thegamesdb --addext '.ext1 ext2'
 ```
 
 ### --cache <COMMAND[:OPTIONS]>

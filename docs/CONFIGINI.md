@@ -844,7 +844,7 @@ Allowed in sections: `[<PLATFORM>]`
 
 #### addExtensions
 
-Adds the rom extensions to the ones that are already supported by the platform, use a space between each extension.
+Adds the rom extensions to the ones that are already supported by the platform, use a space between each extension. You may omit the `*` or even `*.` when providing an extension.
 
 !!! info
 
