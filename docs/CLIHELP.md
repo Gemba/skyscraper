@@ -4,7 +4,7 @@ Look below to find a thorough description of all command line options available 
 
 Also consider that almost all of these options are set at a useful default (and can therefore be left out) and should only be used / changed if your use case requires it.
 
-Most of the options can also be set in the `/home/<USER>/.skyscraper/config.ini` file thus removing the need to type them on command line all the time. Check the [config.ini doc](CONFIGINI.md) for more info on this.
+Most of the options can also be set in the `/home/<USER>/.skyscraper/config.ini` file thus removing the need to type them on command line all the time. Check the [configuration documentation](CONFIGINI.md) for more info on this. The command line options control basic and advanced features. To fully harness the capabilities of Skyscraper you may also want to explore the additional expert options available when using a configuration file.
 
 ### Programmable Completion
 
@@ -16,21 +16,22 @@ On RetroPie the
 will handle the installation. For the curious: It lands in
 `/etc/bash_completion.d/`.
 
-On non RaspiOS-based RetroPie-Installments put the file from
+On _non_ RaspiOS-based RetroPie-Installments put the file from
 `supplementary/bash-completion/Skyscraper.bash` to
 `$XDG_DATA_HOME/bash-completion/completions/` (respective to
 `$HOME/.local/share/bash-completion/completions/`). 
   
-In either case: Open a new bash and press ++tab++ twice to see it in action.
+In either case: Open a new bash and press ++tab++ key twice to see it in action.
 
 ## Short Options
 
-The most prevalent short options you will use are most likely `-s` and `-p`. But
-you will information about the other options here too.
+The most prevalent short options you will use are most likely [`-s`](#-s-module)
+and [`-p`](#-p-platform). But you will information about the other options and
+flags here too.
 
 ### -a &lt;FILENAME&gt;
 
-Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded relative to the current working directory. Consider setting this in [`config.ini`](CONFIGINI.md#artworkxml) instead.  
+Sets a non-default XML file to use when setting up the artwork compositing. By default Skyscraper uses the file `/home/<USER>/.skyscraper/artwork.xml`. If you provide a relative filepath it will be expanded relative to the [current working directory](PATHHANDLING.md#by-using-current-working-directory). Consider setting this in [`config.ini`](CONFIGINI.md#artworkxml) instead.  
 Read more about the artwork.xml [format and customization options](ARTWORK.md).
 
 **Example(s)**
@@ -41,7 +42,7 @@ Skyscraper -p snes -a "/path/to/artwork.xml"
 
 ### -c &lt;FILENAME&gt;
 
-Sets a non-default config file. By default Skyscraper uses the file `/home/<USER>/.skyscraper/config.ini`. A relative filepath will be prepended with the current working directory. If you provide a config file that does not exist, Skyscraper will print a warning and will continue by using built-in default values for the configuration.
+Sets a non-default config file. By default Skyscraper uses the file `/home/<USER>/.skyscraper/config.ini`. A relative filepath will be prepended with the [current working directory](PATHHANDLING.md#by-using-current-working-directory). If you provide a config file that does not exist, Skyscraper will print a warning and will continue by using built-in default values for the configuration. 
 
 **Example(s)**
 
@@ -51,7 +52,7 @@ Skyscraper -p snes -c "/path/to/config.ini"
 
 ### -d &lt;PATH&gt;
 
-Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.).
+Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.). You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-current-working-directory).
 
 !!! note
 
@@ -98,7 +99,7 @@ Skyscraper -p snes -f attractmode -e snes
 
 ### -g &lt;PATH&gt;
 
-Sets the game list export folder. By default Skyscraper exports the game list to the same directory as the rom input folder. This enables you to change that to a non-default location. Consider setting this in [`config.ini`](CONFIGINI.md#gamelistfolder) instead.
+Sets the game list export folder. By default Skyscraper exports the game list to the same directory as the rom input folder. This enables you to change that to a non-default location. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-current-working-directory) with [this limitation](PATHHANDLING.md#by-using-the-gamelist-folder). Consider setting this in [`config.ini`](CONFIGINI.md#gamelistfolder) instead.
 
 **Example(s)**
 
@@ -119,7 +120,7 @@ Skyscraper -h
 
 ### -i &lt;PATH&gt;
 
-Sets the rom input folder. By default Skyscraper will look for roms in the `/home/<user>/RetroPie/roms/<PLATFORM>` folder. If your roms are located in a non-default location, you can set the input path using this option. Consider setting this in [`config.ini`](CONFIGINI.md#inputfolder) instead.
+Sets the rom input folder. By default Skyscraper will look for roms in the `/home/<user>/RetroPie/roms/<PLATFORM>` folder. If your roms are located in a non-default location, you can set the input path using this option. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-current-working-directory). Consider setting this in [`config.ini`](CONFIGINI.md#inputfolder) instead. 
 
 **Example(s)**
 
@@ -129,7 +130,7 @@ Skyscraper -p snes -i "/path/to/your/snes/roms"
 
 ### -l &lt;0-10000&gt;
 
-Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500. Consider setting this in [`config.ini`](CONFIGINI.md#maxlength) instead.
+Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500 (which is approx. two-thirds of a typewriter page). Consider setting this in [`config.ini`](CONFIGINI.md#maxlength) instead.
 
 **Example(s)**
 
@@ -149,7 +150,7 @@ Skyscraper -p snes -s thegamesdb -m 50
 
 ### -o &lt;PATH&gt;
 
-Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder + `/media`. This allows you to change that to a non-default location. Read more about the [artwork compositing](ARTWORK.md). Consider setting this in [`config.ini`](CONFIGINI.md#mediafolder) instead.
+Sets the artwork / media output folder. By default Skyscraper outputs the composited artwork files to the game list export folder + `/media`. This allows you to change that to a non-default location. Read more about the [artwork compositing](ARTWORK.md). You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md)#by-using-current-working-directory. Consider setting this in [`config.ini`](CONFIGINI.md#mediafolder) instead.
 
 **Example(s)**
 
@@ -382,7 +383,7 @@ Skyscraper --cache validate          # all platforms
 
 ### --endat &lt;FILENAME&gt;
 
-If you wish to work on a subset of your roms you can use this option to set the rom to end at. Use it in conjunction with the `--startat` option described above to further narrow the subset of files.
+If you wish to work on a subset of your roms you can use this option to set the rom to end at given the lexically ordered games in a folder. Use it in conjunction with the `--startat` option described above to further narrow the subset of files. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-the-input-folder-rom-gamefile-path). 
 
 !!! note
 
@@ -390,18 +391,19 @@ If you wish to work on a subset of your roms you can use this option to set the 
 
 !!! tip
 
-    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--includefrom` option.
+    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/abs/or/relative/path/to/rom.zip"`.  
+    For a more specific control on which games to scrape, you may use the `--includefrom` option.
 
 **Example(s)**
 
 ```
 Skyscraper -p snes --cache edit --endat "rom name.zip"
-Skyscraper -p snes -s thegamesdb --endat "partial/path/to/rom name.zip"
+Skyscraper -p snes -s thegamesdb --endat "relative/path/to/rom name.zip"
 ```
 
 ### --excludefrom &lt;FILENAME&gt;
 
-Tells Skyscraper to exclude the files listed in FILENAME. One filename per line (with FULL path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').
+Tells Skyscraper to exclude the files listed in FILENAME: One filename per line as absolute path, eg. `/home/pi/RetroPie/roms/snes/subdir/somefile.zip`. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-skyscrapers-built-in-config-directory).
 
 This file can be generated with the `--cache report:missing` option or made manually.
 
@@ -530,7 +532,7 @@ This flag is _only_ relevant when generating a game list (by leaving out the `-s
 
 #### relative
 
-Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list, with the `-f` option. Emulationstation is the default frontend when the `-f` option is left out. This forces the rom and any media paths (if they are the same as the input folder) inside the game list to be relative to the rom input folder. Consider setting this in [`config.ini`](CONFIGINI.md#relativepaths) instead.
+Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list, with the `-f` option. Emulationstation is the default frontend when the `-f` option is left out. The `relative` flag forces the rom and any media paths (if they are the same as the input folder) inside the game list to be relative to the rom input folder. Consider setting this in [`config.ini`](CONFIGINI.md#relativepaths) instead.
 
 #### skipexistingcovers
 
@@ -621,7 +623,8 @@ Displays one of Skyscrapers's 'Did you know?' tips and exits.
 
 ### --includefrom &lt;FILENAME&gt;
 
-Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with _absolute_ path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').
+Tells Skyscraper to exclude the files listed in FILENAME: One filename per line as absolute path, eg. `/home/pi/RetroPie/roms/snes/subdir/somefile.zip`. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-skyscrapers-built-in-config-directory).
+
 The option is the equivalent to adding a bunch of filenames to work on directly on the commandline. It reads one line at a time from `<FILENAME>` and adds them to the queue of files to work on. This is very useful in combination with the `--cache edit` option or if you want to refresh data for just those files using `-s <SCRAPING MODULE>`.
 
 This file can be generated with the '--cache report:missing' option or made manually.
@@ -756,7 +759,7 @@ Skyscraper -p snes -s screenscraper --region jp
 
 ### --startat &lt;FILENAME&gt;
 
-If you wish to work on a subset of your roms you can use this option to set the starting rom. Use it in conjunction with the `--endat` option described below to further narrow the subset of files.
+If you wish to work on a subset of your roms you can use this option to set the starting rom file in the lexically sorted games in a folder. Use it in conjunction with the `--endat` option described below to further narrow the subset of files. You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-the-input-folder-rom-gamefile-path).
 
 !!! note
 
@@ -764,18 +767,19 @@ If you wish to work on a subset of your roms you can use this option to set the 
 
 !!! tip
 
-    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/full/or/partial/path/to/rom.zip"`. You can also use the `--includefrom` option.
+    Instead of using this option, if you just want to gather resources for _one_ ROM at a time, you can provide the filename(s) directly on the command like so: `Skyscraper -p snes -s thegamesdb "/abs/or/relative/path/to/rom.zip"`.  
+    For a more specific control on which games to scrape, you may use the `--includefrom` option.
 
 **Example(s)**
 
 ```
 Skyscraper -p snes --cache edit --startat "rom name.zip"
-Skyscraper -p snes -s thegamesdb --startat "partial/path/to/rom name.zip"
+Skyscraper -p snes -s thegamesdb --startat "relative/path/to/rom name.zip"
 ```
 
 ### --verbosity &lt;0-3&gt;
 
-Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Consider setting this in [`config.ini`](CONFIGINI.md#verbosity) instead.
+Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Maximum value is 3. Consider setting this in [`config.ini`](CONFIGINI.md#verbosity) instead.
 
 **Example(s)**
 

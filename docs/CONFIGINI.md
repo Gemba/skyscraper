@@ -18,6 +18,8 @@ Settings in the `[main]` section will always be set regardless of selected platf
 
 `<SCRAPER>` can be any of the supported scraping modules (check list with `--help` under the `-s` option), in which case the settings will only be applied while scraping with that particular scraping module.
 
+### Order of Precedence
+
 Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline (CLI) option which relates to an configuration setting in `config.ini` has highest precedence, regardless of the other four levels respective sections.
 
 You can find an example config file at `/home/<USER>/.skyscraper/config.ini.example`. This file contains all available options. Just copy the file to `config.ini` and uncomment and edit the ones you wish to use by removing the `#` or `;` in front of the variables. Remember to also uncomment the section the option relates to such as `[main]` or `[amiga]`.
@@ -57,81 +59,81 @@ userCreds="USER:PASSWORD"
 
 ### Index of Options with Applicable Sections
 
-This is an alphabetical index of all configuration options including the sections they may be applied to.
+This is an alphabetical index of all configuration options their usage level and their sections they may be applied to.
 
-| Section &rarr;<br>Parameter &darr;                          | `[main]` | `[<PLATFORM>]` | `[<FRONTEND>]` | `[<SCRAPER>]` |
-| ----------------------------------------------------------- | :------: | :------------: | :------------: | :-----------: |
-| [addExtensions](CONFIGINI.md#addextensions)                 |    Y     |       Y        |                |               |
-| [addFolders](CONFIGINI.md#addfolders)                       |          |                |       Y        |               |
-| [artworkXml](CONFIGINI.md#artworkxml)                       |    Y     |       Y        |       Y        |               |
-| [brackets](CONFIGINI.md#brackets)                           |    Y     |       Y        |       Y        |               |
-| [cacheCovers](CONFIGINI.md#cachecovers)                     |    Y     |       Y        |                |       Y       |
-| [cacheFolder](CONFIGINI.md#cachefolder)                     |    Y     |       Y        |                |               |
-| [cacheMarquees](CONFIGINI.md#cachemarquees)                 |    Y     |       Y        |                |       Y       |
-| [cacheRefresh](CONFIGINI.md#cacherefresh)                   |    Y     |                |                |       Y       |
-| [cacheResize](CONFIGINI.md#cacheresize)                     |    Y     |       Y        |                |       Y       |
-| [cacheScreenshots](CONFIGINI.md#cachescreenshots)           |    Y     |       Y        |                |       Y       |
-| [cacheTextures](CONFIGINI.md#cachetextures)                 |    Y     |       Y        |                |       Y       |
-| [cacheWheels](CONFIGINI.md#cachewheels)                     |    Y     |       Y        |                |       Y       |
-| [cropBlack](CONFIGINI.md#cropblack)                         |    Y     |       Y        |       Y        |               |
-| [emulator](CONFIGINI.md#emulator)                           |    Y     |       Y        |       Y        |               |
-| [endAt](CONFIGINI.md#endat)                                 |          |       Y        |       Y        |               |
-| [excludeFrom](CONFIGINI.md#excludefrom)                     |    Y     |       Y        |                |               |
-| [excludePattern](CONFIGINI.md#excludepattern)               |    Y     |       Y        |       Y        |               |
-| [extensions](CONFIGINI.md#extensions)                       |          |       Y        |                |               |
-| [forceFilename](CONFIGINI.md#forcefilename)                 |    Y     |       Y        |       Y        |               |
-| [frontend](CONFIGINI.md#frontend)                           |    Y     |                |                |               |
-| [gameBaseFile](CONFIGINI.md#gamebasefile)                   |          |       Y        |                |               |
-| [gameListBackup](CONFIGINI.md#gamelistbackup)               |    Y     |                |       Y        |               |
-| [gameListFilename](CONFIGINI.md#gamelistfilename)           |          |                |       Y        |               |
-| [gameListFolder](CONFIGINI.md#gamelistfolder)               |    Y     |       Y        |       Y        |               |
-| [gameListVariants](CONFIGINI.md#gamelistvariants)           |          |                |       Y        |               |
-| [hints](CONFIGINI.md#hints)                                 |    Y     |                |                |               |
-| [ignoreYearInFilename](CONFIGINI.md#ignoreyearinfilename)   |    Y     |       Y        |                |               |
-| [importFolder](CONFIGINI.md#importfolder)                   |    Y     |       Y        |                |               |
-| [includeFrom](CONFIGINI.md#includefrom)                     |    Y     |       Y        |                |               |
-| [includePattern](CONFIGINI.md#includepattern)               |    Y     |       Y        |       Y        |               |
-| [innerBracketsReplace](CONFIGINI.md#innerbracketsreplace)   |    Y     |                |                |               |
-| [innerParenthesesReplace](CONFIGINI.md#innerparenthesesreplace) |  Y   |                |                |               |
-| [inputFolder](CONFIGINI.md#inputfolder)                     |    Y     |       Y        |                |               |
-| [interactive](CONFIGINI.md#interactive)                     |    Y     |       Y        |                |       Y       |
-| [jpgQuality](CONFIGINI.md#jpgquality)                       |    Y     |       Y        |                |       Y       |
-| [keepDiscInfo](CONFIGINI.md#keepdiscinfo)                   |    Y     |       Y        |                |               |
-| [lang](CONFIGINI.md#lang)                                   |    Y     |       Y        |                |               |
-| [langPrios](CONFIGINI.md#langprios)                         |    Y     |       Y        |                |               |
-| [launch](CONFIGINI.md#launch)                               |    Y     |       Y        |       Y        |               |
-| [manuals](CONFIGINI.md#manuals)                             |    Y     |       Y        |                |               |
-| [maxFails](CONFIGINI.md#maxfails)                           |    Y     |                |                |               |
-| [maxLength](CONFIGINI.md#maxlength)                         |    Y     |       Y        |       Y        |       Y       |
-| [mediaFolder](CONFIGINI.md#mediafolder)                     |    Y     |       Y        |       Y        |               |
-| [mediaFolderHidden](CONFIGINI.md#mediafolderhidden)         |          |                |       Y        |               |
-| [minMatch](CONFIGINI.md#minmatch)                           |    Y     |       Y        |                |       Y       |
-| [nameTemplate](CONFIGINI.md#nametemplate)                   |    Y     |       Y        |                |               |
-| [onlyMissing](CONFIGINI.md#onlymissing)                     |    Y     |       Y        |                |       Y       |
-| [platform](CONFIGINI.md#platform)                           |    Y     |                |                |               |
-| [pretend](CONFIGINI.md#pretend)                             |    Y     |       Y        |                |               |
-| [region](CONFIGINI.md#region)                               |    Y     |       Y        |                |               |
-| [regionPrios](CONFIGINI.md#regionprios)                     |    Y     |       Y        |                |               |
-| [relativePaths](CONFIGINI.md#relativepaths)                 |    Y     |       Y        |                |               |
-| [scummIni](CONFIGINI.md#scummini)                           |    Y     |                |                |               |
-| [skipped](CONFIGINI.md#skipped)                             |    Y     |       Y        |       Y        |               |
-| [spaceCheck](CONFIGINI.md#spacecheck)                       |    Y     |                |                |               |
-| [startAt](CONFIGINI.md#startat)                             |          |       Y        |       Y        |               |
-| [subdirs](CONFIGINI.md#subdirs)                             |    Y     |       Y        |                |               |
-| [symlink](CONFIGINI.md#symlink)                             |    Y     |       Y        |       Y        |               |
-| [theInFront](CONFIGINI.md#theinfront)                       |    Y     |       Y        |       Y        |               |
-| [threads](CONFIGINI.md#threads)                             |    Y     |       Y        |                |       Y       |
-| [tidyDesc](CONFIGINI.md#tidydesc)                           |    Y     |       Y        |                |       Y       |
-| [unattend](CONFIGINI.md#unattend)                           |    Y     |       Y        |       Y        |       Y       |
-| [unattendSkip](CONFIGINI.md#unattendskip)                   |    Y     |       Y        |       Y        |       Y       |
-| [unpack](CONFIGINI.md#unpack)                               |    Y     |       Y        |                |               |
-| [userCreds](CONFIGINI.md#usercreds)                         |          |                |                |       Y       |
-| [verbosity](CONFIGINI.md#verbosity)                         |    Y     |       Y        |       Y        |               |
-| [videoConvertCommand](CONFIGINI.md#videoconvertcommand)     |    Y     |                |                |       Y       |
-| [videoConvertExtension](CONFIGINI.md#videoconvertextension) |    Y     |                |                |       Y       |
-| [videoPreferNormalized](CONFIGINI.md#videoprefernormalized) |          |                |                |       Y       |
-| [videos](CONFIGINI.md#videos)                               |    Y     |       Y        |       Y        |       Y       |
-| [videoSizeLimit](CONFIGINI.md#videosizelimit)               |    Y     |       Y        |                |       Y       |
+| Section &rarr;<br>Parameter &darr;                          | Usage<br>Level | `[main]` | `[<PLATFORM>]` | `[<FRONTEND>]` | `[<SCRAPER>]` |
+| ----------------------------------------------------------- |:--------------:| :------: | :------------: | :------------: | :-----------: |
+| [addExtensions](CONFIGINI.md#addextensions)                 | Advanced       |    Y     |       Y        |                |               |
+| [addFolders](CONFIGINI.md#addfolders)                       | Expert         |          |                |       Y        |               |
+| [artworkXml](CONFIGINI.md#artworkxml)                       | Advanced       |    Y     |       Y        |       Y        |               |
+| [brackets](CONFIGINI.md#brackets)                           | Basic          |    Y     |       Y        |       Y        |               |
+| [cacheCovers](CONFIGINI.md#cachecovers)                     | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheFolder](CONFIGINI.md#cachefolder)                     | Basic          |    Y     |       Y        |                |               |
+| [cacheMarquees](CONFIGINI.md#cachemarquees)                 | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheRefresh](CONFIGINI.md#cacherefresh)                   | Basic          |    Y     |                |                |       Y       |
+| [cacheResize](CONFIGINI.md#cacheresize)                     | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheScreenshots](CONFIGINI.md#cachescreenshots)           | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheTextures](CONFIGINI.md#cachetextures)                 | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheWheels](CONFIGINI.md#cachewheels)                     | Basic          |    Y     |       Y        |                |       Y       |
+| [cropBlack](CONFIGINI.md#cropblack)                         | Basic          |    Y     |       Y        |       Y        |               |
+| [emulator](CONFIGINI.md#emulator)                           | Advanced       |    Y     |       Y        |       Y        |               |
+| [endAt](CONFIGINI.md#endat)                                 | Advanced       |          |       Y        |       Y        |               |
+| [excludeFrom](CONFIGINI.md#excludefrom)                     | Advanced       |    Y     |       Y        |                |               |
+| [excludePattern](CONFIGINI.md#excludepattern)               | Advanced       |    Y     |       Y        |       Y        |               |
+| [extensions](CONFIGINI.md#extensions)                       | Expert         |          |       Y        |                |               |
+| [forceFilename](CONFIGINI.md#forcefilename)                 | Advanced       |    Y     |       Y        |       Y        |               |
+| [frontend](CONFIGINI.md#frontend)                           | Basic          |    Y     |                |                |               |
+| [gameBaseFile](CONFIGINI.md#gamebasefile)                   | Expert         |          |       Y        |                |               |
+| [gameListBackup](CONFIGINI.md#gamelistbackup)               | Basic          |    Y     |                |       Y        |               |
+| [gameListFilename](CONFIGINI.md#gamelistfilename)           | Advanced       |          |                |       Y        |               |
+| [gameListFolder](CONFIGINI.md#gamelistfolder)               | Advanced       |    Y     |       Y        |       Y        |               |
+| [gameListVariants](CONFIGINI.md#gamelistvariants)           | Advanced       |          |                |       Y        |               |
+| [hints](CONFIGINI.md#hints)                                 | Basic          |    Y     |                |                |               |
+| [ignoreYearInFilename](CONFIGINI.md#ignoreyearinfilename)   | Expert         |    Y     |       Y        |                |               |
+| [importFolder](CONFIGINI.md#importfolder)                   | Advanced       |    Y     |       Y        |                |               |
+| [includeFrom](CONFIGINI.md#includefrom)                     | Advanced       |    Y     |       Y        |                |               |
+| [includePattern](CONFIGINI.md#includepattern)               | Advanced       |    Y     |       Y        |       Y        |               |
+| [innerBracketsReplace](CONFIGINI.md#innerbracketsreplace)   | Expert         |    Y     |                |                |               |
+| [innerParenthesesReplace](CONFIGINI.md#innerparenthesesreplace) | Expert     |  Y       |                |                |               |
+| [inputFolder](CONFIGINI.md#inputfolder)                     | Advanced       |    Y     |       Y        |                |               |
+| [interactive](CONFIGINI.md#interactive)                     | Basic          |    Y     |       Y        |                |       Y       |
+| [jpgQuality](CONFIGINI.md#jpgquality)                       | Advanced       |    Y     |       Y        |                |       Y       |
+| [keepDiscInfo](CONFIGINI.md#keepdiscinfo)                   | Expert         |    Y     |       Y        |                |               |
+| [lang](CONFIGINI.md#lang)                                   | Basic          |    Y     |       Y        |                |               |
+| [langPrios](CONFIGINI.md#langprios)                         | Expert         |    Y     |       Y        |                |               |
+| [launch](CONFIGINI.md#launch)                               | Advanced       |    Y     |       Y        |       Y        |               |
+| [manuals](CONFIGINI.md#manuals)                             | Basic          |    Y     |       Y        |                |               |
+| [maxFails](CONFIGINI.md#maxfails)                           | Advanced       |    Y     |                |                |               |
+| [maxLength](CONFIGINI.md#maxlength)                         | Basic          |    Y     |       Y        |       Y        |       Y       |
+| [mediaFolder](CONFIGINI.md#mediafolder)                     | Advanced       |    Y     |       Y        |       Y        |               |
+| [mediaFolderHidden](CONFIGINI.md#mediafolderhidden)         | Basic          |          |                |       Y        |               |
+| [minMatch](CONFIGINI.md#minmatch)                           | Basic          |    Y     |       Y        |                |       Y       |
+| [nameTemplate](CONFIGINI.md#nametemplate)                   | Advanced       |    Y     |       Y        |                |               |
+| [onlyMissing](CONFIGINI.md#onlymissing)                     | Advanced       |    Y     |       Y        |                |       Y       |
+| [platform](CONFIGINI.md#platform)                           | Basic          |    Y     |                |                |               |
+| [pretend](CONFIGINI.md#pretend)                             | Basic          |    Y     |       Y        |                |               |
+| [region](CONFIGINI.md#region)                               | Basic          |    Y     |       Y        |                |               |
+| [regionPrios](CONFIGINI.md#regionprios)                     | Expert         |    Y     |       Y        |                |               |
+| [relativePaths](CONFIGINI.md#relativepaths)                 | Basic          |    Y     |       Y        |                |               |
+| [scummIni](CONFIGINI.md#scummini)                           | Advanced       |    Y     |                |                |               |
+| [skipped](CONFIGINI.md#skipped)                             | Advanced       |    Y     |       Y        |       Y        |               |
+| [spaceCheck](CONFIGINI.md#spacecheck)                       | Basic          |    Y     |                |                |               |
+| [startAt](CONFIGINI.md#startat)                             | Advanced       |          |       Y        |       Y        |               |
+| [subdirs](CONFIGINI.md#subdirs)                             | Basic          |    Y     |       Y        |                |               |
+| [symlink](CONFIGINI.md#symlink)                             | Basic          |    Y     |       Y        |       Y        |               |
+| [theInFront](CONFIGINI.md#theinfront)                       | Basic          |    Y     |       Y        |       Y        |               |
+| [threads](CONFIGINI.md#threads)                             | Basic          |    Y     |       Y        |                |       Y       |
+| [tidyDesc](CONFIGINI.md#tidydesc)                           | Basic          |    Y     |       Y        |                |       Y       |
+| [unattend](CONFIGINI.md#unattend)                           | Basic          |    Y     |       Y        |       Y        |       Y       |
+| [unattendSkip](CONFIGINI.md#unattendskip)                   | Basic          |    Y     |       Y        |       Y        |       Y       |
+| [unpack](CONFIGINI.md#unpack)                               | Advanced       |    Y     |       Y        |                |               |
+| [userCreds](CONFIGINI.md#usercreds)                         | Basic          |          |                |                |       Y       |
+| [verbosity](CONFIGINI.md#verbosity)                         | Basic          |    Y     |       Y        |       Y        |               |
+| [videoConvertCommand](CONFIGINI.md#videoconvertcommand)     | Expert         |    Y     |                |                |       Y       |
+| [videoConvertExtension](CONFIGINI.md#videoconvertextension) | Advanced       |    Y     |                |                |       Y       |
+| [videoPreferNormalized](CONFIGINI.md#videoprefernormalized) | Advanced       |          |                |                |       Y       |
+| [videos](CONFIGINI.md#videos)                               | Basic          |    Y     |       Y        |       Y        |       Y       |
+| [videoSizeLimit](CONFIGINI.md#videosizelimit)               | Basic          |    Y     |       Y        |                |       Y       |
 
 #### inputFolder
 
@@ -1138,7 +1140,8 @@ done with the one-time preparation.
 
 While you can use only the `GBC_v18.sqlite3` standalone, you will not be able to
 collect the screenshots and available covers when the `GBC_v18.sqlite3` is moved
-away from the unpacked GameBase DB.
+away from the unpacked GameBase DB as this image data is held in folders
+relative to the mdb (sqlite3) file and not in the database file itself.
 
 Finally, use the absolute file path of the `GBC_v18.sqlite3` in the configuration
 platform section and you are ready to scrape the GameBase DB.
@@ -1151,7 +1154,7 @@ gameBaseFile="/path/to/GBC_v18.sqlite3"
 Default value: unset  
 Allowed in sections: Only in `[<PLATFORM>]`, must be an absolute filepath
 
-!!! tip "Tips for scraping"
+!!! tip "Tips for Scraping a GameBase DB"
 
     1. You will get the most reliable automatic match when your game files are using
     the same basefile stem as in the GameBase DB, for example: The game filename on
