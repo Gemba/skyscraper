@@ -155,7 +155,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             if (v.isEmpty())
                 continue;
             if (k == "addExtensions") {
-                config->addExtensions = v;
+                config->addExtensions = parseExtensions(v);
                 continue;
             }
             if (k == "artworkXml") {
@@ -191,7 +191,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "extensions") {
-                config->extensions = v;
+                config->extensions = parseExtensions(v);
                 continue;
             }
             if (k == "gameListFilename") {
@@ -321,7 +321,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "videoConvertExtension") {
-                config->videoConvertExtension = v;
+                config->videoConvertExtension =
+                    parseExtensions(v).replace("*.", "");
                 continue;
             }
         } else if (conv == "bool") {
@@ -611,7 +612,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         }
     }
     if (parser->isSet("addext")) {
-        config->addExtensions = parser->value("addext");
+        config->addExtensions = parseExtensions(parser->value("addext"));
     }
     if (parser->isSet("refresh")) {
         config->refresh = true;
@@ -814,4 +815,21 @@ QString RuntimeCfg::toAbsolutePath(bool isCliOpt, QString optionVal) {
             isCliOpt ? config->currentDir : configIniAbsPath, optionVal);
     }
     return Config::lexicallyNormalPath(optionVal);
+}
+
+QString RuntimeCfg::parseExtensions(const QString &optionVal) {
+    // --addext, addExtension, extensions
+    // 'foo .bar *.bAZ' --> '*.foo *.bar *.baz'
+    QStringList exts = optionVal.simplified().split(" ");
+    QStringList ret;
+    for (const auto &e : exts) {
+        if (e.startsWith("*.")) {
+            ret.append(e.toLower());
+        } else if (e.startsWith(".")) {
+            ret.append("*" % e.toLower());
+        } else {
+            ret.append("*." % e.toLower());
+        }
+    }
+    return ret.join(" ");
 }

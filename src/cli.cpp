@@ -154,7 +154,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption addextOption(
         "addext",
         "Add this or these file extension(s) to accepted file extensions "
-        "during a scraping run. (example: '*.zst' or '*.zst *.ext')",
+        "during a scraping run. (ex.: '*.zst *.ext', also valid: '.zst ext')",
         "EXTENSION(S)", "");
     QCommandLineOption flagsOption(
         "flags",

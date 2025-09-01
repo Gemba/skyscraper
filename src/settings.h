@@ -185,6 +185,7 @@ private:
     bool scraperAllowedForMatch(const QString &providedScraper,
                                 const QString &opt);
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
+    QString parseExtensions(const QString &optionVal);
 
     Settings *config;
     const QCommandLineParser *parser;

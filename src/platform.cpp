@@ -154,15 +154,13 @@ QString Platform::getFormats(QString platform, QString extensions,
     addExts = addExtensions.split(" ", QString::SkipEmptyParts);
 #endif
     for (auto f : addExts) {
-        if (f.startsWith("*.")) {
-            formats << f;
-        }
+        formats << f;
     }
 
     QStringList myFormats = peas[platform].toHash()["formats"].toStringList();
     for (auto f : myFormats) {
         if (f.trimmed().startsWith("*.")) {
-            formats << f.trimmed();
+            formats << f.trimmed().toLower();
         }
     }
 

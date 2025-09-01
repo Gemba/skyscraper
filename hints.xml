@@ -31,11 +31,12 @@
   <hint>You can scrape game manuals with Skyscraper and display them if your frontend supports this. Use manuals=true in config.ini.</hint>
   <hint>You can make Skyscraper use the XDG Base Directories on Linux systems. See the https://gemba.github.io/skyscraper/XDG documentation.</hint>
   <hint>Skyscraper supports the ES-DE frontend gamelist format.</hint>
-  <hint>You can add new platforms (i.e., systems to scrape) with configuration file edits. See https://gemba.github.io/skyscraper/PLATFORMS</hint>
+  <hint>You can add new platforms (i.e., systems to scrape) by editing configuration files. See https://gemba.github.io/skyscraper/PLATFORMS</hint>
   <hint>You can scrape data from GameBase DB files with Skyscraper. GameBase DBs are a well of information especially for indie or homebrew games for retro systems.</hint>
   <hint>Skyscraper supports ten scraping modules: 7 for online sources and 3 for local sources.</hint>
   <hint>Pizza and beer go well together.</hint>
   <hint>Skyscraper debuted at June, 11th 2017.</hint>
   <hint>Skyscraper runs on Linux, macOS and Windows.</hint>
   <hint>You can use relative paths for almost every path related option. See https://gemba.github.io/skyscraper/PATHHANDLING</hint>
+  <hint>For a file extension/suffix option value like '*.ext', you can use the shorter forms '.ext' or even only 'ext'.</hint>
 </hints>
