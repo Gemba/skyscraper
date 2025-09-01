@@ -5,8 +5,16 @@ humans](https://keepachangelog.com).
 
 ### Version 3.18.0 (2025-TBA)
 
+- Added: Allow more relaxed extension syntax in config options. In addition to
+  `'*.ext'` also allow `'.ext'` and `'ext'`
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
+- Updated: Documentation, added usage level for configuration options. See
+  [config options
+  overview](CONFIGINI.md#index-of-options-with-applicable-sections), plus many
+  smaller edits
+- Fixed: Various edge cases remediated, esp. #166, #167 and #169, thanks to all
+  reporters!
 
 ### Version 3.17.0 (2025-05-04)
 
