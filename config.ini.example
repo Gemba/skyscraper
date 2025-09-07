@@ -82,6 +82,7 @@
 ;innerBracketsReplace="] ["
 ;innerParenthesesReplace=") ("
 ;ignoreYearInFilename="false"
+;searchBaseName="false"
 
 ; The following is an example of configs that only affect the 'snes' platform.
 ;[snes]
@@ -130,6 +131,7 @@
 ;extensions="*.zip *.uae *.adf"
 ;addExtensions="*.zst *.rom"
 ;subdirs="true"
+;searchBaseName="true"
 
 ;[zxspectrum]
 ;gameBaseFile="/path/to/converted-mdb-gamebase/gb-zxspectrum.sqlite3"
