@@ -40,6 +40,12 @@ inline const QString baseFolder() {
     return QString(QDir::homePath() % "/ES-DE");
 }
 
+void Esde::setConfig(Settings *config) {
+    this->config = config;
+    if (config->scraper == "cache")
+        config->manuals = true;
+}
+
 QStringList Esde::extraGamelistTags(bool isFolder) {
     GameEntry g;
     g.isFolder = isFolder;

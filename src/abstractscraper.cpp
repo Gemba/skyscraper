@@ -154,6 +154,11 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
                 getManual(game);
             }
             break;
+        case GameEntry::Elem::FANART:
+            if (config->fanart) {
+                getFanart(game);
+            }
+            break;
         default:;
         }
     }

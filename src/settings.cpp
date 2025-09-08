@@ -477,6 +477,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->manuals = v;
                 continue;
             }
+            if (k == "fanart") {
+                config->fanart = v;
+                continue;
+            }
         } else if (conv == "int") {
             bool intOk;
             int v = ss.toInt(&intOk);
@@ -705,6 +709,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->skipExistingCovers = true;
     } else if (flag == "skipexistingmanuals") {
         config->skipExistingManuals = true;
+    } else if (flag == "skipexistingfanart") {
+        config->skipExistingFanart = true;
     } else if (flag == "skipexistingmarquees") {
         config->skipExistingMarquees = true;
     } else if (flag == "skipexistingscreenshots") {
@@ -731,6 +737,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->videos = true;
     } else if (flag == "manuals") {
         config->manuals = true;
+    } else if (flag == "fanart") {
+        config->fanart = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
     } else {
@@ -765,7 +773,7 @@ QStringList RuntimeCfg::parseFlags() {
 
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
     QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus", "esde"};
+                             "pegasus",          "esde",     "batocera"};
     frontends.sort();
     if (!frontends.contains(providedFrontend)) {
         printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "

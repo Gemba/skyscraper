@@ -58,6 +58,19 @@ const QString ATTR_SRC = "source";
 const QString ATTR_TS = "timestamp";
 const QString ATTR_TYPE = "type";
 
+enum class Excludes : char { NONE = 0, VIDEO = 1, MANUAL = 2, FANART = 4 };
+
+Excludes operator|(Excludes lhs, Excludes rhs) {
+    using ExclType = std::underlying_type<Excludes>::type;
+    return Excludes(static_cast<ExclType>(lhs) | static_cast<ExclType>(rhs));
+}
+
+Excludes operator&(Excludes lhs, Excludes rhs) {
+    using ExclType = std::underlying_type<Excludes>::type;
+    return Excludes(static_cast<ExclType>(lhs) & static_cast<ExclType>(rhs));
+}
+
+// keywords used in cache (slightly different from gamelist XML elements)
 static inline QStringList txtTypes(bool useGenres = true) {
     // keep order for cache edit menu
     QStringList txtTypes = {"title",     "platform", "releasedate", "developer",
@@ -67,16 +80,18 @@ static inline QStringList txtTypes(bool useGenres = true) {
     return txtTypes;
 }
 
-static inline QStringList binTypes(bool withVideo = true,
-                                   bool withManual = true) {
+static inline QStringList binTypes(Excludes bins = Excludes::NONE) {
     // keep order for cache edit menu
     QStringList binTypes = {"cover", "screenshot", "wheel", "marquee",
                             "texture"};
-    if (withVideo) {
+    if (Excludes::VIDEO != (bins & Excludes::VIDEO)) {
         binTypes.append("video");
     }
-    if (withManual) {
+    if (Excludes::MANUAL != (bins & Excludes::MANUAL)) {
         binTypes.append("manual");
+    }
+    if (Excludes::FANART != (bins & Excludes::FANART)) {
+        binTypes.append("fanart");
     }
     return binTypes;
 };
@@ -257,8 +272,9 @@ void Cache::printPriorities(QString cacheId) {
         {"Cover", game.coverSrc},     {"Screenshot", game.screenshotSrc},
         {"Wheel", game.wheelSrc},     {"Marquee", game.marqueeSrc},
         {"Texture", game.textureSrc}, {"Video", game.videoSrc},
-        {"Manual", game.manualSrc}};
+        {"Manual", game.manualSrc},   {"Fanart", game.fanartSrc}};
 
+    // print out summary what was present in cache and from which source
     for (auto const &e : prioBinRes) {
         QString key = QString("%1:%2").arg(
             e.first, pad.left(pad.length() - e.first.length()));
@@ -940,7 +956,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             resTypeList += txtTypes(false);
             resTypeList.sort();
         } else if (missingOption == "artwork") {
-            resTypeList += binTypes(false, false); // w/o 'video' and 'manual'
+            resTypeList += binTypes(Excludes::VIDEO | Excludes::MANUAL);
             resTypeList.sort();
         } else if (missingOption == "media") {
             resTypeList += binTypes();
@@ -1166,7 +1182,7 @@ void Cache::printStats(bool totals) {
         {"Ages", 0},         {"Tags", 0},       {"Ratings", 0},
         {"ReleaseDates", 0}, {"Covers", 0},     {"Screenshots", 0},
         {"Wheels", 0},       {"Marquees", 0},   {"Textures", 0},
-        {"Videos", 0},       {"Manuals", 0}};
+        {"Videos", 0},       {"Manuals", 0},    {"Fanart", 0}};
     for (auto it = resCountsMap.begin(); it != resCountsMap.end(); ++it) {
         if (!totals) {
             printf("'\033[1;32m%s\033[0m' module\n",
@@ -1189,6 +1205,7 @@ void Cache::printStats(bool totals) {
         resTotals["Textures"] += it.value().textures;
         resTotals["Videos"] += it.value().videos;
         resTotals["Manuals"] += it.value().manuals;
+        resTotals["Fanart"] += it.value().fanart;
         if (!totals) {
             for (auto it = resTotals.begin(); it != resTotals.end(); ++it) {
                 printf("  %12s : %d\n", it.key().toStdString().c_str(),
@@ -1239,6 +1256,8 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].videos++;
     } else if (type == "manual") {
         resCountsMap[source].manuals++;
+    } else if (type == "fanart") {
+        resCountsMap[source].fanart++;
     }
 }
 
@@ -1527,6 +1546,7 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"marquee", !entry.marqueeData.isEmpty()},
         {"texture", !entry.textureData.isEmpty()},
         {"manual", !entry.manualData.isEmpty()},
+        {"fanart", !entry.fanartData.isEmpty()},
         {"video", !entry.videoData.isEmpty() && entry.videoFormat != ""}};
 
     for (auto const &t : binTypes()) {
@@ -1564,7 +1584,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
     if (notFound) {
         bool okToAppend = true;
         QString cacheFile = cacheAbsolutePath + "/" + resource.value;
-        if (binTypes(false, false).contains(resource.type)) {
+        if (binTypes(Excludes::VIDEO).contains(resource.type)) {
             QByteArray *imageData = nullptr;
             if (resource.type == "cover") {
                 imageData = &entry.coverData;
@@ -1576,8 +1596,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 imageData = &entry.marqueeData;
             } else if (resource.type == "texture") {
                 imageData = &entry.textureData;
+            } else if (resource.type == "fanart") {
+                imageData = &entry.fanartData;
+            } else if (resource.type == "manual") {
+                imageData = &entry.manualData;
             }
-            if (config.cacheResize) {
+            if (config.cacheResize && resource.type != "fanart" &&
+                resource.type != "manual") {
                 QImage image;
                 if (imageData->size() > 0 && image.loadFromData(*imageData) &&
                     !image.isNull()) {
@@ -1659,21 +1684,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         Config::getSkyFolder(Config::SkyFolderType::CONFIG) %
                         "/config.ini.'");
                 okToAppend = false;
-            }
-        } else if (resource.type == "manual") {
-            QFile f(cacheFile);
-            if (f.open(QIODevice::WriteOnly)) {
-                f.write(entry.manualData);
-                f.close();
-            } else {
-                output.append("Error writing file: '" + f.fileName() +
-                              "' to cache. Please check permissions.");
-                okToAppend = false;
+                entry.videoFormat = "";
             }
         }
 
         if (okToAppend) {
-            if (binTypes(false, false).contains(resource.type)) {
+            if (binTypes(Excludes::VIDEO | Excludes::MANUAL | Excludes::FANART)
+                    .contains(resource.type)) {
                 // Remove old style cache image if it exists
                 if (QFile::exists(cacheFile + ".png")) {
                     QFile::remove(cacheFile + ".png");
@@ -1887,22 +1904,25 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
                 entry.textureData = data;
                 entry.textureSrc = source;
             } else if (type == "video" && !data.isEmpty()) {
-                // video is not part of artwork.xml / compositor.cpp
-                // set filename here
+                // video, manual and fanrt are not part of artwork.xml resp.
+                // compositor.cpp: set filename here
                 entry.videoData = data;
                 entry.videoSrc = source;
                 QFileInfo info(f);
                 entry.videoFormat = info.suffix();
                 entry.videoFile = info.absoluteFilePath();
             } else if (type == "manual" && !data.isEmpty()) {
-                // manual is not part of artwork.xml / compositor.cpp
-                // set filename here
                 entry.manualData = data;
                 entry.manualSrc = source;
                 QFileInfo info(f);
                 entry.manualFile = info.absoluteFilePath();
+            } else if (type == "fanart" && !data.isEmpty()) {
+                entry.fanartData = data;
+                entry.fanartSrc = source;
+                QFileInfo info(f);
+                entry.fanartFile = info.absoluteFilePath();
             }
-            // PENDING: if thumbnail is ever used add it here like video/manual
+            // PENDING: if thumbnail is ever used, add it here like video/manual
         }
     }
 }

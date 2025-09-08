@@ -60,6 +60,7 @@ public:
 
     static const QMap<unsigned char, QString> commonGamelistElems() {
         return QMap<unsigned char, QString>{
+            /* KEY, "gamelist XML element" */
             {DESCRIPTION, "desc"},
             {DEVELOPER, "developer"},
             {PUBLISHER, "publisher"},
@@ -70,14 +71,15 @@ public:
             {SCREENSHOT, "image"},
             {VIDEO, "video"},
             {RATING, "rating"},
-            // PENDING: does ES-DE utilize <wheel/>? (ES: No, Bato: Yes)
+            // PENDING: does ES-DE utilize <wheel/> in GL? (ES: No, Bato: Yes)
             {WHEEL, "wheel"},
             {MARQUEE, "marquee"},
-            // ES, ES-DE and Batocera
+            // ES (variants), ES-DE and Batocera
             {AGES, "kidgame"},
             {TITLE, "name"},
             {TEXTURE, "texture"},
             {MANUAL, "manual"},
+            // Batocera only and some ES dialects
             {FANART, "fanart"}};
     };
 
@@ -91,7 +93,8 @@ public:
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
-                               bool manualEnabled = false);
+                               bool manualEnabled = false,
+                               bool fanartEnabled = false);
     int getCompleteness() const;
     void resetMedia();
     const QString getEsExtra(const QString &tagName) const;

@@ -50,6 +50,7 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
     fetchOrder.append(GameEntry::Elem::WHEEL);
     fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::FANART);
 }
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
@@ -246,6 +247,15 @@ void TheGamesDb::getMarquee(GameEntry &game) {
     game.marqueeData = downloadMedia(req + ".jpg");
     if (game.marqueeData.isEmpty()) {
         game.marqueeData = downloadMedia(req + ".png");
+    }
+}
+
+void TheGamesDb::getFanart(GameEntry &game) {
+    // https://cdn.thegamesdb.net/images/original/fanart/189-1.jpg
+    QString req = gfxUrl + "/fanart/" + game.id + "-1";
+    game.fanartData = downloadMedia(req + ".jpg");
+    if (game.fanartData.isEmpty()) {
+        game.fanartData = downloadMedia(req + ".png");
     }
 }
 

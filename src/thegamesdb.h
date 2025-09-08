@@ -53,6 +53,7 @@ private:
     void getScreenshot(GameEntry &game) override;
     void getWheel(GameEntry &game) override;
     void getMarquee(GameEntry &game) override;
+    void getFanart(GameEntry &game) override;
     int getPlatformId(const QString platform) override;
 
     QString gfxUrl;

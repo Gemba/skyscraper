@@ -26,6 +26,7 @@
 #include "skyscraper.h"
 
 #include "attractmode.h"
+#include "batocera.h"
 #include "cli.h"
 #include "config.h"
 #include "emulationstation.h"
@@ -60,7 +61,7 @@ Skyscraper::Skyscraper(const QString &currentDir) {
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 
 void Skyscraper::run() {
-
+    // called after loadConfig()
     if (config.platform.isEmpty()) {
         if (config.cacheOptions == "purge:all") {
             Cache::purgeAllPlatform(config, this);
@@ -114,6 +115,10 @@ void Skyscraper::run() {
     if (config.manuals && !config.manualsFolder.isEmpty()) {
         printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
                config.manualsFolder.toStdString().c_str());
+    }
+    if (config.fanart && !config.fanartsFolder.isEmpty()) {
+        printf("Fanarts folder:     '\033[1;32m%s\033[0m'\n",
+               config.fanartsFolder.toStdString().c_str());
     }
     printf("Cache folder:       '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
@@ -199,7 +204,7 @@ void Skyscraper::run() {
     }
     if (config.cacheOptions == "validate") {
         cache->validate();
-        state = NO_INTR; // Ignore ctrl+c
+        state = NO_INTR;
         cache->write();
         state = SINGLE;
         exit(0);
@@ -217,7 +222,7 @@ void Skyscraper::run() {
             Cache mergeCache(absMergeCacheFilePath);
             mergeCache.read();
             cache->merge(mergeCache, config.refresh, absMergeCacheFilePath);
-            state = NO_INTR; // Ignore ctrl+c
+            state = NO_INTR;
             cache->write();
             state = SINGLE;
         } else {
@@ -258,7 +263,7 @@ void Skyscraper::run() {
         cache->editResources(queue, editCommand, editType);
         if (state == CACHE_EDIT) {
             printf("Done editing resources.\n");
-            state = NO_INTR; // Ignore ctrl+c
+            state = NO_INTR;
             cache->write();
         } else {
             printf("Catched Ctrl-C: No changes persisted!\n");
@@ -458,6 +463,9 @@ void Skyscraper::prepareFileQueue() {
     if (config.manuals) {
         setFolder(doCacheScraping, config.manualsFolder);
     }
+    if (config.fanart) {
+        setFolder(doCacheScraping, config.fanartsFolder);
+    }
 
     setFolder(doCacheScraping, config.importFolder, false);
 
@@ -569,11 +577,13 @@ void Skyscraper::prepareFileQueue() {
 
 void Skyscraper::setFolder(const bool doCacheScraping, QString &outFolder,
                            const bool createMissingFolder) {
-    QDir dir(outFolder);
-    if (doCacheScraping) {
-        checkForFolder(dir, createMissingFolder);
+    if (!outFolder.isEmpty()) {
+        QDir dir(outFolder);
+        if (doCacheScraping) {
+            checkForFolder(dir, createMissingFolder);
+        }
+        outFolder = dir.absolutePath();
     }
-    outFolder = dir.absolutePath();
 }
 
 void Skyscraper::checkForFolder(QDir &folder, bool create) {
@@ -795,6 +805,7 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
 }
 
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
+    // called before run()
     QString iniFile = parser.isSet("c") ? parser.value("c") : "config.ini";
     QString absIniFile = Config::makeAbsolutePath(
         parser.isSet("c") ? config.currentDir : Config::getSkyFolder(),
@@ -892,6 +903,13 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         frontend = new Pegasus;
     } else if (config.frontend == "esde") {
         frontend = new Esde;
+    } else if (config.frontend == "batocera") {
+        frontend = new Batocera;
+    }
+
+    // Choose default scraper if none has been set yet
+    if (config.scraper.isEmpty()) {
+        config.scraper = "cache";
     }
 
     frontend->setConfig(&config);
@@ -957,11 +975,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     config.texturesFolder = frontend->getTexturesFolder();
     config.videosFolder = frontend->getVideosFolder();
     config.manualsFolder = frontend->getManualsFolder();
-
-    // Choose default scraper for chosen platform if none has been set yet
-    if (config.scraper.isEmpty()) {
-        config.scraper = "cache";
-    }
+    config.fanartsFolder = frontend->getFanartsFolder();
 
     if (config.importFolder.isEmpty()) {
         config.importFolder =

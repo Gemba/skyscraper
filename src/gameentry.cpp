@@ -27,16 +27,17 @@
 
 GameEntry::GameEntry() {}
 
-void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled) {
+void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled,
+                                      bool fanartEnabled) {
     completeness = 100.0;
     // ignore texture (currently only supported by ScreenScraper)
     int noOfTypes = Elem::__LAST - 1;
-    if (!videoEnabled) {
+    if (!videoEnabled)
         noOfTypes -= 1;
-    }
-    if (!manualEnabled) {
+    if (!manualEnabled)
         noOfTypes -= 1;
-    }
+    if (!fanartEnabled)
+        noOfTypes -= 1;
     double valuePerType = completeness / (double)noOfTypes;
     if (title.isEmpty()) {
         completeness -= valuePerType;
@@ -86,6 +87,9 @@ void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled) {
     if (manualEnabled && manualData.isEmpty()) {
         completeness -= valuePerType;
     }
+    if (fanartEnabled && fanartData.isEmpty()) {
+        completeness -= valuePerType;
+    }
 }
 
 int GameEntry::getCompleteness() const { return (int)completeness; }
@@ -98,6 +102,7 @@ void GameEntry::resetMedia() {
     textureData.clear();
     videoData.clear();
     manualData.clear();
+    fanartData.clear();
 }
 
 const QString GameEntry::getEsExtra(const QString &tagName) const {
@@ -115,7 +120,7 @@ const QStringList GameEntry::extraTagNames(Format type,
         // same for every <game/>
         return extraElemNames(type, ge.isFolder);
     }
-    // can differ for each <game/>
+    // can differ for each <game/> when Batocera
     return esExtras.keys();
 }
 
@@ -131,6 +136,7 @@ const QStringList GameEntry::extraElemNames(Format type, bool isFolder) const {
     if (type == Format::RETROPIE) {
         return tagNames;
     }
+    // ES-DE
     tagNames +=
         {"collectionsortname", "completed",    "broken",     "nogamecount",
          "nomultiscrape",      "hidemetadata", "controller", "altemulator"};

@@ -448,6 +448,10 @@ From Skyscraper 3.5.0 all command-line options that change the scraping behaviou
 
 To enable multiple flags separate them by commas (eg. `--flags FLAG1,FLAG2`) or apply `--flags` option multiple times.
 
+#### fanart
+
+By default Skyscraper doesn't scrape and cache game fanart resources because not all scraping sites provide this data and also only some frontends support fanart display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#fanart) instead.
+
 #### forcefilename
 
 This flag forces Skyscraper to use the filename (excluding extension) instead of the cached titles when generating a game list. Consider setting this in [`config.ini`](CONFIGINI.md#forcefilename) instead.
@@ -539,6 +543,10 @@ Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game 
 #### skipexistingcovers
 
 When generating gamelists, skip processing covers that already exist in the media output folder.
+
+#### skipexistingfanart
+
+When generating gamelists, skip copying fanart files that already exist in the media output folder.
 
 #### skipexistingmanuals
 

@@ -106,6 +106,116 @@ file will be preserved: For these on top is the `folderlink` element is preserve
 
 This is modeled after EmualtionStation as it uses it with slight differences.
 
+### Batocera
+
+Over time the fork of EmulationStation in Batocera has diverted stark from the
+initial EmulationStation. Thus, the gamelist format is somewhat different, but
+the textual scraping elements are still the same. Most notably Batocera
+EmulationStation stores a lot of additional information in the gamelist, and the
+set of information may differ for each game.  
+Skyscraper aims to cover the most frequent used elements for scraping, currently
+fanart, manuals and videos. See the [scraping
+modules](SCRAPINGMODULES.md#capabilities-of-scrapers) for support of these
+mediafiles.
+
+This is the complete set of scraping binary data supported by Skyscraper:
+
+| Batocera Gamelist XML-Element | Skyscraper support |
+| :---------------------------- | :----------------: |
+| boxart                        |         ✓          |
+| fanart                        |         ✓          |
+| image (in game Screenshot)    |         ✓          |
+| manual                        |         ✓          |
+| marquee                       |         ✓          |
+| video                         |         ✓          |
+| wheel                         |         ✓          |
+
+ROMs are expected to be in the input folder `/userdata/roms/<PLATFORM>` for
+every `<PLATFORM>` you scrape.
+
+-   Default game list location: `/userdata/roms/<PLATFORM>`
+-   Default game list filename: `gamelist.xml`
+-   Default media file location: `/userdata/roms/<PLATFORM>/{images,videos,manuals}`
+
+#### Metadata preservation
+
+These extra elements are preserved.
+
+| Batocera Gamelist XML-Element | When present in Gamelist  |
+| :---------------------------- | :-----------------------: |
+| `bezel`                       | Preserved                 |
+| `boxback`                     | Preserved                 |
+| `cartridge`                   | Preserved                 |
+| `magazine`                    | Preserved                 |
+| `map`                         | Preserved                 |
+| `mix`                         | Preserved                 |
+| `music`                       | Preserved                 |
+| `thumbnail`                   | Preserved                 |
+| `titleshot`                   | Preserved                 |
+
+Also all other non scrapable elements are preserved (Batocera EmulationStation
+adds those on occasion) like: `cheevosHash`, `cheevosId`, `scrap`, ...
+
+#### Usage of Skyscraper for Batocera
+
+It is possible to compile Skyscraper on Batocera supported systems but you will
+need the build-toolchain (at least GCC, make and Qt). Additionally, the
+configuration files must be installed in a defined location (see the `PREFIX`
+option in the top-level `README.md`, if you are keen to compile Skyscraper on
+Batocera).
+
+A more convienient way is to use Skyscraper from you Desktop system: Below you
+can find a step-by-step guide for Linux systems, macOS should be similar.
+Windows desktop users can use SMB shares and can adapt the following steps.
+
+1. Mount the root folder of Batocera in your Desktop system. Let the mountpoint
+   be `/home/mylogin/bato_sshfs` in this example:
+   ```bash
+   mount -t sshfs root@<batocera-IP-address>:/ /home/mylogin/bato_sshfs
+   ```
+2. Change to the platform folder (in this case `snes`) you want to scrape:
+   ```bash
+   cd /home/mylogin/bato_sshfs/userdata/roms/snes
+   ```
+3. Then run on your Desktop system to scrape data from screenscraper and put it
+   into the Skyscraper cache on your Desktop system:
+   ```bash
+   Skyscraper -s screenscraper -p snes --flags fanart,manuals,videos -i "$(pwd)"
+   -g "$(pwd)" -o "$(pwd)"
+   ```
+   You can also set the values for [input-](CONFIGINI.md#inputfolder) (`-i`),
+   [gamelist-](CONFIGINI.md#gamelistfolder) (`-g`) und
+   [media-folder](CONFIGINI.md#mediafolder) (`-o`) permanently in the Skyscraper
+   config file.
+4. Afterwards run the gamelist creation and media file deployment from
+   cache:
+   ```bash
+   Skyscraper -f batocera -p snes --flags videos -i "$(pwd)" -g "$(pwd)" -o
+   "$(pwd)"
+   ```
+5. Do a SSH login to your Batocera system and restart the EmulationStation
+   ```bash
+   batocera-es-swissknife --restart && emulationstation-standalone
+   ```
+   Leave the SSH shell open to reload EmulationStation with ++ctrl+c++ for
+   subsequent gamelist reloads. You can also restart the whole system, however
+   it takes longer.
+6. Navigate to the system/platform you just scraped to review the scraping
+   result.
+
+!!! tip "New to Skyscraper?"
+
+    For starters I suggest to enable (set `true`) these settings:
+    [`unattended`](CONFIGINI.md#unattend),
+    [`unattendedSktip`](CONFIGINI.md#unattendSkip) and most importantly
+    [`gameListBackup`](CONFIGINI.md#gamelistbackup). If you have precious media
+    files which you may want to keep make also a manual backup of the media folders
+    of. Also you will have to add your credentials for Screenscraper for example in
+    the [config file of Skyscraper](CONFIGINI.md#usercreds).
+
+For general advise on SSH usage see the [Batocera
+documentation](https://wiki.batocera.org/security).
+
 ### Attract-Mode
 
 -   Default game list location: `/home/<USER>/.attract/romlists`

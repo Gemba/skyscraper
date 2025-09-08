@@ -35,10 +35,20 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-static const QRegularExpression REGEX_OPENELEM = QRegularExpression("<(\\w+)");
-static const QString INDENT = "  ";
+static const QRegularExpression REGEX_OPENELEM =
+    QRegularExpression("<(\\w+)[\\s>]");
 
 EmulationStation::EmulationStation() {}
+
+void EmulationStation::setConfig(Settings *config) {
+    this->config = config;
+    if (config->scraper == "cache") {
+        if (config->gameListVariants.contains("enable-manuals"))
+            config->manuals = true;
+        if (config->gameListVariants.contains("enable-fanart"))
+            config->fanart = true;
+    }
+}
 
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // Load old game list entries so we can preserve metadata later when
@@ -111,6 +121,7 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
     for (const auto &oldEntry : oldEntries) {
         if (entry.path == oldEntry.path) {
             preserveVariants(oldEntry, entry);
+
             if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
             }
@@ -140,6 +151,7 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
                 entry.marqueeFile = oldEntry.marqueeFile;
                 entry.textureFile = oldEntry.textureFile;
                 entry.videoFile = oldEntry.videoFile;
+                entry.fanartFile = oldEntry.fanartFile;
                 // entry.manualFile on type folder does not make sense
             }
             break;
@@ -312,7 +324,7 @@ bool EmulationStation::isGameLauncher(QString &sub) {
 
 QString EmulationStation::openingElement(GameEntry &entry) {
     QString entryType = QString(entry.isFolder ? "folder" : "game");
-    return QString("  <" % entryType % ">");
+    return QString(INDENT % "<" % entryType % ">");
 }
 
 QString EmulationStation::createXml(GameEntry &entry) {
@@ -363,16 +375,17 @@ QString EmulationStation::createXml(GameEntry &entry) {
 
     l.append(elem(tagKidgame, kidGame, false));
 
-    l.append(l[0].replace(REGEX_OPENELEM, "</\\1>"));
+    QString outerElemName = REGEX_OPENELEM.match(l[0]).captured(1);
+    l.append(QString(INDENT % "</%1>").arg(outerElemName));
     l.removeAll("");
 
     return l.join("\n") % "\n";
 }
 
-QString EmulationStation::elem(const QString &elem, const QString &text,
+QString EmulationStation::elem(const QString &elem, const QString &data,
                                bool addEmptyElem, bool isPath) {
     QString e;
-    if (text.isEmpty()) {
+    if (data.isEmpty()) {
         if (addEmptyElem) {
             e = QString(INDENT % INDENT % "<%1/>").arg(elem);
         }
@@ -382,7 +395,7 @@ QString EmulationStation::elem(const QString &elem, const QString &text,
             if (config->relativePaths) {
                 // fp is absolute, inputFolder is absolute
                 // fp is always different from inputFolder
-                // save to add "./" as it will always return sth relative
+                // it is save to add "./" as it will always return sth relative
                 fp = "./" +
                      Config::lexicallyRelativePath(config->inputFolder, fp);
             } else {
@@ -401,21 +414,29 @@ QString EmulationStation::elem(const QString &elem, const QString &text,
 QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
     QStringList l;
     bool addEmptyElem = !entry.isFolder;
-    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
-    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
-    l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
-    l.append(elem("texture", entry.textureFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile,
+                  addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
+                  entry.screenshotFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MARQUEE),
+                  entry.marqueeFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TEXTURE),
+                  entry.textureFile, addEmptyElem, true));
 
     QString vidFile = entry.videoFile;
     if (!config->videos) {
         vidFile = "";
     }
-    l.append(elem("video", vidFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::VIDEO), vidFile,
+                  addEmptyElem, true));
 
-    if (config->manuals &&
-        config->gameListVariants.contains("enable-manuals") &&
-        !entry.manualSrc.isEmpty()) {
-        l.append(elem("manual", entry.manualFile, false, true));
+    if (!entry.manualSrc.isEmpty() && config->manuals) {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::MANUAL),
+                      entry.manualFile, false, true));
+    }
+    if (!entry.fanartSrc.isEmpty() && config->fanart) {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::FANART),
+                      entry.fanartFile, false, true));
     }
     return l;
 }
@@ -461,4 +482,9 @@ QString EmulationStation::getVideosFolder() {
 
 QString EmulationStation::getManualsFolder() {
     return config->mediaFolder % "/manuals";
+}
+
+QString EmulationStation::getFanartsFolder() {
+    /* for ES variants */
+    return config->mediaFolder % "/fanarts";
 }

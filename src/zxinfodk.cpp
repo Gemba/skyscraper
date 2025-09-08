@@ -46,14 +46,14 @@ ZxInfoDk::ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager)
 
     /* leave publisher commented here for capabilities-script for doc */
     // fetchOrder.append(PUBLISHER);
-    fetchOrder.append(AGES);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(RATING);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
 }
 
 void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,

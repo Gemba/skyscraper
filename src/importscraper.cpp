@@ -49,6 +49,11 @@ ImportScraper::ImportScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::AGES);
     fetchOrder.append(GameEntry::Elem::RATING);
     fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::FANART);
+
+    config->fanart = true;
+    config->manuals = true;
+    config->videos = true;
 
     covers = QDir(config->importFolder + "/covers", "*.*", QDir::Name,
                   QDir::Files | QDir::NoDotAndDotDot)
@@ -71,6 +76,9 @@ ImportScraper::ImportScraper(Settings *config,
     manuals = QDir(config->importFolder + "/manuals", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
+    fanart = QDir(config->importFolder + "/fanarts", "*.*", QDir::Name,
+                  QDir::Files | QDir::NoDotAndDotDot)
+                 .entryInfoList();
     textual = QDir(config->importFolder + "/textual", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
@@ -96,6 +104,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     marqueeFile = "";
     videoFile = "";
     manualFile = "";
+    fanartFile = "";
     GameEntry game;
     bool any = checkType(info.completeBaseName(), textual, textualFile);
     any |= checkType(info.completeBaseName(), screenshots, screenshotFile);
@@ -105,6 +114,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     any |= checkType(info.completeBaseName(), textures, textureFile);
     any |= checkType(info.completeBaseName(), videos, videoFile);
     any |= checkType(info.completeBaseName(), manuals, manualFile);
+    any |= checkType(info.completeBaseName(), fanart, fanartFile);
     if (any) {
         game.title = info.completeBaseName();
         game.platform = config->platform;
@@ -150,6 +160,10 @@ void ImportScraper::getTexture(GameEntry &game) {
 
 void ImportScraper::getManual(GameEntry &game) {
     game.manualData = readFile(manualFile);
+}
+
+void ImportScraper::getFanart(GameEntry &game) {
+    game.fanartData = readFile(fanartFile);
 }
 
 void ImportScraper::getVideo(GameEntry &game) {

@@ -66,6 +66,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::TEXTURE);
     fetchOrder.append(GameEntry::Elem::VIDEO);
     fetchOrder.append(GameEntry::Elem::MANUAL);
+    fetchOrder.append(GameEntry::Elem::FANART);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -368,27 +369,29 @@ QByteArray ScreenScraper::downloadImageWithRetry(const QString &url) {
 
 void ScreenScraper::downloadBinary(const QString &url, const QString &type,
                                    GameEntry &game) {
-    bool isVideoType = type == "video";
     for (int retries = 0; retries < RETRIESMAX; ++retries) {
         limiter.exec();
         netComm->request(url);
         q.exec();
         if (netComm->getError(config->verbosity) == QNetworkReply::NoError) {
-            QByteArray contentType = netComm->getContentType();
+            QByteArray contentType = netComm->getContentType().toLower();
             // Make sure received data is actually a video or  PDF file
-            if (isVideoType) {
-                QByteArray d = netComm->getData();
+            QByteArray d = netComm->getData();
+            if (type == "video") {
                 if (contentType.contains("video/") && d.size() > 4096) {
                     game.videoData = d;
                     game.videoFormat = contentType.mid(
                         contentType.indexOf("/") + 1,
                         contentType.length() - contentType.indexOf("/") + 1);
-                    game.videoData = netComm->getData();
                     break;
                 }
-            } else {
-                if (contentType.contains("application/pdf")) {
-                    game.manualData = netComm->getData();
+            } else if (type == "manuel") {
+                // Screenscraper.fr:
+                // Content-Type: application/force-download; name="1943 - The
+                // Battle Of Midway-manuel(us).pdf"
+                if (contentType.startsWith("application/") &&
+                    contentType.contains(".pdf")) {
+                    game.manualData = d;
                     break;
                 }
             }
@@ -449,11 +452,17 @@ void ScreenScraper::getVideo(GameEntry &game) {
 }
 
 void ScreenScraper::getManual(GameEntry &game) {
-    QStringList types;
-    types.append("manuel");
+    QStringList types = {"manuel"};
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION, types);
     if (!url.isEmpty()) {
         downloadBinary(url, types.last(), game);
+    }
+}
+
+void ScreenScraper::getFanart(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), NONE, {"fanart"});
+    if (!url.isEmpty()) {
+        game.fanartData = downloadImageWithRetry(url);
     }
 }
 

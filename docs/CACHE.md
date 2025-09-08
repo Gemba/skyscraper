@@ -35,7 +35,7 @@ Preferred way of editing the cache is via the various [`--cache`](CLIHELP.md#-ca
     If you decide to add your own files to the subfolders, you risk them being deleted by Skyscraper later on if it is run with one of the cache cleanup command line options. You've been warned!
 
 
-**Other cool stuff you CAN DO**: Each subfolder in the `/home/<USER>/.skyscraper/cache/` folder is self-contained and can be copied to other Skyscraper installations at your convenience. Just copy the folder itself over to some other computer that has Skyscraper 1.6.0 or later installed, and you can make use of the data when generating game lists. If you add it at a non-default location, set the custom folder with `-d <FOLDER>`.
+**Other cool stuff you CAN DO**: Each subfolder in the `/home/<USER>/.skyscraper/cache/` folder is self-contained and can be copied to other Skyscraper installations at your convenience. Just copy the folder itself over to some other computer that has Skyscraper v1.6 or later installed, and you can make use of the data when generating game lists. If you add it at a non-default location, set the custom folder with `-d <FOLDER>`.
 
 ### Resource Cache Format
 
@@ -51,10 +51,6 @@ The database consists of resource entries connected to a unique id. The id is ca
       source="<SCRAPING SOURCE>"
    timestamp="<UNIX TIMESTAMP IN MSECS>">Resource data</resource>
 ```
-
-!!! note
-
-    Pre-3.3.0 versions of Skyscraper used `sha1` as the name of the unique id key. Later versions use `id`.
 
 #### Resource Types
 
@@ -124,4 +120,8 @@ A video file filename for a game (file exists in `videos` subfolder)
 
 ##### manual
 
-A manual (PDF) file filename for a game (file exists in `manuals` subfolder)
+(Since v3.12) A manual (PDF) file filename for a game (file exists in `manuals` subfolder)
+
+##### fanart
+
+(Since v3.18) A background image displayed in some frontends (e.g. Batocera) and themes for a game (file exists in `fanarts` subfolder)

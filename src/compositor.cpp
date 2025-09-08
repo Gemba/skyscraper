@@ -25,6 +25,7 @@
 
 #include "compositor.h"
 
+#include "batocera.h" // TODO: Does not fit in here
 #include "fxbalance.h"
 #include "fxblur.h"
 #include "fxbrightness.h"
@@ -60,10 +61,23 @@ bool Compositor::processXml() {
     Layer newOutputs;
 
     // Check document for errors before running through it
+    // FIXME: Segfault wenn fishy artwork file und threads > 1
+    // precheck in static methode auslagern (braucht eh nur artworkXml als param)
+    // und vor scraperworker spawn testen (nur wenn scraper == "cache")
     QDomDocument doc;
-    if (!doc.setContent(config->artworkXml))
+    QString eMsg;
+    int eLine;
+#if QT_VERSION < 0x060800
+    if (!doc.setContent(config->artworkXml, false, &eMsg, &eLine)) {
+#else
+    QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
+    eMsg = p.errorMessage;
+    eLine = p.errorLine;
+    if (!p) {
+#endif
+        qWarning() << "XML error:" << eMsg << "at line" << eLine;
         return false;
-
+    }
     QXmlStreamReader xml(config->artworkXml);
 
     // Init recursive parsing
@@ -276,9 +290,10 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
     }
 }
 
-void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
+void Compositor::saveAll(GameEntry &game, QString completeBaseName,
+                         bool isBatocera) {
     bool createSubfolder = false;
-    QString fn = "/" % completeBaseName % ".png";
+    QString fn = "/" % completeBaseName;
     QString subPath = getSubpath(game.path);
     if (subPath != ".") {
         fn.prepend("/" % subPath);
@@ -287,6 +302,12 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
 
     for (auto &output : outputs.getLayers()) {
         QString filename = fn;
+        if (isBatocera) {
+            filename = Batocera::getFileNameFor(output.resType, filename);
+        }
+        if (fn == filename) {
+            filename = filename % ".png";
+        }
         if (output.resType == "cover") {
             filename.prepend(config->coversFolder);
             if (config->skipExistingCovers && QFileInfo::exists(filename)) {
@@ -297,6 +318,7 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
             filename.prepend(config->screenshotsFolder);
             if (config->skipExistingScreenshots &&
                 QFileInfo::exists(filename)) {
+                // set screenshotFile to generate XML element later
                 game.screenshotFile = filename;
                 continue;
             }

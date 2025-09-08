@@ -40,13 +40,20 @@ bool XmlReader::setFile(QString filename) {
 
     QFile f(filename);
     if (f.open(QIODevice::ReadOnly)) {
+        QString eMsg;
+        int eLine;
 #if QT_VERSION < 0x060800
-        if (setContent(f.readAll(), false)) {
+        if (setContent(f.readAll(), false, &eMsg, &eLine)) {
 #else
-        if (QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
-            p) {
+        // FIXME: compile against 6.8 or later
+        QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
+        eMsg = p.errorMessage;
+        eLine = p.errorLine;
+        if (p) {
 #endif
             result = true;
+        } else {
+            qWarning() << "XML error:" << eMsg << "at line" << eLine;
         }
         f.close();
     }
@@ -57,16 +64,18 @@ QList<GameEntry> XmlReader::getEntries(const QStringList &gamelistExtraTags) {
     QList<GameEntry> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
-    QDomNodeList pathNodes = elementsByTagName("folder");
-
     addEntries(gameNodes, gameEntries, gamelistExtraTags);
-    addEntries(pathNodes, gameEntries, gamelistExtraTags, true);
+
+    QDomNodeList folderNodes = elementsByTagName("folder");
+    addEntries(folderNodes, gameEntries, gamelistExtraTags, true);
 
     return gameEntries;
 }
 
 void XmlReader::addEntries(const QDomNodeList &nodes,
-                           QList<GameEntry> &gameEntries, bool isFolder) {
+                           QList<GameEntry> &gameEntries,
+                           const QStringList &gamelistExtraTags,
+                           bool isFolder) {
     for (int a = 0; a < nodes.length(); ++a) {
         GameEntry entry;
         const QDomNode node = nodes.at(a);
@@ -76,39 +85,68 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
 
         addTextual(entry, node);
 
-        // thumbnail only for ES
         entry.coverFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("thumbnail").text());
+            /* inputFolder is correct here as ES reads/expects relative media
+               filepath in relation to the inputFolder */
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::COVER))
+                .text());
 
         entry.screenshotFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("image").text());
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::SCREENSHOT))
+                             .text());
         entry.marqueeFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("marquee").text());
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MARQUEE))
+                .text());
         entry.textureFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("texture").text());
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::TEXTURE))
+                .text());
         entry.videoFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("video").text());
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::VIDEO))
+                .text());
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
         entry.manualFile = Config::makeAbsolutePath(
-            inputFolder, node.firstChildElement("manual").text());
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MANUAL))
+                .text());
 
         if (!gamelistExtraTags.isEmpty()) {
-            // preserve only allowed: ES and ES-DE
-            for (const auto &t : gamelistExtraTags)
+            entry.fanartFile = Config::makeAbsolutePath(
+                inputFolder, node.firstChildElement(
+                                     GameEntry::getTag(GameEntry::Elem::FANART))
+                                 .text());
+            // preserve these elements for ES and ES-DE
+            for (const auto &t : gamelistExtraTags) {
                 entry.setEsExtra(t, node.firstChildElement(t).text());
+            }
         } else {
-            // Bloatcera
+            // Bloatcera case
+            if (node.hasAttributes()) {
+                QDomNamedNodeMap attrs = node.attributes();
+                QDomNode a = attrs.namedItem("id");
+                if (!a.isNull()) {
+                    QDomAttr attr = a.toAttr();
+                    entry.id = attr.value();
+                }
+            }
+
             QDomNodeList elems = node.childNodes();
             for (int i = 0; i < elems.length(); i++) {
                 QString k = elems.at(i).toElement().tagName();
                 if (entry.commonGamelistElems().values().contains(k) ||
-                    k == "path") {
-                    // common/baseline gamelist element, do not keep in esExtra
+                    k == "path" ||
+                    k == "sortname" /* when reading a non-batocera GL */) {
+                    // it is a common/baseline gamelist element: do not keep in
+                    // esExtra
                     continue;
                 }
-                // preserve everything else with attributes
+                // preserve everything else with attributes "as is"
                 entry.setEsExtra(k, elems.at(i).toElement().text(),
                                  elems.at(i).toElement().attributes());
             }
@@ -121,11 +159,24 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
 void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
     // Do NOT get sqr[] and par() notes here. They are not used by skipExisting
     entry.title = node.firstChildElement("name").text();
-    entry.description = node.firstChildElement("desc").text();
-    entry.releaseDate = node.firstChildElement("releasedate").text();
-    entry.developer = node.firstChildElement("developer").text();
-    entry.publisher = node.firstChildElement("publisher").text();
-    entry.tags = node.firstChildElement("genre").text();
-    entry.rating = node.firstChildElement("rating").text();
-    entry.players = node.firstChildElement("players").text();
+    entry.description =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::DESCRIPTION))
+            .text();
+    entry.releaseDate =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::RELEASEDATE))
+            .text();
+    entry.developer =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::DEVELOPER))
+            .text();
+    entry.publisher =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::PUBLISHER))
+            .text();
+    entry.tags =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::TAGS)).text();
+    entry.rating =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::RATING))
+            .text();
+    entry.players =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::PLAYERS))
+            .text();
 }

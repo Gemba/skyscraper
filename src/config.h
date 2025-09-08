@@ -40,6 +40,7 @@ namespace Config {
     QString getSupportedPlatforms();
     QString getRetropieVersion();
 
+    // TODO: These do not fit in here
     QString concatPath(QString absPath, QString subPath);
     QString makeAbsolutePath(const QString &prePath, QString subPath);
     QString lexicallyRelativePath(const QString &base, const QString &other);

@@ -81,6 +81,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [excludeFrom](CONFIGINI.md#excludefrom)                     | Advanced       |    Y     |       Y        |                |               |
 | [excludePattern](CONFIGINI.md#excludepattern)               | Advanced       |    Y     |       Y        |       Y        |               |
 | [extensions](CONFIGINI.md#extensions)                       | Expert         |          |       Y        |                |               |
+| [fanart](CONFIGINI.md#fanart)                               | Basic          |    Y     |                |                |               |
 | [forceFilename](CONFIGINI.md#forcefilename)                 | Advanced       |    Y     |       Y        |       Y        |               |
 | [frontend](CONFIGINI.md#frontend)                           | Basic          |    Y     |                |                |               |
 | [gameBaseFile](CONFIGINI.md#gamebasefile)                   | Expert         |          |       Y        |                |               |
@@ -290,7 +291,8 @@ Cleans up some misformatting in scraped description:
 2. Multiple spaces between sentences are reduced to one space
 3. Bulletpoint beginning with \* or ● are replaced with a dash
 4. Stylized ellipsis (… Unicode:`&#8230;`) is replaced with three dot characters
-5. Multiple exclamation marks are reduced to one, unless for game titles are explicitly typed like that, like 'Super Punch-Out!!'.
+5. Multiple exclamation marks are reduced to one, unless for game titles are
+   explicitly typed like that, like 'Super Punch-Out!!'.
 
 !!! quote
 
@@ -424,7 +426,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### videos
 
-By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this option.
+By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this option. If your frontend supports video display also explicitly set this option to true. See also the option to [symlink video files](#symlink) instead of copying, if space is a premium.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
@@ -1060,9 +1062,32 @@ Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retr
 
 ---
 
+#### fanart
+
+By default Skyscraper doesn't scrape and cache game fanart resources because not
+all scraping sites provide this data and also only some frontends support fanart
+display. If enabled Skyscraper will collect game manuals for the scraping
+modules that provide this data. For frontend Batocera no further option must be
+set to enable the output of fanart in the gamelist and into the appropriate
+folder during gamelist creation. For other EmulationStation forks where themes
+support the display of fanart, see also option
+[gameListVariants](CONFIGINI.md#gamelistvariants).
+
+Default value: false  
+Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
 #### manuals
 
-By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. If enabled Skyscraper will collect game manuals for the scraping modules that provide this data. For frontend ES-DE no further option must be set to enable the output of the PDF manuals to the appropriate folder. For other EmulationStation forks see also option [gameListVariants](CONFIGINI.md#gamelistvariants).
+By default Skyscraper doesn't scrape and cache game manuals resources because
+not all scraping sites provide this data and also only some frontends support
+PDF display of these game manuals. If enabled Skyscraper will collect game
+manuals for the scraping modules that provide this data. For frontend ES-DE and
+Batocera no further option must be set to enable the output of the PDF manuals
+to the appropriate folder during gamelist creation. For other EmulationStation
+forks which support PDF manual display, see also option
+[gameListVariants](CONFIGINI.md#gamelistvariants).
 
 Default value: false  
 Allowed in sections: `[main]`, `[<PLATFORM>]`

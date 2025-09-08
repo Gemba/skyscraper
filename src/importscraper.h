@@ -56,6 +56,7 @@ public:
     void getTitle(GameEntry &game) override;
     void getVideo(GameEntry &game) override;
     void getManual(GameEntry &game) override;
+    void getFanart(GameEntry &game) override;
     void getWheel(GameEntry &game) override;
 
 private:
@@ -86,6 +87,7 @@ private:
     QList<QFileInfo> textures;
     QList<QFileInfo> videos;
     QList<QFileInfo> manuals;
+    QList<QFileInfo> fanart;
     QString textualFile = "";
     QString coverFile = "";
     QString screenshotFile = "";
@@ -94,6 +96,7 @@ private:
     QString textureFile = "";
     QString videoFile = "";
     QString manualFile = "";
+    QString fanartFile = "";
 
     // true if definition.dat is XML style
     bool isXml;

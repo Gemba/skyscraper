@@ -23,11 +23,29 @@
 #include "emulationstation.h"
 #include "gameentry.h"
 
+#include <QDebug>
+
 class Batocera : public EmulationStation {
     Q_OBJECT
 
 public:
     Batocera();
+
+    static QString getFileNameFor(const QString &resType, QString &filename) {
+        QPair<QString, QString> params = getFilenameParams(resType);
+        if (!params.first.isEmpty()) {
+            QString fn = QString("%1-%2.%3")
+                             .arg(filename)
+                             .arg(params.first)
+                             .arg(params.second);
+            qDebug() << "lookup" << resType << "got filename" << fn;
+            return fn;
+        }
+        qDebug() << "lookup" << resType << "got filename" << filename;
+        return filename;
+    }
+
+    void setConfig(Settings *config) override;
 
     QString getInputFolder() override;
     QString getGameListFolder() override;
@@ -37,6 +55,7 @@ public:
     QString getWheelsFolder() override;
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
+    QString getFanartsFolder() override;
 
     QStringList extraGamelistTags(bool isFolder) override;
 
@@ -47,6 +66,21 @@ protected:
     QString openingElement(GameEntry &entry) override;
 
 private:
+    static QPair<QString, QString> getFilenameParams(QString k) {
+        QMap<QString, QPair<QString, QString>> cacheResFn = {
+            // "binary type in cache", <"-postfix", ".ext">
+            {"cover", QPair<QString, QString>("boxart", "jpg")},
+            {"fanart", QPair<QString, QString>("fanart", "jpg")},
+            {"manual", QPair<QString, QString>("manual", "pdf")},
+            {"marquee", QPair<QString, QString>("marquee", "jpg")},
+            {"screenshot", QPair<QString, QString>("image", "jpg")},
+            // 'texture' not in Bato
+            {"video", QPair<QString, QString>("video", "mp4")},
+            {"wheel", QPair<QString, QString>("wheel", "jpg")},
+        };
+        return cacheResFn[k];
+    }
+
     QString
     elemWithAttribs(const QString &t,
                     const QPair<QString, QDomNamedNodeMap> &elemAttribs);

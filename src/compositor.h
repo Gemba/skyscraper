@@ -39,7 +39,8 @@ class Compositor : public QObject {
 public:
     Compositor(Settings *config);
     bool processXml();
-    void saveAll(GameEntry &game, QString completeBaseName);
+    void saveAll(GameEntry &game, QString completeBaseName,
+                 bool isBatocera = false);
     QString getSubpath(const QString &absPath);
 
 private:

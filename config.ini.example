@@ -187,3 +187,6 @@
 cacheRefresh="true"
 ; https://github.com/RetroPie/RetroPie-Setup/pull/3704
 cacheScreenshots="false"
+
+[batocera]
+artworkXml="batocera-artwork.xml"

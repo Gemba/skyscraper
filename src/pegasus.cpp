@@ -362,8 +362,8 @@ void Pegasus::replaceColon(QString &value, const QString &gameTitle) {
             end = idx + 13;
             endStr = "...";
         }
-        // TODO: use sliced() instead of mid() when Qt5
-        // is no longer supported
+        // PENDING: use sliced() instead of mid() when Qt5
+        // is no longer supported (ie. RetroPie moved away from Buster)
         ctxStr = ctxStr % value.mid(begin, end - begin) % endStr;
         value.replace(idx, 1, ".");
         qWarning() << QString(
