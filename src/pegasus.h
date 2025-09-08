@@ -58,9 +58,9 @@ private:
     void removePreservedHeader(const QString &key);
     QString toPegasusFormat(const QString &key, const QString &value);
     QString addMediaFile(const QString &asset, bool useRelativePath,
-                         QString &mediaFile);
+                         QString mediaFile);
+    void replaceColon(QString &value, const QString &gameTitle);
     QMap<QString, QString> headerPairs;
-    QString tab = "  ";
 };
 
 #endif // PEGASUS_H

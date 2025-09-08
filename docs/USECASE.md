@@ -8,7 +8,7 @@ The following describes a typical way of using Skyscraper. It's really simple to
 
 !!! info 
 
-    Some of the scraping modules either require or work best when you have registered a user with their service and configured Skyscraper to make use of these credentials when scraping with the module. The suggested `screenscraper` source used in the command a bit further down will work without credentials. But when the service is busy, it will give you an error! So consider registering users with the relevant sources and configure Skyscraper to make use of them. Read about all scraping modules [here](SCRAPINGMODULES.md).
+    Some of the scraping modules either require or work best when you have registered a user with their service and configured Skyscraper to make use of these credentials when scraping with the module. The suggested `screenscraper` source used in the command a bit further down will work without credentials. But when the service is busy, it will give you an error! So consider registering users with the relevant sources and configure Skyscraper to make use of them. Read about all [scraping modules](SCRAPINGMODULES.md).
 
 Now, let's dig in!
 
@@ -16,7 +16,10 @@ Now, let's dig in!
 
 You probably installed Skyscraper in order to get some data and artwork on your frontend game lists. So let's say that you have a bunch of Super Nintendo files you wish to populate with data. You'd first gather some data into the Skyscraper resource cache and then generate a game list using the cached data afterwards. So it's a two-step process.
 
-![Skyscraper flowchart](resources/skyscraper_overview_chart.png)
+<figure markdown>
+  ![Skyscraper flowchart](resources/skyscraper_overview_chart.png)
+  <figcaption>Skyscraper flowchart</figcaption>
+</figure>
 
 #### The Gathering Phase
 
@@ -42,9 +45,9 @@ By having gathered data from both sources (`screenscraper` _and_ `thegamesdb`) t
 $ Skyscraper -p snes
 ```
 
-Running that command will generate a game list for the chosen frontend (default is EmulationStation). It combines all of the cached data into the most complete results. This phase also includes the artwork compositing. If you use a non-default frontend, you can configure this in Skyscraper's configuration as described [here](CONFIGINI.md#frontend). Or you can set it on command-line as described [here](CLIHELP.md#-f-frontend).
+Running that command will generate a game list for the chosen frontend (default is EmulationStation). It combines all of the cached data into the most complete results. This phase also includes the artwork compositing. If you use a non-default frontend, you can configure this in Skyscraper's [configuration](CONFIGINI.md#frontend). Or you can set it on the [command-line](CLIHELP.md#-f-frontend).
 
-The source priority for each resource is defined per-platform and can be changed at any time. Read more about that [here](CACHE.md#resource-and-scraping-module-priorities).
+The source priority for each resource is defined per-platform and can be changed at any time. Read more about [the priorities file](CACHE.md#resource-and-scraping-module-priorities).
 
 ### So What Then?
 
@@ -64,4 +67,4 @@ Yes, yes, yes. This is just the basics. You can customize the artwork completely
 
 The important thing to note is that the defaults for Skyscraper is set to work well for most users. So unless you see something you want to change, you don't have to. But it's equally important to know that you _can_.
 
-If this piqued your interest, please read the entire documentation thorougly. Everything is documented to the last detail. It can seem overwhelming. But it gives you some really powerful options to scrape just the way you want. Read more about the advanced features [here](https://github.com/Gemba/skyscraper/blob/master/README.md#a-quick-run-down-of-skyscraper).
+If this piqued your interest, please read the entire documentation thorougly. Everything is documented to the last detail. It can seem overwhelming. But it gives you some really powerful options to scrape just the way you want. You can start from the [quick run-down of Skyscraper](https://github.com/Gemba/skyscraper/blob/master/README.md#a-quick-run-down-of-skyscraper) and explore your path from there.

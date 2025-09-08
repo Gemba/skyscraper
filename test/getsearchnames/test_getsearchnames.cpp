@@ -11,7 +11,7 @@
 
 /*
  Tests the getSearchNames() method of the different scrapers.
- WorldOfSpectrum and Import-Scraper and TGDB are covered by Mobygames scraper:
+ ZxInfoDk and Import-Scraper and TGDB are covered by Mobygames scraper:
  These use getSearchNames() in the AbstractScraper.
 
  If testing against v3.10.3 or earlier set the define VER_3_10_3 in the *.pro
@@ -57,8 +57,9 @@ private slots:
             // to spot possible errors (MotherX)
             {"Mother 25th Restoration Hack", {"MotherX (Japan)"}},
             {"Dot1.dot2", {"Dot1x Dot2x"}},
-            {"Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n]", {"Arle No Bouken - Mahou No Jewel"}}
-        };
+            {"Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB "
+             "Compatible) [T-En by Jazz v1.0] [n]",
+             {"Arle No Bouken - Mahou No Jewel"}}};
     }
 
     void testArcadeDB() {
@@ -70,9 +71,8 @@ private slots:
                  "./rom_samples/Mother 25th Restoration Hack.zip",
                  {"MotherX (Japan)"})},
             {"ArcadeDB, with aliasMap match (completeBaseName)",
-             QPair<QString, QStringList>(
-                 "./rom_samples/Dot1.dot2.zip",
-                 {"Dot1x Dot2x"})},
+             QPair<QString, QStringList>("./rom_samples/Dot1.dot2.zip",
+                                         {"Dot1x Dot2x"})},
 #endif
             {"ArcadeDB, w/o  aliasMap match",
              QPair<QString, QStringList>("./rom_samples/1942.zip", {"1942"})},
@@ -104,20 +104,20 @@ private slots:
             {"OpenRetro, with aliasMap match",
              QPair<QString, QStringList>(
                  "./rom_samples/Mother 25th Restoration Hack.zip",
-                 {"/browse?q=motherx"})},
+                 {"motherx"})},
             {"OpenRetro, with ROM hack and no aliasMap entry",
              QPair<QString, QStringList>(
                  "./rom_samples/Mother 25th Restoration Hack_Hack.zip",
-                 {"/browse?q=mother+25th"})},
-            {"OpenRetro, w/o  aliasMap match 1 word",
-             QPair<QString, QStringList>("./rom_samples/1942.zip",
-                                         {"/browse?q=1942"})},
-            {"OpenRetro, w/o  aliasMap match 2+ words",
+                 {"mother+25th+restoration"})},
+            {"OpenRetro, w/o aliasMap match 1 word",
+             QPair<QString, QStringList>("./rom_samples/1942.zip", {"1942"})},
+            {"OpenRetro, w/o aliasMap match 2+ words",
              QPair<QString, QStringList>("./rom_samples/abclimax.zip",
-                                         {"/browse?q=after+burner"})},
+                                         {"after+burner+climax"})},
 
         };
 
+        settings.arcadePlatform = true;
         settings.platform = "fba";
         settings.mameMap = {{"1942", "1942 (Revision B)"},
                             {"abclimax", "After Burner Climax (Export)"}
@@ -129,6 +129,7 @@ private slots:
     void testOpenRetroMatchMany() {
         scraper = new OpenRetro(&settings, NULL);
         settings.platform = "amiga";
+        settings.arcadePlatform = false;
         settings.whdLoadMap = {
             {"BillsTomatoGame_v2.0_1748",
              {"Bill's Tomato Game", "307c1c7f-1f31-5b7d-ac71-57a9f035679f"}},
@@ -142,16 +143,20 @@ private slots:
              QPair<QString, QStringList>(
                  "./rom_samples/BillsTomatoGame_v2.0_1748.lha",
                  {"/game/307c1c7f-1f31-5b7d-ac71-57a9f035679f",
-                  "/browse?q=bill%27s+tomato"})},
-            {"OpenRetro, w/o amiga whdl match",
+                  "bills+tomato+game"})},
+            {"OpenRetro, w/o amiga whdl match and version in file",
              QPair<QString, QStringList>(
                  "./rom_samples/Some game-here V1.0.lha",
-                 {"/browse?q=some+game-here", "/browse?q=some+game"})},
+                 {"some+game-here", "some+game"})},
             {"OpenRetro, with amiga whdl and aga match",
              QPair<QString, QStringList>(
                  "./rom_samples/Burntime_v1.2_AGA_2213.lha",
-                 {"/game/930a2652-50e0-5b89-8076-3ec478f0e6ad",
-                  "/browse?q=burntime+aga", "/browse?q=burntime"})},
+                 {"/game/930a2652-50e0-5b89-8076-3ec478f0e6ad", "burntime+aga",
+                  "burntime"})},
+            {"OpenRetro, w/o amiga whdl match but aga with 3+ words",
+             QPair<QString, QStringList>(
+                 "./rom_samples/Word1 Word2 Word3_Aga_.lha",
+                 {"word1+word2+aga", "word1+word2+word3"})},
 
         };
 
@@ -160,15 +165,15 @@ private slots:
         QMap<QString, QPair<QString, QStringList>> tests_scummvm = {
             {"OpenRetro, with scummvm.ini match",
              QPair<QString, QStringList>("./rom_samples/tentacle.svm",
-                                         {"/browse?q=day+of"})},
+                                         {"day+tentacle"})},
             {"OpenRetro, w/o scummvm.ini match",
              QPair<QString, QStringList>(
-                 "./rom_samples/the yabba dabba doo.svm",
-                 {"/browse?q=yabba+dabba"})},
+                 "./rom_samples/the yabba dabba doo.svm", {"yabba+dabba+doo"})},
 
         };
 
         settings.platform = "scummvm";
+        settings.arcadePlatform = false;
         settings.scummIni =
             QCoreApplication::applicationDirPath() + "/scummvm.ini";
 
@@ -178,6 +183,7 @@ private slots:
     void testIgdb() {
         scraper = new Igdb(&settings, NULL);
         settings.platform = "amiga";
+        settings.arcadePlatform = false;
         settings.whdLoadMap = {
             {"BillsTomatoGame_v2.0_1748",
              {"Bill's Tomato Game", "307c1c7f-1f31-5b7d-ac71-57a9f035679f"}},
@@ -229,6 +235,7 @@ private slots:
         };
 
         settings.platform = "scummvm";
+        settings.arcadePlatform = false;
         settings.scummIni =
             QCoreApplication::applicationDirPath() + "/scummvm.ini";
 
@@ -238,6 +245,7 @@ private slots:
     void testMobyGames() {
         scraper = new MobyGames(&settings, NULL);
         settings.platform = "amiga";
+        settings.arcadePlatform = false;
         settings.whdLoadMap = {
             {"BillsTomatoGame_v2.0_1748",
              {"Bill's Tomato Game", "307c1c7f-1f31-5b7d-ac71-57a9f035679f"}},
@@ -282,6 +290,7 @@ private slots:
         };
 
         settings.platform = "scummvm";
+        settings.arcadePlatform = false;
         settings.scummIni =
             QCoreApplication::applicationDirPath() + "/scummvm.ini";
 
@@ -289,6 +298,7 @@ private slots:
     }
     void testScreenscraper() {
         scraper = new ScreenScraper(&settings, NULL);
+        settings.arcadePlatform = true;
         settings.platform = "mame-libretro";
         QStringList zaxxon_expected = {
             "crc=BB2E0146", "md5=852605F01A3E2D21FBAF35FCAB385B94",
@@ -302,7 +312,8 @@ private slots:
                  {"romnom=MotherX%20(Japan)"})},
             {"Screenscraper, with aliasMap match (completeBaseName)",
              QPair<QString, QStringList>(
-                 "./rom_samples/Arle's Adventure - Magical Jewels (Japan) (SGB Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n].zip",
+                 "./rom_samples/Arle's Adventure - Magical Jewels (Japan) (SGB "
+                 "Enhanced) (GB Compatible) [T-En by Jazz v1.0] [n].zip",
                  {"romnom=Arle%20No%20Bouken%20-%20Mahou%20No%20Jewel"})},
 #endif
             {"Screenscraper, with arcade match",
@@ -315,9 +326,13 @@ private slots:
              QPair<QString, QStringList>(
                  "./rom_samples/BillsTomatoGame_v2.0_1748.lha",
                  {"romnom=BillsTomatoGame_v2.0_1748.lha"})},
+            {"Screenscraper, ROM with uncommon suffix and size greater zero",
+             QPair<QString, QStringList>("./rom_samples/Pac Man.desktop",
+                                         {"romnom=Pac%20Man"})},
 
         };
         settings.mameMap.insert("zaxxon.zip", "Should not break the test.zip");
+        settings.addExtensions = "*.desktop";
 
         match(tests);
     }

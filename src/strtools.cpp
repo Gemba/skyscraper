@@ -84,19 +84,20 @@ QByteArray StrTools::magic(const QByteArray str) {
     QByteArray magicStr("WowMuchEncryptedVeryImpressIGuessThisHasToBeQuiteLongT"
                         "oAlsoSupportSomeVeryLongKeys");
 
-    int strChars[str.length()];
-    int magicChars[str.length()];
-
-    for (int a = 0; a < str.length(); ++a) {
-        strChars[a] = str.at(a);
-    }
-
-    for (int a = 0; a < str.length(); ++a) {
-        magicChars[a] = magicStr.at(a);
-    }
+    int len = str.length();
 
     QByteArray thingie;
-    for (int a = 0; a < str.length(); ++a) {
+    if (len >= 80) {
+        qWarning() << "Length of input str is too long!";
+        return thingie;
+    }
+
+    int strChars[80] = {0};
+    int magicChars[80] = {0};
+
+    for (int a = 0; a < len; ++a) {
+        strChars[a] = str.at(a);
+        magicChars[a] = magicStr.at(a);
         thingie.append(QString::number(strChars[a] += magicChars[a]).toUtf8() %
                        ";");
     }
@@ -105,22 +106,24 @@ QByteArray StrTools::magic(const QByteArray str) {
 }
 
 QByteArray StrTools::unMagic(const QByteArray str) {
-    int length = str.split(';').length();
-
     QByteArray magicStr("WowMuchEncryptedVeryImpressIGuessThisHasToBeQuiteLongT"
                         "oAlsoSupportSomeVeryLongKeys");
 
-    int strChars[length];
-    int magicChars[length];
+    int len = str.split(';').length();
 
-    for (int a = 0; a < length; ++a) {
-        strChars[a] = str.split(';').at(a).toInt();
-    }
-    for (int a = 0; a < length; ++a) {
-        magicChars[a] = magicStr.at(a);
-    }
     QByteArray thingie;
-    for (int a = 0; a < length; ++a) {
+
+    if (len >= 80) {
+        qWarning() << "Length of input str is too long!";
+        return thingie;
+    }
+
+    int strChars[80] = {0};
+    int magicChars[80] = {0};
+
+    for (int a = 0; a < len; ++a) {
+        strChars[a] = str.split(';').at(a).toInt();
+        magicChars[a] = magicStr.at(a);
         thingie.append(QString(QChar(strChars[a] -= magicChars[a])).toUtf8());
     }
     return thingie;

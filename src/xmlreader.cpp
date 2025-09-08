@@ -24,17 +24,14 @@
  */
 #include "xmlreader.h"
 
+#include "config.h"
 #include "gameentry.h"
 
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 
-XmlReader::XmlReader(const QString &inputFolder,
-                     const QStringList &gamelistExtraTags) {
-    this->inputFolder = inputFolder;
-    this->gamelistExtraTags = gamelistExtraTags;
-}
+XmlReader::XmlReader(QString inputFolder) { this->inputFolder = inputFolder; }
 
 XmlReader::~XmlReader() {}
 
@@ -56,14 +53,14 @@ bool XmlReader::setFile(QString filename) {
     return result;
 }
 
-QList<GameEntry> XmlReader::getEntries() {
+QList<GameEntry> XmlReader::getEntries(const QStringList &gamelistExtraTags) {
     QList<GameEntry> gameEntries;
 
     QDomNodeList gameNodes = elementsByTagName("game");
     QDomNodeList pathNodes = elementsByTagName("folder");
 
-    addEntries(gameNodes, gameEntries);
-    addEntries(pathNodes, gameEntries, true);
+    addEntries(gameNodes, gameEntries, gamelistExtraTags);
+    addEntries(pathNodes, gameEntries, gamelistExtraTags, true);
 
     return gameEntries;
 }
@@ -73,34 +70,29 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
     for (int a = 0; a < nodes.length(); ++a) {
         GameEntry entry;
         const QDomNode node = nodes.at(a);
-        QString p = node.firstChildElement("path").text();
-        if (isFolder) {
-            // Workaround for EmulationStation 2.11.2rp and earlier: Element
-            // <path> in <folder> when denoting a relative path is saved from ES
-            // without heading "./"
-            QFileInfo pi(p);
-            if (pi.isRelative() && !p.startsWith("./")) {
-                p = "./" + p;
-            }
-        }
-        entry.path = makeAbsolute(p);
+
+        entry.path = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("path").text());
 
         addTextual(entry, node);
 
-        entry.coverFile =
-            makeAbsolute(node.firstChildElement("thumbnail").text());
-        entry.screenshotFile =
-            makeAbsolute(node.firstChildElement("image").text());
-        entry.marqueeFile =
-            makeAbsolute(node.firstChildElement("marquee").text());
-        entry.textureFile =
-            makeAbsolute(node.firstChildElement("texture").text());
-        entry.videoFile = makeAbsolute(node.firstChildElement("video").text());
+        // thumbnail only for ES
+        entry.coverFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("thumbnail").text());
+
+        entry.screenshotFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("image").text());
+        entry.marqueeFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("marquee").text());
+        entry.textureFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("texture").text());
+        entry.videoFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("video").text());
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
-        entry.manualFile =
-            makeAbsolute(node.firstChildElement("manual").text());
+        entry.manualFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement("manual").text());
 
         if (!gamelistExtraTags.isEmpty()) {
             // preserve only allowed: ES and ES-DE
@@ -136,13 +128,4 @@ void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
     entry.tags = node.firstChildElement("genre").text();
     entry.rating = node.firstChildElement("rating").text();
     entry.players = node.firstChildElement("players").text();
-}
-
-// FIXME: in util class
-QString XmlReader::makeAbsolute(QString filePath) {
-    if (filePath.startsWith("./")) {
-        filePath.remove(0, 1);
-        filePath.prepend(inputFolder);
-    }
-    return filePath;
 }

@@ -159,7 +159,7 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
     }
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getDescription(GameEntry &game) {
     if (descriptionPre.isEmpty()) {
         return;
@@ -182,7 +182,7 @@ void AbstractScraper::getDescription(GameEntry &game) {
     game.description = StrTools::stripHtmlTags(game.description);
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getDeveloper(GameEntry &game) {
     for (const auto &nom : developerPre) {
         if (!checkNom(nom)) {
@@ -195,7 +195,7 @@ void AbstractScraper::getDeveloper(GameEntry &game) {
     game.developer = data.left(data.indexOf(developerPost.toUtf8()));
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getPublisher(GameEntry &game) {
     if (publisherPre.isEmpty()) {
         return;
@@ -211,7 +211,7 @@ void AbstractScraper::getPublisher(GameEntry &game) {
     game.publisher = data.left(data.indexOf(publisherPost.toUtf8()));
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getPlayers(GameEntry &game) {
     if (playersPre.isEmpty()) {
         return;
@@ -243,7 +243,7 @@ void AbstractScraper::getAges(GameEntry &game) {
     game.ages = data.left(data.indexOf(agesPost.toUtf8()));
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getTags(GameEntry &game) {
     if (tagsPre.isEmpty()) {
         return;
@@ -259,7 +259,7 @@ void AbstractScraper::getTags(GameEntry &game) {
     game.tags = data.left(data.indexOf(tagsPost.toUtf8()));
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getRating(GameEntry &game) {
     if (ratingPre.isEmpty()) {
         return;
@@ -282,7 +282,7 @@ void AbstractScraper::getRating(GameEntry &game) {
     }
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getReleaseDate(GameEntry &game) {
     if (releaseDatePre.isEmpty()) {
         return;
@@ -299,7 +299,7 @@ void AbstractScraper::getReleaseDate(GameEntry &game) {
         data.left(data.indexOf(releaseDatePost.toUtf8())).simplified();
 }
 
-// TODO: openretro and worldofspectrum
+// TODO: openretro
 void AbstractScraper::getCover(GameEntry &game) {
     if (coverPre.isEmpty()) {
         return;

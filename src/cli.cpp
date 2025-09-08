@@ -93,12 +93,10 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "frontend to set the emulator and optionally for the 'pegasus' "
         "frontend to set the launch command. Default: unset",
         "STRING", "");
-    QCommandLineOption iOption(
-        "i",
-        "Folder which contains the game/rom files. Default: "
-        "'" %
-            QDir::homePath() % "/RetroPie/roms/PLATFORM'",
-        "PATH", "");
+    QCommandLineOption iOption("i",
+                               "Folder which contains the game/rom "
+                               "files.\n(default depends on frontend)",
+                               "PATH", "");
     QCommandLineOption gOption(
         "g", "Game list export folder.\n(default depends on frontend)", "PATH",
         "");
@@ -111,7 +109,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "platform set with '-p'.\nLeave the '-s' option out to enable "
         "Skyscraper's gamelist generation mode.\n(WEB: 'arcadedb', 'igdb', "
         "'mobygames', 'openretro', 'screenscraper', 'thegamesdb' and "
-        "'worldofspectrum', LOCAL: 'esgamelist' and 'import')",
+        "'zxinfo' ('wos' and 'worldofspectrum' are also accepted), LOCAL: "
+        "'esgamelist' and 'import')",
         "MODULE", "");
     QCommandLineOption uOption(
         "u",
@@ -155,7 +154,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption addextOption(
         "addext",
         "Add this or these file extension(s) to accepted file extensions "
-        "during a scraping run. (example: '*.zst' or '*.zst *.ext')",
+        "during a scraping run. (ex.: '*.zst *.ext', also valid: '.zst ext')",
         "EXTENSION(S)", "");
     QCommandLineOption flagsOption(
         "flags",

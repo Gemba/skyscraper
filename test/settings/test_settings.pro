@@ -6,7 +6,7 @@ INCLUDEPATH += ../..
 PREFIX = /usr/local
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
 
-include(../../VERSION)
+include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../peas.json)) .; 

@@ -152,23 +152,21 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
         QVariant ss = settings->value(k);
         if (conv == "str") {
             QString v = ss.toString();
+            if (v.isEmpty())
+                continue;
             if (k == "addExtensions") {
-                config->addExtensions = v;
+                config->addExtensions = parseExtensions(v);
                 continue;
             }
             if (k == "artworkXml") {
-                if (!v.isEmpty() && QFileInfo(v).isRelative()) {
-                    config->artworkConfig =
-                        concatPath(Config::getSkyFolder(), v);
-                } else {
-                    config->artworkConfig = v;
-                }
+                config->artworkConfig = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "cacheFolder") {
-                config->cacheFolder = (type == CfgType::MAIN)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                v = (type == CfgType::MAIN)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
+                config->cacheFolder = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "emulator") {
@@ -193,7 +191,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "extensions") {
-                config->extensions = v;
+                config->extensions = parseExtensions(v);
                 continue;
             }
             if (k == "gameListFilename") {
@@ -201,10 +199,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "gameListFolder") {
-                config->gameListFolder = (type == CfgType::MAIN ||
-                                          type == CfgType::FRONTEND /* #68 */)
-                                             ? concatPath(v, config->platform)
-                                             : v;
+                v = (type == CfgType::MAIN ||
+                     type == CfgType::FRONTEND /* #68 */)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
+                config->gameListFolder = toAbsolutePath(false, v);
                 gameListFolderSet = true;
                 continue;
             }
@@ -216,7 +215,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "importFolder") {
-                config->importFolder = v;
+                config->importFolder = toAbsolutePath(false, v);
                 continue;
             }
             if (k == "gameBaseFile") {
@@ -253,9 +252,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "inputFolder") {
-                config->inputFolder = (type == CfgType::MAIN)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                config->inputFolder =
+                    (type == CfgType::MAIN)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
                 inputFolderSet = true;
                 continue;
             }
@@ -269,7 +269,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "launch") {
                 if (config->frontend == "pegasus") {
-                    config->frontendExtra = v;
+                    config->frontendExtra = v.trimmed();
                 } else {
                     printf("\033[1;33mParameter launch is ignored. Only "
                            "applicable with frontend=pegasus.\n\033[0m");
@@ -277,10 +277,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "mediaFolder") {
-                config->mediaFolder = (type == CfgType::MAIN ||
-                                       type == CfgType::FRONTEND /* #68 */)
-                                          ? concatPath(v, config->platform)
-                                          : v;
+                config->mediaFolder =
+                    (type == CfgType::MAIN ||
+                     type == CfgType::FRONTEND /* #68 */)
+                        ? Config::concatPath(v, config->platform)
+                        : v;
                 mediaFolderSet = true;
                 continue;
             }
@@ -320,7 +321,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "videoConvertExtension") {
-                config->videoConvertExtension = v;
+                config->videoConvertExtension =
+                    parseExtensions(v).replace("*.", "");
                 continue;
             }
         } else if (conv == "bool") {
@@ -556,11 +558,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->threadsSet = true;
     }
     if (parser->isSet("e")) {
-        if (config->frontend == "attractmode") {
+        QStringList allowedFe({"attractmode", "pegasus"});
+        if (allowedFe.contains(config->frontend)) {
             config->frontendExtra = parser->value("e");
         } else {
-            printf("\033[1;33mParameter emulator is ignored. Only "
-                   "applicable with frontend=attractmode.\n\033[0m");
+            printf("\033[1;33mParameter -e is ignored. Only applicable "
+                   "with frontend %s.\n\033[0m",
+                   allowedFe.join(" or ").toUtf8().constData());
         }
     }
     if (parser->isSet("i")) {
@@ -568,7 +572,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         inputFolderSet = true;
     }
     if (parser->isSet("g")) {
-        config->gameListFolder = parser->value("g");
+        config->gameListFolder = toAbsolutePath(true, parser->value("g"));
         gameListFolderSet = true;
     }
     if (parser->isSet("o")) {
@@ -576,15 +580,11 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         mediaFolderSet = true;
     }
     if (parser->isSet("a")) {
-        config->artworkConfig = parser->value("a");
-        if (QFileInfo(config->artworkConfig).isRelative()) {
-            config->artworkConfig =
-                concatPath(config->currentDir, config->artworkConfig);
-        }
+        config->artworkConfig = toAbsolutePath(true, parser->value("a"));
     } else if (config->artworkConfig.isEmpty()) {
         // failsafe: no CLI and no config.ini artworkConfig provided
         config->artworkConfig =
-            concatPath(Config::getSkyFolder(), "artwork.xml");
+            Config::concatPath(Config::getSkyFolder(), "artwork.xml");
     }
     if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m") &&
         parser->value("m").toInt() >= 0 && parser->value("m").toInt() <= 100) {
@@ -595,16 +595,12 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->userCreds = parser->value("u");
     }
     if (parser->isSet("d")) {
-        config->cacheFolder = parser->value("d");
-        if (QFileInfo(config->cacheFolder).isRelative()) {
-            config->cacheFolder =
-                concatPath(config->currentDir, config->cacheFolder);
-        }
+        config->cacheFolder = toAbsolutePath(true, parser->value("d"));
     } else if (config->cacheFolder.isEmpty()) {
         // failsafe: no CLI and no config.ini cacheFolder provided
-        config->cacheFolder =
-            concatPath(Config::getSkyFolder(Config::SkyFolderType::CACHE),
-                       config->platform);
+        config->cacheFolder = Config::concatPath(
+            Config::getSkyFolder(Config::SkyFolderType::CACHE),
+            config->platform);
     }
     QStringList flags = parseFlags();
     if (flags.contains("help")) {
@@ -616,7 +612,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         }
     }
     if (parser->isSet("addext")) {
-        config->addExtensions = parser->value("addext");
+        config->addExtensions = parseExtensions(parser->value("addext"));
     }
     if (parser->isSet("refresh")) {
         config->refresh = true;
@@ -756,13 +752,6 @@ QSet<QString> RuntimeCfg::getKeys(CfgType type) {
     return ret;
 }
 
-QString RuntimeCfg::concatPath(QString absPath, QString platformFolder) {
-    if (absPath.right(1) != "/") {
-        return absPath % "/" % platformFolder;
-    }
-    return absPath % platformFolder;
-}
-
 QStringList RuntimeCfg::parseFlags() {
     QStringList _flags{};
     if (parser->isSet("flags")) {
@@ -815,4 +804,32 @@ bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,
         return false;
     }
     return true;
+}
+
+QString RuntimeCfg::toAbsolutePath(bool isCliOpt, QString optionVal) {
+    if (QFileInfo(optionVal).isRelative()) {
+        // make absolute
+        const QString configIniAbsPath =
+            QFileInfo(config->configFile).absolutePath();
+        optionVal = Config::concatPath(
+            isCliOpt ? config->currentDir : configIniAbsPath, optionVal);
+    }
+    return Config::lexicallyNormalPath(optionVal);
+}
+
+QString RuntimeCfg::parseExtensions(const QString &optionVal) {
+    // --addext, addExtension, extensions
+    // 'foo .bar *.bAZ' --> '*.foo *.bar *.baz'
+    QStringList exts = optionVal.simplified().split(" ");
+    QStringList ret;
+    for (const auto &e : exts) {
+        if (e.startsWith("*.")) {
+            ret.append(e.toLower());
+        } else if (e.startsWith(".")) {
+            ret.append("*" % e.toLower());
+        } else {
+            ret.append("*." % e.toLower());
+        }
+    }
+    return ret.join(" ");
 }

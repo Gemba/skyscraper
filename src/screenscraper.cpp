@@ -164,24 +164,31 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                            "191;167;200;198;192;228;169;156"),
                          "****");
             data.replace(config->password.toUtf8(), "****");
-            QFile jsonErrorFile(
+            QFile errorResponse(
                 Config::getSkyFolder(Config::SkyFolderType::LOG) +
-                "/screenscraper_error.json");
-            if (jsonErrorFile.open(QIODevice::WriteOnly)) {
+                "/screenscraper_error.txt");
+            if (errorResponse.open(QIODevice::WriteOnly)) {
                 if (data.length() > 64) {
-                    jsonErrorFile.write(data);
+                    if (data.startsWith("****I****l**** "
+                                        "****m****a****n****q****u****e****")) {
+                        data.replace("****", "");
+                        data.prepend("FR: ");
+                        data.append(
+                            "\nEN: Mandatory fields are missing in the URL.\n");
+                    }
+                    errorResponse.write(data);
                     printf("The erroneous answer was written to "
-                           "'%s/screenscraper_error.json'. "
+                           "'%s'. "
                            "If this file contains game data, please consider "
                            "filing a bug report at "
                            "'https://github.com/Gemba/skyscraper/issues' and "
                            "attach that file.\n",
-                           QFileInfo(jsonErrorFile)
+                           QFileInfo(errorResponse)
                                .absoluteFilePath()
                                .toStdString()
                                .c_str());
                 }
-                jsonErrorFile.close();
+                errorResponse.close();
             }
             break; // DON'T try again! If we don't get a valid JSON document,
                    // something is very wrong with the API
@@ -256,6 +263,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 
     // If title still unset, no acceptable rom was found, so return with no
     // results
+    // TODO: replace with isEmpty()
     if (game.title.isNull()) {
         return;
     }
@@ -565,11 +573,21 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
 
     // Only one searchName, but direct match query
     if (info.size() != 0) {
-        searchNames.append("crc=" + hashList.at(1) + "&md5=" + hashList.at(2) +
-                           "&sha1=" + hashList.at(3) +
-                           "&romnom=" + hashList.at(0) +
-                           "&romtaille=" + QString::number(info.size()));
+        if (!config->addExtensions.contains("*." + info.suffix().toLower())) {
+            // sunny day approach
+            searchNames.append(
+                "crc=" + hashList.at(1) + "&md5=" + hashList.at(2) +
+                "&sha1=" + hashList.at(3) + "&romnom=" + hashList.at(0) +
+                "&romtaille=" + QString::number(info.size()));
+        } else {
+            // edge case: user has provided additional extensions via
+            // addExtensions, then use basename only for search
+            // fixes #166
+            searchNames.append("romnom=" +
+                               QUrl::toPercentEncoding(baseName, "()"));
+        }
     } else {
+        // provided file has no content or can not be accessed
         searchNames.append("romnom=" + hashList.at(0));
     }
 

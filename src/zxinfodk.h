@@ -3,7 +3,9 @@
  *
  *  Wed Jun 18 12:00:00 CEST 2017
  *  Copyright 2017 Lars Muldjord
- *  muldjordlars@gmail.com
+ *
+ *  04/2025: worldofspectrum.h -> zxinfodk.h
+ *  Copyright 2025 Gemba @ GitHub
  ****************************************************************************/
 /*
  *  This file is part of skyscraper.
@@ -23,24 +25,42 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef WORLDOFSPECTRUM_H
-#define WORLDOFSPECTRUM_H
+#ifndef ZXINFODK_H
+#define ZXINFODK_H
 
 #include "abstractscraper.h"
+#include "gameentry.h"
 
-class WorldOfSpectrum : public AbstractScraper {
+#include <QJsonDocument>
+#include <QJsonObject>
+
+class ZxInfoDk : public AbstractScraper {
     Q_OBJECT
 
 public:
-    WorldOfSpectrum(Settings *config, QSharedPointer<NetManager> manager);
+    ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager);
 
 private:
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
-    void getDescription(GameEntry &game) override;
+    void getGameData(GameEntry &game) override;
+
+    void getDeveloper(GameEntry &game) override;
+    void getPlayers(GameEntry &game) override;
+    void getAges(GameEntry &game) override;
+    void getTags(GameEntry &game) override;
+    void getRating(GameEntry &game) override;
+    void getReleaseDate(GameEntry &game) override;
     void getCover(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
-    void getReleaseDate(GameEntry &game) override;
+
+    QString getQueryUrl(QString searchName);
+    GameEntry createMinimumGameEntry(const QString &id,
+                                     const QJsonObject &jsonGameObj,
+                                     const QString &platform,
+                                     bool filecheckQuery);
+    QJsonDocument jsonDoc;
+    QJsonObject jsonObj;
 };
 
-#endif // WORLDOFSPECTRUM_H
+#endif // ZXINFODK_H

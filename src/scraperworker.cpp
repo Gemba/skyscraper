@@ -26,6 +26,7 @@
 #include "scraperworker.h"
 
 #include "arcadedb.h"
+#include "cache.h"
 #include "compositor.h"
 #include "esgamelist.h"
 #include "gamebase.h"
@@ -40,12 +41,13 @@
 #include "settings.h"
 #include "strtools.h"
 #include "thegamesdb.h"
-#include "worldofspectrum.h"
+#include "zxinfodk.h"
 
 #include <QDate>
 #include <QRegularExpression>
 #include <QStringBuilder>
 #include <QTimer>
+#include <ios>
 #include <iostream>
 
 constexpr int UNDEF_YEAR = -1;
@@ -74,7 +76,7 @@ void ScraperWorker::run() {
     } else if (config.scraper == "mobygames") {
         scraper = new MobyGames(&config, manager);
     } else if (config.scraper == "worldofspectrum") {
-        scraper = new WorldOfSpectrum(&config, manager);
+        scraper = new ZxInfoDk(&config, manager);
     } else if (config.scraper == "esgamelist") {
         scraper = new ESGameList(&config, manager);
     } else if (config.scraper == "cache") {
@@ -345,9 +347,11 @@ void ScraperWorker::run() {
         }
 
         // Don't unescape title since we already did that in getBestEntry()
-        game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
-                                               info.completeBaseName() + "." +
-                                               game.videoFormat);
+        if (!game.videoFormat.isEmpty()) {
+            game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
+                                                   info.completeBaseName() +
+                                                   "." + game.videoFormat);
+        }
         game.manualFile = StrTools::xmlUnescape(
             config.manualsFolder + "/" + info.completeBaseName() + ".pdf");
         game.description = StrTools::xmlUnescape(game.description);
@@ -370,7 +374,11 @@ void ScraperWorker::run() {
         // Make sure we have the correct format of 'ages'
         game.ages = StrTools::conformAges(game.ages);
 
-        output.append("Scraper:        " + config.scraper + "\n");
+        QString scrpr = config.scraper;
+        if (scrpr == "worldofspectrum") {
+            scrpr = "zxinfo (formerly: worldofspectrum)";
+        }
+        output.append("Scraper:        " + scrpr + "\n");
         if (!cacheScraper && config.scraper != "import") {
             output.append(
                 "From cache:     " +
@@ -898,10 +906,12 @@ void ScraperWorker::copyMedia(MediaHint mediaHint,
         skipExisting = config.skipExistingFanart;
     }
 
-    bool noCopy = true;
-    if (mediaTypeEnabled && !fnExt.isEmpty() && !fn.isEmpty() &&
-        QFile::exists(fn)) {
-        // FIXME: hier MediaHint::BATOCERA checken
+    // assume to ignore the media in gamelist output if skip existing videos /
+    // manuals is _not_ set or media type is not enabled at all. NB: if
+    // skipExisting is false the zap flag will be set false iff copy/symlink
+    // fails
+    bool zapInGamelist = !skipExisting || !mediaTypeEnabled;
+    if (mediaTypeEnabled && fnExt != "" && QFile::exists(fn)) {
         QString absMediaFn = completeBaseName % "." % fnExt;
         if (subPath != ".") {
             absMediaFn = subPath % "/" % absMediaFn;
@@ -919,20 +929,27 @@ void ScraperWorker::copyMedia(MediaHint mediaHint,
             if (config.symlink && mediaHint & MediaHint::VIDEO) {
                 // symlink
                 if (QFile::link(fn, absMediaFn)) {
-                    noCopy = false;
+                    zapInGamelist = false;
+                } else {
+                    qWarning() << "Symlink failed, media entry will be not in "
+                                  "game list: "
+                               << absMediaFn << "->" << fn;
                 }
             } else {
-                // copy
                 QFile fh(absMediaFn);
                 if (fh.open(QIODevice::WriteOnly)) {
                     fh.write(data);
                     fh.close();
-                    noCopy = false;
+                    zapInGamelist = false;
+                } else {
+                    qWarning()
+                        << "Copy failed, media entry will be not in game list: "
+                        << fn << "to" << absMediaFn;
                 }
             }
         }
     }
-    if (noCopy) {
+    if (zapInGamelist) {
         if (mediaHint & MediaHint::VIDEO) {
             game.videoFormat = "";
         } else if (mediaHint & MediaHint::MANUAL) {

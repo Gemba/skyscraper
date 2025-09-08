@@ -9,6 +9,13 @@ CONFIG += release
 CONFIG += c++1z
 QT += core network sql xml
 
+unix {
+  # for GCC8 (RetroPie Buster)
+  system( g++ --version | grep "^g++" | grep -c "8.3." >/dev/null ) {
+    LIBS += -lstdc++fs
+  }
+}
+
 # Installation prefix path for bin/Skyscraper and etc/skyscraper/*
 PREFIX=$$(PREFIX)
 # One time set with "PREFIX=/path/to qmake"?
@@ -27,9 +34,10 @@ unix:target.files=Skyscraper Skyscraper.app/Contents/MacOS/Skyscraper
 
 unix:supplementary.path=$${PREFIX}/bin
 unix:supplementary.files=\
-  supplementary/scraperdata/check_screenscraper_json_to_idmap.py \
-  supplementary/scraperdata/convert_platforms_json.py \
-  supplementary/scraperdata/peas_and_idmap_verify.py
+  supplementary/scraperdata/deepdiff_peas_jsonfiles.py \
+  supplementary/scraperdata/mdb2sqlite.sh \
+  supplementary/scraperdata/peas_and_idmap_verify.py \
+  supplementary/scraperdata/README-Skyscraper-Scripts.md
 
 unix:config.path=$${PREFIX}/etc/skyscraper
 unix:config.files=aliasMap.csv hints.xml mameMap.csv \
@@ -95,7 +103,7 @@ HEADERS += src/skyscraper.h \
            src/pegasus.h \
            src/openretro.h \
            src/thegamesdb.h \
-           src/worldofspectrum.h \
+           src/zxinfodk.h \
            src/screenscraper.h \
            src/crc32.h \
            src/mobygames.h \
@@ -149,7 +157,7 @@ SOURCES += src/main.cpp \
            src/pegasus.cpp \
            src/openretro.cpp \
            src/thegamesdb.cpp \
-           src/worldofspectrum.cpp \
+           src/zxinfodk.cpp \
            src/screenscraper.cpp \
            src/crc32.cpp \
            src/mobygames.cpp \

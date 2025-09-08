@@ -1,12 +1,16 @@
 ## Supported Platforms
 
-Get a list of supported platforms with `Skyscraper --help`.
+Get a list of supported platforms with `Skyscraper --help`. The set of supported
+platforms can be adapted to your needs by configuration files.
 
-After the initial work from torresflo @ GitHub it is possible to add new
+### File One: Platformnames, -aliases and Gamefile Extensions
+
+After the initial work from torresflo @ GitHub it was possible to add new
 platforms by editing the `platforms.json` file. However, since version 3.9.0 of
-Skyscraper this file is replaced by `peas.json` (short for *p*latforms,
-*e*xtensions/formats, *a*liases and *s*crapers. The scrapers list has been
-removed with 3.13.0 as it did not have any use) in the same folder.
+Skyscraper this file is replaced by `peas.json`. in the same folder. The
+filename is an acronym for *p*latforms, *e*xtensions/formats, *a*liases and
+*s*crapers. However, the scrapers list has been removed with 3.13.0 as it did
+not have any use.
 
 Take this example from the `peas.json` file:
 
@@ -42,28 +46,34 @@ Take this example from the `peas.json` file:
 - `formats`: set of ROM file extensions which will be included in scraping if
   a ROM file is not provided explicitly via command line.
 
-!!! tip
+Since Skyscraper 3.13.0 you should maintain local changes to the `peas.json`
+in a separate file called `peas_local.json` alongside to the `peas.json`. The
+format is identical to the `peas.json`. Since Skyscraper 3.15 you can also
+maintain local changes to the `platforms_idmap.csv` in a separate file with a
+`_local` postfix. 
 
-    Since Skyscraper 3.13.0 you should maintain local changes to the `peas.json`
-    in a separate file called `peas_local.json` alongside to the `peas.json`. The
-    format is identical to the `peas.json`. Since Skyscraper 3.15 you can also
-    maintain local changes to the `platforms_idmap.csv` in a separate file with a
-    `_local` postfix. Note the order of precedence: Any platform entry from
-    `peas_local.json` with the same platform name as in `peas.json` overwrites
-    the one from `peas.json`. The same applies for the platforms ID-mapping.
+!!! tip "The order of precedence" 
+
+    Any platform entry from `peas_local.json` with the same platform name as in
+    `peas.json` overwrites the one from `peas.json`. The same applies for the
+    platforms ID-mapping (see next section).
 
 !!! tip
 
     If you need a specific folder name for a platform (on your setup or due to an
-    EmulationStation theme) use a symbolic link (see `megadrive` (=folder) and
-    `genesis` (=symlink) for example on RetroPie or `plus4` (=folder) and `c16`
-    (=symlink)) instead of adding a new platform in the JSON file.
+    EmulationStation theme) use a symbolic link (for example `megadrive` (=folder)
+    and `genesis` (=symlink) on RetroPie setups or another example: `plus4`
+    (=folder) and `c16` (=symlink)) instead of duplicating the platform in the JSON
+    file.
 
-### Exact platform mapping
+### File Two: Exact platform mapping
 
-The file `platforms_idmap.csv` defines exact platform id for the web API of the
-three before mentioned scraping sites. It is a CSV file which maps the platform
-handle (e.g. `megadrive`) to the respective platform id of the scraping sites:
+The second file is used for to instruct scrapers to lookup games by the numeric
+platform identifier the scraping site uses for queries. The file
+`platforms_idmap.csv` defines exact platform id for the web APIs of
+Screenscraper, MobyGames and the GamesDB. It is a CSV file which maps the
+platform handle (e.g. `megadrive`) to the respective platform id of the scraping
+site (selected with the CLI option `-s`):
 
 ```csv
 folder,screenscraper_id,mobygames_id,tgdb_id
@@ -73,8 +83,10 @@ megadrive,1,16,36
 ```
 
 You can display the number with their platform name on each of the three
-scraping sites with the script `peas_and_idmap_verify.py`. Find the script
-sibling to the Skyscraper executable. Below is a part of the output:
+scraping sites in a more readable format with the script
+`peas_and_idmap_verify.py`. Find the script sibling to the Skyscraper
+executable. Below is a part of the output (ScrS refers to the Screenscraper
+site):
 
 ```
 [...]
@@ -84,6 +96,80 @@ sibling to the Skyscraper executable. Below is a part of the output:
     │   └── TGDB   36: Sega Mega Drive
 [...]
 ```
+
+## How to Change Platform Aliases or Gamefile Extensions
+
+Follow instructions in this section if you only want to overwrite platform alias
+names or gamefile extensions.
+
+1. If you don't have a `peas_local.json` file: Create the file `peas_local.json`
+   sibling to `peas.json`. Enter in this file an empty JSON object `{}` (=just
+   curly braces).
+2. Create a new platform block in `peas_local.json` inside these curly braces
+   (you created in step 1) by copying an existing platform block from the
+   `peas.json` and adapt to your needs, but keep the platform name.
+
+Example: Copy this excerpt from `peas.json`...
+
+```json linenums="1" hl_lines="2 20"
+    [...]
+    "psx": {            <-- begin of platform block
+        "aliases": [
+            "playstation",
+            "sony playstation"
+        ],
+        "formats": [
+            "*.cbn",
+            "*.chd",
+            "*.cue",
+            "*.img",
+            "*.iso",
+            "*.m3u",
+            "*.mdf",
+            "*.pbp",
+            "*.toc",
+            "*.z",
+            "*.znx"
+        ]
+    },                  <-- end of platform block
+    [...]
+```
+
+...into `peas_local.json` and add `*.bin` as recognized extension. 
+
+```json linenums="1" hl_lines="8 21"
+{
+    "psx": {
+        "aliases": [
+            "playstation",
+            "sony playstation"
+        ],
+        "formats": [
+            "*.bin",    <-- added extenstion
+            "*.cbn",
+            "*.chd",
+            "*.cue",
+            "*.img",
+            "*.iso",
+            "*.m3u",
+            "*.mdf",
+            "*.pbp",
+            "*.toc",
+            "*.z",
+            "*.znx"
+        ]
+    }                   <-- comma needed here if not last in platform list
+}
+```
+
+If you have multiple platforms defined in your local file make sure the platform
+blocks are separated by a comma `,`.
+
+
+!!! tip
+
+    On RetroPie you may also have to edit `~/.emulationstation/es_systems.cfg` and
+    add `.bin` and `.BIN`.
 
 ## How to Add Platforms For Scraping
 
@@ -100,8 +186,8 @@ Outline:
    `folder,screenscraper_id,mobygames_id,tgdb_id` (i.e. the first line of
    `platforms_idmap.csv`) . See also below for details of this CSV-file.
 4. If you use RetroPie do add the platform/system also to your `es_systems.cfg`
-   as documented
-   [here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
+   as documented in the 
+   [RetroPie documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
 
 There is also a an verbatim example, you may skip the next section initially and
 can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
@@ -140,14 +226,14 @@ into the in the `aliases` list in the `peas_local.json` for the respective
 platform/system at `<platform_name>`. The `<platform_name>` is identical to the
 folder on your filesystem where you keep your games.
 
-!!! example Use of Aliases
+!!! example "Use of Aliases"
 
-    The platforms ScummVM or Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or `"steam": ...` section of `peas.json`. Usually you find the platform information if you lookup the game manually on the scraping website.
+    The platforms ScummVM and Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or `"steam": ...` section of `peas.json`. Usually you find the platforms a game runs on if you lookup the game manually on the scraping website.
 
 ### Sample Usecase: Adding Platform _Satellaview_
 
 Let the platform/systemname be `satellaview`. You may read about this SNES
-enhancing peripheral [here](https://en.wikipedia.org/wiki/Satellaview).
+enhancing peripheral [in Wikipedia](https://en.wikipedia.org/wiki/Satellaview).
 
 #### Step 1: Add a Section to `peas_local.json`
 
@@ -205,9 +291,10 @@ satellaview,107,-1,-1
 
 #### Step 3: Create the System in RetroPie/EmulationStation and Populate the ROM Folder
 
-This part should be added to your `~/.emulationstation/es_systems.cfg`. See
-[here](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/) for
-additional information on this.
+This part should be added to your `~/.emulationstation/es_systems.cfg`. See the
+[RetroPie
+documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/)
+for additional information on this.
 
 !!! warning
 
@@ -363,9 +450,7 @@ Forum/Skyscraper Thread](https://retropie.org.uk/forum/topic/34588). Thank you!
 
 ### Migrating `platforms.json` and `screenscraper.json`
 
-!!! info
-
-    This section is only applicable if you update from Skyscraper 3.7.7-2.
+This section is only applicable if you update from Skyscraper 3.7.7-2.
 
 !!! tip
 

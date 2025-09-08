@@ -26,8 +26,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "config.h"
-
 #include <QCommandLineParser>
 #include <QImage>
 #include <QMap>
@@ -70,7 +68,7 @@ struct Settings {
     QString videosFolder = "";
     QString manualsFolder = "";
     QString fanartFolder = "";
-    QString importFolder = Config::getSkyFolder(Config::SkyFolderType::IMPORT);
+    QString importFolder = "";
     QString nameTemplate = "";
     int doneThreads = 0;
     int threads = 4;
@@ -180,7 +178,6 @@ public:
     void applyCli(bool &inputFolderSet, bool &gameListFolderSet,
                   bool &mediaFolderSet);
 
-    QString concatPath(QString absPath, QString platformFolder);
     bool validateFrontend(const QString &providedFrontend);
 
 private:
@@ -191,6 +188,8 @@ private:
     bool validateFileParameter(const QString &param, const QString &val);
     bool scraperAllowedForMatch(const QString &providedScraper,
                                 const QString &opt);
+    QString toAbsolutePath(bool isCliOpt, QString optionVal);
+    QString parseExtensions(const QString &optionVal);
 
     Settings *config;
     const QCommandLineParser *parser;

@@ -40,6 +40,10 @@ namespace Config {
     QString getSupportedPlatforms();
     QString getRetropieVersion();
 
+    QString concatPath(QString absPath, QString subPath);
+    QString makeAbsolutePath(const QString &prePath, QString subPath);
+    QString lexicallyRelativePath(const QString &base, const QString &other);
+    QString lexicallyNormalPath(const QString &pathWithDots);
 } // namespace Config
 
 #endif // CONFIG_H

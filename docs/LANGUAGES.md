@@ -6,7 +6,7 @@ Some game information comes in several languages. Skyscraper provides several wa
 
 -   screenscraper (game description and tags / genres)
 
-Below follows a general list of supported languages. Please note that not all languages are supported by all modules (support is noted inside the parenthesis for each language).
+Below follows a general list of supported languages. Not all languages are supported by all modules (the supporting module is noted inside the parenthesis for each language).
 
 When configuring languages be sure to use the short-names as shown (eg. 'no' for Norwegian).
 

@@ -8,7 +8,7 @@ Some game information and / or game media is region-based. Skyscraper provides s
 -   igdb (only release date)
 -   mobygames (only cover artwork)
 
-Below follows a general list of supported regions. Please note that not all regions are supported by all modules (support is noted inside the parenthesis for each country or region).
+Below follows a general list of supported regions. Not all regions are supported by all modules: The supporting modules are checkmarked for each region.
 
 When configuring regions be sure to use the short-names as shown (eg. 'fr' for France).
 

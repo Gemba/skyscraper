@@ -52,9 +52,15 @@
         fi
 
         printf '\n%s\n' "--- Cleaning out old build if one exists ---"
-        make --ignore-errors clean
+        make --ignore-errors clean 2>/dev/null
         rm -f .qmake.stash
-        QT_SELECT=5 qmake || handle_error "clean old"
+        if which qmake6 >/dev/null; then
+            qmake6
+        elif which qmake >/dev/null; then
+            QT_SELECT=5 qmake
+        else
+            handle_error "clean old"
+        fi
 
         if [[ "$OSTYPE" == "darwin"* ]]; then
             printf '\n%s\n' "--- macOS : Pre-building adjustment ---"

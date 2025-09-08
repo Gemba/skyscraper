@@ -117,3 +117,7 @@ article a:hover {
   letter-spacing: 0.08em;
   word-spacing: 0.2em;  
 }
+
+.md-typeset :is(.admonition, details):is(.question, .help, .faq) {
+  font-size: .8rem;
+}
