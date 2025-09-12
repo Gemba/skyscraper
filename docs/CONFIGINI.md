@@ -116,6 +116,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [regionPrios](CONFIGINI.md#regionprios)                     | Expert         |    Y     |       Y        |                |               |
 | [relativePaths](CONFIGINI.md#relativepaths)                 | Basic          |    Y     |       Y        |                |               |
 | [scummIni](CONFIGINI.md#scummini)                           | Advanced       |    Y     |                |                |               |
+| [searchbasename](CONFIGINI.md#searchBaseName)               | Advanced       |    Y     |       Y        |                |               |
 | [skipped](CONFIGINI.md#skipped)                             | Advanced       |    Y     |       Y        |       Y        |               |
 | [spaceCheck](CONFIGINI.md#spacecheck)                       | Basic          |    Y     |                |                |               |
 | [startAt](CONFIGINI.md#startat)                             | Advanced       |          |       Y        |       Y        |               |
@@ -679,6 +680,19 @@ Sets how verbose Skyscraper should be when running. Default level is 0. The high
 
 Default value: `0`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+---
+
+#### searchBaseName
+
+Enable this option to use the basename of the file when searching by title.
+
+!!! note
+
+     Only applies to screenscraper queries.
+
+Default value: unset
+Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 ---
 

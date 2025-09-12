@@ -230,6 +230,22 @@ Skyscraper -p snes -s thegamesdb --addext '*.ext1 *.ext2'
 Skyscraper -p snes -s thegamesdb --addext '.ext1 ext2'
 ```
 
+#### searchbasename &lt;EXTENSION&gt;
+
+Removes file extensions from screenscraper name queries.
+
+!!! note
+
+     Only applies to screenscraper queries.
+
+#### searchbasename-all
+
+Removes all platform file extensions from screenscraper name queries.
+
+!!! note
+
+     Only applies to screenscraper queries.
+
 ### --cache <COMMAND[:OPTIONS]>
 
 This is the cache master option. It contains several subcommands that allows you to manipulate the cached data for the selected platform.
