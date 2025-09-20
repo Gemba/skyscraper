@@ -1,9 +1,9 @@
 #include "test_settings.h"
 
-#include "src/settings.h"
 #include "src/cli.h"
 #include "src/config.h"
 #include "src/platform.h"
+#include "src/settings.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -74,7 +74,8 @@ void TestSettings::testConfigIniPaths() {
     params.append("../rel/artworks/artwork.xml");
     parser->parse(params);
     rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
-    exp = Config::lexicallyNormalPath(Config::makeAbsolutePath(config.currentDir, params.last()));
+    exp = Config::lexicallyNormalPath(
+        Config::makeAbsolutePath(config.currentDir, params.last()));
     QCOMPARE(config.artworkConfig, exp);
 
     params.removeLast();
@@ -246,8 +247,8 @@ void TestSettings::testConfigIniMain() {
     QCOMPARE(config.relativePaths, exp);
     // exp = settings.value("scummIni");
     // QCOMPARE(config.scummIni, exp);
-	exp = settings.value("searchBaseName");
-    QCOMPARE(config.searchBaseName, exp);
+    exp = settings.value("searchStem");
+    QCOMPARE(config.searchStem, exp);
     exp = settings.value("skipped");
     QCOMPARE(config.skipped, exp);
     exp = settings.value("spaceCheck");
@@ -395,8 +396,8 @@ void TestSettings::testConfigIniPlatform() {
     QCOMPARE(config.regionPriosStr, exp);
     exp = settings.value("relativePaths");
     QCOMPARE(config.relativePaths, exp);
-	exp = settings.value("searchBaseName");
-    QCOMPARE(config.searchBaseName, exp);
+    exp = settings.value("searchStem");
+    QCOMPARE(config.searchStem, exp);
     exp = settings.value("skipped");
     QCOMPARE(config.skipped, exp);
     exp = settings.value("startAt");

@@ -116,7 +116,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [regionPrios](CONFIGINI.md#regionprios)                     | Expert         |    Y     |       Y        |                |               |
 | [relativePaths](CONFIGINI.md#relativepaths)                 | Basic          |    Y     |       Y        |                |               |
 | [scummIni](CONFIGINI.md#scummini)                           | Advanced       |    Y     |                |                |               |
-| [searchbasename](CONFIGINI.md#searchBaseName)               | Advanced       |    Y     |       Y        |                |               |
+| [searchStem](CONFIGINI.md#searchstem)                       | Advanced       |    Y     |       Y        |                |               |
 | [skipped](CONFIGINI.md#skipped)                             | Advanced       |    Y     |       Y        |       Y        |               |
 | [spaceCheck](CONFIGINI.md#spacecheck)                       | Basic          |    Y     |                |                |               |
 | [startAt](CONFIGINI.md#startat)                             | Advanced       |          |       Y        |       Y        |               |
@@ -683,15 +683,17 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 ---
 
-#### searchBaseName
+#### searchStem
 
-Enable this option to use the basename of the file when searching by title.
+Force searching by filename stem when using Screenscraper for the extensions provided.
+Usually Screenscraper uses a set of parameters derived from the gamefile (e.g., size, checksums, ...) instead of the game filename. When enabling this option you can instruct Skyscraper to query the Screenscraper site by the game filename, more precisly by the stem of the filename. The provided extension(s) must be a subset of the configured extensions for a platform.  
+If you want to enable this option for all extensions for a platform then use the keyword `'all'`. Alternatively you can use the command line alias option `--searchstem-all`. In the rare case, if you are deliberatly using the extension `*.all` for your game files, do use `'.all'` or `'*.all'` to signal Skyscraper to use this extension instead the whole set of extensions.
 
 !!! note
 
-     Only applies to screenscraper queries.
+     Only applies to Screenscraper queries.
 
-Default value: unset
+Default value: unset  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 ---
