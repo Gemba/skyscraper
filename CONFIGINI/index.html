@@ -1,0 +1,3782 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skyscraper User Guide">
+      
+      
+      
+        <link rel="canonical" href="https://gemba.github.io/skyscraper/CONFIGINI/">
+      
+      
+        <link rel="prev" href="../FRONTENDS/">
+      
+      
+        <link rel="next" href="../CLIHELP/">
+      
+      
+      <link rel="icon" href="../resources/skyscraper_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+    
+    
+      
+        <title>The config.ini File - Skyscraper</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/mods.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configini-options" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Skyscraper" class="md-header__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Skyscraper
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The config.ini File
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Skyscraper" class="md-nav__button md-logo" aria-label="Skyscraper" data-md-component="logo">
+      
+  <img src="../resources/skyscraper_logo.png" alt="logo">
+
+    </a>
+    Skyscraper
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Gemba/Skyscraper/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Skyscraper
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../USECASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sample Use Case
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../INSTALLATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FAQ/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../XDG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    XDG Base Directory Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Skyscraper Input
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Input
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SCRAPINGMODULES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Scrapers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IMPORT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Import of Game Data
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Skyscraper Cache
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Cache
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CACHE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Cache
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Skyscraper Output
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Skyscraper Output
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARTWORK/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Artwork & Layout
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FRONTENDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Frontends
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    The config.ini File
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    The config.ini File
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configini-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      config.ini Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="config.ini Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#order-of-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Order of Precedence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-of-options-with-applicable-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Index of Options with Applicable Sections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Index of Options with Applicable Sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      inputFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistbackup" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListBackup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mediafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      mediaFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mediafolderhidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      mediaFolderHidden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachefolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cacheresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cacherefresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheRefresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nametemplate" class="md-nav__link">
+    <span class="md-ellipsis">
+      nameTemplate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tidydesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      tidyDesc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jpgquality" class="md-nav__link">
+    <span class="md-ellipsis">
+      jpgQuality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachecovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheCovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachetextures" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheTextures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachescreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheScreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cropblack" class="md-nav__link">
+    <span class="md-ellipsis">
+      cropBlack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachewheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheWheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachemarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheMarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      importFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      unpack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      frontend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      emulator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      launch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      videos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videosizelimit" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoSizeLimit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoconvertcommand" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoConvertCommand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoconvertextension" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoConvertExtension
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoprefernormalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoPreferNormalized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      symlink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theinfront" class="md-nav__link">
+    <span class="md-ellipsis">
+      theInFront
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brackets" class="md-nav__link">
+    <span class="md-ellipsis">
+      brackets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#innerbracketsreplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      innerBracketsReplace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#innerparenthesesreplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      innerParenthesesReplace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keepdiscinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      keepDiscInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maxlength" class="md-nav__link">
+    <span class="md-ellipsis">
+      maxLength
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      minMatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pretend" class="md-nav__link">
+    <span class="md-ellipsis">
+      pretend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattend" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattendskip" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattendSkip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      interactive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forcefilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      forceFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbosity" class="md-nav__link">
+    <span class="md-ellipsis">
+      verbosity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maxfails" class="md-nav__link">
+    <span class="md-ellipsis">
+      maxFails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#region" class="md-nav__link">
+    <span class="md-ellipsis">
+      region
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regionprios" class="md-nav__link">
+    <span class="md-ellipsis">
+      regionPrios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lang" class="md-nav__link">
+    <span class="md-ellipsis">
+      lang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#langprios" class="md-nav__link">
+    <span class="md-ellipsis">
+      langPrios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artworkxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      artworkXml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relativepaths" class="md-nav__link">
+    <span class="md-ellipsis">
+      relativePaths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addextensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      addExtensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      hints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subdirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      subdirs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlymissing" class="md-nav__link">
+    <span class="md-ellipsis">
+      onlyMissing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#startat" class="md-nav__link">
+    <span class="md-ellipsis">
+      startAt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endat" class="md-nav__link">
+    <span class="md-ellipsis">
+      endAt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#includepattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      includePattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#excludepattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      excludePattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#includefrom" class="md-nav__link">
+    <span class="md-ellipsis">
+      includeFrom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#excludefrom" class="md-nav__link">
+    <span class="md-ellipsis">
+      excludeFrom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usercreds" class="md-nav__link">
+    <span class="md-ellipsis">
+      userCreds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacecheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      spaceCheck
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scummini" class="md-nav__link">
+    <span class="md-ellipsis">
+      scummIni
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      platform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addfolders" class="md-nav__link">
+    <span class="md-ellipsis">
+      addFolders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      manuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistvariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListVariants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoreyearinfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      ignoreYearInFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamebasefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameBaseFile
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLIHELP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Command Line Options
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PATHHANDLING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Path Processing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PLATFORMS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Platforms
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LANGUAGES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Languages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../REGIONS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Regions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configini-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      config.ini Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="config.ini Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#order-of-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Order of Precedence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-of-options-with-applicable-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Index of Options with Applicable Sections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Index of Options with Applicable Sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inputfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      inputFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistbackup" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListBackup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mediafolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      mediaFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mediafolderhidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      mediaFolderHidden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachefolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cacheresize" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheResize
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cacherefresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheRefresh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nametemplate" class="md-nav__link">
+    <span class="md-ellipsis">
+      nameTemplate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tidydesc" class="md-nav__link">
+    <span class="md-ellipsis">
+      tidyDesc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jpgquality" class="md-nav__link">
+    <span class="md-ellipsis">
+      jpgQuality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachecovers" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheCovers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachetextures" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheTextures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachescreenshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheScreenshots
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cropblack" class="md-nav__link">
+    <span class="md-ellipsis">
+      cropBlack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachewheels" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheWheels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachemarquees" class="md-nav__link">
+    <span class="md-ellipsis">
+      cacheMarquees
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importfolder" class="md-nav__link">
+    <span class="md-ellipsis">
+      importFolder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      unpack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      frontend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      emulator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      launch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videos" class="md-nav__link">
+    <span class="md-ellipsis">
+      videos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videosizelimit" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoSizeLimit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoconvertcommand" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoConvertCommand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoconvertextension" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoConvertExtension
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#videoprefernormalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      videoPreferNormalized
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symlink" class="md-nav__link">
+    <span class="md-ellipsis">
+      symlink
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theinfront" class="md-nav__link">
+    <span class="md-ellipsis">
+      theInFront
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brackets" class="md-nav__link">
+    <span class="md-ellipsis">
+      brackets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#innerbracketsreplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      innerBracketsReplace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#innerparenthesesreplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      innerParenthesesReplace
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keepdiscinfo" class="md-nav__link">
+    <span class="md-ellipsis">
+      keepDiscInfo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maxlength" class="md-nav__link">
+    <span class="md-ellipsis">
+      maxLength
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minmatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      minMatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pretend" class="md-nav__link">
+    <span class="md-ellipsis">
+      pretend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattend" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unattendskip" class="md-nav__link">
+    <span class="md-ellipsis">
+      unattendSkip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      interactive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forcefilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      forceFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verbosity" class="md-nav__link">
+    <span class="md-ellipsis">
+      verbosity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maxfails" class="md-nav__link">
+    <span class="md-ellipsis">
+      maxFails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#region" class="md-nav__link">
+    <span class="md-ellipsis">
+      region
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regionprios" class="md-nav__link">
+    <span class="md-ellipsis">
+      regionPrios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lang" class="md-nav__link">
+    <span class="md-ellipsis">
+      lang
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#langprios" class="md-nav__link">
+    <span class="md-ellipsis">
+      langPrios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artworkxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      artworkXml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relativepaths" class="md-nav__link">
+    <span class="md-ellipsis">
+      relativePaths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addextensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      addExtensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      hints
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subdirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      subdirs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onlymissing" class="md-nav__link">
+    <span class="md-ellipsis">
+      onlyMissing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#startat" class="md-nav__link">
+    <span class="md-ellipsis">
+      startAt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endat" class="md-nav__link">
+    <span class="md-ellipsis">
+      endAt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#includepattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      includePattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#excludepattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      excludePattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#includefrom" class="md-nav__link">
+    <span class="md-ellipsis">
+      includeFrom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#excludefrom" class="md-nav__link">
+    <span class="md-ellipsis">
+      excludeFrom
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usercreds" class="md-nav__link">
+    <span class="md-ellipsis">
+      userCreds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacecheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      spaceCheck
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scummini" class="md-nav__link">
+    <span class="md-ellipsis">
+      scummIni
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      platform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addfolders" class="md-nav__link">
+    <span class="md-ellipsis">
+      addFolders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      manuals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamelistvariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameListVariants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoreyearinfilename" class="md-nav__link">
+    <span class="md-ellipsis">
+      ignoreYearInFilename
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamebasefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      gameBaseFile
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>The config.ini File</h1>
+
+<h2 id="configini-options">config.ini Options<a class="headerlink" href="#configini-options" title="Permanent link">&para;</a></h2>
+<p>Look below to find a thorough description of all options and sections available in the <code>/home/&lt;USER&gt;/.skyscraper/config.ini</code> configuration file. These options will then be applied whenever running Skyscraper with the <code>Skyscraper</code> command.</p>
+<p>Almost all of these options are set at a useful default as documented here (and can therefore be left out) and should only be set if your use case requires it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Some users seem to have a habbit of editing the <code>/home/&lt;USER&gt;/skysource/config.ini</code> file. <em>This is not the correct file!</em> Please read the first paragraph. :)</p>
+</div>
+<p>Options can be set on four levels; either <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code> or <code>[&lt;SCRAPER&gt;]</code>.</p>
+<p>Settings in the <code>[main]</code> section will always be set regardless of selected platform, frontend and module.</p>
+<p><code>&lt;PLATFORM&gt;</code> can be any of the supported platforms (check list with <code>--help</code> under the <code>-p</code> option), in which case the settings will only be applied while scraping that particular platform.</p>
+<p><code>&lt;FRONTEND&gt;</code> can be any of the supported frontends (check list with <code>--help</code> under the <code>-f</code> option), in which case the settings will only be applied while scraping for that particular frontend.</p>
+<p><code>&lt;SCRAPER&gt;</code> can be any of the supported scraping modules (check list with <code>--help</code> under the <code>-s</code> option), in which case the settings will only be applied while scraping with that particular scraping module.</p>
+<h3 id="order-of-precedence">Order of Precedence<a class="headerlink" href="#order-of-precedence" title="Permanent link">&para;</a></h3>
+<p>Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline (CLI) option which relates to an configuration setting in <code>config.ini</code> has highest precedence, regardless of the other four levels respective sections.</p>
+<p>You can find an example config file at <code>/home/&lt;USER&gt;/.skyscraper/config.ini.example</code>. This file contains all available options. Just copy the file to <code>config.ini</code> and uncomment and edit the ones you wish to use by removing the <code>#</code> or <code>;</code> in front of the variables. Remember to also uncomment the section the option relates to such as <code>[main]</code> or <code>[amiga]</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can set a custom configuration file with the <code>-c &lt;FILENAME&gt;</code> command line option. Read more about <a href="../CLIHELP/">all available command line options</a>.</p>
+</div>
+<p><strong>Example <code>config.ini</code></strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[main]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">inputFolder</span><span class="o">=</span><span class="s">&quot;/path/to/your/roms&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="na">cacheFolder</span><span class="o">=</span><span class="s">&quot;/path/to/your/desired/db/cache/base/folder&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="na">gameListBackup</span><span class="o">=</span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="na">videos</span><span class="o">=</span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="na">unattend</span><span class="o">=</span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="na">verbosity</span><span class="o">=</span><span class="s">&quot;1&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="na">lang</span><span class="o">=</span><span class="s">&quot;ja&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="na">region</span><span class="o">=</span><span class="s">&quot;jp&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="na">cacheMarquees</span><span class="o">=</span><span class="s">&quot;false&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">[amiga]</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="na">inputFolder</span><span class="o">=</span><span class="s">&quot;/specific/path/just/for/amiga/roms&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="na">cacheFolder</span><span class="o">=</span><span class="s">&quot;/specific/path/just/for/amiga/cache&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="na">minMatch</span><span class="o">=</span><span class="s">&quot;50&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="na">maxLength</span><span class="o">=</span><span class="s">&quot;200&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">[pegasus]</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="na">artworkXml</span><span class="o">=</span><span class="s">&quot;artwork-pegasus.xml&quot;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="na">maxLength</span><span class="o">=</span><span class="s">&quot;10000&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">[screenscraper]</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="na">userCreds</span><span class="o">=</span><span class="s">&quot;USER:PASSWORD&quot;</span>
+</code></pre></div>
+<h3 id="index-of-options-with-applicable-sections">Index of Options with Applicable Sections<a class="headerlink" href="#index-of-options-with-applicable-sections" title="Permanent link">&para;</a></h3>
+<p>This is an alphabetical index of all configuration options their usage level and their sections they may be applied to.</p>
+<table>
+<thead>
+<tr>
+<th>Section &rarr;<br>Parameter &darr;</th>
+<th style="text-align: center;">Usage<br>Level</th>
+<th style="text-align: center;"><code>[main]</code></th>
+<th style="text-align: center;"><code>[&lt;PLATFORM&gt;]</code></th>
+<th style="text-align: center;"><code>[&lt;FRONTEND&gt;]</code></th>
+<th style="text-align: center;"><code>[&lt;SCRAPER&gt;]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="./#addextensions">addExtensions</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#addfolders">addFolders</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#artworkxml">artworkXml</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#brackets">brackets</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#cachecovers">cacheCovers</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cachefolder">cacheFolder</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#cachemarquees">cacheMarquees</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cacherefresh">cacheRefresh</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cacheresize">cacheResize</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cachescreenshots">cacheScreenshots</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cachetextures">cacheTextures</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cachewheels">cacheWheels</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#cropblack">cropBlack</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#emulator">emulator</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#endat">endAt</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#excludefrom">excludeFrom</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#excludepattern">excludePattern</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#extensions">extensions</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#forcefilename">forceFilename</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#frontend">frontend</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#gamebasefile">gameBaseFile</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#gamelistbackup">gameListBackup</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#gamelistfilename">gameListFilename</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#gamelistfolder">gameListFolder</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#gamelistvariants">gameListVariants</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#hints">hints</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#ignoreyearinfilename">ignoreYearInFilename</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#importfolder">importFolder</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#includefrom">includeFrom</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#includepattern">includePattern</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#innerbracketsreplace">innerBracketsReplace</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#innerparenthesesreplace">innerParenthesesReplace</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#inputfolder">inputFolder</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#interactive">interactive</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#jpgquality">jpgQuality</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#keepdiscinfo">keepDiscInfo</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#lang">lang</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#langprios">langPrios</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#launch">launch</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#manuals">manuals</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#maxfails">maxFails</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#maxlength">maxLength</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#mediafolder">mediaFolder</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#mediafolderhidden">mediaFolderHidden</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#minmatch">minMatch</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#nametemplate">nameTemplate</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#onlymissing">onlyMissing</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#platform">platform</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#pretend">pretend</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#region">region</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#regionprios">regionPrios</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#relativepaths">relativePaths</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#scummini">scummIni</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#skipped">skipped</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#spacecheck">spaceCheck</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#startat">startAt</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#subdirs">subdirs</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#symlink">symlink</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#theinfront">theInFront</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#threads">threads</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#tidydesc">tidyDesc</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#unattend">unattend</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#unattendskip">unattendSkip</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#unpack">unpack</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#usercreds">userCreds</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#verbosity">verbosity</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="./#videoconvertcommand">videoConvertCommand</a></td>
+<td style="text-align: center;">Expert</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#videoconvertextension">videoConvertExtension</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#videoprefernormalized">videoPreferNormalized</a></td>
+<td style="text-align: center;">Advanced</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#videos">videos</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td><a href="./#videosizelimit">videoSizeLimit</a></td>
+<td style="text-align: center;">Basic</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table>
+<h4 id="inputfolder">inputFolder<a class="headerlink" href="#inputfolder" title="Permanent link">&para;</a></h4>
+<p>Sets the rom input folder. By default Skyscraper will look for roms in the <code>/home/&lt;USER&gt;/RetroPie/roms/&lt;PLATFORM&gt;</code> folder. If your roms are located in a non-default location, you can set the input path using this option.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this is set in the <code>[main]</code> section it will automatically add <code>/&lt;PLATFORM&gt;</code> to the end of the path. If you want better control consider adding it to a <code>[&lt;PLATFORM&gt;]</code> section instead where it will be used as is.</p>
+</div>
+<p>Default value: <code>/home/&lt;USER&gt;/RetroPie/roms/&lt;PLATFORM&gt;</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="gamelistfolder">gameListFolder<a class="headerlink" href="#gamelistfolder" title="Permanent link">&para;</a></h4>
+<p>Sets the game list export folder. By default Skyscraper exports the game list to the same directory as the rom input folder. This enables you to change that to a non-default location.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this is set in the <code>[main]</code> or <code>[&lt;FRONTEND&gt;]</code> section it will automatically add <code>/&lt;PLATFORM&gt;</code> to the end of the path. If you want better control consider adding it to a <code>[&lt;PLATFORM&gt;]</code> section instead where it will be used as is.</p>
+</div>
+<p>Default value: <code>/home/&lt;USER&gt;/RetroPie/roms/&lt;PLATFORM&gt;</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="gamelistfilename">gameListFilename<a class="headerlink" href="#gamelistfilename" title="Permanent link">&para;</a></h4>
+<p>Override the game list filename. This enables you to set a filename different from the default provided by the frontend modules. For example you can specify a custom filename for the gamelist, which is particularly useful if you are using EmuDeck with the Pegasus frontend: This enhancement helps prevent duplicate entries in Pegasus by allowing users to generate a <code>metadata.txt</code> file instead of the default <code>metadata.pegasus.txt</code>.</p>
+<p>Default value: depends on <a href="../FRONTENDS/">frontend</a><br />
+Allowed in sections: <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="gamelistbackup">gameListBackup<a class="headerlink" href="#gamelistbackup" title="Permanent link">&para;</a></h4>
+<p>When set to true Skyscraper will create a backup of the existing game list each time it is run in game list generation mode (this mode is enabled by leaving out the <code>-s MODULE</code> option). The filename and path of the backup will be equal to the existing game list but have a timestamp appended to the name of the format <code>-yyyyMMdd-hhmmss</code> (eg. <code>gamelist.xml-20200530-115900</code>).</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="mediafolder">mediaFolder<a class="headerlink" href="#mediafolder" title="Permanent link">&para;</a></h4>
+<p>Sets the artwork / media output folder. By default (ie. if the option <code>mediaFolder</code> is not explicitly set or pre-defined by the frontend) Skyscraper outputs the composited artwork files to the game list export folder concatenated with <code>/media</code>. The <code>mediaFolder</code> setting enables you to change that to a non-default location.</p>
+<p>Read more about the <a href="../ARTWORK/">artwork compositing</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this is set in the <code>[main]</code> or <code>[&lt;FRONTEND&gt;]</code> section it will automatically add <code>/&lt;PLATFORM&gt;</code> to the end of the path. If you want better control consider adding it to a <code>[&lt;PLATFORM&gt;]</code> section instead where it will be used as is.</p>
+</div>
+<p>Default value: <code>/home/&lt;USER&gt;/RetroPie/roms/&lt;PLATFORM&gt;/media</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="mediafolderhidden">mediaFolderHidden<a class="headerlink" href="#mediafolderhidden" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper uses the <code>&lt;PLATFORM&gt;/media</code> folder when generating EmulationStation media. Setting this option will change that to <code>&lt;PLATFORM&gt;/.media</code>. Notice the <code>.</code> which hides the folder, which can speed up the initial EmulationStation loading sequence when using slow storage such as network file systems.</p>
+<p>This option is ignored if you set the media folder manually.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remember to remove your old <code>&lt;PLATFORM&gt;/media</code> folders if you enable this option.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: Only for frontends <code>[emulationstation]</code> or <code>[retrobat]</code></p>
+<hr />
+<h4 id="cachefolder">cacheFolder<a class="headerlink" href="#cachefolder" title="Permanent link">&para;</a></h4>
+<p>Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the <em>resource cache</em>. By default this folder is set to <code>/home/&lt;USER&gt;/.skyscraper/cache/&lt;PLATFORM&gt;</code>. Don't change this unless you have a good reason to (for instance if you want your cache to reside on a USB drive).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this is set in the <code>[main]</code> section (recommended) it will automatically add <code>/&lt;PLATFORM&gt;</code> to the end of the path. If you want better control consider adding it to a <code>[&lt;PLATFORM&gt;]</code> section instead where it will be used as is.</p>
+</div>
+<p>Default value: <code>/home/&lt;USER&gt;/.skyscraper/cache/&lt;PLATFORM&gt;</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="cacheresize">cacheResize<a class="headerlink" href="#cacheresize" title="Permanent link">&para;</a></h4>
+<p>By default, to save space, Skyscraper resizes large pieces of artwork before adding them to the resource cache. Setting this option to <code>"false"</code> will disable this and save the artwork files with their original resolution. Beware that Skyscraper converts all artwork resources to lossless PNG's when saving them. High resolution images such as covers will take up a lot of space! So set this to <code>"false"</code> with caution.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is not related to the artwork compositing that happens when generating a game list. This is <em>only</em> related to how Skyscraper handles artwork when adding it to the resource cache while gathering data from the scraping modules.</p>
+</div>
+<p>To read about artwork compositing see the <a href="../ARTWORK/">artwork documentation</a> instead.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cacherefresh">cacheRefresh<a class="headerlink" href="#cacherefresh" title="Permanent link">&para;</a></h4>
+<p>Skyscraper has a resource cache which works just like the browser cache in Firefox. If you scrape and gather resources for a platform with the same scraping module twice, it will grab the data from the cache instead of hammering the online servers again. This has the advantage in the case where you scrape a rom set twice, only the roms that weren't recognized the first time around will be fetched from the online servers. Everything else will be loaded from the cache.</p>
+<p>You can force all data to be refetched from the servers by setting this option to <code>cacheRefresh="true"</code>, effectively updating the cached data with new data from the source.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><em>Only</em> set this option to true if you know data has changed for several roms at the source. Otherwise you are hammering the servers for no reason.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="nametemplate">nameTemplate<a class="headerlink" href="#nametemplate" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper uses just the title as the game name when generating gamelists for any frontend. You can change this to suit your personal preference by setting this option. It works by replacing certain tokens in the name template with the corresponding data. The valid tokens are:</p>
+<ul>
+<li><code>%t</code>: The game title as returned by the scraping sources without bracket information (see <code>%b</code> and <code>%B</code> below)</li>
+<li><code>%f</code>: The game filename without extension and bracket information (see <code>%b</code> and <code>%B</code> below)</li>
+<li><code>%b</code>: The game <code>()</code> parentheses information. This information often comes from the filename, but can also come from the scraping source title (eg. <code>(USA)</code> or <code>(en,fr,de)</code>)</li>
+<li><code>%B</code>: The game <code>[]</code> bracket information. This information often comes from the filename, but can also come from the scraping source title (eg. <code>[disk 1 of 2]</code> or <code>[AGA]</code>)</li>
+<li><code>%a</code>: The age restriction as returned by the scraping sources (eg. <code>16+</code>)</li>
+<li><code>%d</code>: The game developer as returned by the scraping sources</li>
+<li><code>%p</code>: The game publisher as returned by the scraping sources</li>
+<li><code>%r</code>: The game rating as returned by the scraping sources (<code>0.0</code> to <code>5.0</code>)</li>
+<li><code>%P</code>: The number of players as returned by the scraping sources</li>
+<li><code>%D</code>: The game release date with format <code>yyyy-mm-dd</code></li>
+</ul>
+<p>This option also support template groups separated by <code>;</code> within the template. The template parser will go over each group. If a group only has empty variables it will not be included in the final game name. So for a template such as <code>%t;, %P player(s)</code> where the <code>%P</code> is empty because no scraping source has provided the info, it will leave out the <code>, %P player(s)</code> part entirely resulting in the title <code>Game Name</code>. If this was not separated by <code>;</code> the resulting game name would end up being <code>Game Name, player(s)</code>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="na">nameTemplate</span><span class="o">=</span><span class="s">&quot;%t [%f];, %P player(s)&quot;</span>
+</code></pre></div>
+<p>Will result in: <code>1945k III [1945kiii], 2 player(s)</code></p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="tidydesc">tidyDesc<a class="headerlink" href="#tidydesc" title="Permanent link">&para;</a></h4>
+<p>Cleans up some misformatting in scraped description:</p>
+<ol>
+<li>Heading and trailing spaces are stripped</li>
+<li>Multiple spaces between sentences are reduced to one space</li>
+<li>Bulletpoint beginning with * or ● are replaced with a dash</li>
+<li>Stylized ellipsis (… Unicode:<code>&amp;#8230;</code>) is replaced with three dot characters</li>
+<li>Multiple exclamation marks are reduced to one, unless for game titles are explicitly typed like that, like 'Super Punch-Out!!'.</li>
+</ol>
+<div class="admonition quote">
+<p class="admonition-title">Quote</p>
+<p>'Multiple exclamation marks,' he went on, shaking his head, 'are a sure sign of a diseased mind.'<br />
+-- <em>Eric</em> by Terry Pratchett</p>
+</div>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="jpgquality">jpgQuality<a class="headerlink" href="#jpgquality" title="Permanent link">&para;</a></h4>
+<p>Sets the default jpg quality when saving image resources to the cache. This will be ignored if <code>--flags noresize</code> is set. Default is 95.</p>
+<p>All screenshots and any image resource that uses transparency will always be saved as PNG images. In those cases this setting will be ignored as PNG format is lossless.</p>
+<p>Default value: <code>95</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cachecovers">cacheCovers<a class="headerlink" href="#cachecovers" title="Permanent link">&para;</a></h4>
+<p>Enables/disables the caching of the resource type <code>cover</code> when scraping with any module. If you never use covers in your artwork configuration, setting this to <code>"false"</code> can save you some space.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cachetextures">cacheTextures<a class="headerlink" href="#cachetextures" title="Permanent link">&para;</a></h4>
+<p>Enables/disables the caching of the resource type <code>cover</code> when scraping with any module. If you never use covers in your artwork configuration, setting this to <code>"false"</code> can save you some space.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cachescreenshots">cacheScreenshots<a class="headerlink" href="#cachescreenshots" title="Permanent link">&para;</a></h4>
+<p>Enables/disables the caching of the resource type <code>screenshot</code> when scraping with any module. If you never use screenshots in your artwork configuration, setting this to <code>"false"</code> can save you some space.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cropblack">cropBlack<a class="headerlink" href="#cropblack" title="Permanent link">&para;</a></h4>
+<p>Enables/disables cropping away the black borders around the screenshot resources when compositing the final frontend gamelist artwork.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="cachewheels">cacheWheels<a class="headerlink" href="#cachewheels" title="Permanent link">&para;</a></h4>
+<p>Enables/disables the caching of the resource type <code>wheel</code> when scraping with any module. If you never use wheels in your artwork configuration, setting this to <code>"false"</code> can save you some space.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="cachemarquees">cacheMarquees<a class="headerlink" href="#cachemarquees" title="Permanent link">&para;</a></h4>
+<p>Enables/disables the caching of the resource type <code>marquee</code> when scraping with any module. If you never use marquees in your artwork configuration, setting this to <code>"false"</code> can save you some space.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="importfolder">importFolder<a class="headerlink" href="#importfolder" title="Permanent link">&para;</a></h4>
+<p>Sets a non-default folder when scraping using the <code>-s import</code> module. By default this is set to <code>/home/&lt;USER&gt;/.skyscraper/import</code> and will also look for a <code>/&lt;PLATFORM&gt;</code> inside of the chosen folder. Read more about the <a href="../IMPORT/"><code>-s import</code> module</a>.</p>
+<p>Default value: <code>/home/&lt;USER&gt;/.skyscraper/import/&lt;PLATFORM&gt;</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="unpack">unpack<a class="headerlink" href="#unpack" title="Permanent link">&para;</a></h4>
+<p>Some scraping modules use file checksums to identify the game in their databases. If you've compressed your roms to zip or 7z files yourself, this can pose a problem in getting a good result. You can then try setting this option to <code>"true"</code>. Doing so will extract the rom and do the file checksum on the rom itself instead of the compressed file.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Only enable this option if you are having problems getting the roms identified from the compressed files. It slows down the scraping process significantly and should therefore be avoided if possible.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="frontend">frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h4>
+<p>Sets the frontend you wish to export a game list for. By default Skyscraper will export an EmulationStation game list, but other frontends are supported as well.</p>
+<p>If exporting for the <code>attractmode</code> frontend, please also take note of the required <code>emulator=""</code> option that goes along with using the <code>attractmode</code> frontend.</p>
+<p>If exporting for the <code>pegasus</code> frontend, please also take note of the optional <code>launch=""</code> option that allows you to set the launch parameter used by Pegasus.</p>
+<p>Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: <code>emulationstation</code>, <code>esde</code>, <code>pegasus</code>, <code>retrobat</code>, <code>attractmode</code>, aso. Check all supported frontends with '--help' and read a more about the <a href="../FRONTENDS/">details concerning each of them</a>.</p>
+<p>Default value: <code>emulationstation</code><br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="emulator">emulator<a class="headerlink" href="#emulator" title="Permanent link">&para;</a></h4>
+<p>This option is <em>only</em> applicable when also setting the <code>frontend="attractmode"</code> option. It sets the <em>emulator</em> to be used when generating the <code>attractmode</code> game list. On RetroPie the emulator name is mostly the same as the platform.</p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="launch">launch<a class="headerlink" href="#launch" title="Permanent link">&para;</a></h4>
+<p>This option is <em>only</em> applicable when also setting the <code>frontend="pegasus"</code> option. It sets the <em>launch command</em> to be used when generating the <code>pegasus</code> game list. This is optional. It defaults to the RetroPie launch options which works on RetroPie.</p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="videos">videos<a class="headerlink" href="#videos" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this option.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="videosizelimit">videoSizeLimit<a class="headerlink" href="#videosizelimit" title="Permanent link">&para;</a></h4>
+<p>If video scraping is enabled you can set the maximum allowed video file size with this variable. The size is in Megabytes (1.000.000 bytes). If this size is exceeded the video file won't be saved to the cache.</p>
+<p>Default value: <code>100</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="videoconvertcommand">videoConvertCommand<a class="headerlink" href="#videoconvertcommand" title="Permanent link">&para;</a></h4>
+<p>Some scraping modules deliver videos that use a codec or color format that some frontends don't support. In those cases it can be useful to convert the videos before saving them in the Skyscraper resource cache.</p>
+<p>This setting allows you to set a command that will be run on each video after it has been downloaded from the selected scraping module. See the examples below for inspiration.</p>
+<p>The <code>%i</code> and <code>%o</code> <strong>are required</strong> and will be replaced with the internally used video input (original) and output (converted) filenames as needed by Skyscraper.</p>
+<p>If your command / script always converts to a videofile with a specific extension, you also need to set <code>videoConvertExtension</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Set <code>--verbosity 3</code> to route all output from your command / script to the terminal while Skyscraper runs. This will help you ensure everything is working as intended.</p>
+</div>
+<p>The first example below makes use of the excellent <code>ffmpeg</code> tool. If you want to use this specific example you need to install <code>ffmpeg</code> first. On RetroPie and other Debian-derived distros you can install it with <code>sudo apt install ffmpeg</code>. If you want to use a script for the video conversion and run it directly without path, you need to place it in the <code>/home/&lt;USER&gt;/.skyscraper</code> folder.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you create a script that includes checks on the input video and it sometimes decides not to convert them, you should simply let the script copy the video with <code>cp %i %o</code>. The <code>%i</code> is a temporary file created internally by Skyscraper. And the <code>%o</code> file is the file used by the cache. Both files should exist after a successful conversion. Skyscraper removes the temporary <code>%i</code> file automatically.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">videoConvertCommand</span><span class="o">=</span><span class="s">&quot;ffmpeg -i %i -y -pix_fmt yuv420p -t 00:00:10 -c:v libx264 -crf 23 -c:a aac -b:a 64k -vf scale=640:480:force_original_aspect_ratio=decrease,pad=640:480:(ow-iw)/2:(oh-ih)/2,setsar=1 %o&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">videoConvertCommand</span><span class="o">=</span><span class="s">&quot;videoconvert.sh %i %o&quot;</span>
+</code></pre></div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="videoconvertextension">videoConvertExtension<a class="headerlink" href="#videoconvertextension" title="Permanent link">&para;</a></h4>
+<p>If you want to force an extension for the converted video file created by the <code>videoConvertCommand</code> command, you need to set this option. The converted file will then automatically have this extension no matter what the input file extension is.</p>
+<p>For instance, if a scraping module delivers the file <code>videofile.avi</code> and you always want the converted files to be <code>mp4</code> files, you simply set this option to <code>videoConvertExtension="mp4"</code>.</p>
+<p>It is up to you to make sure that the command you provide in <code>videoConvertCommand</code> actually converts to a video file using the selected extension. For some conversion tools such as <code>ffmpeg</code> this is handled simply by setting the extension of the output file. But for other tools you might have to provide additional options to the <code>videoConvertCommand</code> above.</p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="videoprefernormalized">videoPreferNormalized<a class="headerlink" href="#videoprefernormalized" title="Permanent link">&para;</a></h4>
+<p>This option is <em>only</em> applicable when scraping with the <code>-s screenscraper</code> module. ScreenScraper offers two versions of some of their videos. A normalized version, which adheres to some defined standard they made, and the originals. If you prefer converting or standardizing the videos yourself (see <code>videoConvertCommand</code> above) then you can set this to <code>false</code>. If you do so Skyscraper will fetch the original videos from ScreenScraper instead of the normalized ones.</p>
+<p>Be aware that the original videos often vary a lot in codec, color format and size. So it is recommended to convert them afterwards using the <code>videoConvertCommand</code>.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">[screenscraper]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">videoPreferNormalized</span><span class="o">=</span><span class="s">&quot;false&quot;</span>
+</code></pre></div>
+<p>Default value: <code>true</code><br />
+Allowed in sections: Only for scraper <code>[screenscraper]</code></p>
+<hr />
+<h4 id="symlink">symlink<a class="headerlink" href="#symlink" title="Permanent link">&para;</a></h4>
+<p>Enabling this option is only relevant while also setting the <code>videos="true"</code> option. It basically means that Skyscraper will create a link to the cached videos instead of copying them when generating the game list media files. This will save a lot of space, but has the caveat that if you somehow remove the videos from the cache, the links will be broken and the videos then won't show anymore.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="theinfront">theInFront<a class="headerlink" href="#theinfront" title="Permanent link">&para;</a></h4>
+<p>Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this option will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>When generating gamelists Skyscraper will still sort the games as if the game titles didn't have 'The' at the beginning.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="brackets">brackets<a class="headerlink" href="#brackets" title="Permanent link">&para;</a></h4>
+<p>Disable this option to remove any bracket notes when generating the game list. It will disable notes such as <code>(Europe)</code> and <code>[AGA]</code> completely. This option is only relevant when generating the game list. It makes no difference when gathering data into the resource cache. Default (true) will keep brackets in the game title.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="innerbracketsreplace">innerBracketsReplace<a class="headerlink" href="#innerbracketsreplace" title="Permanent link">&para;</a></h4>
+<p>Only in use when the option <code>brackets</code> is set to <code>true</code> for gamelist creation:
+This replaces consecutive brackets <code>][</code> in the game title with whatever is
+defined in this option. This setting has no effect, if there is only one bracket
+present in the game filename.<br />
+Use the option <code>innerParenthesesReplace</code> for the same effect on round brackets
+<code>)(</code> (aka. parentheses).</p>
+<p><strong>Example(s)</strong></p>
+<p>Filename: <code>Oddworld - Abe's Exoddus [NTSC-U] [SLUS-00710].m3u</code></p>
+<ul>
+<li><code>innerBracketsReplace=""</code> (unset), gamelist game title output: <code>Oddworld - Abe's Exoddus [NTSC-U][SLUS-00710]</code></li>
+<li><code>innerBracketsReplace="] ["</code>, gamelist game title output (<em>note the space.</em>): <code>Oddworld - Abe's Exoddus [NTSC-U] [SLUS-00710]</code></li>
+<li><code>innerBracketsReplace=","</code>, gamelist game title output: <code>Oddworld - Abe's Exoddus [NTSC-U,SLUS-00710]</code></li>
+</ul>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="innerparenthesesreplace">innerParenthesesReplace<a class="headerlink" href="#innerparenthesesreplace" title="Permanent link">&para;</a></h4>
+<p>Same as <a href="#innerbracketsreplace">innerBracketsReplace</a> but for parentheses <code>)(</code>
+(aka. round brackets).</p>
+<hr />
+<h4 id="keepdiscinfo">keepDiscInfo<a class="headerlink" href="#keepdiscinfo" title="Permanent link">&para;</a></h4>
+<p>Only in use when the option <code>brackets</code> is set to <code>false</code> for gamelist creation:
+If you set <code>keepDiscInfo="true"</code>, Skyscraper attempts to retain the "Disc N (of
+M)" part in the resulting game title in the gamelist. Currently the term 'disc'
+is identified in the filename in English. German, French, Italian.<br />
+Any disc information is first searched in parentheses e.g., (Disc 1 of 4) and then in
+brackets e.g., [Disc 1]. Any suffix after the disc number like "of 4" is also
+kept.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If the emulator supports multi disc loading with an <code>*.m3u</code> or <code>*.cue</code> file you should use it, as it will remove gamelist clutter. Another option is to define a custom game title for each of the filenames with disc information via Skyscraper's <a href="../IMPORT/">import function</a>. The latter option allows you to define any "Disc N of M" display style in your gamelist. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The option keepDiscInfo is not applicable if you use a <a href="#nametemplate">name template</a>.</p>
+</div>
+<p><strong>Example(s)</strong></p>
+<p>Filename: <code>Stupid Invaders v1.001 (2001)(Ubi Soft)(US)(Disc 1 of 2)[!].chd</code><br />
+Resulting game title: <code>Stupid Invaders (Disc 1 of 2)</code></p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="maxlength">maxLength<a class="headerlink" href="#maxlength" title="Permanent link">&para;</a></h4>
+<p>Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500.</p>
+<p>Default value: <code>2500</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="minmatch">minMatch<a class="headerlink" href="#minmatch" title="Permanent link">&para;</a></h4>
+<p>Some scraping modules are based on a file name or title based search. This option sets the minimum percentage any returned results need to match with in order for it to be accepted. For instance, the game <code>Wonderboy in Monsterland</code> might return the title <code>Wonder Boy in Monster Land</code> which is clearly a match. But it's not a 100% match. So it needs to be set relatively high, while still ignoring bad matches. By default it is set to 65 which has been tested to be a good middle-ground.</p>
+<p>Default value: <code>65</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="threads">threads<a class="headerlink" href="#threads" title="Permanent link">&para;</a></h4>
+<p>Sets the desired number of parallel threads to be run when scraping. Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. By default it is set to 4.</p>
+<p>Default value: <code>4</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="pretend">pretend<a class="headerlink" href="#pretend" title="Permanent link">&para;</a></h4>
+<p>This option is <em>only</em> relevant when generating a game list (by leaving out the <code>-s &lt;SCRAPER&gt;</code> command line option). It disables the game list generator and artwork compositor and only outputs the results of the potential game list generation to the terminal. It is mostly useful when used as a command line flag with <code>--flags pretend</code>. It makes little sense to set it here, but you can if you want to.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="unattend">unattend<a class="headerlink" href="#unattend" title="Permanent link">&para;</a></h4>
+<p>Before a game list creation Skyscraper will check if it already exists and ask if you want to overwrite it, when neither the <code>unattend</code> nor the <code>unattendskip</code> option is set true. By setting this option or <code>unattendskip</code> to true Skyscraper will overwrite an existing game list without confirmation question. This is useful when scripting Skyscraper to avoid the need for user input. Additionally, if this option or <code>unattendskip</code> is set to true, the cache operations <code>purge:all</code> and <code>vacuum</code> will <em>not</em> prompt you with a confirmation question.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="unattendskip">unattendSkip<a class="headerlink" href="#unattendskip" title="Permanent link">&para;</a></h4>
+<p>Before a game list creation Skyscraper will ask if you want to skip existing game entries (i.e. not recreate from cache) in an existing game list, when the <code>unattend</code> and the <code>unattendskip</code> option are set false. By setting this option to true and having <code>unattend</code> set to false, Skyscraper will skip existing entries without prompting you. This is useful when scripting Skyscraper to avoid the need for user input. This option has no effect (i.e. an existing game list entry will be always recreated) when either</p>
+<ul>
+<li><code>unattend</code> is set to true or</li>
+<li>you use the <code>--query</code> parameter or</li>
+<li>the frontend generator does not support preserving a complete gameentry.</li>
+</ul>
+<p>If this option or the <code>unattend</code> option is true, the cache operations <code>purge:all</code> and <code>vacuum</code> will <em>not</em> prompt you with a confirmation question.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="interactive">interactive<a class="headerlink" href="#interactive" title="Permanent link">&para;</a></h4>
+<p>When gathering data from any of the scraping modules many potential entries will be returned. Normally Skyscraper chooses the best entry for you. But should you wish to choose the best entry yourself, you can enable this option. Skyscraper will then list the returned entries and let you choose which one is the best one. It is recommended to use the command line flag <code>--flags interactive</code> instead in the (hopefully) rare cases where this mode is necessary.</p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="forcefilename">forceFilename<a class="headerlink" href="#forcefilename" title="Permanent link">&para;</a></h4>
+<p>Enable this option to force Skyscraper to use the file name (excluding extension) instead of the cached scraping module titles when generating a game list.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you set <code>forceFilename="true"</code> and your filenames contain bracket notes such as <code>(this)</code> or <code>[that]</code> at the end, these will be combined with whatever bracket notes are at the end of the titles returned from the sources. This can cause some confusion. For instance, if you have the filename <code>Gran Turismo 2 (USA) (Arcade Mode)</code> and the cached title is <code>Gran Turismo 2 (Arcade Mode)</code>, then the gamelist name will become <code>Gran Turismo 2 (Arcade Mode)(USA)(Arcade Mode)</code>. You can disable them altogether with the <code>brackets="false"</code> option.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="verbosity">verbosity<a class="headerlink" href="#verbosity" title="Permanent link">&para;</a></h4>
+<p>Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Anything higher than 3 does not further increase the verbosity of the output.</p>
+<p>Default value: <code>0</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="skipped">skipped<a class="headerlink" href="#skipped" title="Permanent link">&para;</a></h4>
+<p>Only has an effect if a rom has no resources attached to it in the cache. If false (default) the rom will be left out when generating a game list file. However, it will still show up in the frontend (at least it does for EmulationStation), but it won't exist in the game list file. If unsure leave it to false, unless you need generic gamelist entries, consisting of <code>&lt;path/&gt;</code> and <code>&lt;name/&gt;</code>, for some reason. In other words: If skipped is set to false and no entry for a rom is found in the cache <em>nothing</em> will be added to the gamelist for that rom. If skipped is true and no entry for a rom is found in the cache a <em>generic</em> entry will be added to the gamelist file for that rom. If a rom has data in Skyscraper's cache then this flag has no effect.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When skipped is set true, any generic added game entry is not eligible for formatting with a <a href="./#nametemplate">nameTemplate</a>.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="maxfails">maxFails<a class="headerlink" href="#maxfails" title="Permanent link">&para;</a></h4>
+<p>Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Don't change this unless you have a very good reason to do so.</p>
+<p>Default value: <code>42</code><br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="region">region<a class="headerlink" href="#region" title="Permanent link">&para;</a></h4>
+<p>Adds the specified region to the top of the existing default internal region priority list. Only one region is supported with this configuration. To overwrite the internal default region priority list entirely use the setting <a href="./#regionprios">regionprios</a>. Read more about how <a href="../REGIONS/">regions are handled in general</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Setting the region will overwrite any region <a href="../REGIONS/#region-auto-detection">auto-detected</a> from the file name.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">[main]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">region</span><span class="o">=</span><span class="s">&quot;de&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">[snes]</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">region</span><span class="o">=</span><span class="s">&quot;de&quot;</span>
+</code></pre></div>
+<hr />
+<h4 id="regionprios">regionPrios<a class="headerlink" href="#regionprios" title="Permanent link">&para;</a></h4>
+<p>Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how <a href="../REGIONS/">regions are handled in general</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Any region <a href="../REGIONS/#region-auto-detection">auto-detected</a> from the file name will still be added to the top of this list.</p>
+</div>
+<p>Default value: <code>eu, us, ss, uk, wor, jp, au, ame, de, cus, cn, kr, asi, br, sp, fr, gr, it, no, dk, nz, nl, pl, ru, se, tw, ca</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">[main]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">regionPrios</span><span class="o">=</span><span class="s">&quot;de,us,jp&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">[megadrive]</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">regionPrios</span><span class="o">=</span><span class="s">&quot;de,us,jp&quot;</span>
+</code></pre></div>
+<hr />
+<h4 id="lang">lang<a class="headerlink" href="#lang" title="Permanent link">&para;</a></h4>
+<p>Adds the specified language to the top of the existing default internal language priority list. Only one language is supported with this configuration. Read more about how <a href="../LANGUAGES/">languages are handles in general</a>.</p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[main]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">lang</span><span class="o">=</span><span class="s">&quot;it&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[snes]</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="na">lang</span><span class="o">=</span><span class="s">&quot;it&quot;</span>
+</code></pre></div>
+<hr />
+<h4 id="langprios">langPrios<a class="headerlink" href="#langprios" title="Permanent link">&para;</a></h4>
+<p>Completely overwrites the internal language priority list inside of Skyscraper. Multiple languages can be configured here separated by commas. Read more about how <a href="../LANGUAGES/">languages are handles in general</a>.</p>
+<p>Default value: <code>en, de, fr, es</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">[main]</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="na">langPrios</span><span class="o">=</span><span class="s">&quot;it,en&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">[megadrive]</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="na">langPrios</span><span class="o">=</span><span class="s">&quot;it,en&quot;</span>
+</code></pre></div>
+<hr />
+<h4 id="artworkxml">artworkXml<a class="headerlink" href="#artworkxml" title="Permanent link">&para;</a></h4>
+<p>Sets a non-default xml file to use when setting up the artwork compositing. By default Skyscraper uses the file <code>/home/&lt;USER&gt;/.skyscraper/artwork.xml</code>. If you provide a relative filepath it will be expanded to <code>/home/&lt;USER&gt;/.skyscraper/&lt;artworkXml&gt;</code>, respective to <code>$XDG_CONFIG_HOME/skyscraper/&lt;artworkXml&gt;</code>, if you use Skyscraper in <a href="../XDG/">XDG</a> mode.<br />
+Read more about the <a href="../ARTWORK/">artwork.xml format and customization options</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>It can be <em>very</em> useful to set this in any platform section or frontend section where you want a specific artwork setup / look.</p>
+</div>
+<p>Default value: <code>artwork.xml</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="relativepaths">relativePaths<a class="headerlink" href="#relativepaths" title="Permanent link">&para;</a></h4>
+<p>Enabling this forces the rom and any media paths inside the game list to be relative to the path of the gamelist file. Currently only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list (see also <a href="#frontend">frontend</a> option).</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This setting has no effect when the frontend is set to attractmode.</p>
+</div>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="extensions">extensions<a class="headerlink" href="#extensions" title="Permanent link">&para;</a></h4>
+<p>Completely overwrites the rom extensions Skyscraper allows for the chosen platform. Use a space between each extension (e.g., <code>*.abc *.def</code>).</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper.</p>
+</div>
+<p>Default value: unset. If set it ignores <code>"formats": [ ... ]</code> in <code>peas.json</code> file<br />
+Allowed in sections: <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="addextensions">addExtensions<a class="headerlink" href="#addextensions" title="Permanent link">&para;</a></h4>
+<p>Adds the rom extensions to the ones that are already supported by the platform, use a space between each extension. You may omit the <code>*</code> or even <code>*.</code> when providing an extension.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper.</p>
+</div>
+<p>Default value: <code>*.zip *.7z *.ml</code> (if and only if <code>extensions</code> parameter is unset)<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="hints">hints<a class="headerlink" href="#hints" title="Permanent link">&para;</a></h4>
+<p>If set to false it disables the "Did you know" hints when running Skyscraper.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="subdirs">subdirs<a class="headerlink" href="#subdirs" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper will include roms located in subfolders. By disabling this option Skyscraper will only scrape the roms located directly in the input folder. See <code>inputFolder="&lt;PATH&gt;"</code> further up to read more about the rom input folder.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="onlymissing">onlyMissing<a class="headerlink" href="#onlymissing" title="Permanent link">&para;</a></h4>
+<p>This flag, when set true, will only scrape game information for ROMs that do not have any data in Skyscraper's cache. The cache information of a ROM that has a cache hit will not be updated or extended when 'only missing' is true. A use case could be that you want to exclude already scraped games from a scraping process and you are using a scraping module which has a limit on how many ROMs may be scraped: With 'only missing' enabled the ROMs with cache data are subtracted from all ROMs to be scraped for a platform, thus the remaining ROM count may be below the scrape module's limit.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Please consider using the command line flag option <code>--flags onlymissing</code> instead. It makes little sense to set this permanently in your configuration unless you <em>always</em> want to use the cached data for already cached game entries. Also when 'only missing' is set and the cache has any data for a game entry, the refresh option has no effect. But you still can use the 'only missing' in the config file if you absolutely want to.</p>
+</div>
+<p>Default value: false<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="startat">startAt<a class="headerlink" href="#startat" title="Permanent link">&para;</a></h4>
+<p>If you only ever wish to gather data for a subset of your roms from the scraping modules you can use this option to set the starting rom. It will then scrape alphabetically from that rom and onwards.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Please consider using the command line option <code>--startat &lt;FILENAME&gt;</code> instead. It makes little sense to set this permanently in your configuration unless you <em>always</em> want it to only ever scrape from a certain file and onward. But you can if you absolutely want to.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="endat">endAt<a class="headerlink" href="#endat" title="Permanent link">&para;</a></h4>
+<p>If you only ever wish to gather data for a subset of your roms from the scraping modules you can use this option to set the rom to end at. It will then scrape alphabetically until it reaches this rom, then stop.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Please consider using the command line option <code>--endat &lt;FILENAME&gt;</code> instead. It makes little sense to set this permanently in your configuration unless you <em>always</em> want it to only ever scrape up until it reaches a certain file. But you can if you absolutely want to.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="includepattern">includePattern<a class="headerlink" href="#includepattern" title="Permanent link">&para;</a></h4>
+<p>Per platform Skyscraper have default file extensions that it will accept. This option allows you to only include certain files within that scope. The pattern is a simple asterisk type pattern. In cases where you need to match for a comma you need to escape it as <code>\,</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might also want to check out the file extension options and the the 'includeFrom' option.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="excludepattern">excludePattern<a class="headerlink" href="#excludepattern" title="Permanent link">&para;</a></h4>
+<p>Per platform Skyscraper have default file extensions that it will accept. This option allows you to exclude certain files within that scope. The pattern is a simple asterisk type pattern. In cases where you need to match for a comma you need to escape it as <code>\,</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might also want to check out the file extension options and the 'excludeFrom' option.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you create a file named <code>.skyscraperignore</code> within any subfolder of the input dir, all files from that directory will be ignored by Skyscraper. Additionally, if you put an empty file <code>.skyscraperignoretree</code> in a folder, all files in that directory and all subdirectories are ignored.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code>, <code>[&lt;FRONTEND&gt;]</code></p>
+<hr />
+<h4 id="includefrom">includeFrom<a class="headerlink" href="#includefrom" title="Permanent link">&para;</a></h4>
+<p>Tells Skyscraper to only include the files listed in FILENAME. One filename per line (with FULL path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').</p>
+<p>This file can be generated with the '--cache report:missing' option or made manually.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might also want to check out the 'includePattern' option.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="excludefrom">excludeFrom<a class="headerlink" href="#excludefrom" title="Permanent link">&para;</a></h4>
+<p>Tells Skyscraper to exclude the files listed in FILENAME. One filename per line (with FULL path, eg. '/home/pi/RetroPie/roms/snes/subdir/somefile.zip').</p>
+<p>This file can be generated with the '--cache report:missing' option or made manually.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might also want to check out the 'excludePattern' option.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you create a file named '.skyscraperignore' within any subfolder of the input dir, all files from that directory will be ignored by Skyscraper. Additionally, if you put an empty file <code>.skyscraperignoretree</code> in a folder, all files in that directory and all subdirectories are ignored.</p>
+</div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="usercreds">userCreds<a class="headerlink" href="#usercreds" title="Permanent link">&para;</a></h4>
+<p>Some scraping modules require a <code>key</code> or <code>user:password</code> to work. You can create a <code>[&lt;SCRAPER&gt;]</code> section and add a <code>userCreds="user:pass"</code> or <code>userCreds="key"</code> line beneath it. Doing this will always use these credentials when scraping from the module in question. Check the <a href="../SCRAPINGMODULES/">scraping module overview</a> to see the specific requirements for each module.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">[screenscraper]</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="na">userCreds</span><span class="o">=</span><span class="s">&quot;&lt;account&gt;:&lt;password&gt;&quot;</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">[igdb]</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="na">userCreds</span><span class="o">=</span><span class="s">&quot;&lt;Client-ID&gt;:&lt;Client-Secret&gt;&quot;</span>
+</code></pre></div>
+<p>Default value: unset<br />
+Allowed in sections: <code>[&lt;SCRAPER&gt;]</code></p>
+<hr />
+<h4 id="spacecheck">spaceCheck<a class="headerlink" href="#spacecheck" title="Permanent link">&para;</a></h4>
+<p>Skyscraper will continuously check if you are running low on disk space. If you go below 200 MB in either the game list export folder or the resource cache folder, it will quit to make sure your system doesn't become unstable. Some types of file systems provide a faulty result to Skyscraper when it comes to these checks and thus it can be necessary to disable it altogether. You can use this option to do just that.</p>
+<p>Default value: <code>true</code><br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="scummini">scummIni<a class="headerlink" href="#scummini" title="Permanent link">&para;</a></h4>
+<p>Allows you to set a non-default path of the <code>scummvm.ini</code> file. This file is used whenever scraping the <code>scummvm</code> platform and has the highest precedence compared to the default values (see below). It converts the shortname such as <code>monkey2</code> (the ScummVM Game ID) to the more search-friendly name <code>Monkey Island 2: LeChuck's Revenge</code> (the value of the <code>description=</code> in the <code>scummvm.ini</code> file) whenever using one of the file name search based scraping modules.<br />
+Always provide an absolute path as value for this parameter.</p>
+<p>Default values: <code>~/.scummvmrc</code> and <code>/opt/retropie/configs/scummvm/scummvm.ini</code>. If <code>~/.scummvmrc</code> is present, it has precedence over <code>/opt/retropie/configs/scummvm/scummvm.ini</code> (RetroPie path).
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="platform">platform<a class="headerlink" href="#platform" title="Permanent link">&para;</a></h4>
+<p>Allows you to set a platform, which is applied when no command line switch <code>-p</code> is given.</p>
+<p>Default value: unset<br />
+Allowed in sections: <code>[main]</code></p>
+<hr />
+<h4 id="addfolders">addFolders<a class="headerlink" href="#addfolders" title="Permanent link">&para;</a></h4>
+<p>If you arrange your ROMs in directories below a platform directory, this flag
+comes into play. The <a href="https://github.com/RetroPie/EmulationStation/blob/master/GAMELISTS.md#folder">gamelist
+specification</a>
+allows you to define also metadata for directories. This metadata is held in
+<code>&lt;folder/&gt;</code> elements in the gamelist XML file. In minimum a <code>&lt;folder/&gt;</code> has a
+<code>&lt;path/&gt;</code> and a <code>&lt;name/&gt;</code> inner element. If no <code>&lt;name/&gt;</code> is given, the last
+subdirectory of the path element is taken as name. Which additionally
+subelements are interpreted and rendered is dependent on the frontend, for
+example EmulationStation for RetroPie supports <a href="https://github.com/RetroPie/EmulationStation/blob/95ba1582356cf51734a6505525bc8c67a072d16d/es-app/src/MetaData.cpp#L37-L50">these
+elements</a>
+to be used inside a folder element.</p>
+<p>If this flag set to true, Skyscraper will create generic folder elements in the
+gamelist file, containing path and name for each directory found. If false, no
+folder elements will be created for the directories with ROM(s) (<a href="../FRONTENDS/#metadata-preservation">example</a>).</p>
+<p>In both cases the existing <code>&lt;folder/&gt;</code> elements of a gamelist will be preserved.
+However, folder data is not cached by Skyscraper, which means if you delete your
+<code>gamelist.xml</code> Skyscraper can not restore the edited folder elements.</p>
+<div class="admonition bug">
+<p class="admonition-title">EmulationStation 2.11.2rp and earlier</p>
+<p>EmulationStation 2.11.2 (RetroPie) and earlier have a bug that adds a <code>&lt;folder/&gt;</code> element everytime you edit and save metadata for the <em>same</em> folder within EmulationStation. The last edit will be the latest folder element in the gamelist file, i.e. it adds a <code>&lt;folder/&gt;</code> element at the end. Skyscraper in contrast expects in maximum only one <code>&lt;folder/&gt;</code> element per each path. If you regenerate a gamelist with Skyscraper, you will lose the latest edit of the folder metadata. This bug is <a href="https://retropie.org.uk/forum/post/295367">described here</a> and is fixed in the next release of EmulationStation respective is fixed already in the EmulationStation-dev version.</p>
+</div>
+<p>Default value: false<br />
+Allowed in sections: Only for frontends <code>[emulationstation]</code>, <code>[esde]</code> or <code>[retrobat]</code></p>
+<hr />
+<h4 id="manuals">manuals<a class="headerlink" href="#manuals" title="Permanent link">&para;</a></h4>
+<p>By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. If enabled Skyscraper will collect game manuals for the scraping modules that provide this data. For frontend ES-DE no further option must be set to enable the output of the PDF manuals to the appropriate folder. For other EmulationStation forks see also option <a href="./#gamelistvariants">gameListVariants</a>.</p>
+<p>Default value: false<br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="gamelistvariants">gameListVariants<a class="headerlink" href="#gamelistvariants" title="Permanent link">&para;</a></h4>
+<p>This is a comma separated list of options for the different gamelist variants
+used by the various EmulationStation forks. Currently only <code>enable-manuals</code> is
+evaluated as variant: It generates <code>&lt;manual/&gt;</code> entries in the gamelist for the
+game manuals scraped or found in the cache, if also the <code>manuals</code> configuration
+option is enabled. However, the <code>gameListVariants</code> option is not not needed for
+the ES-DE frontend to output game manuals.</p>
+<p><strong>Example(s)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">[emulationstation]</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="na">gameListVariants</span><span class="o">=</span><span class="s">&quot;enable-manuals&quot;</span>
+</code></pre></div>
+<p>Default value: unset<br />
+Allowed in sections: Only for frontend <code>[emulationstation]</code></p>
+<hr />
+<h4 id="ignoreyearinfilename">ignoreYearInFilename<a class="headerlink" href="#ignoreyearinfilename" title="Permanent link">&para;</a></h4>
+<p>During scraping, if and only if a year information is identified in parentheses
+in the ROM filename, this information is compared against the release year in
+the scraper database. If the years are different the game information from the
+scraper database is discarded. If no year information is in the ROM filename any
+match for the game from the scraper is accepted. To allow a less strict
+comparision without having to remove or adjust the year information from the
+filename, you can set this option to true.</p>
+<p><strong>Example(s)</strong></p>
+<p>Filename: <code>Statix (1995)(Black Legend)[h TRSi - HLM].zip</code><br />
+Release year from scrape source: 1994<br />
+<code>ignoreYearInFilename=true</code>: Scraper match is accepted<br />
+<code>ignoreYearInFilename=false</code>: Scraper match is discarded, may end up in result <em>Game 'Statix (1995)(Black Legend)[h TRSi - HLM]' not found :(</em></p>
+<p>Default value: <code>false</code><br />
+Allowed in sections: <code>[main]</code>, <code>[&lt;PLATFORM&gt;]</code></p>
+<hr />
+<h4 id="gamebasefile">gameBaseFile<a class="headerlink" href="#gamebasefile" title="Permanent link">&para;</a></h4>
+<p>You must set this filepath if you want to use the <a href="../SCRAPINGMODULES/#gamebase-db">GameBase
+scraper</a>. As a prerequisite you obviously need
+the GameBase DB for your platform. Search the internet for it. The most popular
+and longest maintained GameBase DB is for the Commodore 64 (GB64), but you can
+also find a GameBase for other platforms. The guys at the GB64 are maintaining a
+<a href="http://gb64.com/forum/viewtopic.php?f=10&amp;p=31353">list of GameBase projects</a> for the
+various platforms/systems. Currently it lists over 100 platforms with GameBases.</p>
+<p>Once you have downloaded a GameBase DB, unpack it and put it in a folder
+accessible to Skyscraper. For example <code>~/GameBases/GBC_v18/</code>. In this folder you
+will find a <code>*.mdb</code> file (Microsoft Access DB). Note it.</p>
+<p>Also do obtain the script from Skyscraper's <code>supplementary/scraperdata</code> folder.
+The script is named
+<a href="https://github.com/Gemba/skyscraper/tree/master/supplementary/scraperdata/mdb2sqlite.sh"><code>mdb2sqlite.sh</code></a>.
+RetroPie users may find the script in <code>/opt/retropie/supplementary/skyscraper</code>.
+Run it with the path to the <code>*.mdb</code> file, e.g.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./mdb2sqlite.sh<span class="w"> </span>~/GameBases/GBC_v18/GBC_v18.mdb
+</code></pre></div>
+After a short while you should end up with an GameBase DB in SQLite format
+<code>GBC_v18.sqlite3</code>, sibling to the <code>GBC_v18.mdb</code>. Leave it there. Now you are
+done with the one-time preparation.</p>
+<p>While you can use only the <code>GBC_v18.sqlite3</code> standalone, you will not be able to
+collect the screenshots and available covers when the <code>GBC_v18.sqlite3</code> is moved
+away from the unpacked GameBase DB as this image data is held in folders
+relative to the mdb (sqlite3) file and not in the database file itself.</p>
+<p>Finally, use the absolute file path of the <code>GBC_v18.sqlite3</code> in the configuration
+platform section and you are ready to scrape the GameBase DB.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">[c64]</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="na">gameBaseFile</span><span class="o">=</span><span class="s">&quot;/path/to/GBC_v18.sqlite3&quot;</span>
+</code></pre></div>
+<p>Default value: unset<br />
+Allowed in sections: Only in <code>[&lt;PLATFORM&gt;]</code>, must be an absolute filepath</p>
+<div class="admonition tip">
+<p class="admonition-title">Tips for Scraping a GameBase DB</p>
+<ol>
+<li>You will get the most reliable automatic match when your game files are using
+the same basefile stem as in the GameBase DB, for example: The game filename on
+your filesystem is <code>.../c64/BIGTIMEB.d64</code>, the stem would be <code>BIGTIMEB</code>, this
+will provide the match to the filename used in GameBase DB
+(<code>BIGTIMEB_29819_01.zip</code>) for the title "Big Time Bugger".</li>
+<li>For static mapping between game filename and title to search for you can
+utilize, as always, the alias map which is located sibling to the <code>config.ini</code>.</li>
+<li>In contrast, with the <code>--query</code> parameter you can use globbing wildcards (<code>*</code>
+and <code>?</code>) for the filename or game title. You may also finetune the
+<a href="./#minmatch"><code>minMatch</code></a> / <code>-m</code> match score when using the query
+parameter. Keep in mind, that multiple uses of <code>?</code> will reduce the search match
+score. The results of a query are limited to 25 games, Skyscraper will issue a
+warning when this maximum is reached.</li>
+<li>When providing a CRC as query parameter no wildcards are allowed.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2017-2023 Lars Muldjord and contributors, &copy; 2024,2025 Gemba and contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Gemba/Skyscraper" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.top", "search.highlight", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
