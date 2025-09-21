@@ -1290,17 +1290,19 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
 void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
     const int threadsFailsafe = 1; // Don't change! This limit was set by
                                    // request from ScreenScraper
-    if ((config.user.isEmpty() || config.password.isEmpty()) &&
-        config.threads > 1) {
-        config.threads = threadsFailsafe;
-        printf("\033[1;33mForcing %d thread as this is the anonymous "
-               "limit in the ScreenScraper scraping module. Sign up for "
-               "an account at https://www.screenscraper.fr and support "
-               "them to gain more threads. Then use the credentials with "
-               "Skyscraper using the '-u user:password' command line "
-               "option or by setting 'userCreds=\"user:password\"' in "
-               "'%s/config.ini'.\033[0m\n\n",
-               config.threads, Config::getSkyFolder().toStdString().c_str());
+    if (config.user.isEmpty() || config.password.isEmpty()) {
+        if (config.threads > 1) {
+            config.threads = threadsFailsafe;
+            printf("\033[1;33mForcing %d thread as this is the anonymous "
+                   "limit in the ScreenScraper scraping module. Sign up for "
+                   "an account at https://www.screenscraper.fr and support "
+                   "them to gain more threads. Then use the credentials with "
+                   "Skyscraper using the '-u user:password' command line "
+                   "option or by setting 'userCreds=\"user:password\"' in "
+                   "'%s/config.ini'.\033[0m\n\n",
+                   config.threads,
+                   Config::getSkyFolder().toStdString().c_str());
+        }
     } else {
         printf("Fetching limits for user '\033[1;33m%s\033[0m', just a "
                "sec...\n",
@@ -1341,12 +1343,13 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
             if (allowedThreads != 0) {
                 if (config.threadsSet && config.threads <= allowedThreads) {
                     printf("User is allowed %d threads, but user has set "
-                           "it manually, so ignoring.\n\n",
-                           allowedThreads);
+                           "it manually to %d, using the latter value.\n\n",
+                           allowedThreads, config.threads);
                 } else {
                     config.threads = (allowedThreads <= 8 ? allowedThreads : 8);
                     printf("Setting threads to \033[1;32m%d\033[0m as "
-                           "allowed for the supplied user credentials.\n\n",
+                           "allowed for the authenticated Screenscraper "
+                           "account.\n\n",
                            config.threads);
                 }
             }
