@@ -28,6 +28,7 @@
 #include "attractmode.h"
 #include "batocera.h"
 #include "cli.h"
+#include "compositor.h"
 #include "config.h"
 #include "emulationstation.h"
 #include "esde.h"
@@ -396,6 +397,14 @@ void Skyscraper::run() {
         }
     }
     printf("\n");
+
+    if (!Compositor::preCheckArtworkXml(config.artworkXml)) {
+        printf("Parsing artwork XML from '%s', failed, see above."
+               "Check the file for errors. Now exiting...\n",
+               config.artworkConfig.toStdString().c_str());
+        exit(1);
+    }
+
     if (!doCacheScraping) {
         printf("Starting scraping run on \033[1;32m%d\033[0m files using "
                "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
@@ -445,7 +454,7 @@ void Skyscraper::prepareFileQueue() {
     QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
-        printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
+        printf("Input folder '\033[1;31m%s\033[0m' doesn't exist or can't be "
                "accessed by current user. Please check path and permissions.\n",
                inputDir.absolutePath().toStdString().c_str());
         exit(1);
@@ -588,20 +597,17 @@ void Skyscraper::setFolder(const bool doCacheScraping, QString &outFolder,
 
 void Skyscraper::checkForFolder(QDir &folder, bool create) {
     if (!folder.exists()) {
-        printf("Folder '%s' doesn't exist",
-               folder.absolutePath().toStdString().c_str());
         if (create) {
-            printf(", trying to create it... ");
-            fflush(stdout);
-            if (folder.mkpath(folder.absolutePath())) {
-                printf("\033[1;32mSuccess!\033[0m\n");
-            } else {
-                printf("\033[1;32mFailed!\033[0m Please check path and "
-                       "permissions, now exiting...\n");
+            if (!folder.mkpath(folder.absolutePath())) {
+                printf(
+                    "Create folder '\033[1;31m%s\033[0m' failed! Please "
+                    "check path and filesystem permissions, now exiting...\n",
+                    folder.absolutePath().toStdString().c_str());
                 exit(1);
             }
         } else {
-            printf(", can't continue...\n");
+            printf("Folder '%s' doesn't exist, can't continue...\n",
+                   folder.absolutePath().toStdString().c_str());
             exit(1);
         }
     }
@@ -772,6 +778,18 @@ void Skyscraper::checkThreads() {
         printf("\n\n");
     }
 
+    if (doCacheScraping) {
+        QStringList mediaDirs = {
+            config.coversFolder,   config.screenshotsFolder,
+            config.wheelsFolder,   config.marqueesFolder,
+            config.texturesFolder, config.videosFolder,
+            config.manualsFolder,  config.fanartsFolder};
+        for (const auto &f : mediaDirs) {
+            QDir dir(f);
+            dir.rmdir(f);
+        }
+    }
+
     // All done, now clean up and exit to terminal
     emit finished();
 }
@@ -936,7 +954,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         }
     }
 
-    // defaults are always absolute, thus input and mediafolder will be
+    // defaults are always absolute, thus input- and mediafolder will be
     // unchanged by these calls
     if (config.frontend == "pegasus") {
         config.inputFolder =
@@ -1016,10 +1034,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         }
         if (requestedFileInfo.exists()) {
             QString romPath = requestedFileInfo.absoluteFilePath();
-            if (config.frontend == "emulationstation" ||
-                config.frontend == "esde") {
-                romPath = normalizePath(requestedFileInfo);
-            }
+            romPath = normalizePath(requestedFileInfo);
             if (!romPath.isEmpty()) {
                 cliFiles.append(romPath);
                 // Always set refresh and unattend true if user has supplied
@@ -1031,12 +1046,12 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                 continue;
             }
         }
-        printf("Filename: '\033[1;32m%s\033[0m' requested either on "
-               "command line or with '--includefrom' neither found in platform "
-               "folder '%s' nor in current directory!\n\nPlease verify the "
-               "filename and try again...\n",
-               requestedFile.toStdString().c_str(),
-               config.platform.toStdString().c_str());
+        printf("Filename: '\033[1;33m%s\033[0m' requested either on command "
+               "line or with '--includefrom' not found in(side) the input "
+               "directory '\033[1;33m%s\033[0m'!\n\nPlease verify the filename "
+               "and try again...\n",
+               requestedFileInfo.fileName().toStdString().c_str(),
+               config.inputFolder.toStdString().c_str());
         exit(1);
     }
 
@@ -1116,8 +1131,10 @@ QString Skyscraper::normalizePath(QFileInfo fileInfo) {
     // normalize paths for single romfiles provided at the CLI.
     // format will be: config.inputFolder + relative-path-of-romfile
     QString canonicalRomPath = fileInfo.canonicalFilePath();
+
     // for Windows
     QString cleanRomPath = QDir::cleanPath(canonicalRomPath);
+
     QListIterator<QString> iter(cleanRomPath.split("/"));
     iter.toBack();
     QString relativeRomPath;

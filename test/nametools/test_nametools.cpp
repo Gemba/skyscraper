@@ -67,6 +67,7 @@ private slots:
         }
         QCOMPARE(NameTools::getNumeral("Blarf 0"), 1);
         QCOMPARE(NameTools::getNumeral("Blarf -1"), 1);
+        QCOMPARE(NameTools::getNumeral("Mega Man V MSU-1"), 5);
     }
 
     void testGetSqrNotes() {

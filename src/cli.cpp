@@ -272,8 +272,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(uOption);
     parser->addOption(verbosityOption);
     parser->addVersionOption();
-    parser->addPositionalArgument(
-        "romfile", "Specific ROM to scrape, optionally.", "[<romfile>]");
+    parser->addPositionalArgument("romfile(s)", "Specific ROM(s) to scrape",
+                                  "[<romfile> [<romfile> [<romfile> ... ]]]");
 }
 
 void Cli::subCommandUsage(const QString subCmd) {

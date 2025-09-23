@@ -684,7 +684,7 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
             }
             if (!candidates.empty()) {
                 candidates.sort(Qt::CaseInsensitive);
-                QString pad1 = candidates.length() > 3 ? "\n  " : " ";
+                QString pad1 = candidates.length() > 3 ? "\n  " : "";
                 QString pad2 = candidates.length() > 3 ? "\n  " : ", ";
                 debug.append(QString("Candidates: ") + pad1 +
                              candidates.join(pad2) + "\n");

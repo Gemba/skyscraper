@@ -104,12 +104,7 @@ void ScraperWorker::run() {
     platformOrig = config.platform;
 
     Compositor compositor(&config);
-    if (!compositor.processXml()) {
-        printf("Something went wrong when parsing artwork xml from '%s', "
-               "please check the file for errors. Now exiting...\n",
-               config.artworkConfig.toStdString().c_str());
-        exit(1);
-    }
+    compositor.processXml();
 
     while (queue->hasEntry()) {
         // takeEntry() also unlocks the mutex that was locked in hasEntry()
@@ -258,9 +253,18 @@ void ScraperWorker::run() {
         game.parNotes = NameTools::getUniqueNotes(game.parNotes, '(');
 
         if (!game.found) {
+            QString hint =
+                gameEntries.length() == 0
+                    ? " :("
+                    : QString(", but %1 candidate%1: Use --verbosity 3 or "
+                              "--flags interactive or --query '...' or set an "
+                              "alias (aliasMap.csv). =8^)")
+                          .arg(gameEntries.length() == 1 ? "" : "s")
+                          .arg(gameEntries.length());
             output.append(
-                QString("\033[1;33m---- Game '%1' not found :( ----\033[0m\n\n")
-                    .arg(info.completeBaseName()));
+                QString("\033[1;33m---- Game '%1' not found%2 ----\033[0m\n\n")
+                    .arg(info.completeBaseName())
+                    .arg(hint));
             game.resetMedia();
             if (!forceEnd) {
                 forceEnd = limitReached(output);

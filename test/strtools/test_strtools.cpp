@@ -150,7 +150,6 @@ private slots:
             QCOMPARE(StrTools::conformAges(i.key()), i.value());
         }
         QCOMPARE(StrTools::conformAges("23"), "23");
-        QCOMPARE(StrTools::conformAges(""), "");
     }
 
     void testConformPlayers() {

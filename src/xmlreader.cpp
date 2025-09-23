@@ -45,8 +45,7 @@ bool XmlReader::setFile(QString filename) {
 #if QT_VERSION < 0x060800
         if (setContent(f.readAll(), false, &eMsg, &eLine)) {
 #else
-        // FIXME: compile against 6.8 or later
-        QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
+        QDomDocument::ParseResult p = setContent(f.readAll());
         eMsg = p.errorMessage;
         eLine = p.errorLine;
         if (p) {

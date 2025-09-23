@@ -57,20 +57,15 @@
 
 Compositor::Compositor(Settings *config) { this->config = config; }
 
-bool Compositor::processXml() {
-    Layer newOutputs;
-
-    // Check document for errors before running through it
-    // FIXME: Segfault wenn fishy artwork file und threads > 1
-    // precheck in static methode auslagern (braucht eh nur artworkXml als param)
-    // und vor scraperworker spawn testen (nur wenn scraper == "cache")
+bool Compositor::preCheckArtworkXml(const QString &artworkXml) {
+    // Check document for errors before running through it with threads
     QDomDocument doc;
     QString eMsg;
     int eLine;
 #if QT_VERSION < 0x060800
-    if (!doc.setContent(config->artworkXml, false, &eMsg, &eLine)) {
+    if (!doc.setContent(artworkXml, false, &eMsg, &eLine)) {
 #else
-    QDomDocument::ParseResult p = QDomDocument::setContent(f.readAll());
+    QDomDocument::ParseResult p = doc.setContent(artworkXml);
     eMsg = p.errorMessage;
     eLine = p.errorLine;
     if (!p) {
@@ -78,14 +73,17 @@ bool Compositor::processXml() {
         qWarning() << "XML error:" << eMsg << "at line" << eLine;
         return false;
     }
+    return true;
+}
+
+void Compositor::processXml() {
     QXmlStreamReader xml(config->artworkXml);
+    Layer newOutputs;
 
     // Init recursive parsing
     addChildLayers(newOutputs, xml);
-
     // Assign global outputs to these new outputs
     outputs = newOutputs;
-    return true;
 }
 
 void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
@@ -374,7 +372,7 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
             if (!QDir().mkpath(fi.absolutePath())) {
                 qWarning() << "Path could not be created" << fi.absolutePath()
                            << " Check file permissions, gamelist binary data "
-                              "maybe incomplete.";
+                              "may be incomplete.";
             }
         }
 
@@ -419,6 +417,14 @@ void Compositor::processChildLayers(GameEntry &game, Layer &layer) {
             // If no meaningful canvas could be created, stop processing this
             // layer branch entirely
             if (thisLayer.canvas.isNull()) {
+                qWarning()
+                    << QString("Output of resource '%1' defined in artwork "
+                               "file, but no such data present for game '%2'. "
+                               "Output may not be as expected. To remediate "
+                               "this warning: Re-scrape to get the missing "
+                               "resource or adjust the artwork file.")
+                           .arg(thisLayer.resource)
+                           .arg(game.title);
                 continue;
             }
 
