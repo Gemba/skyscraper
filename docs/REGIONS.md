@@ -4,9 +4,9 @@ Some game information and / or game media is region-based. Skyscraper provides s
 
 ## Scraping modules that support regions
 
--   screenscraper (pretty much all game information and media)
--   igdb (only release date)
--   mobygames (only cover artwork)
+-   Screenscraper (pretty much all game information and media)
+-   IGDB (only release date)
+-   MobyGames (only cover artwork)
 
 Below follows a general list of supported regions. Not all regions are supported by all modules: The supporting modules are checkmarked for each region.
 
