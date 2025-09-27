@@ -56,7 +56,7 @@ Sets a non-default location for the storing and loading of cached game resources
 
 !!! note
 
-    If you wish to _always_ use a certain location as base folder for your resource cache ((for instance if you want your cache to reside on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant [`config.ini` option](CONFIGINI.md#cachefolder).
+    If you wish to _always_ use a certain location as base folder for your resource cache (for instance if you want your cache to reside on a USB drive), it is _strongly_ recommended to set this in the `config.ini` file instead. Read more about the relevant [`config.ini` option](CONFIGINI.md#cachefolder).
 
 **Example(s)**
 

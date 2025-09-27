@@ -20,9 +20,16 @@ Settings in the `[main]` section will always be set regardless of selected platf
 
 ### Order of Precedence
 
-Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline (CLI) option which relates to an configuration setting in `config.ini` has highest precedence, regardless of the other four levels respective sections.
+Each section can have overlapping parameters. In case where a certain option exists in several sections they are prioritized as scraping module first, then frontend, then platform and lastly main. Any commandline interface (CLI) option which relates to an configuration setting in `config.ini` has highest precedence, aces out each scraping module section and other lower prioritized sections (frontend, platform and main). If a configuration option is neither set via CLI nor via configuration file, its default value is applied. In summary:
 
-You can find an example config file at `/home/<USER>/.skyscraper/config.ini.example`. This file contains all available options. Just copy the file to `config.ini` and uncomment and edit the ones you wish to use by removing the `#` or `;` in front of the variables. Remember to also uncomment the section the option relates to such as `[main]` or `[amiga]`.
+1. CLI   
+  ↳ 2. `[<scraper>]`  
+&nbsp;&nbsp;  ↳ 3. `[<frontend>]`  
+&nbsp;&nbsp;&nbsp;&nbsp;  ↳ 4. `[<platform>]`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↳ 5. `[main]`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↳ 6. built-in default
+
+You can find an example config file at `/home/<USER>/.skyscraper/config.ini.example`. This file contains all available options. Just copy the file to `config.ini` and uncomment and edit the ones you wish to use by removing the `#` or `;` in front of the variables. Remember to also uncomment the `[<section>]` line which the option relates to such as `[main]` or `[amiga]`.
 
 !!! note
 
