@@ -477,7 +477,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->manuals = v;
                 continue;
             }
-            if (k == "fanart") {
+            if (k == "fanarts") {
                 config->fanart = v;
                 continue;
             }
@@ -709,7 +709,7 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->skipExistingCovers = true;
     } else if (flag == "skipexistingmanuals") {
         config->skipExistingManuals = true;
-    } else if (flag == "skipexistingfanart") {
+    } else if (flag == "skipexistingfanarts") {
         config->skipExistingFanart = true;
     } else if (flag == "skipexistingmarquees") {
         config->skipExistingMarquees = true;
@@ -737,7 +737,7 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->videos = true;
     } else if (flag == "manuals") {
         config->manuals = true;
-    } else if (flag == "fanart") {
+    } else if (flag == "fanarts") {
         config->fanart = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
@@ -761,14 +761,36 @@ QSet<QString> RuntimeCfg::getKeys(CfgType type) {
 }
 
 QStringList RuntimeCfg::parseFlags() {
-    QStringList _flags{};
+    QStringList retFlags;
     if (parser->isSet("flags")) {
+        QStringList _flags;
         QStringList flagsCli = parser->values("flags");
         for (QString f : flagsCli) {
             _flags << f.replace(" ", "").split(",");
         }
+        // pluralize
+        QStringList plFlags = {"nocover",
+                               "nomarquee",
+                               "noscreenshot",
+                               "notexture",
+                               "nowheel",
+                               "skipexistingcover",
+                               "skipexistingmarquee",
+                               "skipexistingscreenshot",
+                               "skipexistingtexture",
+                               "skipexistingwheel",
+                               "skipexistingfanart",
+                               "skipexistingvideo",
+                               "skipexistingmanual",
+                               "fanart",
+                               "video",
+                               "manual"};
+        for (QString f : _flags) {
+            retFlags << (plFlags.contains(f) ? f % "s" : f);
+        }
     }
-    return _flags;
+    qDebug() << "Flags:" << retFlags;
+    return retFlags;
 }
 
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {

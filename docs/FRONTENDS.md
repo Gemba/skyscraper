@@ -114,7 +114,7 @@ the textual scraping elements are still the same. Most notably Batocera
 EmulationStation stores a lot of additional information in the gamelist, and the
 set of information may differ for each game.  
 Skyscraper aims to cover the most frequent used elements for scraping, currently
-fanart, manuals and videos. See the [scraping
+fanarts, manuals and videos. See the [scraping
 modules](SCRAPINGMODULES.md#capabilities-of-scrapers) for support of these
 mediafiles.
 
@@ -185,7 +185,7 @@ Windows desktop users can use SMB shares and can adapt the following steps.
 3. Then run on your Desktop system to scrape data from screenscraper and put it
    into the Skyscraper cache on your Desktop system:
    ```bash
-   Skyscraper -s screenscraper -p snes --flags fanart,manuals,videos -i "$(pwd)"
+   Skyscraper -s screenscraper -p snes --flags fanarts,manuals,videos -i "$(pwd)"
    -g "$(pwd)" -o "$(pwd)"
    ```
    You can also set the values for [input-](CONFIGINI.md#inputfolder) (`-i`),

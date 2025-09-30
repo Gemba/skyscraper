@@ -46,6 +46,7 @@
 ;frontend="emulationstation"
 ;emulator=""
 ;launch=""
+;fanarts="false"
 ;manuals="false"
 ;videos="false"
 ;videoSizeLimit="42"

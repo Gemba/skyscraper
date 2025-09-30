@@ -214,7 +214,7 @@ private:
         {"excludeFrom",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"excludePattern",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"extensions",              QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},
-        {"fanart",                  QPair<QString, int>("bool", CfgType::MAIN                                                            )},
+        {"fanarts",                 QPair<QString, int>("bool", CfgType::MAIN                                                            )},
         {"forceFilename",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"frontend",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"gameBaseFile",            QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},
