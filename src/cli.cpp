@@ -106,11 +106,12 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption sOption(
         "s",
         "The scraping module you wish to gather resources from for the "
-        "platform set with '-p'.\nLeave the '-s' option out to enable "
-        "Skyscraper's gamelist generation mode.\n(WEB: 'arcadedb', 'igdb', "
+        "platform set with '-p'.\nScraping modules web: 'arcadedb', 'igdb', "
         "'mobygames', 'openretro', 'screenscraper', 'thegamesdb' and "
-        "'zxinfo' ('wos' and 'worldofspectrum' are also accepted), LOCAL: "
-        "'esgamelist' and 'import')",
+        "'zxinfo' ('worldofspectrum' and 'wos' are backward compability "
+        "aliases)\nScrpaing modules local: 'esgamelist', 'gamebase' and "
+        "'import'\nLeave this option out to enable Skyscraper's gamelist "
+        "generation mode.",
         "MODULE", "");
     QCommandLineOption uOption(
         "u",
