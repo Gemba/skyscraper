@@ -97,7 +97,8 @@ void ESGameList::getGameData(GameEntry &game) {
         loadVideoData(game, gameNode.firstChildElement("video").text());
     }
     if (config->fanart) {
-        loadVideoData(game, gameNode.firstChildElement("fanart").text());
+        game.fanartData =
+            loadBinaryData(gameNode.firstChildElement("fanart").text());
     }
 }
 

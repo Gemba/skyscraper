@@ -84,7 +84,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "The frontend you wish to generate a gamelist for. Remember to leave "
         "out the '-s' option when using this in order to enable Skyscraper's "
         "gamelist generation mode.\nCurrently supports 'emulationstation', "
-        "'esde', 'retrobat', 'attractmode' and 'pegasus'. Default: "
+        "'esde', 'batocera', 'retrobat', 'attractmode' and 'pegasus'. Default: "
         "'emulationstation'",
         "FRONTEND", "");
     QCommandLineOption eOption(
@@ -420,7 +420,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"skipexistingmanuals",
              "When generating gamelists, skip processing manuals that already "
              "exist in the media output folder."},
-            {"skipexistingfanart",
+            {"skipexistingfanarts",
              "When generating gamelists, skip processing of fanart that "
              "already exist in the media output folder."},
             {"skipexistingmarquees",
@@ -466,7 +466,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"manuals",
              "Enables scraping and caching of manuals for the scraping modules "
              "that support them."},
-            {"fanart",
+            {"fanarts",
              "Enables scraping and caching of fanart for the scraping modules "
              "that support them."},
         };

@@ -88,7 +88,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [excludeFrom](CONFIGINI.md#excludefrom)                     | Advanced       |    Y     |       Y        |                |               |
 | [excludePattern](CONFIGINI.md#excludepattern)               | Advanced       |    Y     |       Y        |       Y        |               |
 | [extensions](CONFIGINI.md#extensions)                       | Expert         |          |       Y        |                |               |
-| [fanart](CONFIGINI.md#fanart)                               | Basic          |    Y     |                |                |               |
+| [fanarts](CONFIGINI.md#fanarts)                             | Basic          |    Y     |                |                |               |
 | [forceFilename](CONFIGINI.md#forcefilename)                 | Advanced       |    Y     |       Y        |       Y        |               |
 | [frontend](CONFIGINI.md#frontend)                           | Basic          |    Y     |                |                |               |
 | [gameBaseFile](CONFIGINI.md#gamebasefile)                   | Expert         |          |       Y        |                |               |
@@ -1069,7 +1069,7 @@ Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retr
 
 ---
 
-#### fanart
+#### fanarts
 
 By default Skyscraper doesn't scrape and cache game fanart resources because not
 all scraping sites provide this data and also only some frontends support fanart

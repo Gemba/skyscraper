@@ -68,7 +68,7 @@ protected:
 private:
     static QPair<QString, QString> getFilenameParams(QString k) {
         QMap<QString, QPair<QString, QString>> cacheResFn = {
-            // "binary type in cache", <"-postfix", ".ext">
+            // key: "binary type in cache", value: <"-postfix", ".ext">
             {"cover", QPair<QString, QString>("boxart", "jpg")},
             {"fanart", QPair<QString, QString>("fanart", "jpg")},
             {"manual", QPair<QString, QString>("manual", "pdf")},
