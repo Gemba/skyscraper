@@ -71,12 +71,14 @@ ScreenScraper::ScreenScraper(Settings *config,
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                      QString searchName, QString) {
-    int platformId = getPlatformId(config->platform);
+    // ignore any | entries, only pick first
+    int platformId = getPlatformId(config->platform)[0];
     if (platformId == -1) {
-        reqRemaining = 0;
-        printf("\033[0;31mPlatform not supported by ScreenScraper or it hasn't "
-               "yet been included in Skyscraper for this module...\033[0m\n");
-        return;
+        printf(
+            "\033[0;31mPlatform '\033[0;31m%s\033[0m' has not platform id "
+            "match. Review PLATFORMS.md to remediate this warning. Skyscraper "
+            "is proceeding without platform id, result may be inaccurate.\n",
+            config->platform.toStdString().c_str());
     }
 
     QString gameUrl =
@@ -693,6 +695,6 @@ QString ScreenScraper::getJsonText(QJsonArray jsonArr, int attr,
     return ret;
 }
 
-int ScreenScraper::getPlatformId(const QString platform) {
+QVector<int> ScreenScraper::getPlatformId(const QString platform) {
     return Platform::get().getPlatformIdOnScraper(platform, config->scraper);
 }

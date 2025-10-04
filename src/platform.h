@@ -46,8 +46,8 @@ public:
                        QString addExtensions) const;
     QString getDefaultScraper() const;
     QStringList getAliases(QString platform) const;
-    int getPlatformIdOnScraper(const QString platform,
-                               const QString scraper) const;
+    QVector<int> getPlatformIdOnScraper(const QString platform,
+                                        const QString scraper) const;
 
 private:
     bool loadPlatformsIdMap();
@@ -56,7 +56,7 @@ private:
 
     QStringList platforms;
     QVariantMap peas;
-    QMap<QString, QVector<int>> platformIdsMap;
+    QMap<QString, QVector<QVector<int>>> platformIdsMap;
 };
 
 #endif // PLATFORM_H

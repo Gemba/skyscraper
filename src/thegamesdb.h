@@ -54,14 +54,13 @@ private:
     void getWheel(GameEntry &game) override;
     void getMarquee(GameEntry &game) override;
     void getFanart(GameEntry &game) override;
-    int getPlatformId(const QString platform) override;
+    QVector<int> getPlatformId(const QString platform) override;
 
     QString gfxUrl;
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
 
     void loadMaps();
-    QVariantMap readJson(QString filename);
     QVariantMap platformMap;
     QVariantMap genreMap;
     QVariantMap developerMap;

@@ -1012,6 +1012,10 @@
         "nom_hyperspin": "Tangerine Oric",
         "noms_commun": "Tangerince Oric Atmos,Tangerine Oric-1,Tangerine Oric-I,Oric Atmos,Oric-1,Oric-I,Eurêka Oric Atmos,Eurêka Oric Telestrat,Eurêka Oric Nova 64,Eurêka Oric Adresstal,Eurêka Telestrat,Eurêka Nova 64,Eurêka Adresstal"
     },
+    "287": {
+        "nom_eu": "P2000T",
+        "nom_recalbox": "p2000t"
+    },
     "219": {
         "nom_eu": "Palm OS",
         "nom_recalbox": "palm",
@@ -1021,7 +1025,7 @@
         "nom_eu": "PC Dos",
         "nom_recalbox": "pc",
         "nom_retropie": "pc",
-        "nom_launchbox": "MS-DOS",
+        "nom_launchbox": "MS-Dos",
         "nom_hyperspin": "Microsoft MS-DOS",
         "noms_commun": "Microsoft MS-DOS,Microsoft DOS,DOS,MS-DOS,PC-DOS,PC,DosBox,eXoDos,Total DOS Collection,Total DOS,PrBoom"
     },
@@ -1130,6 +1134,10 @@
         "nom_launchbox": "Sony Playstation 4",
         "noms_commun": "Sony Playstation 4,Playstation 4,Sony PS4,PS4,Sony Playstation IV,Playstation IV"
     },
+    "284": {
+        "nom_eu": "Playstation 5",
+        "noms_commun": "Sony Playstation 5,Playstation 5,Sony PS5,PS5,Sony Playstation V,Playstation V"
+    },
     "172": {
         "nom_eu": "Playstation minis",
         "nom_recalbox": "psp",
@@ -1151,6 +1159,10 @@
         "nom_eu": "Pokémon mini",
         "nom_recalbox": "pokemini",
         "noms_commun": "Pokemon Mini, PokeMini"
+    },
+    "290": {
+        "nom_eu": "PrBoom",
+        "nom_recalbox": "Port"
     },
     "62": {
         "nom_eu": "PS Vita",
@@ -1352,6 +1364,9 @@
         "nom_eu": "Switch",
         "nom_launchbox": "Nintendo Switch"
     },
+    "296": {
+        "nom_eu": "Switch 2"
+    },
     "157": {
         "nom_eu": "Taito Classics",
         "nom_recalbox": "arcade,mame,fba,fba_libretro",
@@ -1359,6 +1374,10 @@
         "nom_launchbox": "arcade",
         "nom_hyperspin": "Taito Classics",
         "noms_commun": "Taito Classics"
+    },
+    "293": {
+        "nom_eu": "Tamagotchi",
+        "nom_recalbox": "b"
     },
     "169": {
         "nom_eu": "Technos",

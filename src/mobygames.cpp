@@ -36,23 +36,26 @@
 
 static inline QMap<QString, QString> mobyRegionMap() {
     return QMap<QString, QString>(
-        {{"Australia", "au"},      {"Brazil", "br"},
-         {"Bulgaria", "bg"},       {"Canada", "ca"},
-         {"Chile", "cl"},          {"China", "cn"},
-         {"Czech Republic", "cz"}, {"Denmark", "dk"},
-         {"Finland", "fi"},        {"France", "fr"},
-         {"Germany", "de"},        {"Greece", "gr"},
-         {"Hungary", "hu"},        {"Israel", "il"},
-         {"Italy", "it"},          {"Japan", "jp"},
-         {"Netherlands", "nl"},    {"New Zealand", "nz"},
-         {"Norway", "no"},         {"Poland", "pl"},
-         {"Portugal", "pt"},       {"Russia", "ru"},
-         {"Slovakia", "sk"},       {"South Korea", "kr"},
-         {"Spain", "sp"},          {"Sweden", "se"},
-         {"Taiwan", "tw"},         {"Turkey", "tr"},
-         {"United Kingdom", "uk"}, {"United States", "us"},
+        {{"Australia", "au"},       {"Brazil", "br"},
+         {"Bulgaria", "bg"},        {"Canada", "ca"},
+         {"Chile", "cl"},           {"China", "cn"},
+         {"Czech Republic", "cz"},  {"Denmark", "dk"},
+         {"Finland", "fi"},         {"France", "fr"},
+         {"Germany", "de"},         {"Greece", "gr"},
+         {"Hungary", "hu"},         {"Israel", "il"},
+         {"Italy", "it"},           {"Japan", "jp"},
+         {"The Netherlands", "nl"}, {"New Zealand", "nz"},
+         {"Norway", "no"},          {"Poland", "pl"},
+         {"Portugal", "pt"},        {"Russia", "ru"},
+         {"Slovakia", "sk"},        {"South Korea", "kr"},
+         {"Spain", "sp"},           {"Sweden", "se"},
+         {"Taiwan", "tw"},          {"Turkey", "tr"},
+         {"United Kingdom", "uk"},  {"United States", "us"},
+         {"Austria", "at"},         {"Belgium", "be"},
          {"Worldwide", "wor"}});
 }
+
+static inline QStringList stopWords = {"and", "&", "or", "to", "of", "by"};
 
 MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -63,51 +66,50 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
 
     baseUrl = "https://api.mobygames.com";
 
-    searchUrlPre = baseUrl + "/v1/games";
+    searchUrlPre = baseUrl + "/v2/games";
 
     fetchOrder.append(GameEntry::Elem::PUBLISHER);
     fetchOrder.append(GameEntry::Elem::DEVELOPER);
     fetchOrder.append(GameEntry::Elem::RELEASEDATE);
     fetchOrder.append(GameEntry::Elem::TAGS);
-    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    // disabled: not in API v2
+    // fetchOrder.append(GameEntry::Elem::P_LAYERS);
+    // fetchOrder.append(GameEntry::Elem::A_GES);
+    // fetchOrder.append(GameEntry::Elem::R_ATING);
     fetchOrder.append(GameEntry::Elem::DESCRIPTION);
-    fetchOrder.append(GameEntry::Elem::AGES);
-    fetchOrder.append(GameEntry::Elem::RATING);
     fetchOrder.append(GameEntry::Elem::COVER);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+
+    mobyPlatformsMap = readJson("mobygames_platforms.json");
 }
 
 void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
                                  QString searchName, QString platform) {
-    int platformId = getPlatformId(config->platform);
-
-    printf("Waiting as advised by MobyGames api restrictions...\n");
     limiter.exec();
-    QString req = QString(searchUrlPre % "?api_key=" % config->password);
+    // ignore '|' entries, only pick first
+    int platformId = getPlatformId(config->platform)[0];
+
+    printf("Waiting as advised by MobyGames api restrictions...");
+    fflush(stdout);
+    QString req =
+        QString("%1?api_key=%2").arg(searchUrlPre).arg(config->password);
     bool isMobyGameId;
     int queryGameId = searchName.toInt(&isMobyGameId);
     if (isMobyGameId) {
         req = req % "&id=" % QString::number(queryGameId);
     } else {
-        req = req % "&title=" % searchName %
-              (platformId == -1 ? ""
-                                : "&platform=" + QString::number(platformId));
+        QString platformParam;
+        if (platformId > 0)
+            platformParam = "&platform=" % QString::number(platformId);
+        req = req %
+              QString("&title=%1%2&fuzzy=true&include=platforms,release_date")
+                  .arg(searchName)
+                  .arg(platformParam);
         queryGameId = 0;
     }
-    qDebug() << "Request: " << req;
-    netComm->request(req);
-    q.exec();
-    data = netComm->getData();
 
-    jsonDoc = QJsonDocument::fromJson(data);
-    if (jsonDoc.isEmpty()) {
+    if (!apiRequest(req)) {
         return;
-    }
-
-    if (jsonDoc.object()["code"].toInt() == 429) {
-        printf("\033[1;31mToo many requests! Please wait a while and try "
-               "again.\n\nNow quitting...\033[0m\n");
-        reqRemaining = 0;
     }
 
     QJsonArray jsonGames = jsonDoc.object()["games"].toArray();
@@ -119,20 +121,19 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
 
         game.id = QString::number(jsonGame["game_id"].toInt());
         game.title = jsonGame["title"].toString();
-        game.miscData = QJsonDocument(jsonGame).toJson(QJsonDocument::Compact);
 
         QJsonArray jsonPlatforms = jsonGame["platforms"].toArray();
         while (!jsonPlatforms.isEmpty()) {
             QJsonObject jsonPlatform = jsonPlatforms.first().toObject();
-            int gamePlafId = jsonPlatform["platform_id"].toInt();
-            game.url = searchUrlPre % "/" % game.id % "/platforms/" %
-                       QString::number(gamePlafId) % "?api_key=" %
-                       config->password;
-            game.releaseDate = jsonPlatform["first_release_date"].toString();
-            game.platform = jsonPlatform["platform_name"].toString();
-            bool matchPlafId = gamePlafId == platformId;
-            if (platformMatch(game.platform, platform) || matchPlafId) {
+            gamePlatformId = jsonPlatform["platform_id"].toInt();
+            bool matchPlafId = gamePlatformId == platformId;
+            if (matchPlafId || platformMatch(game.platform, platform)) {
+                game.url = searchUrlPre % "?id=" % game.id;
+                game.releaseDate = jsonPlatform["release_date"].toString();
+                game.platform = jsonPlatform["name"].toString();
                 gameEntries.append(game);
+                // assume only one platform match per game
+                break;
             }
             jsonPlatforms.removeFirst();
         }
@@ -140,30 +141,43 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void MobyGames::getGameData(GameEntry &game) {
-    printf("Waiting to get game data... ");
-    fflush(stdout);
-    limiter.exec();
-    netComm->request(game.url);
-    q.exec();
-    data = netComm->getData();
+QString MobyGames::removeStopwords(QString &searchName) {
+    QStringList s;
+    for (const auto &w : searchName.split(" ")) {
+        if (!stopWords.contains(w)) {
+            s.append(w);
+        }
+    }
+    return s.join(" ");
+}
 
-    jsonDoc = QJsonDocument::fromJson(data);
-    if (jsonDoc.isEmpty()) {
-        printf("None found.\n");
+void MobyGames::getGameData(GameEntry &game) {
+    limiter.exec();
+    printf("Waiting to get game data...");
+    fflush(stdout);
+    QStringList includes = {"covers",      "description", "developers",
+                            "genres",      "publishers",  "release_date",
+                            "screenshots", "title"};
+    QString url = game.url % QString("&api_key=%1&include=%2")
+                                 .arg(config->password)
+                                 .arg(includes.join(","));
+    if (!apiRequest(url)) {
         return;
     }
-    printf("OK\n");
 
-    jsonObj = QJsonDocument::fromJson(game.miscData).object();
+    jsonObj = jsonDoc.object()["games"].toArray()[0].toObject();
     populateGameEntry(game);
 }
 
 void MobyGames::getReleaseDate(GameEntry &game) {
-    game.releaseDate = jsonDoc.object()["first_release_date"].toString();
+    (void)game;
+    // already done in initial game lookup
 }
 
 void MobyGames::getPlayers(GameEntry &game) {
+    // TODO not via API - unsupported atm
+    (void)game;
+    /* v1 code
     QJsonArray jsonAttribs = jsonDoc.object()["attributes"].toArray();
     for (int a = 0; a < jsonAttribs.count(); ++a) {
         if (jsonAttribs.at(a)
@@ -173,24 +187,28 @@ void MobyGames::getPlayers(GameEntry &game) {
                 jsonAttribs.at(a).toObject()["attribute_name"].toString();
         }
     }
+    */
 }
 
 void MobyGames::getTags(GameEntry &game) {
     QJsonArray jsonGenres = jsonObj["genres"].toArray();
     for (auto gg : jsonGenres) {
         QJsonObject jg = gg.toObject();
-        int genreCatId = jg["genre_category_id"].toInt();
+        int genreCatId = jg["category_id"].toInt();
         qDebug() << "JSON genre id" << genreCatId;
         if (/*Basic Genres*/ 1 == genreCatId || /*Gameplay*/ 4 == genreCatId) {
-            QString gs = jg["genre_name"].toString();
-            game.tags.append(gs + ", ");
+            QString gs = jg["name"].toString();
             qDebug() << "Using" << gs << QString("(id %1)").arg(genreCatId);
+            game.tags.append(gs % ", ");
         }
     }
     game.tags.chop(2);
 }
 
 void MobyGames::getAges(GameEntry &game) {
+    // TODO not via API - unsupported atm
+    (void)game;
+    /*
     QJsonArray jsonAges = jsonDoc.object()["ratings"].toArray();
     QStringList ratingBodies = {"PEGI Rating",
                                 "ELSPA Rating",
@@ -213,18 +231,16 @@ void MobyGames::getAges(GameEntry &game) {
             break;
         }
     }
+    */
 }
 
 void MobyGames::getPublisher(GameEntry &game) {
-    QJsonArray jsonReleases = jsonDoc.object()["releases"].toArray();
-    for (int a = 0; a < jsonReleases.count(); ++a) {
-        QJsonArray jsonCompanies =
-            jsonReleases.at(a).toObject()["companies"].toArray();
-        for (int b = 0; b < jsonCompanies.count(); ++b) {
-            if (jsonCompanies.at(b).toObject()["role"].toString() ==
-                "Published by") {
-                game.publisher =
-                    jsonCompanies.at(b).toObject()["company_name"].toString();
+    QJsonArray publishers = jsonObj["publishers"].toArray();
+    for (int a = 0; a < publishers.count(); ++a) {
+        QJsonArray publForPlatform = publishers.at(a)["platforms"].toArray();
+        for (int b = 0; b < publForPlatform.count(); ++b) {
+            if (publForPlatform.at(b).toString() == game.platform) {
+                game.publisher = publishers.at(a).toObject()["name"].toString();
                 return;
             }
         }
@@ -232,19 +248,9 @@ void MobyGames::getPublisher(GameEntry &game) {
 }
 
 void MobyGames::getDeveloper(GameEntry &game) {
-    QJsonArray jsonReleases = jsonDoc.object()["releases"].toArray();
-    for (int a = 0; a < jsonReleases.count(); ++a) {
-        QJsonArray jsonCompanies =
-            jsonReleases.at(a).toObject()["companies"].toArray();
-        for (int b = 0; b < jsonCompanies.count(); ++b) {
-            if (jsonCompanies.at(b).toObject()["role"].toString() ==
-                "Developed by") {
-                game.developer =
-                    jsonCompanies.at(b).toObject()["company_name"].toString();
-                return;
-            }
-        }
-    }
+    game.developer =
+        jsonObj["developers"].toArray()[0].toObject()["name"].toString();
+    qDebug() << "game.developer" << game.developer;
 }
 
 void MobyGames::getDescription(GameEntry &game) {
@@ -258,6 +264,9 @@ void MobyGames::getDescription(GameEntry &game) {
 }
 
 void MobyGames::getRating(GameEntry &game) {
+    // TODO not via API - unsupported atm
+    (void)game;
+    /* v1 code
     QJsonValue jsonValue = jsonObj["moby_score"];
     if (jsonValue != QJsonValue::Undefined) {
         double rating = jsonValue.toDouble();
@@ -265,82 +274,105 @@ void MobyGames::getRating(GameEntry &game) {
             game.rating = QString::number(rating / 10.0);
         }
     }
+    */
 }
 
 void MobyGames::getCover(GameEntry &game) {
-    printf("Waiting to get cover data... ");
-    fflush(stdout);
-    limiter.exec();
-    QString req = QString(
-        game.url.left(game.url.indexOf("?api_key=")) % "/covers" %
-        game.url.mid(game.url.indexOf("?api_key="),
-                     game.url.length() - game.url.indexOf("?api_key=")));
-    qDebug() << "Covers request" << req;
-    netComm->request(req);
-    q.exec();
-    data = netComm->getData();
+    printf("Retrieve front cover: ");
 
-    jsonDoc = QJsonDocument::fromJson(data);
-    if (jsonDoc.isEmpty()) {
+    QJsonArray covers = jsonObj["covers"].toArray();
+
+    // pair: <cover index, front cover image index>
+    QList<QPair<int, int>> matchIdx;
+
+    for (int k = 0; k < covers.count(); k++) {
+        QJsonArray plfs = covers.at(k).toObject()["platforms"].toArray();
+        bool platMatched = false;
+        while (!plfs.isEmpty()) {
+            if (plfs.first().toObject()["id"] == gamePlatformId) {
+                qDebug() << "platMatched!" << plfs.first().toObject()["name"];
+                platMatched = true;
+                break;
+            }
+            plfs.removeFirst();
+        }
+        if (!platMatched) {
+            continue;
+        } else {
+            bool typeMatched = false;
+            QJsonArray coverImgs = covers.at(k).toObject()["images"].toArray();
+            int m = 0;
+            while (!coverImgs.isEmpty()) {
+                QJsonObject img = coverImgs.first().toObject();
+                QJsonObject imgType = img["type"].toObject();
+                if (imgType["id"].toInt() == 1) {
+                    qDebug() << "typeMatched!" << img["image_url"];
+                    typeMatched = true;
+                    break;
+                }
+                coverImgs.removeFirst();
+                m++;
+            }
+            // keep cover and image index
+            if (typeMatched)
+                matchIdx.append(QPair<int, int>(k, m));
+        }
+    }
+
+    if (matchIdx.isEmpty()) {
+        printf("No front covers at all for this platform.\n");
         return;
     }
 
-    QString coverUrl = "";
-    bool foundFrontCover = false;
+    qDebug() << "Covers with matching platform with type 'Front Cover':"
+             << matchIdx;
 
+    QString coverUrl = "";
+    QStringList foundRegions;
+    QString regionMatch = "";
+    qDebug() << regionPrios;
     for (const auto &region : regionPrios) {
-        QJsonArray jsonCoverGroups = jsonDoc.object()["cover_groups"].toArray();
-        while (!jsonCoverGroups.isEmpty()) {
-            bool foundRegion = false;
+        for (auto const &k : matchIdx) {
             QJsonArray jsonCountries =
-                jsonCoverGroups.first().toObject()["countries"].toArray();
+                covers.at(k.first).toObject()["countries"].toArray();
             while (!jsonCountries.isEmpty()) {
-                if (getRegionShort(
-                        jsonCountries.first().toString().simplified()) ==
-                    region) {
-                    foundRegion = true;
+                QString mobyCountry = getRegionShort(
+                    jsonCountries.first()["name"].toString().trimmed());
+                if (mobyCountry == region) {
+                    regionMatch = region;
+                    qDebug() << "region match" << region;
                     break;
+                } else {
+                    foundRegions.append(mobyCountry);
                 }
                 jsonCountries.removeFirst();
             }
-            if (!foundRegion) {
-                jsonCoverGroups.removeFirst();
-                continue;
-            }
-            QJsonArray jsonCovers =
-                jsonCoverGroups.first().toObject()["covers"].toArray();
-            while (!jsonCovers.isEmpty()) {
-                QJsonObject jsonCover = jsonCovers.first().toObject();
-                if (jsonCover["scan_of"]
-                        .toString()
-                        .toLower()
-                        .simplified()
-                        .contains("front cover")) {
-                    coverUrl = jsonCover["image"].toString();
-                    foundFrontCover = true;
-                    break;
-                }
-                jsonCovers.removeFirst();
-            }
-            if (foundFrontCover) {
+            if (!regionMatch.isEmpty()) {
+                QJsonArray coverImgs =
+                    covers.at(k.first).toObject()["images"].toArray();
+                coverUrl =
+                    coverImgs.at(k.second).toObject()["image_url"].toString();
                 break;
             }
-            jsonCoverGroups.removeFirst();
         }
-        if (foundFrontCover) {
+        if (!regionMatch.isEmpty()) {
             break;
         }
     }
 
-    // For some reason the links are http but they
-    // are always redirected to https
-    coverUrl.replace("http://", "https://");
-
     if (coverUrl.isEmpty()) {
-        printf("No cover found for platform '%s'.\n",
-               game.platform.toStdString().c_str());
+        printf("No cover found for platform '%s' and these region prios\n"
+               "  %s\n but for these regions\n  %s.\nYou may adjust your "
+               "region prios to get a match.\n",
+               game.platform.toStdString().c_str(),
+               regionPrios.join(", ").toStdString().c_str(),
+               foundRegions.join(", ").toStdString().c_str());
         return;
     }
+
+    // For some reason the links are http but they
+    // are always redirected to https
+    coverUrl = coverUrl.replace("http://", "https://");
     qDebug() << coverUrl;
     game.coverData = downloadMedia(coverUrl);
     if (game.coverData.isEmpty()) {
@@ -351,7 +383,7 @@ void MobyGames::getCover(GameEntry &game) {
     image.loadFromData(game.coverData);
     double aspect = image.height() / (double)image.width();
     if (aspect >= 0.8) {
-        printf("OK\n");
+        printf("OK. Region: '%s'\n", regionMatch.toStdString().c_str());
     } else {
         printf("Landscape mode detected. Cover discarded.\n");
         game.coverData.clear();
@@ -359,54 +391,92 @@ void MobyGames::getCover(GameEntry &game) {
 }
 
 void MobyGames::getScreenshot(GameEntry &game) {
-    printf("Waiting to get screenshot data... ");
+    printf("Retrieve screenshot: ");
     fflush(stdout);
-    limiter.exec();
-    netComm->request(
-        game.url.left(game.url.indexOf("?api_key=")) % "/screenshots" %
-        game.url.mid(game.url.indexOf("?api_key="),
-                     game.url.length() - game.url.indexOf("?api_key=")));
-    q.exec();
-    data = netComm->getData();
+    QJsonArray jsonScreenshots = jsonObj["screenshots"].toArray();
 
-    jsonDoc = QJsonDocument::fromJson(data);
-    if (jsonDoc.isEmpty()) {
-        return;
+    QString dlUrl;
+    QString caption;
+    int imgCount = 0;
+    int pick = 0;
+    for (int k = 0; k < jsonScreenshots.count(); k++) {
+        QJsonObject screens = jsonScreenshots.at(k).toObject();
+        // find screenshots for platform
+        if (screens["platform_id"].toInt() == gamePlatformId) {
+            QJsonArray jsonImgs = screens["images"].toArray();
+            imgCount = jsonImgs.count();
+            while (dlUrl.isEmpty()) {
+                pick = QRandomGenerator::system()->bounded(imgCount);
+                QJsonObject img = jsonImgs.at(pick).toObject();
+                caption = img["caption"].toString().toLower();
+                if (imgCount > 2 &&
+                    (caption.contains("title") || caption.contains("intro"))) {
+                    continue;
+                }
+                dlUrl = img["image_url"].toString();
+            }
+        }
+        if (!dlUrl.isEmpty())
+            break;
     }
 
-    QJsonArray jsonScreenshots = jsonDoc.object()["screenshots"].toArray();
-
-    const int screenCount = static_cast<int>(jsonScreenshots.count());
-
-    if (screenCount < 1) {
+    if (dlUrl.isEmpty()) {
         printf("No screenshots available.\n");
         return;
     }
-    int chosen = 1;
-    if (screenCount > 2) {
-        // First 2 are almost always not ingame, so skip those if we have 3
-        // or more
-        chosen = 2 + (QRandomGenerator::system()->bounded(screenCount - 2));
-    }
-    game.screenshotData = downloadMedia(
-        jsonScreenshots.at(chosen).toObject()["image"].toString().replace(
-            "http://", "https://"));
+    game.screenshotData = downloadMedia(dlUrl.replace("http://", "https://"));
     if (!game.screenshotData.isEmpty()) {
-        printf("OK. Picked screenshot #%d of %d.\n", chosen, screenCount);
+        printf("OK. Picked screenshot #%d of %d, caption '%s'.\n", pick,
+               imgCount, caption.toStdString().c_str());
     } else {
         printf("No screenshot available.\n");
     }
 }
 
-int MobyGames::getPlatformId(const QString platform) {
+QVector<int> MobyGames::getPlatformId(const QString platform) {
     return Platform::get().getPlatformIdOnScraper(platform, config->scraper);
 }
 
 QString MobyGames::getRegionShort(const QString &region) {
     if (mobyRegionMap().contains(region)) {
-        qDebug() << "Got region" << mobyRegionMap()[region];
+        // qDebug() << "resolved" << region << "to" << mobyRegionMap()[region];
         return mobyRegionMap()[region];
     }
-    qWarning() << "Region not matched for" << region;
+    qWarning() << "Region not resolved for" << region;
     return "na";
+}
+
+bool MobyGames::apiRequest(const QString &url) {
+    qDebug() << url;
+
+    int retry = 0;
+    while (retry < 5) {
+        netComm->request(url);
+        q.exec();
+        data = netComm->getData();
+
+        jsonDoc = QJsonDocument::fromJson(data);
+        if (jsonDoc.isEmpty()) {
+            return false;
+        }
+
+        if (jsonDoc.object()["code"].toInt() == 429) {
+            printf(".");
+            fflush(stdout);
+            qDebug() << "Got 429, round:" << retry;
+            retry++;
+            if (retry < 5)
+                limiter.exec();
+        } else {
+            break;
+        }
+    }
+    printf("\n");
+    if (jsonDoc.object()["code"].toInt() == 429) {
+        printf("\033[1;31mToo many requests signaled! Please wait a while and "
+               "try again.\nNow quitting...\033[0m\n");
+        reqRemaining = 0;
+        return false;
+    }
+    return true;
 }

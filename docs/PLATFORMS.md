@@ -58,7 +58,7 @@ maintain local changes to the `platforms_idmap.csv` in a separate file with a
     `peas.json` overwrites the one from `peas.json`. The same applies for the
     platforms ID-mapping (see next section).
 
-!!! tip
+!!! tip "Avoid Duplication"
 
     If you need a specific folder name for a platform (on your setup or due to an
     EmulationStation theme) use a symbolic link (for example `megadrive` (=folder)
@@ -72,15 +72,20 @@ The second file is used for to instruct scrapers to lookup games by the numeric
 platform identifier the scraping site uses for queries. The file
 `platforms_idmap.csv` defines exact platform id for the web APIs of
 Screenscraper, MobyGames and the GamesDB. It is a CSV file which maps the
-platform handle (e.g. `megadrive`) to the respective platform id of the scraping
+platform handle (e.g. `c64`) to the respective platform id of the scraping
 site (selected with the CLI option `-s`):
 
 ```csv
 folder,screenscraper_id,mobygames_id,tgdb_id
 [...]
-megadrive,1,16,36
+c64,66,27,40
 [...]
 ```
+
+!!! tip "The Games DB"
+
+    The game data at TGDB is in rare case in different platforms to be found. Prominent example is Sega's Genesis respecitve Mega Drive. For these edgecases you may find the platform ids in the `platforms_idmap.csv` separated with an `|`. This means all platform ids will be tried to find a match in left-to-right order of the definition.
+
 
 You can display the number with their platform name on each of the three
 scraping sites in a more readable format with the script
@@ -90,12 +95,14 @@ site):
 
 ```
 [...]
-    ├── megadrive
-    │   ├── ScrS    1: Megadrive
-    │   ├── Moby   16: Genesis
-    │   └── TGDB   36: Sega Mega Drive
+    ├── c64
+    │   ├── ScrS   66: Commodore 64
+    │   ├── Moby   27: Commodore 64
+    │   └── TGDB   40: Commodore 64
 [...]
 ```
+
+After the platform id is the textual representation the scraper source uses.
 
 ## How to Change Platform Aliases or Gamefile Extensions
 
@@ -166,7 +173,7 @@ If you have multiple platforms defined in your local file make sure the platform
 blocks are separated by a comma `,`.
 
 
-!!! tip
+!!! tip "Case-sensitivity in EmulationStation Configuration"
 
     On RetroPie you may also have to edit `~/.emulationstation/es_systems.cfg` and
     add `.bin` and `.BIN`.

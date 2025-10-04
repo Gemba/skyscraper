@@ -31,6 +31,8 @@
 #include "strtools.h"
 
 #include <QDomDocument>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QRegularExpression>
 
 AbstractScraper::AbstractScraper(Settings *config,
@@ -518,8 +520,9 @@ QList<QString> AbstractScraper::getSearchNames(const QFileInfo &info,
     if (config->scraper != "import") {
         searchName = lookupSearchName(info, baseName, debug);
     }
-
     Q_ASSERT(!searchName.isEmpty());
+
+    searchName = removeStopwords(searchName);
 
     searchNames.append(NameTools::getUrlQueryName(searchName));
 
@@ -705,4 +708,33 @@ bool AbstractScraper::platformMatch(QString found, QString platform) {
     return false;
 }
 
-int AbstractScraper::getPlatformId(const QString) { return -1; }
+QVector<int> AbstractScraper::getPlatformId(const QString) {
+    return QVector<int>();
+}
+
+/*
+ for ingesting of
+
+ mobygames_platforms.json (unused)
+ screenscraper_platforms.json (unused)
+ tgdb_developers.json
+ tgdb_genres.json
+ tgdb_platforms.json
+ tgdb_publishers.json
+*/
+QVariantMap AbstractScraper::readJson(const QString &filename) {
+    QVariantMap m;
+    QFile jsonFile(filename);
+    if (jsonFile.open(QIODevice::ReadOnly)) {
+        QJsonObject jsonObj =
+            QJsonDocument::fromJson(jsonFile.readAll()).object();
+        m = jsonObj.toVariantMap();
+        jsonFile.close();
+    } else {
+        printf("\033[1;31mFile '%s' not found. Please fix.\n\nNow "
+               "quitting...\033[0m\n",
+               filename.toUtf8().constData());
+        exit(1);
+    }
+    return m;
+}

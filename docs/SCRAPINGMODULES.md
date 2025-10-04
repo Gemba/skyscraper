@@ -18,17 +18,18 @@ over a table cell to display the scraper module as tooltip:
 | [GameBase](#gamebase-db)                     |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |      &nbsp; {title='GameBase'}      |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |       ✓ ² {title='GameBase'}        |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |
 | [Internet Game DB (IGDB)](#igdb)             | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} |
 | [File Import](#custom-resource-import)       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |
-| [MobyGames](#mobygames)                      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |
+| [MobyGames](#mobygames)                      |        ✓ {title='MobyGames'}        |       ✓ ⁴ {title='MobyGames'}       |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        See ⁴ {title='MobyGames'}         |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |
 | [OpenRetro](#openretro)                      |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |     &nbsp; {title='OpenRetro'}      |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |          ✓ {title='OpenRetro'}           |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |
 | [ScreenScraper](#screenscraper)              |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |
 | [The Games DB](#thegamesdb-tgdb)             |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |    &nbsp; {title='The Games DB'}    |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      &nbsp; {title='The Games DB'}       |         ✓ {title='The Games DB'}         |         ✓ {title='The Games DB'}         |      &nbsp; {title='The Games DB'}       |      &nbsp; {title='The Games DB'}       |         ✓ {title='The Games DB'}         |
 | [ZXInfo](#zxinfo-formerly-world-of-spectrum) |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |       &nbsp; {title='ZXInfo'}       |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |        ✓ ³ {title='ZXInfo'}         |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |
-| Coverage                                     |                10/10                |                10/10                |                8/10                 |                10/10                |                9/10                 |                10/10                |                10/10                |                8/10                 |                8/10                 |                10/10                |                10/10                |                   4/10                   |                   4/10                   |                   5/10                   |                   3/10                   |                   2/10                   |                                          |
+| Coverage                                     |                10/10                |                10/10                |                8/10                 |                9/10                 |                9/10                 |                10/10                |                10/10                |                7/10                 |                7/10                 |                10/10                |                10/10                |                   4/10                   |                   4/10                   |                   5/10                   |                   3/10                   |                   2/10                   |                   3/10                   |
 
 **Remarks**:  
  ¹ Skyscraper uses ArcadeDB's Flyer and as a failsafe the Title screen, as Arcade games usually where not sold in a box  
  ² GameBase provides only an adult flag, thus it is either 18 or no age rating  
- ³ The source zxinfo.dk provides only an x-rated flag, thus it is either 18 or no age rating
+ ³ The source zxinfo.dk provides only an x-rated flag, thus it is either 18 or no age rating  
+ ⁴ Release date will contain the first release date worldwde with Hobbyist API subscription. Age Recommendation, Rating, Max. Players, Video and release date per platform require an APIv2 Bronze subscription or higher. Skyscraper supporting anything else than a Hobbyist subscription is very unlikely.
 
 ### Recognized Keywords in Query
 
@@ -39,11 +40,11 @@ over a table cell to display the scraper module as tooltip:
 | gamebase                 | Game filename, Game title and Game CRC (automatically detected). Except for CRC, globbing patterns (`*` and `'?`) can be used. |
 | igdb                     | Title or use id=... to query by IGDB game ID                                                                                   |
 | import                   | No query supported                                                                                                             |
-| mobygames                | Title or numeric MobyGames ID (see _Identifiers_ section their website / on game details)                                      |
+| mobygames                | Title or numeric MobyGames ID (see _Moby ID:_ right below the title when displaying a game on the website)                     |
 | openretro                | Only title                                                                                                                     |
 | screenscraper            | romnom=, crc=, md5=, sha1=; see [Screenscraper documentation](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description    |
 | thegamesdb, tgdb         | Only title                                                                                                                     |
-| zxinfo (worldofspectrum) | Title, game Id (id=...) or game filehash (MD5 or SHA512)                                                            |
+| zxinfo (worldofspectrum) | Title, game Id (id=...) or game filehash (MD5 or SHA512)                                                                       |
 
 !!! tip "Aliases for Game Filenames"
 
@@ -143,7 +144,7 @@ The database also supports many non-Amiga platforms, but there's no doubt that A
 - Shortname: _`mobygames`_
 - Type: _Online_
 - Website: _[www.mobygames.com](https://www.mobygames.com)_
-- Type: _File name_ or _Moby Games ID_ search based
+- Type: _File name_ or _MobyGames ID_ search based
 - User credential support: _None required_
 - API request limit: _1 request per 5 seconds (Hobbyist subscription)_
 - Thread limit: _1_
@@ -153,9 +154,23 @@ The database also supports many non-Amiga platforms, but there's no doubt that A
   - `Skyscraper -p fba -s mobygames <SINGLE FILE TO SCRAPE>`
   - `Skyscraper -p fba -s mobygames --startat <FILE TO START AT> --endat <FILE TO END AT>`
 
-MobyGames. What can I say. If you haven't heard about this database before you've been missing out. It's one of the best and oldest games databases on the internet. You'll probably come across references to MobyGames on other sites when searching for retro games. There's a reason for that - it's that good.
+MobyGames APIv2 imposes more limits than APIv1. Not only you will need a payed
+subscription (to get an API key), but even with the entry-level (=Hobbyist)
+subscription you cannot scrape the same data as with APIv1. These are the
+limitations:
 
-There's a caveat to the module as it requires a subscription to get an API key, but you get well curated game information especially for hard to find titles. Examine the possible options: https://www.mobygames.com/api/subscribe/. Once you have obtained an API key add it to the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the [mobygames] INI section.
+- Release date will contain only the first release date worldwde with Hobbyist API
+subscription. 
+- Age Recommendation, Rating, Maximum of Players, Video and release date per
+platform require an APIv2 Bronze subscription or higher. 
+
+Skyscraper supporting anything else than a Hobbyist subscription is very
+unlikely. It is saddening to see the service of MobyGames degrading after the
+acquisition by Atari SA.
+
+However, once you have obtained an API key (starting with `moby_...`) add it to
+the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the
+`[mobygames]` INI-file section.
 
 ### IGDB
 
