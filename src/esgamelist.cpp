@@ -96,6 +96,10 @@ void ESGameList::getGameData(GameEntry &game) {
     if (config->videos) {
         loadVideoData(game, gameNode.firstChildElement("video").text());
     }
+    if (config->fanart) {
+        game.fanartData =
+            loadBinaryData(gameNode.firstChildElement("fanart").text());
+    }
 }
 
 QByteArray ESGameList::loadBinaryData(const QString fileName) {

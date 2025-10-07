@@ -84,7 +84,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "The frontend you wish to generate a gamelist for. Remember to leave "
         "out the '-s' option when using this in order to enable Skyscraper's "
         "gamelist generation mode.\nCurrently supports 'emulationstation', "
-        "'esde', 'retrobat', 'attractmode' and 'pegasus'. Default: "
+        "'esde', 'batocera', 'retrobat', 'attractmode' and 'pegasus'. Default: "
         "'emulationstation'",
         "FRONTEND", "");
     QCommandLineOption eOption(
@@ -106,11 +106,12 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption sOption(
         "s",
         "The scraping module you wish to gather resources from for the "
-        "platform set with '-p'.\nLeave the '-s' option out to enable "
-        "Skyscraper's gamelist generation mode.\n(WEB: 'arcadedb', 'igdb', "
+        "platform set with '-p'.\nScraping modules web: 'arcadedb', 'igdb', "
         "'mobygames', 'openretro', 'screenscraper', 'thegamesdb' and "
-        "'zxinfo' ('wos' and 'worldofspectrum' are also accepted), LOCAL: "
-        "'esgamelist' and 'import')",
+        "'zxinfo' ('worldofspectrum' and 'wos' are backward compability "
+        "aliases)\nScrpaing modules local: 'esgamelist', 'gamebase' and "
+        "'import'\nLeave this option out to enable Skyscraper's gamelist "
+        "generation mode.",
         "MODULE", "");
     QCommandLineOption uOption(
         "u",
@@ -286,8 +287,8 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(uOption);
     parser->addOption(verbosityOption);
     parser->addVersionOption();
-    parser->addPositionalArgument(
-        "romfile", "Specific ROM to scrape, optionally.", "[<romfile>]");
+    parser->addPositionalArgument("romfile(s)", "Specific ROM(s) to scrape",
+                                  "[<romfile> [<romfile> [<romfile> ... ]]]");
 }
 
 void Cli::subCommandUsage(const QString subCmd) {
@@ -433,6 +434,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"skipexistingmanuals",
              "When generating gamelists, skip processing manuals that already "
              "exist in the media output folder."},
+            {"skipexistingfanarts",
+             "When generating gamelists, skip processing of fanart that "
+             "already exist in the media output folder."},
             {"skipexistingmarquees",
              "When generating gamelists, skip processing marquees that already "
              "exist in the media output folder."},
@@ -475,6 +479,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "that support them. Beware, this takes up a lot of disk space!"},
             {"manuals",
              "Enables scraping and caching of manuals for the scraping modules "
+             "that support them."},
+            {"fanarts",
+             "Enables scraping and caching of fanart for the scraping modules "
              "that support them."},
         };
     } else {

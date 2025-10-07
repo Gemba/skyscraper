@@ -23,6 +23,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
+// TODO: split up file
 #include "cache.h"
 
 #include "cli.h"
@@ -58,6 +59,19 @@ const QString ATTR_SRC = "source";
 const QString ATTR_TS = "timestamp";
 const QString ATTR_TYPE = "type";
 
+enum class Excludes : char { NONE = 0, VIDEO = 1, MANUAL = 2, FANART = 4 };
+
+Excludes operator|(Excludes lhs, Excludes rhs) {
+    using ExclType = std::underlying_type<Excludes>::type;
+    return Excludes(static_cast<ExclType>(lhs) | static_cast<ExclType>(rhs));
+}
+
+Excludes operator&(Excludes lhs, Excludes rhs) {
+    using ExclType = std::underlying_type<Excludes>::type;
+    return Excludes(static_cast<ExclType>(lhs) & static_cast<ExclType>(rhs));
+}
+
+// keywords used in cache (slightly different from gamelist XML elements)
 static inline QStringList txtTypes(bool useGenres = true) {
     // keep order for cache edit menu
     QStringList txtTypes = {"title",     "platform", "releasedate", "developer",
@@ -67,19 +81,48 @@ static inline QStringList txtTypes(bool useGenres = true) {
     return txtTypes;
 }
 
-static inline QStringList binTypes(bool withVideo = true,
-                                   bool withManual = true) {
+static inline QStringList binTypes(Excludes bins = Excludes::NONE) {
     // keep order for cache edit menu
     QStringList binTypes = {"cover", "screenshot", "wheel", "marquee",
                             "texture"};
-    if (withVideo) {
+    if (Excludes::VIDEO != (bins & Excludes::VIDEO)) {
         binTypes.append("video");
     }
-    if (withManual) {
+    if (Excludes::MANUAL != (bins & Excludes::MANUAL)) {
         binTypes.append("manual");
+    }
+    if (Excludes::FANART != (bins & Excludes::FANART)) {
+        binTypes.append("fanart");
     }
     return binTypes;
 };
+
+// this is the logical order used for keywords for cache maintenance
+static inline QStringList getKeywordOrder() {
+    QStringList order = txtTypes(false);
+    QString desc = order.takeLast();
+    order += binTypes();
+    order.append(desc);
+    return order;
+}
+
+static inline std::string &trim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+                                    [](int c) { return !std::isspace(c); }));
+    s.erase(std::find_if(s.rbegin(), s.rend(),
+                         [](unsigned char ch) { return !std::isspace(ch); })
+                .base(),
+            s.end());
+    return s;
+}
+
+static inline QString pluralizeWord(QString word, bool plural) {
+    return word + (plural ? "s" : "");
+}
+
+static inline std::string pluralizeWordStd(QString word, bool plural) {
+    return pluralizeWord(word, plural).toStdString();
+}
 
 const QStringList Cache::getAllResourceTypes() {
     return txtTypes() + binTypes();
@@ -238,7 +281,7 @@ void Cache::printPriorities(QString cacheId) {
                       {"Tags", {game.tags, game.tagsSrc}},
                       {"Rating", {game.rating, game.ratingSrc}}};
 
-    const QString pad = "               ";
+    const QString pad = "              ";
     for (auto const &e : prioTxtRes) {
         QString key = e.first;
         QString keyPadded =
@@ -257,8 +300,9 @@ void Cache::printPriorities(QString cacheId) {
         {"Cover", game.coverSrc},     {"Screenshot", game.screenshotSrc},
         {"Wheel", game.wheelSrc},     {"Marquee", game.marqueeSrc},
         {"Texture", game.textureSrc}, {"Video", game.videoSrc},
-        {"Manual", game.manualSrc}};
+        {"Manual", game.manualSrc},   {"Fanart", game.fanartSrc}};
 
+    // print out summary what was present in cache and from which source
     for (auto const &e : prioBinRes) {
         QString key = QString("%1:%2").arg(
             e.first, pad.left(pad.length() - e.first.length()));
@@ -281,7 +325,8 @@ void Cache::printPriorities(QString cacheId) {
 
 void Cache::printCacheEditMenu() {
     printf("\033[1;34mWhat would you like to do?\033[0m\n"
-           " Press Enter to continue to next rom in queue\n");
+           "\033[1;33mRET\033[0m) Press Enter to continue to next rom in queue "
+           "and\n     after last rom save changes + quit\n");
     printf("\033[1;33m  s\033[0m) Show current resource priorities for this "
            "rom\n");
     printf("\033[1;33m  S\033[0m) Show all cached resources for this rom\n");
@@ -295,8 +340,10 @@ void Cache::printCacheEditMenu() {
            "from a specific module\n");
     printf("\033[1;33m  t\033[0m) Remove ALL resources connected to this rom "
            "of a specific type\n");
-    printf("\033[1;33m  c\033[0m) Cancel all cache changes and exit\n");
-    printf("\033[1;33m  q\033[0m) Save all cache changes and exit\n");
+    printf("\033[1;33m  q\033[0m) Save all cache changes and quit (or use "
+           "\033[1;33mw\033[0m)\n");
+    printf("\033[1;33m  c\033[0m) Dismiss all cache changes and exit (or use "
+           "\033[1;33mx\033[0m)\n");
 }
 
 void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
@@ -340,8 +387,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
         bool doneEdit = false;
         printPriorities(cacheId);
         while (!doneEdit) {
-            printf("\033[0;32m#%d/%d\033[0m \033[1;33m\nCURRENT FILE: "
-                   "\033[0m\033[1;32m%s\033[0m\033[1;33m\033[0m\n",
+            printf("\033[1m#%d of %d: "
+                   "%s\033[0m\n",
                    queueLength - static_cast<int>(queue->length()), queueLength,
                    info.fileName().toStdString().c_str());
             std::string userInput = "";
@@ -349,13 +396,12 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 printCacheEditMenu();
                 printf("> ");
                 getline(std::cin, userInput);
+                userInput = trim(userInput);
                 printf("\n");
             } else {
                 if (command == "new") {
                     userInput = "n";
                     doneEdit = true;
-                } else if (command == "quit") {
-                    userInput = "q";
                 }
             }
             if (userInput == "") {
@@ -365,20 +411,52 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 printPriorities(cacheId);
             } else if (userInput == "S") {
                 printf("\033[1;34mResources connected to this rom:\033[0m\n");
-                bool found = false;
+                QMap<QString, QList<QPair<QString, QString>>> connectedRes;
+                int lenType = 0;
+                int lenSrc = 0;
                 for (const auto &res : resources) {
                     if (res.cacheId == cacheId) {
-                        printf(
-                            "\033[1;33m%s\033[0m (%s): '\033[1;32m%s\033[0m'\n",
-                            res.type.toStdString().c_str(),
-                            res.source.toStdString().c_str(),
-                            res.value.toStdString().c_str());
-                        found = true;
+                        QList l = connectedRes[res.type];
+                        QPair<QString, QString> kv =
+                            QPair<QString, QString>(res.source, res.value);
+                        l.append(kv);
+                        connectedRes[res.type] = l;
+                        if (res.source.length() > lenSrc) {
+                            lenSrc = res.source.length();
+                        }
+                        if (res.type.length() > lenType) {
+                            lenType = res.type.length();
+                        }
                     }
                 }
-                if (!found)
+                if (connectedRes.isEmpty()) {
                     printf("None\n");
-                printf("\n");
+                } else {
+                    for (auto const &t : getKeywordOrder()) {
+                        QList<QPair<QString, QString>> l = connectedRes[t];
+                        if (!l.isEmpty()) {
+                            std::sort(
+                                l.begin(), l.end(),
+                                [](const QPair<QString, QString> &a,
+                                   const QPair<QString, QString> &b) -> bool {
+                                    QString sourceA = a.first;
+                                    QString sourceB = b.first;
+                                    return sourceA < sourceB;
+                                });
+                            int k = 0;
+                            for (auto const &kv : l) {
+                                QString tpl = "\033[1;33m%1\033[0m "
+                                              "%2:%3'\033[1;32m%4\033[0m'\n";
+                                tpl = tpl.arg(k == 0 ? t : "", -lenType)
+                                          .arg("(" % kv.first % ")", lenSrc + 2)
+                                          .arg(t == "description" ? "\n" : " ")
+                                          .arg(kv.second);
+                                printf("%s", tpl.toStdString().c_str());
+                                k++;
+                            }
+                        }
+                    }
+                }
             } else if (userInput == "n") {
                 GameEntry game;
                 game.cacheId = cacheId;
@@ -410,6 +488,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                     printf("> ");
                     getline(std::cin, typeInput);
+                    typeInput = trim(typeInput);
                     printf("\n");
                 } else {
                     int idx = txtTypes().indexOf(type);
@@ -494,6 +573,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     QString value = valueInput.c_str();
                     printf("\n");
                     value.replace("\\n", "\n");
+                    value = value.trimmed();
                     if (valueInput == "") {
                         printf("Resource creation cancelled...\n\n");
                         continue;
@@ -515,9 +595,9 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         }
                         resources.append(newRes);
                         if (updated) {
-                            printf(">>> Updated existing ");
+                            printf("[*] Updated existing ");
                         } else {
-                            printf(">>> Added ");
+                            printf("[+] Added ");
                         }
                         printf("resource with value '\033[1;32m%s\033[0m'\n\n",
                                value.toStdString().c_str());
@@ -529,43 +609,90 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
             } else if (userInput == "d") {
-                int rIdx = 0;
-                QList<int> rIdxList;
-                printf("\033[1;34mWhich resource id would you like to "
-                       "remove?\033[0m (Enter to cancel)\n");
+                printf("\033[1;34mWhich resource would you like to "
+                       "remove?\033[0m (number or cancel with just Enter or "
+                       "'0')\n");
+                // TODO: almost identical to code at "S" command
+                QMap<QString, QList<QStringList>> connectedRes;
+                QMap<int, QString> idxCacheIdMap;
+                int idx = 1;
+                int lenType = 0;
+                int lenSrc = 0;
                 for (const auto &res : resources) {
                     if (res.cacheId == cacheId &&
                         !binTypes().contains(res.type)) {
-                        printf(
-                            "\033[1;33m%4d\033[0m) \033[1;33m%s\033[0m (%s): "
-                            "'\033[1;32m%s\033[0m'\n",
-                            static_cast<int>(rIdxList.length()) + 1,
-                            res.type.toStdString().c_str(),
-                            res.source.toStdString().c_str(),
-                            res.value.toStdString().c_str());
-                        rIdxList.append(rIdx);
+                        QList l = connectedRes[res.type];
+                        QStringList resValues = {res.cacheId, res.source,
+                                                 res.type, res.value};
+                        l.append(resValues);
+                        connectedRes[res.type] = l;
+                        if (res.source.length() > lenSrc) {
+                            lenSrc = res.source.length();
+                        }
+                        if (res.type.length() > lenType) {
+                            lenType = res.type.length();
+                        }
                     }
-                    rIdx++;
                 }
-                if (rIdxList.isEmpty()) {
+                if (connectedRes.isEmpty()) {
                     printf("No resources found, cancelling...\n\n");
                     continue;
+                } else {
+                    for (auto const &t : getKeywordOrder()) {
+                        QList l = connectedRes[t];
+                        if (!l.isEmpty()) {
+                            std::sort(l.begin(), l.end(),
+                                      [](const QStringList &a,
+                                         const QStringList &b) -> bool {
+                                          QString sourceA = a[1];
+                                          QString sourceB = b[1];
+                                          return sourceA < sourceB;
+                                      });
+                            int k = 0;
+                            for (auto const &rvals : l) {
+                                QString tpl =
+                                    "\033[1;33m%1\033[0m) \033[1;33m%2\033[0m "
+                                    "%3:%4'\033[1;32m%5\033[0m'\n";
+                                tpl = tpl.arg(idx, 3)
+                                          .arg(k == 0 ? t : "", -lenType)
+                                          .arg("(" % rvals[1] % ")", lenSrc + 2)
+                                          .arg(t == "description" ? "\n" : " ")
+                                          .arg(rvals[3]);
+                                printf("%s", tpl.toStdString().c_str());
+                                k++;
+                                idxCacheIdMap[idx] =
+                                    rvals[0] % rvals[1] % rvals[2];
+                                idx++;
+                            }
+                        }
+                    }
                 }
+                printf("\033[1;34mYour choice?\033[0m (0-%d, 0=cancel)\n",
+                       idx - 1);
                 printf("> ");
                 std::string typeInput = "";
                 getline(std::cin, typeInput);
+                typeInput = trim(typeInput);
                 printf("\n");
-                if (typeInput == "") {
+                if (typeInput == "" || typeInput == "0") {
                     printf("Resource removal cancelled...\n\n");
                     continue;
                 } else {
                     int chosen = atoi(typeInput.c_str());
-                    if (chosen >= 1 && chosen <= rIdxList.length()) {
-                        int index = rIdxList.at(chosen - 1);
-                        QString delType = resources[index].type;
-                        QString delSource = resources[index].source;
-                        resources.removeAt(index);
-                        printf("<<< Removed resource: %s (%s)\n\n",
+                    if (chosen >= 1 && chosen < idx) {
+                        QString cacheId = idxCacheIdMap[chosen];
+                        int idxInResList = 0;
+                        for (const auto &res : resources) {
+                            if (cacheId ==
+                                res.cacheId % res.source % res.type) {
+                                break;
+                            }
+                            idxInResList++;
+                        }
+                        QString delType = resources[idxInResList].type;
+                        QString delSource = resources[idxInResList].source;
+                        resources.removeAt(idxInResList);
+                        printf("[-] Removed resource: %s (%s)\n\n",
                                delType.toStdString().c_str(),
                                delSource.toStdString().c_str());
 
@@ -579,7 +706,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 while (it.hasNext()) {
                     Resource res = it.next();
                     if (res.cacheId == cacheId) {
-                        printf("<<< Removed \033[1;33m%s\033[0m (%s) with "
+                        printf("[-] Removed \033[1;33m%s\033[0m (%s) with "
                                "value '\033[1;32m%s\033[0m'\n",
                                res.type.toStdString().c_str(),
                                res.source.toStdString().c_str(),
@@ -593,17 +720,26 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 printf("\n");
             } else if (userInput == "m") {
                 printf("\033[1;34mResources from which module would you like "
-                       "to remove?\033[0m (Enter to cancel)\n");
+                       "to remove?\033[0m (module name or press Enter to "
+                       "cancel)\n");
                 QMap<QString, int> modules;
+                int lenSrc = 0;
                 for (const auto &res : resources) {
                     if (res.cacheId == cacheId) {
                         modules[res.source] += 1;
+                        if (res.source.length() > lenSrc) {
+                            lenSrc = res.source.length();
+                        }
                     }
                 }
                 QMap<QString, int>::iterator it;
                 for (it = modules.begin(); it != modules.end(); ++it) {
-                    printf("'\033[1;33m%s\033[0m': %d resource(s) found\n",
-                           it.key().toStdString().c_str(), it.value());
+                    QString tpl = "%1: %2 %3\n";
+                    tpl = tpl.arg("'\033[1;33m" % it.key() % "\033[0m'",
+                                  -(lenSrc + 13))
+                              .arg(it.value(), 2)
+                              .arg(pluralizeWord("resource", it.value() != 1));
+                    printf("%s", tpl.toStdString().c_str());
                 }
                 if (modules.isEmpty()) {
                     printf("No resources found, cancelling...\n\n");
@@ -627,27 +763,40 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("<<< Removed %d resource(s) connected to rom from "
+                    printf("[-] Removed %d %s connected to rom from "
                            "module '\033[1;32m%s\033[0m'\n\n",
-                           removed, typeInput.c_str());
+                           removed,
+                           pluralizeWordStd("resource", removed != 1).c_str(),
+                           typeInput.c_str());
                 } else {
                     printf("No resources from module '\033[1;32m%s\033[0m' "
                            "found, cancelling...\n\n",
                            typeInput.c_str());
                 }
             } else if (userInput == "t") {
-                printf("\033[1;34mResources of which type would you like to "
-                       "remove?\033[0m (Enter to cancel)\n");
+                printf(
+                    "\033[1;34mResources of which type would you like to "
+                    "remove?\033[0m (enter type or press Enter to cancel)\n");
                 QMap<QString, int> types;
+                int lenType = 0;
                 for (const auto &res : resources) {
                     if (res.cacheId == cacheId) {
                         types[res.type] += 1;
+                        if (res.type.length() > lenType) {
+                            lenType = res.type.length();
+                        }
                     }
                 }
-                QMap<QString, int>::iterator it;
-                for (it = types.begin(); it != types.end(); ++it) {
-                    printf("'\033[1;33m%s\033[0m': %d resource(s) found\n",
-                           it.key().toStdString().c_str(), it.value());
+                for (auto const &key : getKeywordOrder()) {
+                    if (types.contains(key)) {
+                        int count = types[key];
+                        QString tpl = "%1: %2 %3\n";
+                        tpl = tpl.arg("'\033[1;33m" % key % "\033[0m'",
+                                      -(lenType + 13))
+                                  .arg(count, 2)
+                                  .arg(pluralizeWord("resource", count != 1));
+                        printf("%s", tpl.toStdString().c_str());
+                    }
                 }
                 if (types.isEmpty()) {
                     printf("No resources found, cancelling...\n\n");
@@ -656,6 +805,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 printf("> ");
                 std::string typeInput = "";
                 getline(std::cin, typeInput);
+                typeInput = trim(typeInput);
                 printf("\n");
                 if (typeInput == "") {
                     printf("Resource removal cancelled...\n\n");
@@ -671,21 +821,26 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("<<< Removed %d resource(s) connected to rom of "
+                    printf("[-] Removed %d %s connected to rom of "
                            "type '\033[1;32m%s\033[0m'\n\n",
-                           removed, typeInput.c_str());
+                           removed,
+                           pluralizeWordStd("resource", removed != 1).c_str(),
+                           typeInput.c_str());
                 } else {
                     printf("No resources of type '\033[1;32m%s\033[0m' found, "
                            "cancelling...\n\n",
                            typeInput.c_str());
                 }
-            } else if (userInput == "c") {
-                printf("Exiting without saving changes.\n");
+            } else if (userInput == "c" || userInput == "x") {
+                printf("[!] Exiting without saving changes.\n");
                 exit(0);
-            } else if (userInput == "q") {
+            } else if (userInput == "q" || userInput == "w") {
                 queue->clear();
                 doneEdit = true;
                 continue;
+            } else {
+                printf("Choice '\033[1;31m%s\033[0m' not recognized!\n\n",
+                       userInput.c_str());
             }
         }
     }
@@ -727,7 +882,8 @@ bool Cache::purgeResources(QString purgeStr) {
             purged++;
         }
     }
-    printf("Successfully purged %d resources from the cache.\n", purged);
+    printf("Successfully purged %d %s from the cache.\n", purged,
+           pluralizeWordStd("resource", purged != 1).c_str());
     return true;
 }
 
@@ -739,6 +895,7 @@ bool Cache::purgeAll(const bool unattend) {
         printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
         std::string userInput = "";
         getline(std::cin, userInput);
+        userInput = trim(userInput);
         if (userInput != "y") {
             printf("User chose not to continue, cancelling purge...\n\n");
             return false;
@@ -750,8 +907,6 @@ bool Cache::purgeAll(const bool unattend) {
 
     int purged = 0;
     int dots = 0;
-    // Always make dotMod at least 1 or it will give "floating point exception"
-    // when modulo
     int dotMod = resources.size() * 0.1 + 1;
 
     QMutableListIterator<Resource> it(resources);
@@ -774,8 +929,8 @@ bool Cache::purgeAll(const bool unattend) {
                "cache.\n");
         return false;
     } else {
-        printf("Successfully purged %d resources from the resource cache.\n",
-               purged);
+        printf("Successfully purged %d %s from the resource cache.\n", purged,
+               pluralizeWordStd("resource", purged != 1).c_str());
     }
     printf("\n");
     return true;
@@ -794,6 +949,7 @@ void Cache::purgeAllPlatform(Settings config, Skyscraper *app) {
     printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
     std::string userInput = "";
     getline(std::cin, userInput);
+    userInput = trim(userInput);
     if (userInput != "y") {
         printf("User chose not to continue, cancelling purge...\n\n");
         return;
@@ -833,6 +989,7 @@ void Cache::vacuumAllPlatform(Settings config, Skyscraper *app) {
     printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
     std::string userInput = "";
     getline(std::cin, userInput);
+    userInput = trim(userInput);
     if (userInput != "y") {
         printf("User chose not to continue, cancelling vacuum...\n\n");
         return;
@@ -895,8 +1052,6 @@ QList<QFileInfo> Cache::getFileInfos(const QString &inputFolder,
 QList<QString> Cache::getCacheIdList(const QList<QFileInfo> &fileInfos) {
     QList<QString> cacheIdList;
     int dots = 0;
-    // Always make dotMod at least 1 or it will give "floating point exception"
-    // when modulo
     int dotMod = fileInfos.size() * 0.1 + 1;
     for (const auto &info : fileInfos) {
         if (dots % dotMod == 0) {
@@ -940,7 +1095,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             resTypeList += txtTypes(false);
             resTypeList.sort();
         } else if (missingOption == "artwork") {
-            resTypeList += binTypes(false, false); // w/o 'video' and 'manual'
+            resTypeList += binTypes(Excludes::VIDEO | Excludes::MANUAL);
             resTypeList.sort();
         } else if (missingOption == "media") {
             resTypeList += binTypes();
@@ -962,7 +1117,9 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         printf("Resource type list is empty, cancelling...\n");
         return;
     } else {
-        printf("Creating report(s) for resource type(s):\n");
+        printf("Creating %s for resource %s:\n",
+               pluralizeWordStd("report", resTypeList.size() != 1).c_str(),
+               pluralizeWordStd("type", resTypeList.size() != 1).c_str());
         for (const auto &resType : resTypeList) {
             printf("  %s\n", resType.toStdString().c_str());
         }
@@ -1012,8 +1169,6 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
         if (reportFile.open(QIODevice::WriteOnly)) {
             int missing = 0;
             int dots = 0;
-            // Always make dotMod at least 1 or it will give "floating point
-            // exception" when modulo
             int dotMod = fileInfos.size() * 0.1 + 1;
 
             for (int a = 0; a < fileInfos.length(); ++a) {
@@ -1037,9 +1192,10 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
                 }
             }
             reportFile.close();
-            printf("\033[1;32m Done!\033[0m\n\033[1;33m%d file(s) is/are "
-                   "missing the '%s' resource.\033[0m\n\n",
-                   missing, resType.toStdString().c_str());
+            printf("\033[1;32m Done!\033[0m\n\033[1;33m%d %s "
+                   "do miss the '%s' resource.\033[0m\n\n",
+                   missing, pluralizeWordStd("file", missing != 1).c_str(),
+                   resType.toStdString().c_str());
         } else {
             printf("Report file could not be opened for writing, please check "
                    "permissions of folder '%s', then try "
@@ -1076,6 +1232,7 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                    .c_str());
         printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
         getline(std::cin, userInput);
+        userInput = trim(userInput);
         if (userInput != "y") {
             printf("User chose not to continue, cancelling vacuum...\n\n");
             return false;
@@ -1104,8 +1261,6 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
     int vacuumed = 0;
     {
         int dots = 0;
-        // Always make dotMod at least 1 or it will give "floating point
-        // exception" when modulo
         int dotMod = resources.size() * 0.1 + 1;
 
         QMutableListIterator<Resource> it(resources);
@@ -1166,7 +1321,7 @@ void Cache::printStats(bool totals) {
         {"Ages", 0},         {"Tags", 0},       {"Ratings", 0},
         {"ReleaseDates", 0}, {"Covers", 0},     {"Screenshots", 0},
         {"Wheels", 0},       {"Marquees", 0},   {"Textures", 0},
-        {"Videos", 0},       {"Manuals", 0}};
+        {"Videos", 0},       {"Manuals", 0},    {"Fanarts", 0}};
     for (auto it = resCountsMap.begin(); it != resCountsMap.end(); ++it) {
         if (!totals) {
             printf("'\033[1;32m%s\033[0m' module\n",
@@ -1189,6 +1344,7 @@ void Cache::printStats(bool totals) {
         resTotals["Textures"] += it.value().textures;
         resTotals["Videos"] += it.value().videos;
         resTotals["Manuals"] += it.value().manuals;
+        resTotals["Fanarts"] += it.value().fanart;
         if (!totals) {
             for (auto it = resTotals.begin(); it != resTotals.end(); ++it) {
                 printf("  %12s : %d\n", it.key().toStdString().c_str(),
@@ -1239,6 +1395,8 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].videos++;
     } else if (type == "manual") {
         resCountsMap[source].manuals++;
+    } else if (type == "fanart") {
+        resCountsMap[source].fanart++;
     }
 }
 
@@ -1372,7 +1530,7 @@ void Cache::validate() {
     }
 
     int filesDeleted = 0;
-    int filesNoDelete = 0;
+    int notDeletedCount = 0;
 
     for (auto const &t : binTypes()) {
         QDir dir(cacheDir.path() % "/" % t % "s", "*.*", QDir::Name,
@@ -1380,25 +1538,27 @@ void Cache::validate() {
         QDirIterator iter(dir.absolutePath(),
                           QDir::Files | QDir::NoDotAndDotDot,
                           QDirIterator::Subdirectories);
-        verifyFiles(iter, filesDeleted, filesNoDelete, t);
+        verifyFiles(iter, filesDeleted, notDeletedCount, t);
     }
 
-    if (filesDeleted == 0 && filesNoDelete == 0) {
+    if (filesDeleted == 0 && notDeletedCount == 0) {
         printf("No inconsistencies found in the database. :)\n\n");
     } else {
-        printf("Successfully deleted %d files with no resource entry.\n",
-               filesDeleted);
-        if (filesNoDelete != 0) {
-            printf("%d files couldn't be deleted, please check file "
+        printf("Successfully deleted %d %s with no resource entry.\n",
+               filesDeleted,
+               pluralizeWordStd("file", filesDeleted != 1).c_str());
+        if (notDeletedCount != 0) {
+            printf("%d %s couldn't be deleted, please check file "
                    "permissions and re-run with '--cache validate'.\n",
-                   filesNoDelete);
+                   notDeletedCount,
+                   pluralizeWordStd("file", notDeletedCount != 1).c_str());
         }
         printf("\n");
     }
 }
 
 void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
-                        int &filesNoDelete, QString resType) {
+                        int &notDeletedCount, QString resType) {
     QList<QString> resFileNames;
     for (const auto &resource : resources) {
         if (resource.type == resType) {
@@ -1417,7 +1577,7 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
                 filesDeleted++;
             } else {
                 printf("ERROR! File couldn't be deleted :/\n");
-                filesNoDelete++;
+                notDeletedCount++;
             }
         }
     }
@@ -1477,8 +1637,10 @@ void Cache::merge(Cache &mergeCache, bool overwrite,
             resources.append(mergeResource);
         }
     }
-    printf("Successfully updated %d resource(s) in cache!\n", resUpdated);
-    printf("Successfully merged %d new resource(s) into cache!\n\n", resMerged);
+    printf("Successfully updated %d %s in cache!\n", resUpdated,
+           pluralizeWordStd("resource", resUpdated != 1).c_str());
+    printf("Successfully merged %d new %s into cache!\n\n", resMerged,
+           pluralizeWordStd("resource", resMerged != 1).c_str());
 }
 
 QList<Resource> Cache::getResources() { return resources; }
@@ -1527,6 +1689,7 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"marquee", !entry.marqueeData.isEmpty()},
         {"texture", !entry.textureData.isEmpty()},
         {"manual", !entry.manualData.isEmpty()},
+        {"fanart", !entry.fanartData.isEmpty()},
         {"video", !entry.videoData.isEmpty() && entry.videoFormat != ""}};
 
     for (auto const &t : binTypes()) {
@@ -1564,7 +1727,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
     if (notFound) {
         bool okToAppend = true;
         QString cacheFile = cacheAbsolutePath + "/" + resource.value;
-        if (binTypes(false, false).contains(resource.type)) {
+        if (binTypes(Excludes::VIDEO).contains(resource.type)) {
             QByteArray *imageData = nullptr;
             if (resource.type == "cover") {
                 imageData = &entry.coverData;
@@ -1576,8 +1739,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 imageData = &entry.marqueeData;
             } else if (resource.type == "texture") {
                 imageData = &entry.textureData;
+            } else if (resource.type == "fanart") {
+                imageData = &entry.fanartData;
+            } else if (resource.type == "manual") {
+                imageData = &entry.manualData;
             }
-            if (config.cacheResize) {
+            if (config.cacheResize && resource.type != "fanart" &&
+                resource.type != "manual") {
                 QImage image;
                 if (imageData->size() > 0 && image.loadFromData(*imageData) &&
                     !image.isNull()) {
@@ -1659,21 +1827,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         Config::getSkyFolder(Config::SkyFolderType::CONFIG) %
                         "/config.ini.'");
                 okToAppend = false;
-            }
-        } else if (resource.type == "manual") {
-            QFile f(cacheFile);
-            if (f.open(QIODevice::WriteOnly)) {
-                f.write(entry.manualData);
-                f.close();
-            } else {
-                output.append("Error writing file: '" + f.fileName() +
-                              "' to cache. Please check permissions.");
-                okToAppend = false;
+                entry.videoFormat = "";
             }
         }
 
         if (okToAppend) {
-            if (binTypes(false, false).contains(resource.type)) {
+            if (binTypes(Excludes::VIDEO | Excludes::MANUAL | Excludes::FANART)
+                    .contains(resource.type)) {
                 // Remove old style cache image if it exists
                 if (QFile::exists(cacheFile + ".png")) {
                     QFile::remove(cacheFile + ".png");
@@ -1887,22 +2047,25 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
                 entry.textureData = data;
                 entry.textureSrc = source;
             } else if (type == "video" && !data.isEmpty()) {
-                // video is not part of artwork.xml / compositor.cpp
-                // set filename here
+                // video, manual and fanrt are not part of artwork.xml resp.
+                // compositor.cpp: set filename here
                 entry.videoData = data;
                 entry.videoSrc = source;
                 QFileInfo info(f);
                 entry.videoFormat = info.suffix();
                 entry.videoFile = info.absoluteFilePath();
             } else if (type == "manual" && !data.isEmpty()) {
-                // manual is not part of artwork.xml / compositor.cpp
-                // set filename here
                 entry.manualData = data;
                 entry.manualSrc = source;
                 QFileInfo info(f);
                 entry.manualFile = info.absoluteFilePath();
+            } else if (type == "fanart" && !data.isEmpty()) {
+                entry.fanartData = data;
+                entry.fanartSrc = source;
+                QFileInfo info(f);
+                entry.fanartFile = info.absoluteFilePath();
             }
-            // PENDING: if thumbnail is ever used add it here like video/manual
+            // PENDING: if thumbnail is ever used, add it here like video/manual
         }
     }
 }

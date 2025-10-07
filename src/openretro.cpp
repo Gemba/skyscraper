@@ -82,16 +82,16 @@ OpenRetro::OpenRetro(Settings *config, QSharedPointer<NetManager> manager)
     ratingPre.append("<div class='score'>Score: ");
     ratingPost = "</";
 
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(COVER);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(RATING);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::RATING);
 }
 
 void OpenRetro::getSearchResults(QList<GameEntry> &gameEntries,

@@ -66,6 +66,7 @@ struct ResCounts {
     int textures;
     int videos;
     int manuals;
+    int fanart;
 };
 
 class Cache {

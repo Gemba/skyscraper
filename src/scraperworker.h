@@ -52,6 +52,11 @@ signals:
                     const QString &debug);
 
 private:
+    enum MediaHint : unsigned char {
+        VIDEO = 1,
+        MANUAL = VIDEO << 1,
+        FANART = VIDEO << 2
+    };
     AbstractScraper *scraper;
 
     Settings config;
@@ -77,8 +82,9 @@ private:
     int getReleaseYear(const QString releaseDateString);
 
     bool limitReached(QString &output);
-    void copyMedia(const QString &mediaType, const QString &completeBaseName,
-                   const QString &subPath, GameEntry &game);
+    void copyMedia(MediaHint mediaHint, const QString &completeBaseName,
+                   const QString &subPath, GameEntry &game,
+                   bool isBatocera = false);
     bool matchTitles(const QString &thiz, const QString &that);
     QList<QString> splitTitle(const QString &title);
     bool matchWords(const QList<QString> theseWords,

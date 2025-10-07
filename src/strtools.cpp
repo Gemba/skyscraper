@@ -290,7 +290,7 @@ QString StrTools::getVersionHeader() {
         dashesString = dashesString % "-";
     }
 
-    return QString("\033[1;34m" % dashesString % "\033[0m\n\033[1;33m" %
+    return QString("\033[1;34m" % dashesString % "\033[0m\n\033[1m" %
                    headerString % "\033[0m\n\033[1;34m" % dashesString %
                    "\033[0m\n");
 }
@@ -364,7 +364,7 @@ QString StrTools::tidyText(QString text, bool ignoreBangs) {
     int ctr = 0;
     int tmpCtr = -1;
     bool itemize = false;
-    QRegularExpression re("^[\\*●]\\s+");
+    QRegularExpression re("^[\\*●•]\\s+");
     QString tmpPiggy;
     for (auto l : pars) {
         ctr++;

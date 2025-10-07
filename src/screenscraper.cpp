@@ -51,21 +51,22 @@ ScreenScraper::ScreenScraper(Settings *config,
 
     baseUrl = "http://www.screenscraper.fr";
 
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(AGES);
-    fetchOrder.append(RATING);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(TEXTURE);
-    fetchOrder.append(VIDEO);
-    fetchOrder.append(MANUAL);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::WHEEL);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::TEXTURE);
+    fetchOrder.append(GameEntry::Elem::VIDEO);
+    fetchOrder.append(GameEntry::Elem::MANUAL);
+    fetchOrder.append(GameEntry::Elem::FANART);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -367,27 +368,29 @@ QByteArray ScreenScraper::downloadImageWithRetry(const QString &url) {
 
 void ScreenScraper::downloadBinary(const QString &url, const QString &type,
                                    GameEntry &game) {
-    bool isVideoType = type == "video";
     for (int retries = 0; retries < RETRIESMAX; ++retries) {
         limiter.exec();
         netComm->request(url);
         q.exec();
         if (netComm->getError(config->verbosity) == QNetworkReply::NoError) {
-            QByteArray contentType = netComm->getContentType();
+            QByteArray contentType = netComm->getContentType().toLower();
             // Make sure received data is actually a video or  PDF file
-            if (isVideoType) {
-                QByteArray d = netComm->getData();
+            QByteArray d = netComm->getData();
+            if (type == "video") {
                 if (contentType.contains("video/") && d.size() > 4096) {
                     game.videoData = d;
                     game.videoFormat = contentType.mid(
                         contentType.indexOf("/") + 1,
                         contentType.length() - contentType.indexOf("/") + 1);
-                    game.videoData = netComm->getData();
                     break;
                 }
-            } else {
-                if (contentType.contains("application/pdf")) {
-                    game.manualData = netComm->getData();
+            } else if (type == "manuel") {
+                // Screenscraper.fr:
+                // Content-Type: application/force-download; name="1943 - The
+                // Battle Of Midway-manuel(us).pdf"
+                if (contentType.startsWith("application/") &&
+                    contentType.contains(".pdf")) {
+                    game.manualData = d;
                     break;
                 }
             }
@@ -448,11 +451,17 @@ void ScreenScraper::getVideo(GameEntry &game) {
 }
 
 void ScreenScraper::getManual(GameEntry &game) {
-    QStringList types;
-    types.append("manuel");
+    QStringList types = {"manuel"};
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION, types);
     if (!url.isEmpty()) {
         downloadBinary(url, types.last(), game);
+    }
+}
+
+void ScreenScraper::getFanart(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), NONE, {"fanart"});
+    if (!url.isEmpty()) {
+        game.fanartData = downloadImageWithRetry(url);
     }
 }
 

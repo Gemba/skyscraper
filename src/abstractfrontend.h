@@ -40,7 +40,7 @@ class AbstractFrontend : public QObject {
 public:
     AbstractFrontend();
     virtual ~AbstractFrontend();
-    void setConfig(Settings *config);
+    virtual void setConfig(Settings *config);
     virtual void checkReqs(){};
     virtual void assembleList(QString &, QList<GameEntry> &){};
     virtual void skipExisting(QList<GameEntry> &, QSharedPointer<Queue>){};
@@ -58,6 +58,7 @@ public:
     virtual QString getTexturesFolder() { return QString(); };
     virtual QString getVideosFolder() { return QString(); };
     virtual QString getManualsFolder() { return QString(); };
+    virtual QString getFanartsFolder() { return QString(); };
     virtual void sortEntries(QList<GameEntry> &gameEntries);
 
 protected:

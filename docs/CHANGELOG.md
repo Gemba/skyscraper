@@ -5,6 +5,14 @@ humans](https://keepachangelog.com).
 
 ### Version 3.18.0 (2025-TBA)
 
+- Added: Support for [Batocera gamelists](FRONTENDS.md#batocera) incl. fanart
+  output
+- Added: Support for fanart gamelist output for some [EmulationStation
+  variants](CONFIGINI.md#gamelistvariants)
+- Added: Fanart scraping with Screenscraper-, TGDB- and Import-scraper. See flag
+  and config option [`fanarts`](CLIHELP.md#fanarts)
+- Added: Accept also singular for media flags, e.g. `--flags video` additionally
+  to `--flags videos`. However, in the config file accept only plural as before.
 - Added: Allow more relaxed extension syntax in config options. In addition to
   `'*.ext'` also allow `'.ext'` and `'ext'`
 - Added: Option to force Screenscraper scrapes to use the stem of the game

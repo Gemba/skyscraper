@@ -25,6 +25,7 @@
 
 #include "compositor.h"
 
+#include "batocera.h" // TODO: Does not fit in here
 #include "fxbalance.h"
 #include "fxblur.h"
 #include "fxbrightness.h"
@@ -56,22 +57,33 @@
 
 Compositor::Compositor(Settings *config) { this->config = config; }
 
-bool Compositor::processXml() {
-    Layer newOutputs;
-
-    // Check document for errors before running through it
+bool Compositor::preCheckArtworkXml(const QString &artworkXml) {
+    // Check document for errors before running through it with threads
     QDomDocument doc;
-    if (!doc.setContent(config->artworkXml))
+    QString eMsg;
+    int eLine;
+#if QT_VERSION < 0x060800
+    if (!doc.setContent(artworkXml, false, &eMsg, &eLine)) {
+#else
+    QDomDocument::ParseResult p = doc.setContent(artworkXml);
+    eMsg = p.errorMessage;
+    eLine = p.errorLine;
+    if (!p) {
+#endif
+        qWarning() << "XML error:" << eMsg << "at line" << eLine;
         return false;
+    }
+    return true;
+}
 
+void Compositor::processXml() {
     QXmlStreamReader xml(config->artworkXml);
+    Layer newOutputs;
 
     // Init recursive parsing
     addChildLayers(newOutputs, xml);
-
     // Assign global outputs to these new outputs
     outputs = newOutputs;
-    return true;
 }
 
 void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
@@ -276,9 +288,10 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
     }
 }
 
-void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
+void Compositor::saveAll(GameEntry &game, QString completeBaseName,
+                         bool isBatocera) {
     bool createSubfolder = false;
-    QString fn = "/" % completeBaseName % ".png";
+    QString fn = "/" % completeBaseName;
     QString subPath = getSubpath(game.path);
     if (subPath != ".") {
         fn.prepend("/" % subPath);
@@ -287,6 +300,12 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
 
     for (auto &output : outputs.getLayers()) {
         QString filename = fn;
+        if (isBatocera) {
+            filename = Batocera::getFileNameFor(output.resType, filename);
+        }
+        if (fn == filename) {
+            filename = filename % ".png";
+        }
         if (output.resType == "cover") {
             filename.prepend(config->coversFolder);
             if (config->skipExistingCovers && QFileInfo::exists(filename)) {
@@ -297,6 +316,7 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
             filename.prepend(config->screenshotsFolder);
             if (config->skipExistingScreenshots &&
                 QFileInfo::exists(filename)) {
+                // set screenshotFile to generate XML element later
                 game.screenshotFile = filename;
                 continue;
             }
@@ -352,7 +372,7 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName) {
             if (!QDir().mkpath(fi.absolutePath())) {
                 qWarning() << "Path could not be created" << fi.absolutePath()
                            << " Check file permissions, gamelist binary data "
-                              "maybe incomplete.";
+                              "may be incomplete.";
             }
         }
 
@@ -397,6 +417,14 @@ void Compositor::processChildLayers(GameEntry &game, Layer &layer) {
             // If no meaningful canvas could be created, stop processing this
             // layer branch entirely
             if (thisLayer.canvas.isNull()) {
+                qWarning()
+                    << QString("Output of resource '%1' defined in artwork "
+                               "file, but no such data present for game '%2'. "
+                               "Output may not be as expected. To remediate "
+                               "this warning: Re-scrape to get the missing "
+                               "resource or adjust the artwork file.")
+                           .arg(thisLayer.resource)
+                           .arg(game.title);
                 continue;
             }
 

@@ -5,6 +5,7 @@
 $user_cfg_files = @(
   'artwork.xml'
   'aliasMap.csv'
+  'batocera-artwork.xml'
   'peas.json'
   'platforms_idmap.csv'
 )

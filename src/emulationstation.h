@@ -38,6 +38,7 @@ class EmulationStation : public AbstractFrontend {
 public:
     EmulationStation();
 
+    void setConfig(Settings *config) override;
     void assembleList(QString &finalOutput,
                       QList<GameEntry> &gameEntries) override;
     void skipExisting(QList<GameEntry> &gameEntries,
@@ -56,21 +57,24 @@ public:
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
     QString getManualsFolder() override;
+    QString getFanartsFolder() override;
 
 protected:
+    const QString INDENT = "  ";
+
     virtual QStringList createEsVariantXml(const GameEntry &entry);
     virtual QStringList extraGamelistTags(bool isFolder /* ignored on RP ES */);
-    virtual GameEntry::Format gamelistFormat() {
-        return GameEntry::Format::RETROPIE;
-    };
+    virtual void preserveVariants(const GameEntry &oldEntry, GameEntry &entry);
+    bool addEmptyElement() { return true; };
+    QString elem(const QString &elem, const QString &data, bool addEmptyElem,
+                 bool isPath = false);
+    virtual QString openingElement(GameEntry &entry);
 
 private:
     QString createXml(GameEntry &entry);
     bool isGameLauncher(QString &sub);
     void addFolder(QString &base, QString sub, QList<GameEntry> &added);
     bool existingInGamelist(GameEntry &entry);
-    QString elem(const QString &elem, const QString &data, bool addEmptyElem,
-                 bool isPath = false);
 
     const inline QRegularExpression isoTimeRe() const {
         return QRegularExpression("(^$|T[0-9]{6}$)");

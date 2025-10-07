@@ -279,6 +279,8 @@ int NameTools::getNumeral(const QString baseName) {
         QString roman = match.captured(1);
         numeral =
             arabicRomanNumerals().key(roman, QString::number(numeral)).toInt();
+        // 'Mega Man V MSU-1' (roman number wins)
+        return numeral;
     }
 
     // Check for european digits

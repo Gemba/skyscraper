@@ -20,7 +20,6 @@
 #include "esde.h"
 
 #include "emulationstation.h"
-#include "gameentry.h"
 
 #include <QDir>
 #include <QProcessEnvironment>
@@ -41,13 +40,22 @@ inline const QString baseFolder() {
     return QString(QDir::homePath() % "/ES-DE");
 }
 
+void Esde::setConfig(Settings *config) {
+    this->config = config;
+    if (config->scraper == "cache")
+        config->manuals = true;
+}
+
 QStringList Esde::extraGamelistTags(bool isFolder) {
     GameEntry g;
-    return g.extraTagNames(GameEntry::Format::ESDE, isFolder);
+    g.isFolder = isFolder;
+    return g.extraTagNames(GameEntry::Format::ESDE, g);
 }
 
 QStringList Esde::createEsVariantXml(const GameEntry &entry) {
     (void)entry;
+    // ES-DE expects mediafiles to be on a specific location by contract and
+    // does not require extra XML elements
     return QStringList();
 }
 

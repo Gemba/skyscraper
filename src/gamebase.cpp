@@ -46,7 +46,7 @@ GamebaseScraper::GamebaseScraper(Settings *config,
     // SCREENSHOT, COVER
 
     // other data is retrieved in one query
-    fetchOrder.append(COVER);
+    fetchOrder.append(GameEntry::Elem::COVER);
 }
 
 GamebaseScraper::~GamebaseScraper(){};
@@ -185,18 +185,23 @@ void GamebaseScraper::getGameData(GameEntry &game) {
     int i = q.record().indexOf("Developer");
     QString v = q.value(i).toString();
     game.developer = v.contains(BRACKETS_RE) ? "" : v;
+
     i = q.record().indexOf("Rating");
     int r = q.value(i).toInt();
     v = r == 0 ? "" : QString::number(r / 5.0f);
     game.rating = v;
+
     i = q.record().indexOf("Players");
     v = q.value(i).toString();
     game.players = v;
+
     i = q.record().indexOf("Genre");
     v = q.value(i).toString();
     game.tags = v.contains(BRACKETS_RE) ? "" : v;
+
     i = q.record().indexOf("Ages");
     game.ages = q.value(i).toInt() ? "18" : "";
+
     i = q.record().indexOf("ScrnshotFilename");
     v = q.value(i).toString();
     qDebug() << "Screenshot relPath:" << v;

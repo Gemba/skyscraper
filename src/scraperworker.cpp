@@ -26,6 +26,7 @@
 #include "scraperworker.h"
 
 #include "arcadedb.h"
+#include "batocera.h"
 #include "cache.h"
 #include "compositor.h"
 #include "esgamelist.h"
@@ -103,12 +104,7 @@ void ScraperWorker::run() {
     platformOrig = config.platform;
 
     Compositor compositor(&config);
-    if (!compositor.processXml()) {
-        printf("Something went wrong when parsing artwork xml from '%s', "
-               "please check the file for errors. Now exiting...\n",
-               config.artworkConfig.toStdString().c_str());
-        exit(1);
-    }
+    compositor.processXml();
 
     while (queue->hasEntry()) {
         // takeEntry() also unlocks the mutex that was locked in hasEntry()
@@ -257,9 +253,18 @@ void ScraperWorker::run() {
         game.parNotes = NameTools::getUniqueNotes(game.parNotes, '(');
 
         if (!game.found) {
+            QString hint =
+                gameEntries.length() == 0
+                    ? " :("
+                    : QString(", but %1 candidate%1: Use --verbosity 3 or "
+                              "--flags interactive or --query '...' or set an "
+                              "alias (aliasMap.csv). =8^)")
+                          .arg(gameEntries.length() == 1 ? "" : "s")
+                          .arg(gameEntries.length());
             output.append(
-                QString("\033[1;33m---- Game '%1' not found :( ----\033[0m\n\n")
-                    .arg(info.completeBaseName()));
+                QString("\033[1;33m---- Game '%1' not found%2 ----\033[0m\n\n")
+                    .arg(info.completeBaseName())
+                    .arg(hint));
             game.resetMedia();
             if (!forceEnd) {
                 forceEnd = limitReached(output);
@@ -306,13 +311,15 @@ void ScraperWorker::run() {
         }
 
         if (!config.pretend && cacheScraper) {
+            bool batoceraFe = config.frontend == "batocera";
             // Process all artwork
-            compositor.saveAll(game, info.completeBaseName());
+            compositor.saveAll(game, info.completeBaseName(), batoceraFe);
             // extra media files (not part of compositor)
             const QString baseName = info.completeBaseName();
             const QString subPath = compositor.getSubpath(game.path);
-            copyMedia("video", baseName, subPath, game);
-            copyMedia("manual", baseName, subPath, game);
+            copyMedia(MediaHint::VIDEO, baseName, subPath, game, batoceraFe);
+            copyMedia(MediaHint::MANUAL, baseName, subPath, game, batoceraFe);
+            copyMedia(MediaHint::FANART, baseName, subPath, game, batoceraFe);
         }
 
         // Add all resources to the cache
@@ -345,30 +352,26 @@ void ScraperWorker::run() {
             }
         }
 
-        // Don't unescape title since we already did that in getBestEntry()
-        if (!game.videoFormat.isEmpty()) {
-            game.videoFile = StrTools::xmlUnescape(config.videosFolder + "/" +
-                                                   info.completeBaseName() +
-                                                   "." + game.videoFormat);
-        }
-        game.manualFile = StrTools::xmlUnescape(
-            config.manualsFolder + "/" + info.completeBaseName() + ".pdf");
         game.description = StrTools::xmlUnescape(game.description);
         if (config.tidyDesc) {
-            bool skipBangs = game.title.contains("!!");
+            bool skipBangs = game.title.contains("!!"); /* e.g., Punch-Out!! */
             game.description = StrTools::tidyText(game.description, skipBangs);
         }
+
         game.releaseDate = StrTools::xmlUnescape(game.releaseDate);
         // Make sure we have the correct 'yyyymmdd' format of 'releaseDate'
         game.releaseDate = StrTools::conformReleaseDate(game.releaseDate);
+
         game.developer = StrTools::xmlUnescape(game.developer);
         game.publisher = StrTools::xmlUnescape(game.publisher);
         game.tags = StrTools::xmlUnescape(game.tags);
         game.tags = StrTools::conformTags(game.tags);
         game.rating = StrTools::xmlUnescape(game.rating);
+
         game.players = StrTools::xmlUnescape(game.players);
         // Make sure we have the correct single digit format of 'players'
         game.players = StrTools::conformPlayers(game.players);
+
         game.ages = StrTools::xmlUnescape(game.ages);
         // Make sure we have the correct format of 'ages'
         game.ages = StrTools::conformAges(game.ages);
@@ -525,6 +528,13 @@ void ScraperWorker::run() {
                                                    : "\033[1;32mYES")) +
                 "\033[0m (" + game.manualSrc + ")\n");
         }
+        if (config.fanart) {
+            output.append(
+                "Fanart:         " +
+                QString((game.fanartData.isEmpty() ? "\033[1;31mNO"
+                                                   : "\033[1;32mYES")) +
+                "\033[0m (" + game.fanartSrc + ")\n");
+        }
         output.append("\nDescription: (" + game.descriptionSrc +
                       ")\n'\033[1;32m" +
                       game.description.left(config.maxLength) + "\033[0m'\n");
@@ -535,7 +545,8 @@ void ScraperWorker::run() {
         if (!forceEnd) {
             forceEnd = limitReached(output);
         }
-        game.calculateCompleteness(config.videos, config.manuals);
+        game.calculateCompleteness(config.videos, config.manuals,
+                                   config.fanart);
         game.resetMedia();
         emit entryReady(game, output, debug);
         if (forceEnd) {
@@ -874,33 +885,70 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
     return suggestedGame;
 }
 
-void ScraperWorker::copyMedia(const QString &mediaType,
-                              const QString &completeBaseName,
-                              const QString &subPath, GameEntry &game) {
+void ScraperWorker::copyMedia(MediaHint mediaHint, const QString &baseName,
+                              const QString &subPath, GameEntry &game,
+                              bool isBatocera) {
+    QString cacheFn, fnExt, mediaTypeFolder;
+    bool mediaTypeEnabled = false;
+    bool skipExisting = false;
+    QByteArray data;
+    QMimeDatabase db;
 
-    // false means "game manual"
-    const bool isVideoType = mediaType == "video";
-
-    const QString fmt = isVideoType ? game.videoFormat : "pdf";
-    const QString fn = isVideoType ? game.videoFile : game.manualFile;
-    const QByteArray data = isVideoType ? game.videoData : game.manualData;
-    const bool mediaTypeEnabled = isVideoType ? config.videos : config.manuals;
-    const bool skipExisting =
-        isVideoType ? config.skipExistingVideos : config.skipExistingManuals;
-    const QString mediaTypeFolder =
-        isVideoType ? config.videosFolder : config.manualsFolder;
+    if (mediaHint & MediaHint::VIDEO & !game.videoFile.isEmpty()) {
+        fnExt = game.videoFormat;
+        cacheFn = game.videoFile;
+        mediaTypeEnabled = config.videos;
+        data = game.videoData;
+        mediaTypeFolder = config.videosFolder;
+        skipExisting = config.skipExistingVideos;
+    } else if (mediaHint & MediaHint::MANUAL && !game.manualFile.isEmpty()) {
+        QMimeType mime = db.mimeTypeForFile(game.manualFile);
+        fnExt = mime.preferredSuffix();
+        cacheFn = game.manualFile;
+        mediaTypeEnabled = config.manuals;
+        data = game.manualData;
+        mediaTypeFolder = config.manualsFolder;
+        skipExisting = config.skipExistingManuals;
+    } else if (mediaHint & MediaHint::FANART && !game.fanartFile.isEmpty()) {
+        QMimeType mime = db.mimeTypeForFile(game.fanartFile);
+        fnExt = mime.preferredSuffix();
+        cacheFn = game.fanartFile;
+        mediaTypeEnabled = config.fanart;
+        data = game.fanartData;
+        mediaTypeFolder = config.fanartsFolder;
+        skipExisting = config.skipExistingFanart;
+    }
 
     // assume to ignore the media in gamelist output if skip existing videos /
     // manuals is _not_ set or media type is not enabled at all. NB: if
     // skipExisting is false the zap flag will be set false iff copy/symlink
     // fails
     bool zapInGamelist = !skipExisting || !mediaTypeEnabled;
-    if (mediaTypeEnabled && fmt != "" && QFile::exists(fn)) {
-        QString absMediaFn = completeBaseName % "." % fmt;
+    // mediaTypeFolder is set iff frontend supports output of that media
+    // TODO: the logic here is still confusing
+    QString absMediaFn;
+    if (mediaTypeEnabled && !fnExt.isEmpty() && QFile::exists(cacheFn) &&
+        !mediaTypeFolder.isEmpty()) {
+
+        absMediaFn = baseName;
+        if (isBatocera) {
+            if (mediaHint & MediaHint::FANART) {
+                absMediaFn = Batocera::getFileNameFor("fanart", absMediaFn);
+            } else if (mediaHint & MediaHint::MANUAL) {
+                absMediaFn = Batocera::getFileNameFor("manual", absMediaFn);
+            } else if (mediaHint & MediaHint::VIDEO) {
+                absMediaFn = Batocera::getFileNameFor("video", absMediaFn);
+            }
+        }
+        if (absMediaFn == baseName) {
+            absMediaFn = baseName % "." % fnExt;
+        }
+
         if (subPath != ".") {
             absMediaFn = subPath % "/" % absMediaFn;
-            QFileInfo fi = QFileInfo(mediaTypeFolder % "/" % absMediaFn);
-            if (!QDir().mkpath(fi.absolutePath())) {
+            // try to create sub paths for gamelist media files
+            if (QFileInfo fi = QFileInfo(mediaTypeFolder % "/" % absMediaFn);
+                !QDir().mkpath(fi.absolutePath())) {
                 qWarning() << "Path could not be created" << fi.absolutePath()
                            << " Check file permissions, gamelist binary data "
                               "maybe incomplete.";
@@ -910,13 +958,14 @@ void ScraperWorker::copyMedia(const QString &mediaType,
 
         if (!(skipExisting && QFile::exists(absMediaFn))) {
             QFile::remove(absMediaFn);
-            if (config.symlink && isVideoType) {
-                if (QFile::link(fn, absMediaFn)) {
+            if (config.symlink && mediaHint & MediaHint::VIDEO) {
+                // symlink
+                if (QFile::link(cacheFn, absMediaFn)) {
                     zapInGamelist = false;
                 } else {
                     qWarning() << "Symlink failed, media entry will be not in "
                                   "game list: "
-                               << absMediaFn << "->" << fn;
+                               << absMediaFn << "->" << cacheFn;
                 }
             } else {
                 QFile fh(absMediaFn);
@@ -927,20 +976,32 @@ void ScraperWorker::copyMedia(const QString &mediaType,
                 } else {
                     qWarning()
                         << "Copy failed, media entry will be not in game list: "
-                        << fn << "to" << absMediaFn;
+                        << cacheFn << "to" << absMediaFn;
                 }
             }
         }
     }
-
-    if (zapInGamelist) {
-        // empty values to avoid game list output
-        if (isVideoType) {
+    if (mediaHint & MediaHint::VIDEO) {
+        if (zapInGamelist) {
             game.videoFormat = "";
+            game.videoData.clear();
             game.videoFile = "";
         } else {
+            game.videoFile = absMediaFn;
+        }
+    } else if (mediaHint & MediaHint::MANUAL) {
+        if (zapInGamelist) {
             game.manualData.clear();
             game.manualFile = "";
+        } else {
+            game.manualFile = absMediaFn;
+        }
+    } else {
+        if (zapInGamelist) {
+            game.fanartData.clear();
+            game.fanartFile = "";
+        } else {
+            game.fanartFile = absMediaFn;
         }
     }
 }

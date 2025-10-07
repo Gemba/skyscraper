@@ -67,6 +67,7 @@ struct Settings {
     QString texturesFolder = "";
     QString videosFolder = "";
     QString manualsFolder = "";
+    QString fanartsFolder = "";
     QString importFolder = "";
     QString nameTemplate = "";
     int doneThreads = 0;
@@ -118,6 +119,7 @@ struct Settings {
     int romLimit = -1;
 
     bool manuals = false;
+    bool fanart = false;
     QString gameListVariants = "";
     bool videos = false;
     bool videoPreferNormalized = true;
@@ -139,6 +141,8 @@ struct Settings {
     bool skipExistingTextures = false;
     bool cacheTextures = true;
     bool skipExistingManuals = false;
+    bool skipExistingFanart = false;
+
     QString innerBracketsReplace = "";
     QString innerParenthesesReplace = "";
 
@@ -212,6 +216,7 @@ private:
         {"excludeFrom",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"excludePattern",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"extensions",              QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},
+        {"fanarts",                 QPair<QString, int>("bool", CfgType::MAIN                                                            )},
         {"forceFilename",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"frontend",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"gameBaseFile",            QPair<QString, int>("str",                  CfgType::PLATFORM                                        )},

@@ -26,7 +26,9 @@
 #include "skyscraper.h"
 
 #include "attractmode.h"
+#include "batocera.h"
 #include "cli.h"
+#include "compositor.h"
 #include "config.h"
 #include "emulationstation.h"
 #include "esde.h"
@@ -60,7 +62,7 @@ Skyscraper::Skyscraper(const QString &currentDir) {
 Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 
 void Skyscraper::run() {
-
+    // called after loadConfig()
     if (config.platform.isEmpty()) {
         if (config.cacheOptions == "purge:all") {
             Cache::purgeAllPlatform(config, this);
@@ -114,6 +116,10 @@ void Skyscraper::run() {
     if (config.manuals && !config.manualsFolder.isEmpty()) {
         printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
                config.manualsFolder.toStdString().c_str());
+    }
+    if (config.fanart && !config.fanartsFolder.isEmpty()) {
+        printf("Fanarts folder:     '\033[1;32m%s\033[0m'\n",
+               config.fanartsFolder.toStdString().c_str());
     }
     printf("Cache folder:       '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
@@ -199,7 +205,7 @@ void Skyscraper::run() {
     }
     if (config.cacheOptions == "validate") {
         cache->validate();
-        state = NO_INTR; // Ignore ctrl+c
+        state = NO_INTR;
         cache->write();
         state = SINGLE;
         exit(0);
@@ -217,7 +223,7 @@ void Skyscraper::run() {
             Cache mergeCache(absMergeCacheFilePath);
             mergeCache.read();
             cache->merge(mergeCache, config.refresh, absMergeCacheFilePath);
-            state = NO_INTR; // Ignore ctrl+c
+            state = NO_INTR;
             cache->write();
             state = SINGLE;
         } else {
@@ -258,7 +264,7 @@ void Skyscraper::run() {
         cache->editResources(queue, editCommand, editType);
         if (state == CACHE_EDIT) {
             printf("Done editing resources.\n");
-            state = NO_INTR; // Ignore ctrl+c
+            state = NO_INTR;
             cache->write();
         } else {
             printf("Catched Ctrl-C: No changes persisted!\n");
@@ -391,6 +397,14 @@ void Skyscraper::run() {
         }
     }
     printf("\n");
+
+    if (!Compositor::preCheckArtworkXml(config.artworkXml)) {
+        printf("Parsing artwork XML from '%s', failed, see above."
+               "Check the file for errors. Now exiting...\n",
+               config.artworkConfig.toStdString().c_str());
+        exit(1);
+    }
+
     if (!doCacheScraping) {
         printf("Starting scraping run on \033[1;32m%d\033[0m files using "
                "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
@@ -440,7 +454,7 @@ void Skyscraper::prepareFileQueue() {
     QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
-        printf("Input folder '\033[1;32m%s\033[0m' doesn't exist or can't be "
+        printf("Input folder '\033[1;31m%s\033[0m' doesn't exist or can't be "
                "accessed by current user. Please check path and permissions.\n",
                inputDir.absolutePath().toStdString().c_str());
         exit(1);
@@ -457,6 +471,9 @@ void Skyscraper::prepareFileQueue() {
     }
     if (config.manuals) {
         setFolder(doCacheScraping, config.manualsFolder);
+    }
+    if (config.fanart) {
+        setFolder(doCacheScraping, config.fanartsFolder);
     }
 
     setFolder(doCacheScraping, config.importFolder, false);
@@ -569,29 +586,28 @@ void Skyscraper::prepareFileQueue() {
 
 void Skyscraper::setFolder(const bool doCacheScraping, QString &outFolder,
                            const bool createMissingFolder) {
-    QDir dir(outFolder);
-    if (doCacheScraping) {
-        checkForFolder(dir, createMissingFolder);
+    if (!outFolder.isEmpty()) {
+        QDir dir(outFolder);
+        if (doCacheScraping) {
+            checkForFolder(dir, createMissingFolder);
+        }
+        outFolder = dir.absolutePath();
     }
-    outFolder = dir.absolutePath();
 }
 
 void Skyscraper::checkForFolder(QDir &folder, bool create) {
     if (!folder.exists()) {
-        printf("Folder '%s' doesn't exist",
-               folder.absolutePath().toStdString().c_str());
         if (create) {
-            printf(", trying to create it... ");
-            fflush(stdout);
-            if (folder.mkpath(folder.absolutePath())) {
-                printf("\033[1;32mSuccess!\033[0m\n");
-            } else {
-                printf("\033[1;32mFailed!\033[0m Please check path and "
-                       "permissions, now exiting...\n");
+            if (!folder.mkpath(folder.absolutePath())) {
+                printf(
+                    "Create folder '\033[1;31m%s\033[0m' failed! Please "
+                    "check path and filesystem permissions, now exiting...\n",
+                    folder.absolutePath().toStdString().c_str());
                 exit(1);
             }
         } else {
-            printf(", can't continue...\n");
+            printf("Folder '%s' doesn't exist, can't continue...\n",
+                   folder.absolutePath().toStdString().c_str());
             exit(1);
         }
     }
@@ -762,6 +778,18 @@ void Skyscraper::checkThreads() {
         printf("\n\n");
     }
 
+    if (doCacheScraping) {
+        QStringList mediaDirs = {
+            config.coversFolder,   config.screenshotsFolder,
+            config.wheelsFolder,   config.marqueesFolder,
+            config.texturesFolder, config.videosFolder,
+            config.manualsFolder,  config.fanartsFolder};
+        for (const auto &f : mediaDirs) {
+            QDir dir(f);
+            dir.rmdir(f);
+        }
+    }
+
     // All done, now clean up and exit to terminal
     emit finished();
 }
@@ -795,6 +823,7 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
 }
 
 void Skyscraper::loadConfig(const QCommandLineParser &parser) {
+    // called before run()
     QString iniFile = parser.isSet("c") ? parser.value("c") : "config.ini";
     QString absIniFile = Config::makeAbsolutePath(
         parser.isSet("c") ? config.currentDir : Config::getSkyFolder(),
@@ -892,6 +921,13 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         frontend = new Pegasus;
     } else if (config.frontend == "esde") {
         frontend = new Esde;
+    } else if (config.frontend == "batocera") {
+        frontend = new Batocera;
+    }
+
+    // Choose default scraper if none has been set yet
+    if (config.scraper.isEmpty()) {
+        config.scraper = "cache";
     }
 
     frontend->setConfig(&config);
@@ -906,7 +942,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.gameListFolder = frontend->getGameListFolder();
     }
     if (!mediaFolderSet) {
-        if (config.frontend == "esde") {
+        if (config.frontend == "esde" || config.frontend == "batocera") {
             config.mediaFolder = frontend->getMediaFolder();
         } else {
             // defaults to <gamelistfolder>/[.]media/
@@ -918,7 +954,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         }
     }
 
-    // defaults are always absolute, thus input and mediafolder will be
+    // defaults are always absolute, thus input- and mediafolder will be
     // unchanged by these calls
     if (config.frontend == "pegasus") {
         config.inputFolder =
@@ -957,11 +993,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     config.texturesFolder = frontend->getTexturesFolder();
     config.videosFolder = frontend->getVideosFolder();
     config.manualsFolder = frontend->getManualsFolder();
-
-    // Choose default scraper for chosen platform if none has been set yet
-    if (config.scraper.isEmpty()) {
-        config.scraper = "cache";
-    }
+    config.fanartsFolder = frontend->getFanartsFolder();
 
     if (config.importFolder.isEmpty()) {
         config.importFolder =
@@ -1002,10 +1034,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         }
         if (requestedFileInfo.exists()) {
             QString romPath = requestedFileInfo.absoluteFilePath();
-            if (config.frontend == "emulationstation" ||
-                config.frontend == "esde") {
-                romPath = normalizePath(requestedFileInfo);
-            }
+            romPath = normalizePath(requestedFileInfo);
             if (!romPath.isEmpty()) {
                 cliFiles.append(romPath);
                 // Always set refresh and unattend true if user has supplied
@@ -1017,12 +1046,12 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                 continue;
             }
         }
-        printf("Filename: '\033[1;32m%s\033[0m' requested either on "
-               "command line or with '--includefrom' neither found in platform "
-               "folder '%s' nor in current directory!\n\nPlease verify the "
-               "filename and try again...\n",
-               requestedFile.toStdString().c_str(),
-               config.platform.toStdString().c_str());
+        printf("Filename: '\033[1;33m%s\033[0m' requested either on command "
+               "line or with '--includefrom' not found in(side) the input "
+               "directory '\033[1;33m%s\033[0m'!\n\nPlease verify the filename "
+               "and try again...\n",
+               requestedFileInfo.fileName().toStdString().c_str(),
+               config.inputFolder.toStdString().c_str());
         exit(1);
     }
 
@@ -1102,8 +1131,10 @@ QString Skyscraper::normalizePath(QFileInfo fileInfo) {
     // normalize paths for single romfiles provided at the CLI.
     // format will be: config.inputFolder + relative-path-of-romfile
     QString canonicalRomPath = fileInfo.canonicalFilePath();
+
     // for Windows
     QString cleanRomPath = QDir::cleanPath(canonicalRomPath);
+
     QListIterator<QString> iter(cleanRomPath.split("/"));
     iter.toBack();
     QString relativeRomPath;
@@ -1290,17 +1321,19 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
 void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
     const int threadsFailsafe = 1; // Don't change! This limit was set by
                                    // request from ScreenScraper
-    if ((config.user.isEmpty() || config.password.isEmpty()) &&
-        config.threads > 1) {
-        config.threads = threadsFailsafe;
-        printf("\033[1;33mForcing %d thread as this is the anonymous "
-               "limit in the ScreenScraper scraping module. Sign up for "
-               "an account at https://www.screenscraper.fr and support "
-               "them to gain more threads. Then use the credentials with "
-               "Skyscraper using the '-u user:password' command line "
-               "option or by setting 'userCreds=\"user:password\"' in "
-               "'%s/config.ini'.\033[0m\n\n",
-               config.threads, Config::getSkyFolder().toStdString().c_str());
+    if (config.user.isEmpty() || config.password.isEmpty()) {
+        if (config.threads > 1) {
+            config.threads = threadsFailsafe;
+            printf("\033[1;33mForcing %d thread as this is the anonymous "
+                   "limit in the ScreenScraper scraping module. Sign up for "
+                   "an account at https://www.screenscraper.fr and support "
+                   "them to gain more threads. Then use the credentials with "
+                   "Skyscraper using the '-u user:password' command line "
+                   "option or by setting 'userCreds=\"user:password\"' in "
+                   "'%s/config.ini'.\033[0m\n\n",
+                   config.threads,
+                   Config::getSkyFolder().toStdString().c_str());
+        }
     } else {
         printf("Fetching limits for user '\033[1;33m%s\033[0m', just a "
                "sec...\n",
@@ -1341,12 +1374,13 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
             if (allowedThreads != 0) {
                 if (config.threadsSet && config.threads <= allowedThreads) {
                     printf("User is allowed %d threads, but user has set "
-                           "it manually, so ignoring.\n\n",
-                           allowedThreads);
+                           "it manually to %d, using the latter value.\n\n",
+                           allowedThreads, config.threads);
                 } else {
                     config.threads = (allowedThreads <= 8 ? allowedThreads : 8);
                     printf("Setting threads to \033[1;32m%d\033[0m as "
-                           "allowed for the supplied user credentials.\n\n",
+                           "allowed for the authenticated Screenscraper "
+                           "account.\n\n",
                            config.threads);
                 }
             }

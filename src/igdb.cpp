@@ -57,16 +57,16 @@ Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     baseUrl = "https://api.igdb.com/v4";
     searchUrlPre = baseUrl;
 
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(RATING);
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(AGES);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(COVER);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::COVER);
 }
 
 void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,

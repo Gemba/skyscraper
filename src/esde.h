@@ -29,6 +29,7 @@ class Esde : public EmulationStation {
 public:
     Esde();
 
+    void setConfig(Settings *config) override;
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
@@ -36,9 +37,7 @@ public:
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
     QStringList extraGamelistTags(bool isFolder) override;
-    GameEntry::Format gamelistFormat() override {
-        return GameEntry::Format::ESDE;
-    };
+    bool addEmptyElem() { return false; };
 };
 
 #endif // ESDE_H

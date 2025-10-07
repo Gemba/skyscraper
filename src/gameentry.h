@@ -27,40 +27,82 @@
 #define GAMEENTRY_H
 
 #include <QByteArray>
+#include <QDomNamedNodeMap>
 #include <QList>
 #include <QMap>
 #include <QPair>
 #include <QString>
 
-enum : int {
-    DESCRIPTION = 0,
-    DEVELOPER,
-    PUBLISHER,
-    PLAYERS,
-    TAGS,
-    RELEASEDATE,
-    COVER,
-    SCREENSHOT,
-    VIDEO,
-    RATING,
-    WHEEL,
-    MARQUEE,
-    AGES,
-    TITLE,
-    TEXTURE,
-    MANUAL
-};
-
 class GameEntry {
 public:
-    enum Format { RETROPIE, ESDE };
+    enum Elem : unsigned char {
+        DESCRIPTION = 0,
+        DEVELOPER,
+        PUBLISHER,
+        PLAYERS,
+        TAGS,
+        RELEASEDATE,
+        COVER,
+        SCREENSHOT,
+        VIDEO,
+        RATING,
+        WHEEL,
+        MARQUEE,
+        AGES,
+        TITLE,
+        TEXTURE,
+        MANUAL,
+        FANART,
+        __LAST
+    };
+
+    enum Format { RETROPIE, ESDE, BATOCERA };
+
+    static const QMap<unsigned char, QString> commonGamelistElems() {
+        return QMap<unsigned char, QString>{
+            /* KEY, "gamelist XML element" */
+            {DESCRIPTION, "desc"},
+            {DEVELOPER, "developer"},
+            {PUBLISHER, "publisher"},
+            {PLAYERS, "players"},
+            {TAGS, "genre"},
+            {RELEASEDATE, "releasedate"},
+            {COVER, "thumbnail"}, // Batocera uses "<boxart/>"
+            {SCREENSHOT, "image"},
+            {VIDEO, "video"},
+            {RATING, "rating"},
+            // PENDING: does ES-DE utilize <wheel/> in GL? (ES: No, Bato: Yes)
+            {WHEEL, "wheel"},
+            {MARQUEE, "marquee"},
+            // ES (variants), ES-DE and Batocera
+            {AGES, "kidgame"},
+            {TITLE, "name"},
+            {TEXTURE, "texture"},
+            {MANUAL, "manual"},
+            // Batocera only and some ES dialects
+            {FANART, "fanart"}};
+    };
+
+    static const QString getTag(GameEntry::Elem e, bool isBatocera = false) {
+        QString elemName = commonGamelistElems()[e];
+        if (isBatocera and e == COVER)
+            elemName = "boxart";
+        return elemName;
+    };
 
     GameEntry();
 
     void calculateCompleteness(bool videoEnabled = false,
-                               bool manualEnabled = false);
+                               bool manualEnabled = false,
+                               bool fanartEnabled = false);
     int getCompleteness() const;
     void resetMedia();
+    const QString getEsExtra(const QString &tagName) const;
+    QPair<QString, QDomNamedNodeMap>
+    getEsExtraAttribs(const QString &tagName) const;
+    void setEsExtra(const QString &tagName, QString value,
+                    QDomNamedNodeMap map = QDomNamedNodeMap());
+    const QStringList extraTagNames(Format type, const GameEntry &ge) const;
 
     // textual data
     QString id = "";
@@ -108,6 +150,9 @@ public:
     QByteArray manualData = QByteArray();
     QString manualFile = "";
     QString manualSrc = "";
+    QByteArray fanartData = QByteArray();
+    QString fanartFile = "";
+    QString fanartSrc = "";
 
     // internal
     int searchMatch = 0;
@@ -126,7 +171,7 @@ public:
 
     // Holds EmulationStation (RetroPie and derivates) specific metadata
     // for preservation. (metadata = anything which is not scrapable)
-    QMap<QString, QString> esExtras;
+    QMap<QString, QPair<QString, QDomNamedNodeMap>> esExtras;
 
     bool isFolder = false;
 
@@ -146,31 +191,9 @@ public:
     // Pegasus specific metadata for preservation
     QList<QPair<QString, QString>> pSValuePairs;
 
-    QString getEsExtra(const QString &tagName) const {
-        return esExtras[tagName];
-    };
-
-    void setEsExtra(const QString &tagName, QString value) {
-        esExtras[tagName] = value;
-    };
-
-    inline const QStringList extraTagNames(Format type, bool isFolder = false) {
-        QStringList tagNames = {"favorite",   "hidden",  "playcount",
-                                "lastplayed", "kidgame", "sortname"};
-        if (type == Format::RETROPIE) {
-            return tagNames;
-        }
-        tagNames +=
-            {"collectionsortname", "completed",    "broken",     "nogamecount",
-             "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
-        if (isFolder) {
-            tagNames.append("folderlink");
-        }
-        return tagNames;
-    };
-
 private:
-    double completeness = 0;
+    const QStringList extraElemNames(Format type, bool isFolder) const;
+    double completeness = 0.0;
 };
 
 #endif // GAMEENTRY_H

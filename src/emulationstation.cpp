@@ -35,9 +35,20 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
-static const QString INDENT = "  ";
+static const QRegularExpression REGEX_OPENELEM =
+    QRegularExpression("<(\\w+)[\\s>]");
 
 EmulationStation::EmulationStation() {}
+
+void EmulationStation::setConfig(Settings *config) {
+    this->config = config;
+    if (config->scraper == "cache") {
+        if (config->gameListVariants.contains("enable-manuals"))
+            config->manuals = true;
+        if (config->gameListVariants.contains("enable-fanart"))
+            config->fanart = true;
+    }
+}
 
 bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
     // Load old game list entries so we can preserve metadata later when
@@ -51,9 +62,9 @@ bool EmulationStation::loadOldGameList(const QString &gameListFileString) {
 }
 
 QStringList EmulationStation::extraGamelistTags(bool isFolder) {
-    (void)isFolder;
+    (void)isFolder; // don't care for ES
     GameEntry g;
-    return g.extraTagNames(GameEntry::Format::RETROPIE);
+    return g.extraTagNames(GameEntry::Format::RETROPIE, g);
 }
 
 void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
@@ -97,14 +108,20 @@ void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
     }
 }
 
+void EmulationStation::preserveVariants(const GameEntry &oldEntry,
+                                        GameEntry &entry) {
+    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+        if (entry.getEsExtra(t).isEmpty()) {
+            entry.setEsExtra(t, oldEntry.getEsExtra(t));
+        }
+    }
+}
+
 void EmulationStation::preserveFromOld(GameEntry &entry) {
     for (const auto &oldEntry : oldEntries) {
         if (entry.path == oldEntry.path) {
-            for (const auto &t : extraGamelistTags(entry.isFolder)) {
-                if (entry.getEsExtra(t).isEmpty()) {
-                    entry.setEsExtra(t, oldEntry.getEsExtra(t));
-                }
-            }
+            preserveVariants(oldEntry, entry);
+
             if (entry.developer.isEmpty() || entry.isFolder) {
                 entry.developer = oldEntry.developer;
             }
@@ -134,6 +151,7 @@ void EmulationStation::preserveFromOld(GameEntry &entry) {
                 entry.marqueeFile = oldEntry.marqueeFile;
                 entry.textureFile = oldEntry.textureFile;
                 entry.videoFile = oldEntry.videoFile;
+                entry.fanartFile = oldEntry.fanartFile;
                 // entry.manualFile on type folder does not make sense
             }
             break;
@@ -304,50 +322,61 @@ bool EmulationStation::isGameLauncher(QString &sub) {
     return folderIsGameLauncher;
 }
 
+QString EmulationStation::openingElement(GameEntry &entry) {
+    QString entryType = QString(entry.isFolder ? "folder" : "game");
+    return QString(INDENT % "<" % entryType % ">");
+}
+
 QString EmulationStation::createXml(GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem = !entry.isFolder;
-    if (gamelistFormat() == GameEntry::Format::ESDE) {
-        addEmptyElem = false;
-    }
-    QString entryType = QString(entry.isFolder ? "folder" : "game");
-    l.append(INDENT % "<" % entryType % ">");
+    bool addEmptyElem = addEmptyElement() && !entry.isFolder;
+    l.append(openingElement(entry));
 
     l.append(elem("path", entry.path, addEmptyElem));
-    l.append(elem("name", entry.title, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TITLE), entry.title,
+                  addEmptyElem));
 
     l += createEsVariantXml(entry);
 
-    l.append(elem("rating", entry.rating, addEmptyElem));
-    l.append(elem("desc", entry.description, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DESCRIPTION),
+                  entry.description, addEmptyElem));
 
     QString released = entry.releaseDate;
     QRegularExpressionMatch m = isoTimeRe().match(released);
     if (!m.hasMatch()) {
         released = released % "T000000";
     }
-    l.append(elem("releasedate", released, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RELEASEDATE), released,
+                  addEmptyElem));
 
-    l.append(elem("developer", entry.developer, addEmptyElem));
-    l.append(elem("publisher", entry.publisher, addEmptyElem));
-    l.append(elem("genre", entry.tags, addEmptyElem));
-    l.append(elem("players", entry.players, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DEVELOPER),
+                  entry.developer, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PUBLISHER),
+                  entry.publisher, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TAGS), entry.tags,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PLAYERS), entry.players,
+                  addEmptyElem));
 
-    // non scraper elements
+    // write out non scraped elements
+    const QString tagKidgame = GameEntry::getTag(GameEntry::Elem::AGES);
     for (const auto &t : extraGamelistTags(entry.isFolder)) {
-        if (t != "kidgame") {
+        if (t != tagKidgame) {
             l.append(elem(t, entry.getEsExtra(t), false));
         }
     }
-    QString kidGame = entry.getEsExtra("kidgame");
+    QString kidGame = entry.getEsExtra(tagKidgame);
     if (kidGame.isEmpty() && entry.ages.toInt() >= 1 &&
         entry.ages.toInt() <= 10) {
         kidGame = "true";
     }
 
-    l.append(elem("kidgame", kidGame, false));
+    l.append(elem(tagKidgame, kidGame, false));
 
-    l.append(INDENT % "</" % entryType % ">");
+    QString outerElemName = REGEX_OPENELEM.match(l[0]).captured(1);
+    l.append(QString(INDENT % "</%1>").arg(outerElemName));
     l.removeAll("");
 
     return l.join("\n") % "\n";
@@ -366,7 +395,7 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
             if (config->relativePaths) {
                 // fp is absolute, inputFolder is absolute
                 // fp is always different from inputFolder
-                // save to add "./" as it will always return sth relative
+                // it is save to add "./" as it will always return sth relative
                 fp = "./" +
                      Config::lexicallyRelativePath(config->inputFolder, fp);
             } else {
@@ -385,21 +414,29 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
 QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
     QStringList l;
     bool addEmptyElem = !entry.isFolder;
-    l.append(elem("thumbnail", entry.coverFile, addEmptyElem, true));
-    l.append(elem("image", entry.screenshotFile, addEmptyElem, true));
-    l.append(elem("marquee", entry.marqueeFile, addEmptyElem, true));
-    l.append(elem("texture", entry.textureFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile,
+                  addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
+                  entry.screenshotFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MARQUEE),
+                  entry.marqueeFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TEXTURE),
+                  entry.textureFile, addEmptyElem, true));
 
     QString vidFile = entry.videoFile;
     if (!config->videos) {
         vidFile = "";
     }
-    l.append(elem("video", vidFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::VIDEO), vidFile,
+                  addEmptyElem, true));
 
-    if (config->manuals &&
-        config->gameListVariants.contains("enable-manuals") &&
-        !entry.manualSrc.isEmpty()) {
-        l.append(elem("manual", entry.manualFile, false, true));
+    if (!entry.manualSrc.isEmpty() && config->manuals) {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::MANUAL),
+                      entry.manualFile, false, true));
+    }
+    if (!entry.fanartSrc.isEmpty() && config->fanart) {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::FANART),
+                      entry.fanartFile, false, true));
     }
     return l;
 }
@@ -445,4 +482,9 @@ QString EmulationStation::getVideosFolder() {
 
 QString EmulationStation::getManualsFolder() {
     return config->mediaFolder % "/manuals";
+}
+
+QString EmulationStation::getFanartsFolder() {
+    /* for ES variants */
+    return config->mediaFolder % "/fanarts";
 }

@@ -92,66 +92,71 @@ void AbstractScraper::getTitle(GameEntry &) {}
 void AbstractScraper::populateGameEntry(GameEntry &game) {
     for (int t : fetchOrder) {
         switch (t) {
-        case TITLE:
+        case GameEntry::Elem::TITLE:
             getTitle(game);
             break;
-        case DESCRIPTION:
+        case GameEntry::Elem::DESCRIPTION:
             getDescription(game);
             break;
-        case DEVELOPER:
+        case GameEntry::Elem::DEVELOPER:
             getDeveloper(game);
             break;
-        case PUBLISHER:
+        case GameEntry::Elem::PUBLISHER:
             getPublisher(game);
             break;
-        case PLAYERS:
+        case GameEntry::Elem::PLAYERS:
             getPlayers(game);
             break;
-        case AGES:
+        case GameEntry::Elem::AGES:
             getAges(game);
             break;
-        case RATING:
+        case GameEntry::Elem::RATING:
             getRating(game);
             break;
-        case TAGS:
+        case GameEntry::Elem::TAGS:
             getTags(game);
             break;
-        case RELEASEDATE:
+        case GameEntry::Elem::RELEASEDATE:
             getReleaseDate(game);
             break;
-        case COVER:
+        case GameEntry::Elem::COVER:
             if (config->cacheCovers) {
                 getCover(game);
             }
             break;
-        case SCREENSHOT:
+        case GameEntry::Elem::SCREENSHOT:
             if (config->cacheScreenshots) {
                 getScreenshot(game);
             }
             break;
-        case WHEEL:
+        case GameEntry::Elem::WHEEL:
             if (config->cacheWheels) {
                 getWheel(game);
             }
             break;
-        case MARQUEE:
+        case GameEntry::Elem::MARQUEE:
             if (config->cacheMarquees) {
                 getMarquee(game);
             }
             break;
-        case TEXTURE:
+        case GameEntry::Elem::TEXTURE:
             if (config->cacheTextures) {
                 getTexture(game);
             }
             break;
-        case VIDEO:
+        case GameEntry::Elem::VIDEO:
             if (config->videos) {
                 getVideo(game);
             }
             break;
-        case MANUAL:
+        case GameEntry::Elem::MANUAL:
             if (config->manuals) {
                 getManual(game);
+            }
+            break;
+        case GameEntry::Elem::FANART:
+            if (config->fanart) {
+                getFanart(game);
             }
             break;
         default:;
@@ -679,7 +684,7 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
             }
             if (!candidates.empty()) {
                 candidates.sort(Qt::CaseInsensitive);
-                QString pad1 = candidates.length() > 3 ? "\n  " : " ";
+                QString pad1 = candidates.length() > 3 ? "\n  " : "";
                 QString pad2 = candidates.length() > 3 ? "\n  " : ", ";
                 debug.append(QString("Candidates: ") + pad1 +
                              candidates.join(pad2) + "\n");

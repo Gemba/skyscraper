@@ -25,28 +25,35 @@
 
 #include "importscraper.h"
 
+#include "gameentry.h"
+
 #include <QDir>
 #include <QDomDocument>
 
 ImportScraper::ImportScraper(Settings *config,
                              QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
-    fetchOrder.append(TITLE);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
-    fetchOrder.append(WHEEL);
-    fetchOrder.append(MARQUEE);
-    fetchOrder.append(TEXTURE);
-    fetchOrder.append(VIDEO);
-    fetchOrder.append(MANUAL);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(AGES);
-    fetchOrder.append(RATING);
-    fetchOrder.append(DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::TITLE);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::WHEEL);
+    fetchOrder.append(GameEntry::Elem::MARQUEE);
+    fetchOrder.append(GameEntry::Elem::TEXTURE);
+    fetchOrder.append(GameEntry::Elem::VIDEO);
+    fetchOrder.append(GameEntry::Elem::MANUAL);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::FANART);
+
+    config->fanart = true;
+    config->manuals = true;
+    config->videos = true;
 
     covers = QDir(config->importFolder + "/covers", "*.*", QDir::Name,
                   QDir::Files | QDir::NoDotAndDotDot)
@@ -69,6 +76,9 @@ ImportScraper::ImportScraper(Settings *config,
     manuals = QDir(config->importFolder + "/manuals", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
+    fanart = QDir(config->importFolder + "/fanarts", "*.*", QDir::Name,
+                  QDir::Files | QDir::NoDotAndDotDot)
+                 .entryInfoList();
     textual = QDir(config->importFolder + "/textual", "*.*", QDir::Name,
                    QDir::Files | QDir::NoDotAndDotDot)
                   .entryInfoList();
@@ -94,6 +104,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     marqueeFile = "";
     videoFile = "";
     manualFile = "";
+    fanartFile = "";
     GameEntry game;
     bool any = checkType(info.completeBaseName(), textual, textualFile);
     any |= checkType(info.completeBaseName(), screenshots, screenshotFile);
@@ -103,6 +114,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     any |= checkType(info.completeBaseName(), textures, textureFile);
     any |= checkType(info.completeBaseName(), videos, videoFile);
     any |= checkType(info.completeBaseName(), manuals, manualFile);
+    any |= checkType(info.completeBaseName(), fanart, fanartFile);
     if (any) {
         game.title = info.completeBaseName();
         game.platform = config->platform;
@@ -148,6 +160,10 @@ void ImportScraper::getTexture(GameEntry &game) {
 
 void ImportScraper::getManual(GameEntry &game) {
     game.manualData = readFile(manualFile);
+}
+
+void ImportScraper::getFanart(GameEntry &game) {
+    game.fanartData = readFile(fanartFile);
 }
 
 void ImportScraper::getVideo(GameEntry &game) {

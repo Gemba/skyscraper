@@ -482,6 +482,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->manuals = v;
                 continue;
             }
+            if (k == "fanarts") {
+                config->fanart = v;
+                continue;
+            }
         } else if (conv == "int") {
             bool intOk;
             int v = ss.toInt(&intOk);
@@ -732,6 +736,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->skipExistingCovers = true;
     } else if (flag == "skipexistingmanuals") {
         config->skipExistingManuals = true;
+    } else if (flag == "skipexistingfanarts") {
+        config->skipExistingFanart = true;
     } else if (flag == "skipexistingmarquees") {
         config->skipExistingMarquees = true;
     } else if (flag == "skipexistingscreenshots") {
@@ -758,6 +764,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->videos = true;
     } else if (flag == "manuals") {
         config->manuals = true;
+    } else if (flag == "fanarts") {
+        config->fanart = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
     } else {
@@ -780,19 +788,41 @@ QSet<QString> RuntimeCfg::getKeys(CfgType type) {
 }
 
 QStringList RuntimeCfg::parseFlags() {
-    QStringList _flags{};
+    QStringList retFlags;
     if (parser->isSet("flags")) {
+        QStringList _flags;
         QStringList flagsCli = parser->values("flags");
         for (QString f : flagsCli) {
             _flags << f.replace(" ", "").split(",");
         }
+        // pluralize
+        QStringList plFlags = {"nocover",
+                               "nomarquee",
+                               "noscreenshot",
+                               "notexture",
+                               "nowheel",
+                               "skipexistingcover",
+                               "skipexistingmarquee",
+                               "skipexistingscreenshot",
+                               "skipexistingtexture",
+                               "skipexistingwheel",
+                               "skipexistingfanart",
+                               "skipexistingvideo",
+                               "skipexistingmanual",
+                               "fanart",
+                               "video",
+                               "manual"};
+        for (QString f : _flags) {
+            retFlags << (plFlags.contains(f) ? f % "s" : f);
+        }
     }
-    return _flags;
+    qDebug() << "Flags:" << retFlags;
+    return retFlags;
 }
 
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
     QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus", "esde"};
+                             "pegasus",          "esde",     "batocera"};
     frontends.sort();
     if (!frontends.contains(providedFrontend)) {
         printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "

@@ -65,16 +65,16 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
 
     searchUrlPre = baseUrl + "/v1/games";
 
-    fetchOrder.append(PUBLISHER);
-    fetchOrder.append(DEVELOPER);
-    fetchOrder.append(RELEASEDATE);
-    fetchOrder.append(TAGS);
-    fetchOrder.append(PLAYERS);
-    fetchOrder.append(DESCRIPTION);
-    fetchOrder.append(AGES);
-    fetchOrder.append(RATING);
-    fetchOrder.append(COVER);
-    fetchOrder.append(SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::PUBLISHER);
+    fetchOrder.append(GameEntry::Elem::DEVELOPER);
+    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
+    fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::PLAYERS);
+    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
+    fetchOrder.append(GameEntry::Elem::AGES);
+    fetchOrder.append(GameEntry::Elem::RATING);
+    fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
 }
 
 void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
