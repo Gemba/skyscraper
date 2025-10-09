@@ -36,7 +36,7 @@ def print_platform_tree():
 
     df = pd.read_csv(pid_map_fn)
     df = df[~df.folder.str.contains("#")]
-    df = df.astype({col: int for col in df.columns[1:]})
+    df = df.astype({col: int for col in df.columns[1:-1]})
     df = df.sort_values("folder")
     last_folder = df["folder"].values[-1]
 
@@ -71,11 +71,14 @@ def print_data(r, last_folder):
             scrs_name = "[!] no match"
 
     mobs_name = mobs[moby_id] if moby_id in mobs else "N/A"
-    tgdb_name = tgdb_plafs[tgdb_id] if tgdb_id in tgdb_plafs else "N/A"
+    tgdb_strs = []
+    for tgdb_id in [int(tt) for tt in tgdb_id.split("|")]:
+        tgdb_name = tgdb_plafs[tgdb_id] if tgdb_id in tgdb_plafs else "N/A"
+        tgdb_strs.append(f"{tgdb_id:>4d}: {tgdb_name}")
 
     print(f"    {' ' if last else '│'}   ├── ScrS {scrs_id:>4d}: {scrs_name}")
     print(f"    {' ' if last else '│'}   ├── Moby {moby_id:>4d}: {mobs_name}")
-    print(f"    {' ' if last else '│'}   └── TGDB {tgdb_id:>4d}: {tgdb_name}")
+    print(f"    {' ' if last else '│'}   └── TGDB {', '.join(tgdb_strs)}")
 
 
 def print_coverage(df):
@@ -95,9 +98,11 @@ def print_coverage(df):
     print(
         f"    The Games DB : {tgdb_count:3d}/{total} ({100.0 * tgdb_count/total:.1f}%)"
     )
-    print("    Any not covered/matched platform can most likely be scraped by "
+    print(
+        "    Any not covered/matched platform can most likely be scraped by "
         "utilizing the 'aliases' list in the peas.json file.\n    Read the details: "
-        "https://gemba.github.io/skyscraper/PLATFORMS/#updating-peasjson-and-platforms_idmapcsv")
+        "https://gemba.github.io/skyscraper/PLATFORMS/#updating-peasjson-and-platforms_idmapcsv"
+    )
 
 
 def annotate_peas(f):
@@ -193,12 +198,13 @@ if __name__ == "__main__":
     if peas_local_fn.exists():
         peas = peas.set_index("folder")
         with open(peas_local_fn) as fh:
-            peas_local = pd.DataFrame([k for k in json.load(fh).keys()], columns=["folder"])
+            peas_local = pd.DataFrame(
+                [k for k in json.load(fh).keys()], columns=["folder"]
+            )
             peas_local.set_index("folder")
             peas.update(peas_local)
             peas = peas.reset_index()
         print(f"[+] Merging with local platform file: {peas_local_fn}")
-
 
     df = print_platform_tree()
     print_coverage(df)

@@ -26,7 +26,7 @@ _skyscraper_parse_subhelp() {
 		# other Linux install
 		skyscraper_bin="/usr/local/bin/$executable"
 		if [[ ! -e "$skyscraper_bin" ]]; then
-			return
+			skyscraper_bin="$(realpath "$executable")"
 		fi
 	fi
 	# detect with shell coloring but remove shell coloring before output

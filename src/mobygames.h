@@ -37,6 +37,9 @@ class MobyGames : public AbstractScraper {
 public:
     MobyGames(Settings *config, QSharedPointer<NetManager> manager);
 
+protected:
+    QString removeStopwords(QString &searchName) override;
+
 private:
     QTimer limitTimer;
     QEventLoop limiter;
@@ -54,11 +57,14 @@ private:
     void getCover(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
 
-    int getPlatformId(const QString platform) override;
+    QVector<int> getPlatformId(const QString platform) override;
     QString getRegionShort(const QString &region);
+    bool apiRequest(const QString &url);
 
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
+    QVariantMap mobyPlatformsMap;
+    int gamePlatformId = 0;
 };
 
 #endif // MOBYGAMES_H

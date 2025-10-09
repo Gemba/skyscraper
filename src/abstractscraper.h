@@ -36,6 +36,7 @@
 #include <QImage>
 #include <QList>
 #include <QSettings>
+#include <QVariantMap>
 
 class AbstractScraper : public QObject {
     Q_OBJECT
@@ -89,13 +90,15 @@ protected:
     bool checkNom(const QString nom);
 
     virtual bool platformMatch(QString found, QString platform);
-    virtual int getPlatformId(const QString);
+    virtual QVector<int> getPlatformId(const QString);
     virtual QString applyQuerySearchName(QString query) { return query; };
+    virtual QString removeStopwords(QString &searchName) { return searchName; };
 
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);
     QString lookupAliasMap(const QString &baseName, QString &debug);
     QByteArray downloadMedia(const QString &url, bool isImage = true);
+    QVariantMap readJson(const QString &filename);
 
     MatchType type = ABSTRACT;
 
