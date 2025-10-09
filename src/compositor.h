@@ -40,8 +40,8 @@ public:
     Compositor(Settings *config);
     static bool preCheckArtworkXml(const QString &artworkXml);
     void processXml();
-    void saveAll(GameEntry &game, QString completeBaseName,
-                 bool isBatocera = false);
+    void saveAll(GameEntry &game, QString completeBaseName, bool isBatocera,
+                 bool isEsde);
     QString getSubpath(const QString &absPath);
 
 private:

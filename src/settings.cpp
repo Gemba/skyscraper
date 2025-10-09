@@ -741,6 +741,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->fanart = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
+    } else if (flag == "miximages") {
+        config->miximages = true;
     } else {
         printf("Unknown flag '%s', please check '--flags help' for "
                "a list of valid flags. Exiting...\n",

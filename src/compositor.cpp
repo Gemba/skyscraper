@@ -26,6 +26,7 @@
 #include "compositor.h"
 
 #include "batocera.h" // TODO: Does not fit in here
+#include "config.h"
 #include "fxbalance.h"
 #include "fxblur.h"
 #include "fxbrightness.h"
@@ -289,7 +290,7 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
 }
 
 void Compositor::saveAll(GameEntry &game, QString completeBaseName,
-                         bool isBatocera) {
+                         bool isBatocera, bool isEsde) {
     bool createSubfolder = false;
     QString fn = "/" % completeBaseName;
     QString subPath = getSubpath(game.path);
@@ -313,7 +314,13 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
                 continue;
             }
         } else if (output.resType == "screenshot") {
-            filename.prepend(config->screenshotsFolder);
+            if (isEsde) {
+                filename.prepend(Config::lexicallyNormalPath(
+                    config->screenshotsFolder % "/../miximages"));
+                createSubfolder = true;
+            } else {
+                filename.prepend(config->screenshotsFolder);
+            }
             if (config->skipExistingScreenshots &&
                 QFileInfo::exists(filename)) {
                 // set screenshotFile to generate XML element later

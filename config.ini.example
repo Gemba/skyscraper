@@ -83,6 +83,7 @@
 ;innerBracketsReplace="] ["
 ;innerParenthesesReplace=") ("
 ;ignoreYearInFilename="false"
+;theInFront="false"
 
 ; The following is an example of configs that only affect the 'snes' platform.
 ;[snes]

@@ -468,6 +468,14 @@ When gathering data from any of the scraping modules many potential entries will
 
 By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#manuals) instead.
 
+#### miximages
+
+This is an epheremal flag and has only an effect when used with the ES-DE frontend. The miximage feature is coming up with ES-DE 3.4.0 onwards. 'Miximage' in ES-DE is their implementation of Skyscraper's artwork processing. When you set this flag, Skyscraper's artwork file will be stored in the ES-DE miximage media folder. The ES-DE screenshots media folder will contain the plain screenshot of a game. If this flag is unset, the screenshots folder of ES-DE contains the artwork file of Skyscraper (defined by the artwork XML file), which is most likely what you want with ES-DE 3.3.0 or earlier.
+
+!!! warning "Epheremal Flag for ES-DE"
+
+    Once the miximage of ES-DE feature has been released, this flag may be removed again from Skyscraper.
+
 #### nobrackets
 
 Use this flag to disable any bracket notes when generating the game list. It will disable notes such as `(Europe)` and `[AGA]` completely. This flag is only relevant when generating the game list. It makes no difference when gathering data into the resource cache. Consider setting this in [`config.ini`](CONFIGINI.md#brackets) instead.

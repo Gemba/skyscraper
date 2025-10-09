@@ -29,6 +29,7 @@
 #include "batocera.h"
 #include "cache.h"
 #include "compositor.h"
+#include "config.h"
 #include "esgamelist.h"
 #include "gamebase.h"
 #include "gameentry.h"
@@ -312,14 +313,21 @@ void ScraperWorker::run() {
 
         if (!config.pretend && cacheScraper) {
             bool batoceraFe = config.frontend == "batocera";
+            bool esdeFe = config.frontend == "esde" && config.miximages;
             // Process all artwork
-            compositor.saveAll(game, info.completeBaseName(), batoceraFe);
+            compositor.saveAll(game, info.completeBaseName(), batoceraFe,
+                               esdeFe);
             // extra media files (not part of compositor)
             const QString baseName = info.completeBaseName();
             const QString subPath = compositor.getSubpath(game.path);
+            // copy from cache to destination folder
             copyMedia(MediaHint::VIDEO, baseName, subPath, game, batoceraFe);
             copyMedia(MediaHint::MANUAL, baseName, subPath, game, batoceraFe);
             copyMedia(MediaHint::FANART, baseName, subPath, game, batoceraFe);
+            if (esdeFe) {
+                copyMedia(MediaHint::SCREENSHOT, baseName, subPath, game,
+                          false);
+            }
         }
 
         // Add all resources to the cache
@@ -917,6 +925,16 @@ void ScraperWorker::copyMedia(MediaHint mediaHint, const QString &baseName,
         data = game.fanartData;
         mediaTypeFolder = config.fanartsFolder;
         skipExisting = config.skipExistingFanart;
+    } else if (mediaHint & MediaHint::SCREENSHOT &&
+               !game.screenshotFile.isEmpty()) {
+        // ES-DE only
+        QMimeType mime = db.mimeTypeForFile(game.screenshotFile);
+        fnExt = mime.preferredSuffix();
+        cacheFn = game.screenshotFile;
+        mediaTypeEnabled = true;
+        data = game.screenshotData;
+        mediaTypeFolder = config.screenshotsFolder;
+        skipExisting = false;
     }
 
     // assume to ignore the media in gamelist output if skip existing videos /
@@ -996,13 +1014,17 @@ void ScraperWorker::copyMedia(MediaHint mediaHint, const QString &baseName,
         } else {
             game.manualFile = absMediaFn;
         }
-    } else {
+    } else if (mediaHint & MediaHint::FANART) {
         if (zapInGamelist) {
             game.fanartData.clear();
             game.fanartFile = "";
         } else {
             game.fanartFile = absMediaFn;
         }
+    } else {
+        // never output when using ES-DE
+        game.screenshotData.clear();
+        game.screenshotFile = "";
     }
 }
 
