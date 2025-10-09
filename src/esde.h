@@ -33,6 +33,7 @@ public:
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
+    QString getFanartsFolder() override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;

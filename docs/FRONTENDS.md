@@ -75,11 +75,13 @@ highlights the differences.
 ROMs are expected to be in the input folder `/home/<USER>/ROMs/<PLATFORM>` for
 every `<PLATFORM>` you scrape.
 
-Media filepaths (screenshots, marquees, videos, aso.) are not explicitly stored
-in the gamelist file. This is ES-DE default. However, Skyscraper will put the
-media files into the `downloaded_media` folder (e.g.
+Media filepaths (screenshots, marquees, videos, aso.) are not held in the
+gamelist file. This is ES-DE default. However, Skyscraper will put the media
+files into the `downloaded_media` folder (e.g.
 `~/ES-DE/downloaded_media/<PLATFORM>/screenshots/` for screenshots) from where
-ES-DE will pick them up. ES-DE does not support textures currently.
+ES-DE will pick them up. ES-DE does not support textures currently. Any manual
+or fanart data present in the cache will be put automagically into
+`~/ES-DE/downloaded_media/<PLATFORM>` where ES-DE will load it.
 
 !!! tip
 

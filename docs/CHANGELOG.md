@@ -7,10 +7,12 @@ humans](https://keepachangelog.com).
 
 - Added: Support for [Batocera gamelists](FRONTENDS.md#batocera) incl. fanart
   output
-- Added: Support for fanart gamelist output for some [EmulationStation
+- Added: Support for fanart gamelist output for ES-DE and some [EmulationStation
   variants](CONFIGINI.md#gamelistvariants)
 - Added: Fanart scraping with Screenscraper-, TGDB- and Import-scraper. See flag
   and config option [`fanarts`](CLIHELP.md#fanarts)
+- Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [flag
+  miximages](CLIHELP.md#miximages)
 - Added: Allow more relaxed extension syntax in config options. In addition to
   `'*.ext'` also allow `'.ext'` and `'ext'`
 - Added: Accept also singular for media flags, e.g. `--flags video` additionally

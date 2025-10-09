@@ -55,7 +55,8 @@ private:
     enum MediaHint : unsigned char {
         VIDEO = 1,
         MANUAL = VIDEO << 1,
-        FANART = VIDEO << 2
+        FANART = VIDEO << 2,
+        SCREENSHOT = VIDEO << 3
     };
     AbstractScraper *scraper;
 
@@ -83,8 +84,7 @@ private:
 
     bool limitReached(QString &output);
     void copyMedia(MediaHint mediaHint, const QString &completeBaseName,
-                   const QString &subPath, GameEntry &game,
-                   bool isBatocera = false);
+                   const QString &subPath, GameEntry &game, bool isBatocera);
     bool matchTitles(const QString &thiz, const QString &that);
     QList<QString> splitTitle(const QString &title);
     bool matchWords(const QList<QString> theseWords,

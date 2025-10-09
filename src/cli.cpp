@@ -469,6 +469,8 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"fanarts",
              "Enables scraping and caching of fanart for the scraping modules "
              "that support them."},
+            {"miximages",
+             "Enables output of Skyscraper's artwork as ES-DE miximage."},
         };
     } else {
         QStringList resTypes = Cache::getAllResourceTypes();
