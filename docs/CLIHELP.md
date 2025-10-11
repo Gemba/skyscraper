@@ -230,6 +230,10 @@ Skyscraper -p snes -s thegamesdb --addext '*.ext1 *.ext2'
 Skyscraper -p snes -s thegamesdb --addext '.ext1 ext2'
 ```
 
+### --buildinfo
+
+Show the build configuration and runtime environment of Skyscraper and exits. Use this info when reporting an issue. Thanks!
+
 ### --cache <COMMAND[:OPTIONS]>
 
 This is the cache master option. It contains several subcommands that allows you to manipulate the cached data for the selected platform.

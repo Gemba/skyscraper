@@ -17,6 +17,8 @@ humans](https://keepachangelog.com).
   `'*.ext'` also allow `'.ext'` and `'ext'`
 - Added: Accept also singular for media flags, e.g. `--flags video` additionally
   to `--flags videos`. However, in the config file accept only plural as before.
+- Added: Flag [`--buildinfo`](CLIHELP.md#--buildinfo), comes in handy when
+  reporting an issue.
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
 - Updated: Documentation, added usage level for configuration options. See
