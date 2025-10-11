@@ -397,7 +397,7 @@ If you wish to work on a subset of your roms you can use this option to set the 
 
 !!! tip
 
-    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `$ Skyscraper -p snes -s thegamesdb "/abs/or/relative/path/to/rom.zip"`.  
+    Instead of using this option, if you just want to gather resources for one or two roms, you can provide the filename(s) directly on the command like so: `Skyscraper -p snes -s thegamesdb "/abs/or/relative/path/to/rom.zip"`.  
     For a more specific control on which games to scrape, you may use the `--includefrom` option.
 
 **Example(s)**
@@ -695,6 +695,16 @@ Adds the specified language to the top of the existing default internal language
 Skyscraper -p snes -s screenscraper --lang es
 ```
 
+### --listext
+
+Lists the configured game filename extensions for a platform and quits.
+
+**Example(s)**
+
+```
+Skyscraper -p c64 --listext
+```
+
 ### --maxfails &lt;1-200&gt;
 
 Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Don't change this unless you have a very good reason to do so.
@@ -710,14 +720,14 @@ Skyscraper -p snes -s thegamesdb --maxfails 75
 For most modules a search query is sent to the scraping module in an URL format. This means that a filename such as "Rick Dangerous.lha" becomes "rick+dangerous". The '+' here means a space. You could probably also use the URL encoded space "rick%20dangerous" but my tests show that most modules expect spaces as '+'. And it is the "rick+dangerous" part that you, as the user, can pass as the query, like so:
 
 ```
-$ Skyscraper -p <PLATFORM> -s <MODULE> --query "rick+dangerous" <FILENAME>
+Skyscraper -p <PLATFORM> -s <MODULE> --query "rick+dangerous" <FILENAME>
 ```
 
 Remember to also add exactly one filename that you wish to use the override with. Otherwise the query will be ignored.
 
 If you apply the query option with a game filename, the flag `--refresh` (see below) is automatically set.
 
-Not all of the scraping modules are search name based. For instance, the `screenscraper` module can use a variety of different search methods. So for screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file doesn't match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.
+Not all of the scraping modules are search name based. For instance, the `screenscraper` module can use a variety of different search methods. So for Screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file doesn't match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.
 
 You can use any combination of `crc=<CHECKSUM>`, `md5=<CHECKSUM>`, `sha1=<CHECKSUM>` and `romnom=<FILENAME>` (without the `<` and `>`! Also "romnom" is "rom name" in French - Screenscraper is operated from France). From Skyscraper 3.17 onwards you can also omit the `romnom=` search keyword when using the title search. Most times you only need one of these, but you can combine them by separating them with a `&`.
 
@@ -734,17 +744,17 @@ For other scraping module's query capabilities see the [overview page](SCRAPINGM
 **Example(s)**
 
 ```
-$ Skyscraper -p snes -s thegamesdb --query "rick+dangerous" /absolute/or/relative/path/to/rom.zip
-$ Skyscraper -p snes -s screenscraper --query "md5=<CHECKSUM>" /absolute/or/relative/path/to/rom.zip
-$ Skyscraper -p snes -s screenscraper --query "<game title> or <romfile>" /absolute/or/relative/path/to/rom.zip
-$ Skyscraper -p snes -s screenscraper --query "sha1=<CHECKSUM>&romnom=yaddayadda" /absolute/or/relative/path/to/rom.zip
+Skyscraper -p snes -s thegamesdb --query "rick+dangerous" /absolute/or/relative/path/to/rom.zip
+Skyscraper -p snes -s screenscraper --query "md5=<CHECKSUM>" /absolute/or/relative/path/to/rom.zip
+Skyscraper -p snes -s screenscraper --query "<game title> or <romfile>" /absolute/or/relative/path/to/rom.zip
+Skyscraper -p snes -s screenscraper --query "sha1=<CHECKSUM>&romnom=yaddayadda" /absolute/or/relative/path/to/rom.zip
 # 14576 is the MobyGames Game Id
-$ Skyscraper -p ports -s mobygames --query "14576" "~/RetroPie/roms/ports/Head over Heels.sh"
-$ Skyscraper -p zxspectrum -s gamebase --query "*Deathc*" --verbosity 3 "~/RetroPie/roms/zxspectrum/game.tzx
+Skyscraper -p ports -s mobygames --query "14576" "~/RetroPie/roms/ports/Head over Heels.sh"
+Skyscraper -p zxspectrum -s gamebase --query "*Deathc*" --verbosity 3 "~/RetroPie/roms/zxspectrum/game.tzx
 # 1303 is the ZXInfo / World of Spectrum Game Id
-$ Skyscraper -p zxspectrum -s zxinfo --query "01303" "~/RetroPie/roms/zxspectrum/Deathchase.zip
+Skyscraper -p zxspectrum -s zxinfo --query "01303" "~/RetroPie/roms/zxspectrum/Deathchase.zip
 # 4443397... is the MD5 hashsum of Deathchase.zip for example
-$ Skyscraper -p zxspectrum -s zxinfo --query "4443397ad973cc066e06d9854cc69035" "~/RetroPie/roms/zxspectrum/Deathchase.zip
+Skyscraper -p zxspectrum -s zxinfo --query "4443397ad973cc066e06d9854cc69035" "~/RetroPie/roms/zxspectrum/Deathchase.zip
 ```
 
 ### --refresh
@@ -778,6 +788,30 @@ Read more about how [regions are handled in general](REGIONS.md) in this user ma
 ```
 Skyscraper -p snes -s screenscraper --region jp
 ```
+
+### --searchstem &lt;EXTENSION&gt;
+
+Force searching by filename stem when using Screenscraper for the extensions provided.
+Usually Screenscraper uses a set of parameters derived from the gamefile (e.g., size, checksums, ...) instead of the game filename. When enabling this option you can instruct Skyscraper to query the Screenscraper site by the game filename, more precisly by the stem of the filename. The provided extension(s) must be a subset of the configured extensions for a platform.  
+If you want to enable this option for all extensions for a platform then use the keyword `'all'`. Alternatively you can use the command line alias option `--searchstem-all`. In the rare case, if you are deliberatly using the extension `*.all` for your game files, do use `'.all'` or `'*.all'` to signal Skyscraper to use this extension instead the whole set of extensions. Consider applying this in [`config.ini`](CONFIGINI.md#searchstem) instead.
+
+**Example(s)**
+
+`Skyscraper -p snes -s screenscraper --searchstem 'desktop' --addext 'desktop' path-to/snes/Super Mario 3.desktop` will result in querying for gamefiles ending with `.desktop` with the stem (`Super Mario 3`) of the game filename (`.../snes/Super Mario 3.desktop`). If you omit a specific rom file the rule is applied to all games with that extensions. Other games not ending with that extension will be queried from Screenscraper via the usual approach.
+
+!!! notes
+
+    Only applies when using Screenscraper to scrape or query.  
+    This option has no effect when you also apply `--query`.
+
+### --searchstem-all
+
+This is a alias for `--searchstem 'all'`. See the [`--searchstem`](#-searchstem-extension) documentation.
+Consider applying this in [`config.ini`](CONFIGINI.md#searchstem) instead.
+
+!!! note
+
+    Only applies when using Screenscraper to scrape or query.
 
 ### --startat &lt;FILENAME&gt;
 

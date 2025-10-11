@@ -13,20 +13,26 @@ humans](https://keepachangelog.com).
   and config option [`fanarts`](CLIHELP.md#fanarts)
 - Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [flag
   miximages](CLIHELP.md#miximages)
+- Added: Option to force Screenscraper scrapes to use the stem of the game
+  filename instead of derived parameters. See
+  [`--searchstem`](CLIHELP.md#-searchstem-extension) and the last question in
+  the [FAQ](FAQ.md). Thanks for contributing, @eilefsen
+- Added: Option to list configured extension for a platform. See
+  [`--listext`](CLIHELP.md#-listext)
 - Added: Allow more relaxed extension syntax in config options (e.g.,
   `addExtensions`). In addition to `'*.ext'` also allow `'.ext'` and even `'ext'`
 - Added: Accept also singular for media flags, e.g. `--flags video` additionally
   to `--flags videos`. However, in the config file accept only plural as before.
-- Updated: Option `theInFront` covers also the indefinite article 'a'.
 - Added: Flag [`--buildinfo`](CLIHELP.md#--buildinfo), comes in handy when
   reporting an issue.
+- Updated: Option `theInFront` covers also the indefinite article 'a'.
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
 - Updated: Documentation, added usage level for configuration options. See
   [config options
   overview](CONFIGINI.md#index-of-options-with-applicable-sections), plus many
   smaller edits
-- Fixed: Various edge cases remediated, esp. #166, #167 and #169, thanks to all
+- Fixed: Various edge cases remediated, esp. #167 and #169, thanks to all
   reporters!
 
 ### Version 3.17.0 (2025-05-04)

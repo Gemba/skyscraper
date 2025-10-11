@@ -63,6 +63,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
         QStringList plafs = Platform::get().getPlatforms();
         if (parser->isSet("p") &&
             plafs.contains(parser->value("p").split('_').first())) {
+            // TODO: Legacy code / undocumented "feature", remove
             /* '_' is seen as a subcategory of the selected platform */
             config->platform = parser->value("p");
         } else if (type == CfgType::MAIN && settings->contains("platform") &&
@@ -307,6 +308,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                     exit(1);
                 }
                 config->scummIni = v;
+                continue;
+            }
+            if (k == "searchStem") {
+                config->searchStem = parseExtensions(v);
                 continue;
             }
             if (k == "startAt") {
@@ -619,6 +624,28 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     if (parser->isSet("addext")) {
         config->addExtensions = parseExtensions(parser->value("addext"));
     }
+
+    if (parser->isSet("searchstem")) {
+        if (parser->isSet("searchstem-all")) {
+            puts("Cannot use both --searchstem and --searchstem-all "
+                 "at the same time, please use only one at a time. Exiting...");
+            exit(1);
+        }
+        QString exts = parser->value("searchstem");
+        config->searchStem = exts.toLower() == "all"
+                                 ? getAllExtensionsOfPlatform()
+                                 : parseExtensions(exts);
+    }
+    if (parser->isSet("searchstem-all")) {
+        config->searchStem = getAllExtensionsOfPlatform();
+    }
+    if (parser->isSet("listext")) {
+        QString exts = getAllExtensionsOfPlatform();
+        printf("Configured extensions for platform '%s':\n%s\n\n",
+               config->platform.toStdString().c_str(),
+               exts.toStdString().c_str());
+        exit(0);
+    }
     if (parser->isSet("refresh")) {
         config->refresh = true;
     }
@@ -869,4 +896,10 @@ QString RuntimeCfg::parseExtensions(const QString &optionVal) {
         }
     }
     return ret.join(" ");
+}
+
+QString RuntimeCfg::getAllExtensionsOfPlatform() {
+    return Platform::get()
+        .getFormats(config->platform, config->extensions, config->addExtensions)
+        .remove('*');
 }

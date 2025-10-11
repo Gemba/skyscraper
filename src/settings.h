@@ -91,6 +91,7 @@ struct Settings {
     bool unattendSkip = false;
     bool interactive = false;
     bool forceFilename = false;
+    QString searchStem = "";
     bool stats = false;
     bool hints = true;
     int verbosity = 0;
@@ -191,6 +192,7 @@ private:
                                 const QString &opt);
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
     QString parseExtensions(const QString &optionVal);
+    QString getAllExtensionsOfPlatform();
 
     Settings *config;
     const QCommandLineParser *parser;
@@ -251,6 +253,7 @@ private:
         {"regionPrios",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"relativePaths",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"scummIni",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
+        {"searchStem",              QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"skipped",                 QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"spaceCheck",              QPair<QString, int>("bool", CfgType::MAIN                                                            )},
         {"startAt",                 QPair<QString, int>("str",                  CfgType::PLATFORM | CfgType::FRONTEND                    )},

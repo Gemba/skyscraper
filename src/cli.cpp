@@ -158,6 +158,17 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "Add this or these file extension(s) to accepted file extensions "
         "during a scraping run. (ex.: '*.zst *.ext', also valid: '.zst ext')",
         "EXTENSION(S)", "");
+    QCommandLineOption searchStemOption(
+        "searchstem",
+        "Force searching by filename stem for the given extensions when using "
+        "Screenscraper.",
+        "EXTENSION(S)", "");
+    QCommandLineOption searchStemAllOption(
+        "searchstem-all", "Force searching by filename stem for all configured "
+                          "extensions of a platform when using Screenscraper.");
+    QCommandLineOption listExt("listext",
+                               "Show the configured game filename extensions "
+                               "for a platform and exit.");
     QCommandLineOption flagsOption(
         "flags",
         "Allows setting flags that will impact the run in various ways. See "
@@ -272,6 +283,9 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(queryOption);
     parser->addOption(refreshOption);
     parser->addOption(regionOption);
+    parser->addOption(searchStemOption);
+    parser->addOption(searchStemAllOption);
+    parser->addOption(listExt);
     parser->addOption(sOption);
     parser->addOption(startatOption);
     parser->addOption(tOption);

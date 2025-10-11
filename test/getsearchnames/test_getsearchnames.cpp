@@ -35,7 +35,6 @@ private:
 #else
             QList<QString> out = scraper->getSearchNames(fi, dbgStr);
 #endif
-            //            qDebug() << out;
 
             QCOMPARE(out.size(), exp.size());
             int i = 0;
@@ -326,14 +325,15 @@ private slots:
              QPair<QString, QStringList>(
                  "./rom_samples/BillsTomatoGame_v2.0_1748.lha",
                  {"romnom=BillsTomatoGame_v2.0_1748.lha"})},
-            {"Screenscraper, ROM with uncommon suffix and size greater zero",
+            {"Screenscraper, ROM with search by stem suffix and size greater "
+             "zero",
              QPair<QString, QStringList>("./rom_samples/Pac Man.desktop",
                                          {"romnom=Pac%20Man"})},
-
         };
         settings.mameMap.insert("zaxxon.zip", "Should not break the test.zip");
+        // #166
         settings.addExtensions = "*.desktop";
-
+        settings.searchStem = settings.addExtensions;
         match(tests);
     }
 };

@@ -26,13 +26,13 @@ You probably installed Skyscraper in order to get some data and artwork on your 
 Skyscraper can gather data from several scraping modules / sources (set with `-s <MODULE>`). So you'd start by scraping the `snes` platform (set with `-p <PLATFORM>`) with one or more of those modules. Each time you do so, all of the data will be saved in the Skyscraper cache.
 
 ```
-$ Skyscraper -p snes -s screenscraper
+Skyscraper -p snes -s screenscraper
 ```
 
 This should have given you a lot of data for your games. But some of it might still be missing. So let's continue gathering some data from another module.
 
 ```
-$ Skyscraper -p snes -s thegamesdb
+Skyscraper -p snes -s thegamesdb
 ```
 
 Each time you scrape your roms with a new scraping module, all of the data that was gathered will be cached inside Skyscraper's internal resource cache. The cache can contain one of each resource for each of the scraping modules.
@@ -42,7 +42,7 @@ Each time you scrape your roms with a new scraping module, all of the data that 
 By having gathered data from both sources (`screenscraper` _and_ `thegamesdb`) there's a good chance that you will get a complete result if the data from both is combined. And that's _exactly_ what Skyscraper can do for you.
 
 ```
-$ Skyscraper -p snes
+Skyscraper -p snes
 ```
 
 Running that command will generate a game list for the chosen frontend (default is EmulationStation). It combines all of the cached data into the most complete results. This phase also includes the artwork compositing. If you use a non-default frontend, you can configure this in Skyscraper's [configuration](CONFIGINI.md#frontend). Or you can set it on the [command-line](CLIHELP.md#-f-frontend).

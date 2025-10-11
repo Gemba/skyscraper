@@ -266,8 +266,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 
     // If title still unset, no acceptable rom was found, so return with no
     // results
-    // TODO: replace with isEmpty()
-    if (game.title.isNull()) {
+    if (game.title.isEmpty()) {
         return;
     }
 
@@ -582,23 +581,31 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
     hashList.append(md5Result.toUpper());
     hashList.append(sha1Result.toUpper());
 
-    // Only one searchName, but direct match query
     if (info.size() != 0) {
-        if (!config->addExtensions.contains("*." + info.suffix().toLower())) {
-            // sunny day approach
+        QString fnWithExt = info.fileName();
+        bool searchByStem = false;
+        if (!config->searchStem.isEmpty()) {
+            for (const auto &e : config->searchStem.remove('*').split(' ')) {
+                if (fnWithExt.endsWith(e, Qt::CaseInsensitive)) {
+                    searchByStem = true;
+                    QString romName = fnWithExt.replace(
+                        fnWithExt.length() - e.length(), e.length(), "");
+                    searchNames.append("romnom=" +
+                                       QUrl::toPercentEncoding(romName, "()"));
+                    break;
+                }
+            }
+        }
+        if (!searchByStem) {
             searchNames.append(
                 "crc=" + hashList.at(1) + "&md5=" + hashList.at(2) +
                 "&sha1=" + hashList.at(3) + "&romnom=" + hashList.at(0) +
                 "&romtaille=" + QString::number(info.size()));
-        } else {
-            // edge case: user has provided additional extensions via
-            // addExtensions, then use basename only for search
-            // fixes #166
-            searchNames.append("romnom=" +
-                               QUrl::toPercentEncoding(baseName, "()"));
         }
     } else {
-        // provided file has no content or can not be accessed
+        // file not accessible or size is 0
+        // TODO: Legacy code, most likely clear searchNames here to indicate
+        // faulty input
         searchNames.append("romnom=" + hashList.at(0));
     }
 
