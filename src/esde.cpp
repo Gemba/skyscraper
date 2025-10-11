@@ -42,8 +42,10 @@ inline const QString baseFolder() {
 
 void Esde::setConfig(Settings *config) {
     this->config = config;
-    if (config->scraper == "cache")
+    if (config->scraper == "cache") {
         config->manuals = true;
+        config->fanart = true;
+    }
 }
 
 QStringList Esde::extraGamelistTags(bool isFolder) {
@@ -70,3 +72,5 @@ QString Esde::getGameListFolder() {
 QString Esde::getMediaFolder() {
     return baseFolder() % "/downloaded_media/" % config->platform;
 }
+
+QString Esde::getFanartsFolder() { return config->mediaFolder % "/fanart"; }

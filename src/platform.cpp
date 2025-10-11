@@ -182,6 +182,10 @@ QStringList Platform::getAliases(QString platform) const {
     return aliases;
 }
 
+static inline QStringList splitPlatformIds(const QString &ids) {
+    return ids.split("|");
+}
+
 bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
 
     QFile configFile(platformsIdCsvFn);
@@ -217,26 +221,29 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
             continue;
         }
         parts.removeFirst();
-        QVector<int> ids(QVector<int>(3));
-        int i = 0;
+        QVector<QVector<int>> ids(QVector<QVector<int>>(3));
+        int col = 0;
         for (QString id : parts) {
             id = id.trimmed();
-            ids[i] = -1;
             if (!id.isEmpty()) {
-                bool ok;
-                int tmp = id.toInt(&ok);
-                if (ok) {
-                    ids[i] = (tmp == 0) ? -1 : tmp;
-                } else {
-                    printf(
-                        "\033[1;33mFile '%s', line '%s,%s' has unparsable int "
-                        "value (use -1 for unknown platform id). Assumming -1 "
-                        "for now, please fix to mute this warning.\033[0m\n",
-                        fn, pkey.toUtf8().constData(),
-                        parts.join(',').toUtf8().constData());
+                for (const auto &i : splitPlatformIds(id)) {
+                    bool ok = false;
+                    int tmp = i.toInt(&ok);
+                    if (ok && tmp >= -1) {
+                        ids[col].append((tmp == 0) ? -1 : tmp);
+                    } else {
+                        ids[col].append(-1);
+                        printf("\033[1;33mFile '%s', line '%s,%s' has "
+                               "unparsable or too negative int value '%s' (use "
+                               "-1 for unknown platform id). Assumming -1 for "
+                               "now, please fix to mute this warning.\033[0m\n",
+                               fn, pkey.toUtf8().constData(),
+                               parts.join(',').toUtf8().constData(),
+                               i.toUtf8().constData());
+                    }
                 }
             }
-            i++;
+            col++;
         }
         platformIdsMap.insert(pkey, ids);
     }
@@ -267,14 +274,16 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "dfd5591107d585eeecfd3e37beb1b2d80b740caae84ac79d09c65704677740d2",
                  "f046b81f403b132379a4f93e3e5d9482e60b69ce3d18a13539a895ea2d6583d8",
                  "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9",
-                 "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d"}
+                 "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d",
+                 "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1"}
             )
         },
         {"platforms_idmap.csv", QStringList(
                 {"78ca2da2de3ee98e57d7ce9bb88504c7b45bdf72a2599a34e583ebcc0855cbef",
                  "30c443a6a6c7583433e62e89febe8d10bae075040e5c1392623a71f348f3f476",
                  "bf12d0f2f7161d45041f8996c44d6c3c2f666cfc33938dbcbd506c1f766062c4",
-                 "44a416856327c01c1ec73c41252f9c3318bf703c33fd717935f31b37e635f413"}
+                 "44a416856327c01c1ec73c41252f9c3318bf703c33fd717935f31b37e635f413",
+                 "9af2abea78af7b94b8c86d97417fb4aff347a8b6eef5c0fdab37be31938f5f9a"}
             )
         }
         // clang-format on
@@ -303,11 +312,11 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
     return isPristine;
 }
 
-int Platform::getPlatformIdOnScraper(const QString platform,
-                                     const QString scraper) const {
-    int id = -1;
+QVector<int> Platform::getPlatformIdOnScraper(const QString platform,
+                                              const QString scraper) const {
+    QVector<int> id;
     if (platformIdsMap.contains(platform)) {
-        QVector<int> ids = platformIdsMap[platform];
+        QVector<QVector<int>> ids = platformIdsMap[platform];
         qDebug() << "platform ids" << ids;
         if (scraper == "screenscraper") {
             id = ids[0];
@@ -317,7 +326,7 @@ int Platform::getPlatformIdOnScraper(const QString platform,
             id = ids[2];
         }
     }
-    qDebug() << "Got platform id" << id << "for platform" << platform
+    qDebug() << "Got platform id(s)" << id << "for platform" << platform
              << "and scraper" << scraper;
     return id;
 }

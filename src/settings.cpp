@@ -77,7 +77,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             bool isFlagsOK =
                 parser->isSet("flags") && parseFlags().contains("help");
 
-            if (!isCacheOK && !isFlagsOK && !parser->isSet("hint")) {
+            if (!isCacheOK && !isFlagsOK && !parser->isSet("hint") &&
+                !parser->isSet("buildinfo")) {
                 reportInvalidPlatform();
                 exit(1);
             }
@@ -648,6 +649,10 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     if (parser->isSet("refresh")) {
         config->refresh = true;
     }
+    if (parser->isSet("buildinfo")) {
+        Cli::showBuildinfo();
+        exit(0);
+    }
     if (parser->isSet("hint")) {
         Cli::showHint();
         exit(0);
@@ -768,6 +773,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->fanart = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
+    } else if (flag == "miximages") {
+        config->miximages = true;
     } else {
         printf("Unknown flag '%s', please check '--flags help' for "
                "a list of valid flags. Exiting...\n",
@@ -811,12 +818,12 @@ QStringList RuntimeCfg::parseFlags() {
                                "skipexistingmanual",
                                "fanart",
                                "video",
-                               "manual"};
+                               "manual",
+                               "miximage"};
         for (QString f : _flags) {
             retFlags << (plFlags.contains(f) ? f % "s" : f);
         }
     }
-    qDebug() << "Flags:" << retFlags;
     return retFlags;
 }
 

@@ -7,20 +7,25 @@ humans](https://keepachangelog.com).
 
 - Added: Support for [Batocera gamelists](FRONTENDS.md#batocera) incl. fanart
   output
-- Added: Support for fanart gamelist output for some [EmulationStation
+- Added: Support for fanart gamelist output for ES-DE and some [EmulationStation
   variants](CONFIGINI.md#gamelistvariants)
 - Added: Fanart scraping with Screenscraper-, TGDB- and Import-scraper. See flag
   and config option [`fanarts`](CLIHELP.md#fanarts)
-- Added: Accept also singular for media flags, e.g. `--flags video` additionally
-  to `--flags videos`. However, in the config file accept only plural as before.
-- Added: Allow more relaxed extension syntax in config options. In addition to
-  `'*.ext'` also allow `'.ext'` and `'ext'`
+- Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [flag
+  miximages](CLIHELP.md#miximages)
 - Added: Option to force Screenscraper scrapes to use the stem of the game
   filename instead of derived parameters. See
   [`--searchstem`](CLIHELP.md#-searchstem-extension) and the last question in
   the [FAQ](FAQ.md). Thanks for contributing, @eilefsen
 - Added: Option to list configured extension for a platform. See
   [`--listext`](CLIHELP.md#-listext)
+- Added: Allow more relaxed extension syntax in config options (e.g.,
+  `addExtensions`). In addition to `'*.ext'` also allow `'.ext'` and even `'ext'`
+- Added: Accept also singular for media flags, e.g. `--flags video` additionally
+  to `--flags videos`. However, in the config file accept only plural as before.
+- Added: Flag [`--buildinfo`](CLIHELP.md#--buildinfo), comes in handy when
+  reporting an issue.
+- Updated: Option `theInFront` covers also the indefinite article 'a'.
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
 - Updated: Documentation, added usage level for configuration options. See

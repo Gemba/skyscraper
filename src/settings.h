@@ -142,6 +142,7 @@ struct Settings {
     bool cacheTextures = true;
     bool skipExistingManuals = false;
     bool skipExistingFanart = false;
+    bool miximages = false;
 
     QString innerBracketsReplace = "";
     QString innerParenthesesReplace = "";

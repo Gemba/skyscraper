@@ -166,9 +166,6 @@ public:
     QString absoluteFilePath = "";
     bool found = true;
 
-    // used by mobygames
-    QByteArray miscData = "";
-
     // Holds EmulationStation (RetroPie and derivates) specific metadata
     // for preservation. (metadata = anything which is not scrapable)
     QMap<QString, QPair<QString, QDomNamedNodeMap>> esExtras;

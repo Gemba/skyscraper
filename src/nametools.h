@@ -51,6 +51,7 @@ public:
                                        const QString &nameTemplate,
                                        const QString &parenthesesInfo,
                                        const QString &bracketInfo);
+    static QString theInFront(bool theInFront, const QString &title);
 
 private:
     static QString notesByRegex(const QString &baseName, const QString &re);

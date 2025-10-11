@@ -29,6 +29,7 @@
 #include "platform.h"
 #include "strtools.h"
 
+#include <QDebug>
 #include <QJsonArray>
 
 TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
@@ -55,6 +56,14 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
                                   QString searchName, QString platform) {
+    const QVector<int> configuredPlfIds = getPlatformId(config->platform);
+    QStringList pIds;
+    for (const auto &p : configuredPlfIds) {
+        if (p > 0) {
+            pIds.append(QString::number(p));
+        }
+    }
+
     netComm->request(
         searchUrlPre +
         StrTools::unMagic(
@@ -62,7 +71,7 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
             "139;151;215;173;122;206;161;162;200;216;217;123;124;215;200;170;"
             "171;132;158;155;215;120;149;169;140;164;122;154;178;174;160;172;"
             "157;131;210;161;203;137;159;117;205;166;162;139;171;169;210;163") +
-        "&name=" + searchName);
+        "&name=" + searchName + "&filter[platform]=" + pIds.join(","));
     q.exec();
     data = netComm->getData();
 
@@ -86,36 +95,47 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
     QJsonArray jsonGames =
         jsonDoc.object()["data"].toObject()["games"].toArray();
 
-    int platformId = getPlatformId(config->platform);
+    const QStringList fields = {"game_title", "players",    "release_date",
+                                "developers", "publishers", "genres",
+                                "overview",   "rating",     "platform"};
+
     while (!jsonGames.isEmpty()) {
         QJsonObject jsonGame = jsonGames.first().toObject();
 
         GameEntry game;
-        // https://api.thegamesdb.net/v1/Games/ByGameID?id=88&apikey=XXX&fields=game_title,players,release_date,developer,publisher,genres,overview,rating,platform
+
         game.id = QString::number(jsonGame["id"].toInt());
-        game.url = baseUrl + "/Games/ByGameID?id=" + game.id + "&apikey=" +
-                   StrTools::unMagic(
-                       "187;161;217;126;172;149;202;122;163;197;163;219;162;"
-                       "171;203;197;139;151;215;173;122;206;161;162;200;216;"
-                       "217;123;124;215;200;170;171;132;158;155;215;120;149;"
-                       "169;140;164;122;154;178;174;160;172;157;131;210;161;"
-                       "203;137;159;117;205;166;162;139;171;169;210;163") +
-                   "&fields=game_title,players,release_date,developers,"
-                   "publishers,genres,overview,rating";
+        game.url =
+            QString("%1/Games/ByGameID?id=%2&apikey=%3&fields=%4")
+                .arg(baseUrl)
+                .arg(game.id)
+                .arg(QString(StrTools::unMagic(
+                    "187;161;217;126;172;149;202;122;163;197;163;219;162;"
+                    "171;203;197;139;151;215;173;122;206;161;162;200;216;"
+                    "217;123;124;215;200;170;171;132;158;155;215;120;149;"
+                    "169;140;164;122;154;178;174;160;172;157;131;210;161;"
+                    "203;137;159;117;205;166;162;139;171;169;210;163")))
+                .arg(fields.join(","));
+
         game.title = jsonGame["game_title"].toString();
         // Remove anything at the end with a parentheses. 'thegamesdb' has a
         // habit of adding for instance '(1993)' to the name.
         game.title = game.title.left(game.title.indexOf("(")).simplified();
+
         if (jsonGame["release_date"] != QJsonValue::Undefined) {
             game.releaseDate = jsonGame["release_date"].toString();
         }
-        int gamePlafId = jsonGame["platform"].toInt();
-        game.platform = platformMap[QString::number(gamePlafId)].toString();
-        bool matchPlafId = gamePlafId == platformId;
-        if (platformMatch(game.platform, platform) || matchPlafId) {
+        int foundPlafId = jsonGame["platform"].toInt();
+        game.platform = platformMap[QString::number(foundPlafId)].toString();
+        qDebug() << "Trying to match platform" << game.platform;
+        bool matchPlafId = configuredPlfIds.contains(foundPlafId);
+        if (matchPlafId || platformMatch(game.platform, platform)) {
             if (matchPlafId) {
-                qDebug() << "platforms_id match "
-                         << QString::number(gamePlafId);
+                qDebug() << "exact platform id match "
+                         << QString::number(foundPlafId) << "as"
+                         << game.platform;
+            } else {
+                qDebug() << "platform matched by alias" << game.platform;
             }
             gameEntries.append(game);
         }
@@ -266,23 +286,6 @@ void TheGamesDb::loadMaps() {
     platformMap = readJson("tgdb_platforms.json");
 }
 
-QVariantMap TheGamesDb::readJson(QString filename) {
-    QVariantMap m;
-    QFile jsonFile(filename);
-    if (jsonFile.open(QIODevice::ReadOnly)) {
-        QJsonObject jsonObj =
-            QJsonDocument::fromJson(jsonFile.readAll()).object();
-        m = jsonObj.toVariantMap();
-        jsonFile.close();
-    } else {
-        printf("\033[1;31mFile '%s' not found. Please fix.\n\nNow "
-               "quitting...\033[0m\n",
-               filename.toUtf8().constData());
-        exit(1);
-    }
-    return m;
-}
-
-int TheGamesDb::getPlatformId(const QString platform) {
+QVector<int> TheGamesDb::getPlatformId(const QString platform) {
     return Platform::get().getPlatformIdOnScraper(platform, config->scraper);
 }

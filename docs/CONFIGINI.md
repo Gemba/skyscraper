@@ -524,11 +524,18 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### theInFront
 
-Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this option will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources.
+Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this option will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources. Titles starting with "A " or ending with ", A" (indefinite article) are also covered with this switch, for example "Bug's Life, A".
 
-!!! info
+!!! info "Order within the Gamelist XML"
 
     When generating gamelists Skyscraper will still sort the games as if the game titles didn't have 'The' at the beginning.
+
+**Example(s)**
+
+| Input TItle                         | `theInFront="true"`                | `theInFront="false"`                |
+| ----------------------------------- | ---------------------------------- | ----------------------------------- |
+| "The Adventures of Batman & Robin"  | "The Adventures of Batman & Robin" | "Adventures of Batman & Robin, The" |
+| "Adventures of Batman & Robin, The" | "The Adventures of Batman & Robin" | "Adventures of Batman & Robin, The" |
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
@@ -1090,10 +1097,10 @@ Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retr
 By default Skyscraper doesn't scrape and cache game fanart resources because not
 all scraping sites provide this data and also only some frontends support fanart
 display. If enabled Skyscraper will collect game manuals for the scraping
-modules that provide this data. For frontend Batocera no further option must be
-set to enable the output of fanart in the gamelist and into the appropriate
-folder during gamelist creation. For other EmulationStation forks where themes
-support the display of fanart, see also option
+modules that provide this data. For the frontends ES-DE and Batocera no further
+option must be set to enable the output of fanart in the gamelist and into the
+appropriate folder during gamelist creation. For other EmulationStation forks
+where themes support the display of fanart, see also option
 [gameListVariants](CONFIGINI.md#gamelistvariants).
 
 Default value: false  
@@ -1106,10 +1113,10 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 By default Skyscraper doesn't scrape and cache game manuals resources because
 not all scraping sites provide this data and also only some frontends support
 PDF display of these game manuals. If enabled Skyscraper will collect game
-manuals for the scraping modules that provide this data. For frontend ES-DE and
-Batocera no further option must be set to enable the output of the PDF manuals
-to the appropriate folder during gamelist creation. For other EmulationStation
-forks which support PDF manual display, see also option
+manuals for the scraping modules that provide this data. For the frontends ES-DE
+and Batocera no further option must be set to enable the output of the PDF
+manuals to the appropriate folder during gamelist creation. For other
+EmulationStation forks which support PDF manual display, see also option
 [gameListVariants](CONFIGINI.md#gamelistvariants).
 
 Default value: false  

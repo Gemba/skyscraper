@@ -1092,7 +1092,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     if (!config.userCreds.isEmpty()) {
-        QList<QString> userCreds = config.userCreds.split(":");
+        QStringList userCreds = config.userCreds.split(":");
         if (userCreds.length() == 2) {
             config.user = userCreds.at(0);
             config.password = userCreds.at(1);
@@ -1183,16 +1183,17 @@ void Skyscraper::prepareScraping() {
         config.threads = 1;
     } else if (config.scraper == "igdb") {
         prepareIgdb(netComm, q);
-    } else if (config.scraper == "mobygames" && config.threads != 1) {
-        printf(
-            "\033[1;33mForcing one thread to accomodate limits in MobyGames "
-            "scraping module. Also be aware that MobyGames has a request limit "
-            "of 720 requests per hour for a Hobbyist subscription.\033[0m\n\n");
-        config.threads = 1;
+    } else if (config.scraper == "mobygames") {
+        if (config.threads != 1) {
+            printf("\033[1;33mForcing one thread to accomodate limits in "
+                   "MobyGames scraping module. Also be aware that MobyGames "
+                   "has a request limit of 720 requests per hour, 12 per "
+                   "minute, for a Hobbyist subscription.\033[0m\n\n");
+            config.threads = 1;
+        }
         if (config.password.isEmpty()) {
-            printf("The MobyGames scraping module requires an API key to "
-                   "work. Read more about that here: "
-                   "'https://gemba.github.io/skyscraper/"
+            printf("The MobyGames scraping module requires an API key to work. "
+                   "More info: 'https://gemba.github.io/skyscraper/"
                    "SCRAPINGMODULES#mobygames'\n");
             exit(1);
         }

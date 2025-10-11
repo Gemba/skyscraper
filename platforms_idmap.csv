@@ -51,7 +51,7 @@ mame-advmame,75,143,23
 mame-libretro,75,143,23
 mame-mame4all,75,143,23
 mastersystem,2,26,35
-megadrive,1,16,36
+megadrive,1,16,36|18
 moto,141,147,-1
 msx,113,57,4929
 n64,14,9,3
@@ -122,7 +122,7 @@ naomi,56,-1,23
 neogeocd,70,54,4956
 palm,219,65,-1
 pcenginecd,114,45,4955
-plus4,99,115,5007
+plus4,99,115,5007|5006
 ps3,59,81,12
 ps4,60,141,4919
 psvita,62,105,39

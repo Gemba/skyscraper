@@ -54,17 +54,20 @@ The database consists of resource entries connected to a unique id. The id is ca
 
 #### Resource Types
 
+These resource types contain the provided game data from a scraping
+source.
+
 ##### title
 
-A game title
+The game title
 
 ##### platform
 
-A game platform
+The game platform, may differ from provided platform with `-p`.
 
 ##### description
 
-A game description
+The game description
 
 ##### publisher
 
@@ -96,32 +99,35 @@ Game rating, real number between 0 and 1
 
 ##### cover
 
-A cover image filename for a game (file exists in `covers` subfolder)
+Cover image filename for a game (file stored below `covers` subfolder)
 
 ##### screenshot
 
-A screenshot image filename for a game (file exists in `screenshots` subfolder)
+Screenshot image filename for a game (file stored below `screenshots` subfolder)
 
 ##### wheel
 
-A wheel (logo) image filename for a game (file exists in `wheels` subfolder)
+Wheel (logo) image filename for a game (file stored below `wheels` subfolder)
 
 ##### marquee
 
-A marquee image filename for a game (file exists in `marquees` subfolder)
+Marquee image filename for a game (file stored below `marquees` subfolder)
 
 ##### texture
 
-A texture image (disc/cartridge) filename for a game (file exists in `textures` subfolder)
+Texture image (disc/cartridge) filename for a game (file stored below `textures`
+subfolder)
 
 ##### video
 
-A video file filename for a game (file exists in `videos` subfolder)
+Video file filename for a game (file stored below `videos` subfolder)
 
 ##### manual
 
-(Since v3.12) A manual (PDF) file filename for a game (file exists in `manuals` subfolder)
+Since v3.12: Manual (PDF) file filename for a game (file stored below `manuals`
+subfolder)
 
 ##### fanart
 
-(Since v3.18) A background image displayed in some frontends (e.g. Batocera) and themes for a game (file exists in `fanarts` subfolder)
+Since v3.18: Background image displayed in some frontends (e.g. Batocera) and
+themes for a game (file stored below `fanarts` subfolder)
