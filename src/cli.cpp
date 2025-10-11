@@ -30,6 +30,7 @@
 #include <QRandomGenerator>
 #include <QRegularExpression>
 #include <QStringBuilder>
+#include <QSysInfo>
 
 void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 
@@ -239,9 +240,13 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "verbosity", "Print more info while scraping. Default: 0", "0-3", "0");
     QCommandLineOption hintOption("hint",
                                   "Show a random 'Tip of the Day' and quit.");
+    QCommandLineOption buildinfoOption("buildinfo",
+                                       "Show Skyscraper's build information "
+                                       "(for reporting an issue) and quit.");
 
     parser->addOption(addextOption);
     parser->addOption(aOption);
+    parser->addOption(buildinfoOption);
     parser->addOption(cacheOption);
     parser->addOption(cOption);
     parser->addOption(dOption);
@@ -537,4 +542,25 @@ void Cli::showHint() {
     hintWrapped.append(line);
 
     printf("%s\n\n", hintWrapped.join("\n").toStdString().c_str());
+}
+
+void Cli::showBuildinfo() {
+    QStringList info;
+    QString skyVer = "Skyscraper:       " VERSION;
+#ifdef QT_DEBUG
+    skyVer = skyVer % " (Debug)";
+#endif
+    info.append(skyVer);
+    info.append("Qt:               " % QString::number(QT_VERSION_MAJOR) % "." %
+                QString::number(QT_VERSION_MINOR) % "." %
+                QString::number(QT_VERSION_PATCH));
+    info.append("Architecture:     " % QSysInfo::currentCpuArchitecture());
+    info.append("Kernel:           " % QSysInfo::kernelType() % " " %
+                QSysInfo::kernelVersion());
+    info.append("Operating System: " % QSysInfo::prettyProductName());
+    QString rpVer = Config::getRetropieVersion();
+    if (!rpVer.isEmpty()) {
+        info.append("RetroPie:         " % rpVer);
+    }
+    printf("%s\n", info.join("\n").toStdString().c_str());
 }
