@@ -13,10 +13,11 @@ humans](https://keepachangelog.com).
   and config option [`fanarts`](CLIHELP.md#fanarts)
 - Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [flag
   miximages](CLIHELP.md#miximages)
-- Added: Allow more relaxed extension syntax in config options. In addition to
-  `'*.ext'` also allow `'.ext'` and `'ext'`
+- Added: Allow more relaxed extension syntax in config options (e.g.,
+  `addExtensions`). In addition to `'*.ext'` also allow `'.ext'` and even `'ext'`
 - Added: Accept also singular for media flags, e.g. `--flags video` additionally
   to `--flags videos`. However, in the config file accept only plural as before.
+- Updated: Option `theInFront` covers also the indefinite article 'a'.
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
 - Updated: Documentation, added usage level for configuration options. See

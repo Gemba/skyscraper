@@ -126,6 +126,20 @@ private slots:
             QCOMPARE(out, exp);
         }
     }
+
+    void testTheInFront() {
+        QCOMPARE(NameTools::theInFront(false, "The Adventures of Batman & Robin"), "Adventures of Batman & Robin, The");
+        QCOMPARE(NameTools::theInFront(true, "The Adventures of Batman & Robin"), "The Adventures of Batman & Robin");
+        QCOMPARE(NameTools::theInFront(false, "Adventures of Batman & Robin, The"), "Adventures of Batman & Robin, The");
+        QCOMPARE(NameTools::theInFront(true, "Adventures of Batman & Robin, the"), "The Adventures of Batman & Robin");
+        QCOMPARE(NameTools::theInFront(false, "A Bug's Life"), "Bug's Life, A");
+        QCOMPARE(NameTools::theInFront(true, "A Bug's Life"), "A Bug's Life");
+        QCOMPARE(NameTools::theInFront(false, "Bug's Life, A"), "Bug's Life, A");
+        QCOMPARE(NameTools::theInFront(true, "Bug's Life, A"), "A Bug's Life");
+        // fix wrong capitalization in any case
+        QCOMPARE(NameTools::theInFront(false, "Cave, THE"), "Cave, The");
+        QCOMPARE(NameTools::theInFront(true, "the Cave"), "The Cave");
+    }
 };
 
 QTEST_MAIN(TestNameTools)

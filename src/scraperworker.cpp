@@ -345,20 +345,7 @@ void ScraperWorker::run() {
         // assembling gamelist
         game.title = StrTools::stripBrackets(game.title);
 
-        // Move 'The' or ', The' depending on the config. This does not affect
-        // game list sorting. 'The ' is always removed before sorting.
-        if (config.theInFront) {
-            QRegularExpression theMatch(", [Tt]{1}he");
-            if (theMatch.match(game.title).hasMatch()) {
-                game.title.replace(theMatch.match(game.title).captured(0), "");
-                game.title.prepend("The ");
-            }
-        } else {
-            if (game.title.toLower().left(4) == "the ") {
-                game.title =
-                    game.title.remove(0, 4).simplified().append(", The");
-            }
-        }
+        game.title = NameTools::theInFront(config.theInFront, game.title);
 
         game.description = StrTools::xmlUnescape(game.description);
         if (config.tidyDesc) {
