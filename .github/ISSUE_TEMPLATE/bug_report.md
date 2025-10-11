@@ -32,10 +32,13 @@ Please remove the text down to this point before proceeding.
 [Replace this text with any useful Skyscraper terminal output that might help clarify your issue. For longer output use pastebin.com, ix.io or similiar.]
 
 **Technical information**
- - Skyscraper version: [Replace with the Skyscraper version you are running, e.g. 3.9.1]
- - Configuration switches applied (config.ini, commandline, ...)
+ - Configuration switches applied to Skyscraper (config.ini, commandline, ...)
  - Internet connection: [Replace with the type of internet you have, e.g. adsl, wifi, dialup, if your issue is scraper related]
- - OS and Version [Replace with the OS/stack and version you are running, e.g. RetroPie 4.8.5, 23.10.1, ...]
+ - _Note_: For the next two items you may provide the output of `Skyscraper --buildinfo`
+   (from v3.18 onwards) and add the RetroPie version if it is not printed with
+   this command.
+   - Skyscraper version: [Replace with the Skyscraper version you are running, e.g. 3.9.1]
+   - OS and Version [Replace with the OS/stack and version you are running, e.g. RetroPie 4.8.5, 23.10.1, ...]
 
 **Additional context**
 [Replace this text with any additional context that might help understand this issue better. Optional.]
