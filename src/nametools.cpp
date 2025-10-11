@@ -35,6 +35,12 @@
 #include <QSettings>
 #include <QStringBuilder>
 
+inline const QRegularExpression
+    RE_THE_TRAILING("(,\\s+)(the|a)$",
+                    QRegularExpression::CaseInsensitiveOption);
+inline const QRegularExpression
+    RE_THE_HEADING("^(the|a)(\\s+)", QRegularExpression::CaseInsensitiveOption);
+
 QString NameTools::getScummName(const QFileInfo &info, const QString baseName,
                                 const QString scummIni) {
 
@@ -474,4 +480,38 @@ QString NameTools::getNameFromTemplate(const GameEntry &game,
     }
 
     return finalName;
+}
+
+QString NameTools::theInFront(bool theInFront, const QString &title) {
+    // Move 'The' or ', The' depending on the config. This does not affect
+    // game list sorting. 'The ' is always removed before sorting.
+    QString t = title;
+    QRegularExpressionMatch m = RE_THE_TRAILING.match(t);
+    if (m.hasMatch()) {
+        QString pre = m.captured(2).left(1).toUpper();
+        if (m.captured(2).length() > 1) {
+            pre = pre % m.captured(2).mid(1).toLower();
+        }
+        if (theInFront) {
+            t.replace(m.captured(0), "");
+            t = t.prepend(pre % " ");
+        } else {
+            t.replace(m.captured(2), pre);
+        }
+    }
+
+    m = RE_THE_HEADING.match(t);
+    if (m.hasMatch()) {
+        QString pre = m.captured(1).left(1).toUpper();
+        if (m.captured(1).length() > 1) {
+            pre = pre % m.captured(1).mid(1).toLower();
+        }
+        if (!theInFront) {
+            t.replace(m.captured(0), "");
+            t.append(", " % pre);
+        } else {
+            t.replace(m.captured(1), pre);
+        }
+    }
+    return t;
 }

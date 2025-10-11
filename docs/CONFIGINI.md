@@ -523,11 +523,18 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### theInFront
 
-Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this option will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources.
+Game titles are returned from the scraping sources sometimes as 'The Game' and other times as 'Game, The'. Enabling this option will force Skyscraper to always try and move 'The' to the front of the titles. If it is not enabled, Skyscraper will always try and move it to the end of the title, regardless of how it was originally returned by the scraping sources. Titles starting with "A " or ending with ", A" (indefinite article) are also covered with this switch, for example "Bug's Life, A".
 
-!!! info
+!!! info "Order within the Gamelist XML"
 
     When generating gamelists Skyscraper will still sort the games as if the game titles didn't have 'The' at the beginning.
+
+**Example(s)**
+
+| Input TItle                         | `theInFront="true"`                | `theInFront="false"`                |
+| ----------------------------------- | ---------------------------------- | ----------------------------------- |
+| "The Adventures of Batman & Robin"  | "The Adventures of Batman & Robin" | "Adventures of Batman & Robin, The" |
+| "Adventures of Batman & Robin, The" | "The Adventures of Batman & Robin" | "Adventures of Batman & Robin, The" |
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
