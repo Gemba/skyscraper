@@ -1,5 +1,12 @@
 ## Path Logic in Skyscraper
 
+!!! tip inline end "Absolute Paths"
+
+    You may use `~/` at the beginning of the path. This will be replaced with
+    the current [home directory](https://doc.qt.io/qt-6/qdir.html#homePath)
+    specific to the OS platform. The notation `~account/some/path` is not
+    supported.
+
 This page describes how Skyscraper processes the different paths and especially
 how the absolute path is calculated when a you provide a relative path.
 
@@ -66,12 +73,12 @@ error message.
 
 If you define a relative path Gamelist folder either via `-g` or via
 `gameListFolder=` (INI-file) and are using a frontend for EmulationStation (or
-any other frontend, which is _not_ Pegasus) then the configuration for input
-folder _must_ be provided absolute and can not be relative. In turn, the media
-folder, if it is a relative path, is then assumed to be relative to the input
-folder.
+any other frontend, which is _neither_ Pegasus _nor_ Batocera) then the
+configuration for input folder _must_ be provided absolute and can not be
+relative. In turn, the media folder, if it is a relative path, is then assumed
+to be relative to the input folder.
 
-However, if you selected the Pegasus frontend then the input folder may be
+However, if you selected the Pegasus or Batocera frontend then the input folder may be
 relative. The input folder and media folder, when relative, are then interpreted
 by Skyscraper to be relative to the game list folder.
 

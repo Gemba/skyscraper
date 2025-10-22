@@ -83,48 +83,50 @@ void Skyscraper::run() {
 
     cacheScrapeMode = config.scraper == "cache";
     doCacheScraping = cacheScrapeMode && !config.pretend;
-    printf("Platform:           '\033[1;32m%s\033[0m'\n",
+    printf("Platform:         '\033[1;32m%s\033[0m'\n",
            config.platform.toStdString().c_str());
-    printf("Scraping module:    '\033[1;32m%s\033[0m'\n",
+    printf("Scraping module:  '\033[1;32m%s\033[0m'\n",
            config.scraper.toStdString().c_str());
     if (cacheScrapeMode) {
-        printf("Frontend:           '\033[1;32m%s\033[0m'\n",
+        printf("Frontend:         '\033[1;32m%s\033[0m'\n",
                config.frontend.toStdString().c_str());
         if (!config.frontendExtra.isEmpty()) {
-            printf("Extra:              '\033[1;32m%s\033[0m'\n",
+            printf("Extra:            '\033[1;32m%s\033[0m'\n",
                    config.frontendExtra.toStdString().c_str());
         }
     }
-    printf("Input folder:       '\033[1;32m%s\033[0m'\n",
+    printf("Input folder:     '\033[1;32m%s\033[0m'\n",
            config.inputFolder.toStdString().c_str());
-    printf("Game list folder:   '\033[1;32m%s\033[0m'\n",
+    printf("Game list folder: '\033[1;32m%s\033[0m'\n",
            config.gameListFolder.toStdString().c_str());
-    printf("Covers folder:      '\033[1;32m%s\033[0m'\n",
+    printf("Media folder:     '\033[1;32m%s\033[0m'\n",
+           config.mediaFolder.toStdString().c_str());
+    printf("  Covers folder:  '\033[1;32m%s\033[0m'\n",
            config.coversFolder.toStdString().c_str());
-    printf("Screenshots folder: '\033[1;32m%s\033[0m'\n",
+    printf("  Screenshots:    '\033[1;32m%s\033[0m'\n",
            config.screenshotsFolder.toStdString().c_str());
-    printf("Wheels folder:      '\033[1;32m%s\033[0m'\n",
+    printf("  Wheels:         '\033[1;32m%s\033[0m'\n",
            config.wheelsFolder.toStdString().c_str());
-    printf("Marquees folder:    '\033[1;32m%s\033[0m'\n",
+    printf("  Marquees:       '\033[1;32m%s\033[0m'\n",
            config.marqueesFolder.toStdString().c_str());
-    printf("Textures folder:    '\033[1;32m%s\033[0m'\n",
+    printf("  Textures:       '\033[1;32m%s\033[0m'\n",
            config.texturesFolder.toStdString().c_str());
     if (config.videos) {
-        printf("Videos folder:      '\033[1;32m%s\033[0m'\n",
+        printf("  Videos:         '\033[1;32m%s\033[0m'\n",
                config.videosFolder.toStdString().c_str());
     }
     if (config.manuals && !config.manualsFolder.isEmpty()) {
-        printf("Manuals folder:     '\033[1;32m%s\033[0m'\n",
+        printf("  Manuals:        '\033[1;32m%s\033[0m'\n",
                config.manualsFolder.toStdString().c_str());
     }
     if (config.fanart && !config.fanartsFolder.isEmpty()) {
-        printf("Fanarts folder:     '\033[1;32m%s\033[0m'\n",
+        printf("  Fanarts:        '\033[1;32m%s\033[0m'\n",
                config.fanartsFolder.toStdString().c_str());
     }
-    printf("Cache folder:       '\033[1;32m%s\033[0m'\n",
+    printf("Cache folder:     '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
     if (config.scraper == "import") {
-        printf("Import folder:      '\033[1;32m%s\033[0m'\n",
+        printf("Import folder:    '\033[1;32m%s\033[0m'\n",
                config.importFolder.toStdString().c_str());
     }
 
@@ -935,11 +937,16 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // Fallback to defaults if they aren't already set, find the rest in
     // settings.h
-    if (!inputFolderSet) {
-        config.inputFolder = frontend->getInputFolder();
-    }
-    if (!gameListFolderSet) {
-        config.gameListFolder = frontend->getGameListFolder();
+    if (config.frontend != "batocera") {
+        if (!inputFolderSet)
+            config.inputFolder = frontend->getInputFolder();
+        if (!gameListFolderSet)
+            config.gameListFolder = frontend->getGameListFolder();
+    } else {
+        if (!gameListFolderSet)
+            config.gameListFolder = frontend->getGameListFolder();
+        if (!inputFolderSet)
+            config.inputFolder = frontend->getInputFolder();
     }
     if (!mediaFolderSet) {
         if (config.frontend == "esde" || config.frontend == "batocera") {
@@ -953,10 +960,19 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             config.mediaFolder = Config::concatPath(config.gameListFolder, mf);
         }
     }
+    Config::expandHomePath(config.inputFolder);
+    Config::expandHomePath(config.mediaFolder);
 
     // defaults are always absolute, thus input- and mediafolder will be
-    // unchanged by these calls
-    if (config.frontend == "pegasus") {
+    // unchanged by these calls.
+    // gamelistfolder is absolute by now.
+    // the other two may be relative or absolute.
+    if (config.frontend == "pegasus" || config.frontend == "batocera") {
+        QString last = config.gameListFolder.split("/").last();
+        config.inputFolder = removeSurplusPlatformPath(config.platform, last,
+                                                       config.inputFolder);
+        config.mediaFolder = removeSurplusPlatformPath(config.platform, last,
+                                                       config.mediaFolder);
         config.inputFolder =
             Config::makeAbsolutePath(config.gameListFolder, config.inputFolder);
         config.mediaFolder =
@@ -970,6 +986,11 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                    "Now quitting...\n");
             exit(1);
         }
+        QString last = config.inputFolder.split("/").last();
+        config.gameListFolder = removeSurplusPlatformPath(
+            config.platform, last, config.gameListFolder);
+        config.mediaFolder = removeSurplusPlatformPath(config.platform, last,
+                                                       config.mediaFolder);
         if (config.inputFolder != config.gameListFolder &&
             inputDirFileInfo.canonicalFilePath() ==
                 frontend->getInputFolder()) {
@@ -1511,6 +1532,20 @@ void Skyscraper::setLangPrios() {
             }
         }
     }
+}
+
+QString &Skyscraper::removeSurplusPlatformPath(const QString &platform,
+                                               const QString &lastPath,
+                                               QString &sourcePath) {
+    if (sourcePath.startsWith("./") && lastPath == platform) {
+        const QString subPath = "/" % lastPath;
+        if (sourcePath.endsWith(subPath)) {
+            qDebug() << "pre  sourcePath" << sourcePath;
+            sourcePath.replace(subPath, "");
+            qDebug() << "post sourcePath" << sourcePath;
+        }
+    }
+    return sourcePath;
 }
 
 // --- Console colors ---

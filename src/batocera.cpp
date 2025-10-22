@@ -33,14 +33,15 @@ static const QString baseFolder() { return QString("/userdata/roms/"); }
 
 inline const QStringList binaryGamelistElems() {
     // using enum GameEntry::Elem; TODO --> std-c++-20 onwards
-    return QStringList({GameEntry::getTag(GameEntry::Elem::COVER, true),
+    return QStringList({GameEntry::getTag(GameEntry::Elem::COVER),
                         GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
                         GameEntry::getTag(GameEntry::Elem::MARQUEE),
+                        GameEntry::getTag(GameEntry::Elem::WHEEL),
                         GameEntry::getTag(GameEntry::Elem::FANART),
                         GameEntry::getTag(GameEntry::Elem::MANUAL),
                         GameEntry::getTag(GameEntry::Elem::VIDEO), "bezel",
                         "boxart", "boxback", "cartridge", "magazine", "map",
-                        "mix", "music", "thumbnail", "titleshot"});
+                        "mix", "music", /*"thumbnail", -> COVER */ "titleshot"});
 };
 
 void Batocera::setConfig(Settings *config) {
@@ -53,13 +54,13 @@ void Batocera::setConfig(Settings *config) {
     }
 }
 
-QString Batocera::getInputFolder() { return baseFolder() % config->platform; }
+QString Batocera::getInputFolder() { return config->gameListFolder; }
 
 QString Batocera::getGameListFolder() {
     return baseFolder() % config->platform;
 }
 
-QString Batocera::getMediaFolder() { return baseFolder() % config->platform; }
+QString Batocera::getMediaFolder() { return config->gameListFolder; }
 
 QString Batocera::getCoversFolder() { return config->mediaFolder % "/images"; }
 QString Batocera::getScreenshotsFolder() { return getCoversFolder(); }
@@ -81,9 +82,11 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
         entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
 
     const QMap<QString, QString> scrapedBinsMap = {
-        {GameEntry::getTag(GameEntry::Elem::COVER, true), entry.coverFile},
+        {GameEntry::getTag(GameEntry::Elem::COVER, false), entry.coverFile},
+        //{"boxart", entry.coverFile},
         {GameEntry::getTag(GameEntry::Elem::SCREENSHOT), entry.screenshotFile},
         {GameEntry::getTag(GameEntry::Elem::MARQUEE), entry.marqueeFile},
+        {GameEntry::getTag(GameEntry::Elem::WHEEL), entry.wheelFile},
         {GameEntry::getTag(GameEntry::Elem::FANART), entry.fanartFile},
         {GameEntry::getTag(GameEntry::Elem::MANUAL), entry.manualFile},
         {GameEntry::getTag(GameEntry::Elem::VIDEO), entry.videoFile}};
@@ -96,8 +99,8 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
         if (binaryGamelistElems().contains(el)) {
             if (!scrapedBinsMap.keys().contains(el)) {
                 // write back binaries which are currently not scraped by
-                // Skyscraper
-                l.append(elem(el, entry.getEsExtra(el), addEmptyElem(), true));
+                // Skyscraper, set isPath to false to avoid any changes
+                l.append(elem(el, entry.getEsExtra(el), addEmptyElem(), false));
             } else {
                 qWarning() << "Twin element" << el
                            << "detected in extra-elements for" << entry.path;

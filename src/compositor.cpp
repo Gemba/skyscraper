@@ -51,6 +51,7 @@
 #include <QDir>
 #include <QDomDocument>
 #include <QFileInfo>
+#include <QMimeDatabase>
 #include <QPainter>
 #include <QSettings>
 #include <QStringBuilder>
@@ -298,6 +299,8 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
         fn.prepend("/" % subPath);
         createSubfolder = true;
     }
+    QMimeDatabase db;
+    QRegularExpression reExt("^(.+)(\\.[^\\.]+)$");
 
     for (auto &output : outputs.getLayers()) {
         QString filename = fn;
@@ -347,16 +350,24 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
             }
         }
 
+        QByteArray mediaData;
+        QString fnExt;
         if (output.resource == "cover") {
-            output.setCanvas(QImage::fromData(game.coverData));
+            mediaData = game.coverData;
         } else if (output.resource == "screenshot") {
-            output.setCanvas(QImage::fromData(game.screenshotData));
+            mediaData = game.screenshotData;
         } else if (output.resource == "wheel") {
-            output.setCanvas(QImage::fromData(game.wheelData));
+            mediaData = game.wheelData;
         } else if (output.resource == "marquee") {
-            output.setCanvas(QImage::fromData(game.marqueeData));
+            mediaData = game.marqueeData;
         } else if (output.resource == "texture") {
-            output.setCanvas(QImage::fromData(game.textureData));
+            mediaData = game.textureData;
+        }
+
+        output.setCanvas(QImage::fromData(mediaData));
+        if (isBatocera) {
+            QMimeType mime = db.mimeTypeForData(mediaData);
+            fnExt = mime.preferredSuffix();
         }
 
         if (output.canvas.isNull() && output.hasLayers()) {
@@ -381,6 +392,11 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
                            << " Check file permissions, gamelist binary data "
                               "may be incomplete.";
             }
+        }
+
+        // check if image format matches extension
+        if (isBatocera) {
+            filename = filename.replace(reExt, "\\1." % fnExt);
         }
 
         if (output.resType == "cover" && output.save(filename)) {

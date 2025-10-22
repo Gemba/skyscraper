@@ -321,7 +321,7 @@ QString AttractMode::getMediaTypeFolder(QString type, bool detectVideoPath) {
         while (!emulatorFile.atEnd()) {
             QByteArray line = emulatorFile.readLine();
             line = line.trimmed();
-            line.replace("~", QDir::homePath().toUtf8());
+            line.replace("~/", QDir::homePath().toUtf8() + "/");
             line.replace("$HOME", QDir::homePath().toUtf8());
             QString lookFor = "artwork";
             if (line.left(lookFor.length()) == lookFor) {

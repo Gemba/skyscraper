@@ -58,8 +58,9 @@ public:
 
     enum Format { RETROPIE, ESDE, BATOCERA };
 
-    static const QMap<unsigned char, QString> commonGamelistElems() {
-        return QMap<unsigned char, QString>{
+    static const QMap<unsigned char, QString>
+    commonGamelistElems(bool isBatocera = false) {
+        QMap<unsigned char, QString> m = QMap<unsigned char, QString>{
             /* KEY, "gamelist XML element" */
             {DESCRIPTION, "desc"},
             {DEVELOPER, "developer"},
@@ -67,7 +68,6 @@ public:
             {PLAYERS, "players"},
             {TAGS, "genre"},
             {RELEASEDATE, "releasedate"},
-            {COVER, "thumbnail"}, // Batocera uses "<boxart/>"
             {SCREENSHOT, "image"},
             {VIDEO, "video"},
             {RATING, "rating"},
@@ -79,14 +79,15 @@ public:
             {TITLE, "name"},
             {TEXTURE, "texture"},
             {MANUAL, "manual"},
-            // Batocera only and some ES dialects
+            // Batocera, ES-DE only and some ES dialects
             {FANART, "fanart"}};
+        m.insert(COVER, "thumbnail");
+        (void)isBatocera;
+        return m;
     };
 
     static const QString getTag(GameEntry::Elem e, bool isBatocera = false) {
-        QString elemName = commonGamelistElems()[e];
-        if (isBatocera and e == COVER)
-            elemName = "boxart";
+        QString elemName = commonGamelistElems(isBatocera)[e];
         return elemName;
     };
 

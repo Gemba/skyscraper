@@ -203,13 +203,11 @@ bool Layer::save(QString filename) {
 
     canvas = canvas.convertToFormat(QImage::Format_ARGB6666_Premultiplied);
 
-    if (canvas.isNull())
+    if (canvas.isNull()) {
         return false;
-
-    if (canvas.save(filename)) {
-        return true;
     }
-    return false;
+
+    return canvas.save(filename);
 }
 
 void Layer::colorFromHex(QString color) {

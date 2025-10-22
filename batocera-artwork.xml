@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Just the screenshot without any decorations or scaling -->
 <artwork>
+  <!-- copies the resourcetypes without any artwork applied to the respective mediafolder -->
   <output type="screenshot"/>
+  <output type="marquee" resource="wheel" />
+  <output type="cover" />
+  <output type="wheel" />
 </artwork>

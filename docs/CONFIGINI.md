@@ -103,7 +103,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [includePattern](CONFIGINI.md#includepattern)               | Advanced       |    Y     |       Y        |       Y        |               |
 | [innerBracketsReplace](CONFIGINI.md#innerbracketsreplace)   | Expert         |    Y     |                |                |               |
 | [innerParenthesesReplace](CONFIGINI.md#innerparenthesesreplace) | Expert     |  Y       |                |                |               |
-| [inputFolder](CONFIGINI.md#inputfolder)                     | Advanced       |    Y     |       Y        |                |               |
+| [inputFolder](CONFIGINI.md#inputfolder)                     | Advanced       |    Y     |       Y        |       Y        |               |
 | [interactive](CONFIGINI.md#interactive)                     | Basic          |    Y     |       Y        |                |       Y       |
 | [jpgQuality](CONFIGINI.md#jpgquality)                       | Advanced       |    Y     |       Y        |                |       Y       |
 | [keepDiscInfo](CONFIGINI.md#keepdiscinfo)                   | Expert         |    Y     |       Y        |                |               |
@@ -150,10 +150,12 @@ Sets the rom input folder. By default Skyscraper will look for roms in the `/hom
 
 !!! note
 
-    If this is set in the `[main]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
+    If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`  
-Allowed in sections: `[main]`, `[<PLATFORM>]`
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
 
 ---
 
@@ -167,6 +169,8 @@ Sets the game list export folder. By default Skyscraper exports the game list to
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
 
 ---
 
@@ -200,6 +204,8 @@ Read more about the [artwork compositing](ARTWORK.md).
 
 Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>/media`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
 
 ---
 

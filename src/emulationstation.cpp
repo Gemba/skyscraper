@@ -413,7 +413,7 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
 
 QStringList EmulationStation::createEsVariantXml(const GameEntry &entry) {
     QStringList l;
-    bool addEmptyElem = !entry.isFolder;
+    bool addEmptyElem = addEmptyElement() && !entry.isFolder;
     l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile,
                   addEmptyElem, true));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT),

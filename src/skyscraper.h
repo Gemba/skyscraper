@@ -84,6 +84,9 @@ private:
     void setRegionPrios();
     void setLangPrios();
     QString normalizePath(QFileInfo fileInfo);
+    QString &removeSurplusPlatformPath(const QString &platform,
+                                       const QString &lastPath,
+                                       QString &sourcePath);
     // void migrate(QString filename);
     void setFolder(const bool doCacheScraping, QString &outFolder,
                    const bool createMissingFolder = true);

@@ -69,14 +69,14 @@ private:
     static QPair<QString, QString> getFilenameParams(QString k) {
         QMap<QString, QPair<QString, QString>> cacheResFn = {
             // key: "binary type in cache", value: <"-postfix", ".ext">
-            {"cover", QPair<QString, QString>("boxart", "jpg")},
+            {"cover", QPair<QString, QString>("thumb", "jpg")},
             {"fanart", QPair<QString, QString>("fanart", "jpg")},
             {"manual", QPair<QString, QString>("manual", "pdf")},
             {"marquee", QPair<QString, QString>("marquee", "jpg")},
             {"screenshot", QPair<QString, QString>("image", "jpg")},
-            // 'texture' not in Bato
             {"video", QPair<QString, QString>("video", "mp4")},
-            {"wheel", QPair<QString, QString>("wheel", "jpg")},
+            {"wheel", QPair<QString, QString>("wheel", "png")},
+            // 'texture' not in Bato
         };
         return cacheResFn[k];
     }

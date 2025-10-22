@@ -137,8 +137,9 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
 
             QDomNodeList elems = node.childNodes();
             for (int i = 0; i < elems.length(); i++) {
-                QString k = elems.at(i).toElement().tagName();
-                if (entry.commonGamelistElems().values().contains(k) ||
+                QDomElement glElem = elems.at(i).toElement();
+                QString k = glElem.tagName();
+                if (entry.commonGamelistElems(true).values().contains(k) ||
                     k == "path" ||
                     k == "sortname" /* when reading a non-batocera GL */) {
                     // it is a common/baseline gamelist element: do not keep in
@@ -146,8 +147,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
                     continue;
                 }
                 // preserve everything else with attributes "as is"
-                entry.setEsExtra(k, elems.at(i).toElement().text(),
-                                 elems.at(i).toElement().attributes());
+                entry.setEsExtra(k, glElem.text(), glElem.attributes());
             }
         }
         entry.isFolder = isFolder;
