@@ -841,8 +841,8 @@ bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
     return true;
 }
 
-bool RuntimeCfg::validateFileParameter(const QString &param,
-                                       const QString &val) {
+bool RuntimeCfg::validateFileParameter(const QString &param, QString &val) {
+    Config::expandHomePath(val);
     if (QFileInfo(val).isRelative()) {
         printf("Parameter %s must be absolute path, got: %s\nPlease fix!\n",
                param.toStdString().c_str(), val.toStdString().c_str());
@@ -871,6 +871,7 @@ bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,
 }
 
 QString RuntimeCfg::toAbsolutePath(bool isCliOpt, QString optionVal) {
+    Config::expandHomePath(optionVal);
     if (QFileInfo(optionVal).isRelative()) {
         // make absolute
         const QString configIniAbsPath =

@@ -194,3 +194,8 @@ cacheScreenshots="false"
 
 [batocera]
 artworkXml="batocera-artwork.xml"
+;gameListFolder="~/path/to/mounted/userdata/roms"
+; relative to gameListFolder
+inputFolder="."
+mediaFolder="."
+;videos="true"

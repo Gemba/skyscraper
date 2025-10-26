@@ -2,11 +2,11 @@
 
 When generating a game list with Skyscraper you have the option of generating it for several different frontends. A frontend is the graphical interface that lists and launches your games.
 
+!!! danger inline end "Backup Any Manual Changes of Your Gamelists"
+
+    Skyscraper will overwrite your game list (obviously). So if you have spend a lot of time hand-crafting metadata in a game list for any frontend, please remember to create a backup before overwriting it with Skyscraper. You can also tell Skyscraper to auto-backup old game lists prior to overwriting them. Read more about the [`gameListBackup` config option](CONFIGINI.md#gamelistbackup).
+
 Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [in the commandline documentation](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [config file documentation](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
-
-!!! warning
-
-    Skyscraper will overwrite your game list (obviously). So if you have spend a lot of time hand-crafting metadata in a game list for any frontend, please remember to create a backup before overwriting it with Skyscraper. You can also tell Skyscraper to auto-backup old game lists prior to overwriting them. Read more about the [`gamelistbackup` config option](CONFIGINI.md#gamelistbackup).
 
 When generating a game list for any frontend, Skyscraper will try to preserve certain metadata. Check the frontend sections below for more information on what metadata is preserved per frontend.
 
@@ -21,7 +21,7 @@ This is the default frontend used when generating a game list with Skyscraper. I
 
 Skyscraper will preserve the following metadata when re-generating a game list for EmulationStation: `favorite`, `hidden`, `kidgame`, `lastplayed`, `playcount`, `sortname`. Also existing `<folder/>` elements of a gamelist file will be preserved. The user editable sub-XML elements for a folder are listed in the [`Metadata.cpp` of EmulationStation](https://github.com/RetroPie/EmulationStation/blob/01de7618d0d248fa2ff1eacde09a20d9d2af5f10/es-app/src/MetaData.cpp#L30).
 
-!!! warning
+!!! warning "Folder Data is Not Cached"
 
     Folder data is not cached by Skyscraper, thus if you delete your `gamelist.xml`, Skyscraper can not restore the edited folder elements from cache.
 
@@ -124,7 +124,7 @@ This is the complete set of scraping binary data supported by Skyscraper:
 
 | Batocera Gamelist XML-Element | Skyscraper support |
 | :---------------------------- | :----------------: |
-| boxart                        |         ✓          |
+| thumbnail (cover)             |         ✓          |
 | fanart                        |         ✓          |
 | image (in game Screenshot)    |         ✓          |
 | manual                        |         ✓          |
@@ -139,13 +139,17 @@ every `<PLATFORM>` you scrape.
 -   Default game list filename: `gamelist.xml`
 -   Default media file location: `/userdata/roms/<PLATFORM>/{images,videos,manuals}`
 
+If you set a game list location and do not specifiy the ROM folder (input
+folder) and media folder, then these are set relatively to the game list folder.
+
 #### Metadata preservation
 
-These extra elements are preserved.
+These extra elements are preserved when they are present in the Gamelist file.
 
 | Batocera Gamelist XML-Element | When present in Gamelist  |
 | :---------------------------- | :-----------------------: |
 | `bezel`                       | Preserved                 |
+| `boxart`                      | Preserved                 |
 | `boxback`                     | Preserved                 |
 | `cartridge`                   | Preserved                 |
 | `magazine`                    | Preserved                 |
@@ -155,7 +159,7 @@ These extra elements are preserved.
 | `thumbnail`                   | Preserved                 |
 | `titleshot`                   | Preserved                 |
 
-Also all other non scrapable elements are preserved (Batocera EmulationStation
+Also, all other non scrapable elements are preserved (Batocera EmulationStation
 adds those on occasion) like: `cheevosHash`, `cheevosId`, `scrap`, ...
 
 #### Usage of Skyscraper for Batocera
@@ -178,7 +182,7 @@ Windows desktop users can use SMB shares and can adapt the following steps.
 1. Mount the root folder of Batocera in your Desktop system. Let the mountpoint
    be `/home/mylogin/bato_sshfs` in this example:
    ```bash
-   mount -t sshfs root@<batocera-IP-address>:/ /home/mylogin/bato_sshfs
+   mount -t sshfs root@batocera:/ /home/mylogin/bato_sshfs
    ```
 2. Change to the platform folder (in this case `snes`) you want to scrape:
    ```bash
@@ -193,7 +197,24 @@ Windows desktop users can use SMB shares and can adapt the following steps.
    You can also set the values for [input-](CONFIGINI.md#inputfolder) (`-i`),
    [gamelist-](CONFIGINI.md#gamelistfolder) (`-g`) und
    [media-folder](CONFIGINI.md#mediafolder) (`-o`) permanently in the Skyscraper
-   config file.
+   config file. You can find a sample configuration at the `[batocera]` section
+   (at the end of `config.ini.example`):
+   ```ini
+   [batocera]
+   artworkXml="batocera-artwork.xml"
+   gameListFolder="~/bato_sshfs/userdata/roms"
+   ; relative to gameListFolder
+   inputFolder="."
+   mediaFolder="."
+   ;videos="true"
+   ```
+   With this addition the Skyscraper invocation is reduced to:
+   ```bash
+   Skyscraper -f batocera -p <platform>
+   ```
+   You may also set the default [frontend in the
+   configuration](CONFIGINI.md#frontend), then you can even drop the `-f` CLI
+   parameter.
 4. Afterwards run the gamelist creation and media file deployment from
    cache:
    ```bash
@@ -220,7 +241,7 @@ Windows desktop users can use SMB shares and can adapt the following steps.
     of. Also you will have to add your credentials for Screenscraper for example in
     the [config file of Skyscraper](CONFIGINI.md#usercreds).
 
-For general advise on SSH usage see the [Batocera
+For general advise on SSH usage and the default password see the [Batocera
 documentation](https://wiki.batocera.org/security).
 
 ### Attract-Mode

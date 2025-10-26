@@ -45,6 +45,7 @@ namespace Config {
     QString makeAbsolutePath(const QString &prePath, QString subPath);
     QString lexicallyRelativePath(const QString &base, const QString &other);
     QString lexicallyNormalPath(const QString &pathWithDots);
+    QString &expandHomePath(QString &path);
 } // namespace Config
 
 #endif // CONFIG_H

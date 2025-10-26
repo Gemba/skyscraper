@@ -369,3 +369,12 @@ QString Config::lexicallyNormalPath(const QString &pathWithDots) {
         std::filesystem::path(pathWithDots.toStdString()).lexically_normal();
     return QString(result.string().c_str());
 }
+
+QString &Config::expandHomePath(QString &path) {
+    if (path.startsWith("~/")) {
+        path.remove(0, 1);
+        path = QDir::homePath() % path;
+        // "~account/folder" not supported
+    }
+    return path;
+}

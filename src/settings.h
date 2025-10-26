@@ -187,7 +187,7 @@ private:
     QSet<QString> getKeys(CfgType type);
     QStringList parseFlags();
     void reportInvalidPlatform();
-    bool validateFileParameter(const QString &param, const QString &val);
+    bool validateFileParameter(const QString &param, QString &val);
     bool scraperAllowedForMatch(const QString &providedScraper,
                                 const QString &opt);
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
@@ -232,7 +232,7 @@ private:
         {"includePattern",          QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"innerBracketsReplace",    QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"innerParenthesesReplace", QPair<QString, int>("str",  CfgType::MAIN                                                            )},
-        {"inputFolder",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
+        {"inputFolder",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"interactive",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"jpgQuality",              QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},        
         {"keepDiscInfo",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},

@@ -116,8 +116,18 @@ void TestSettings::testConfigIniPaths() {
     exp =
         Config::makeAbsolutePath(config.gameListFolder, "../../rel/inout-roms");
     QCOMPARE(config.gameListFolder % "/" % config.inputFolder, exp);
+
     exp = Config::makeAbsolutePath(config.gameListFolder, "./rel/media");
     QCOMPARE(config.gameListFolder % config.mediaFolder.replace(".", ""), exp);
+
+    exp = Config::makeAbsolutePath(config.gameListFolder, "./");
+    QCOMPARE(config.gameListFolder, exp);
+
+    exp = Config::makeAbsolutePath(config.gameListFolder, ".");
+    QCOMPARE(config.gameListFolder, exp);
+
+    exp = Config::makeAbsolutePath(config.gameListFolder, "~/dont/change");
+    QCOMPARE("~/dont/change", exp);
 }
 
 void TestSettings::testConfigIniMain() {
