@@ -144,7 +144,7 @@ QString Platform::getFormats(QString platform, QString extensions,
     }
 
     // default extensions/formats for all
-    QSet<QString> formats({"*.zip", "*.7z", "*.ml"});
+    QSet<QString> formats({"*.zip", "*.7z", "*.ml", "*.m3u"});
     QStringList addExts;
 
 #if QT_VERSION >= 0x050e00
