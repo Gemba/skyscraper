@@ -83,3 +83,11 @@ And now for the questions (with answers)...
     Yes, from Skyscraper 3.18 onwards. The cause is that Screenscraper is the only scraping module which by default passes the extension to the server during the scraping information along with other information (checksums, filesize).  
     When scraping a set of games use the [`--searchstem`](CLIHELP.md#-searchstem-extension) option, i.e. `--searchstem '*.<customext>'`, that way Skyscraper will explicitly query only for the filename stem (=filename without file extension) of the game file. Example: Let's assume you are using `*.desktop` as custom game file extension, then the command would be `Skyscraper -s screenscraper -p <platform> --searchstem '*.desktop'`. You may also use the config file [counterpart](CONFIGINI.md#searchstem). On top you may add `--verbosity 3` to investigate what search term is presented to the Screenscraper server.  
     However, when querying for a single game with [`--query`](CLIHELP.md#-query-string) you don't have to specify this custom extension.
+
+??? Question "I have been enrolled on IGDB, but whenever I try to scrape I get a HTTP 401 (unauthorized). How to resolve this?"
+
+    It may be caused by a system without a realtime clock (like Raspberry Pi) or on systems with a highly unsynchronized clock. As the IGDB token lifetime is calculated on the system time, this might be the culprit. You may remove the file `~/.skyscraper/igdbToken.dat` and try again to scrape with IGDB.
+
+??? Question "I have scraped manuals/fanarts/backcovers from different sources, but in the gamelist/frontend I only get the most recent scraped. How can I correct this?"
+
+    Most likely the `priorities.xml` file is missing these entries for the platform. You can find an example for manual, fanart and backcover cache types and their priority of selection at the [cache documentation](CACHE.md#resource-and-scraping module-priorities) and at the end of the the `~/.skyscraper/priorities.xml.example` file. Once you have added these entries and adjusted them your preferences you will get the media outputted in that order instead of the most recent scraped media.

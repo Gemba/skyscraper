@@ -43,8 +43,9 @@ inline const QString baseFolder() {
 void Esde::setConfig(Settings *config) {
     this->config = config;
     if (config->scraper == "cache") {
-        config->manuals = true;
+        config->backcovers = true;
         config->fanart = true;
+        config->manuals = true;
     }
 }
 
@@ -73,4 +74,9 @@ QString Esde::getMediaFolder() {
     return baseFolder() % "/downloaded_media/" % config->platform;
 }
 
-QString Esde::getFanartsFolder() { return config->mediaFolder % "/fanart"; }
+GameEntry::Types Esde::supportedMedia() {
+    return GameEntry::Types(GameEntry::BACKCOVER | GameEntry::COVER |
+                            GameEntry::FANART | GameEntry::MANUAL |
+                            GameEntry::MARQUEE | GameEntry::SCREENSHOT |
+                            GameEntry::VIDEO | GameEntry::WHEEL);
+}

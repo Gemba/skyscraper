@@ -29,59 +29,59 @@
 
 #include <QDir>
 #include <QDomDocument>
+#include <QStringBuilder>
 
 ImportScraper::ImportScraper(Settings *config,
                              QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
-    fetchOrder.append(GameEntry::Elem::TITLE);
-    fetchOrder.append(GameEntry::Elem::DEVELOPER);
-    fetchOrder.append(GameEntry::Elem::PUBLISHER);
-    fetchOrder.append(GameEntry::Elem::COVER);
-    fetchOrder.append(GameEntry::Elem::SCREENSHOT);
-    fetchOrder.append(GameEntry::Elem::WHEEL);
-    fetchOrder.append(GameEntry::Elem::MARQUEE);
-    fetchOrder.append(GameEntry::Elem::TEXTURE);
-    fetchOrder.append(GameEntry::Elem::VIDEO);
-    fetchOrder.append(GameEntry::Elem::MANUAL);
-    fetchOrder.append(GameEntry::Elem::RELEASEDATE);
-    fetchOrder.append(GameEntry::Elem::TAGS);
-    fetchOrder.append(GameEntry::Elem::PLAYERS);
-    fetchOrder.append(GameEntry::Elem::AGES);
-    fetchOrder.append(GameEntry::Elem::RATING);
-    fetchOrder.append(GameEntry::Elem::DESCRIPTION);
-    fetchOrder.append(GameEntry::Elem::FANART);
 
+    for (auto const &entryElem : GameEntry::commonGamelistElems().keys()) {
+        fetchOrder.append(entryElem);
+    }
+
+    // Always force the cache to be refreshed when using import scraper
+    config->refresh = true;
+    // force true for import
     config->fanart = true;
     config->manuals = true;
     config->videos = true;
+    config->backcovers = true;
 
-    covers = QDir(config->importFolder + "/covers", "*.*", QDir::Name,
-                  QDir::Files | QDir::NoDotAndDotDot)
-                 .entryInfoList();
-    screenshots = QDir(config->importFolder + "/screenshots", "*.*", QDir::Name,
-                       QDir::Files | QDir::NoDotAndDotDot)
-                      .entryInfoList();
-    wheels = QDir(config->importFolder + "/wheels", "*.*", QDir::Name,
-                  QDir::Files | QDir::NoDotAndDotDot)
-                 .entryInfoList();
-    marquees = QDir(config->importFolder + "/marquees", "*.*", QDir::Name,
-                    QDir::Files | QDir::NoDotAndDotDot)
-                   .entryInfoList();
-    textures = QDir(config->importFolder + "/textures", "*.*", QDir::Name,
-                    QDir::Files | QDir::NoDotAndDotDot)
-                   .entryInfoList();
-    videos = QDir(config->importFolder + "/videos", "*.*", QDir::Name,
-                  QDir::Files | QDir::NoDotAndDotDot)
-                 .entryInfoList();
-    manuals = QDir(config->importFolder + "/manuals", "*.*", QDir::Name,
-                   QDir::Files | QDir::NoDotAndDotDot)
-                  .entryInfoList();
-    fanart = QDir(config->importFolder + "/fanarts", "*.*", QDir::Name,
-                  QDir::Files | QDir::NoDotAndDotDot)
-                 .entryInfoList();
-    textual = QDir(config->importFolder + "/textual", "*.*", QDir::Name,
-                   QDir::Files | QDir::NoDotAndDotDot)
-                  .entryInfoList();
+    const QDir::Filters filters = QDir::Files | QDir::NoDotAndDotDot;
+    const QDir::SortFlags sort = QDir::Name;
+    const QStringList imgNameFilters = {"*.png", "*.jpg", "*.jpeg", "*.jpe"};
+
+    QDir d = QDir(config->importFolder + "/textual", "", sort, filters);
+    textual = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/covers");
+    covers = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/screenshots");
+    screenshots = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/wheels");
+    wheels = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/marquees");
+    marquees = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/videos");
+    videos = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/manuals");
+    d.setNameFilters({"*.pdf"});
+    manuals = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/fanarts");
+    d.setNameFilters(imgNameFilters);
+    fanart = d.entryInfoList();
+    d.setPath(config->importFolder + "/fanart");
+    fanart.append(d.entryInfoList());
+
+    d.setPath(config->importFolder + "/backcovers");
+    backcovers = d.entryInfoList();
+
     loadDefinitions();
 }
 
@@ -105,6 +105,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     videoFile = "";
     manualFile = "";
     fanartFile = "";
+    backcoverFile = "";
     GameEntry game;
     bool any = checkType(info.completeBaseName(), textual, textualFile);
     any |= checkType(info.completeBaseName(), screenshots, screenshotFile);
@@ -115,6 +116,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     any |= checkType(info.completeBaseName(), videos, videoFile);
     any |= checkType(info.completeBaseName(), manuals, manualFile);
     any |= checkType(info.completeBaseName(), fanart, fanartFile);
+    any |= checkType(info.completeBaseName(), backcovers, backcoverFile);
     if (any) {
         game.title = info.completeBaseName();
         game.platform = config->platform;
@@ -164,6 +166,10 @@ void ImportScraper::getManual(GameEntry &game) {
 
 void ImportScraper::getFanart(GameEntry &game) {
     game.fanartData = readFile(fanartFile);
+}
+
+void ImportScraper::getBackcover(GameEntry &game) {
+    game.backcoverData = readFile(backcoverFile);
 }
 
 void ImportScraper::getVideo(GameEntry &game) {
@@ -341,12 +347,12 @@ void ImportScraper::loadData() {
 
 bool ImportScraper::loadDefinitions() {
     // Check for textual resource file
-    QFile defFile;
-    if (QFile::exists(config->importFolder + "/definitions.dat")) {
+    QFile defFile = QFile("/definitions.dat");
+    if (QFile::exists(config->importFolder + defFile.fileName())) {
         // check for per-platform folder definitions file
-        defFile.setFileName(config->importFolder + "/definitions.dat");
+        defFile.setFileName(config->importFolder + defFile.fileName());
     } else {
-        defFile.setFileName(config->importFolder + "/../definitions.dat");
+        defFile.setFileName(config->importFolder + "/.." + defFile.fileName());
     }
     if (defFile.open(QIODevice::ReadOnly)) {
         while (!defFile.atEnd()) {

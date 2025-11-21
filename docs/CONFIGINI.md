@@ -73,6 +73,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [addExtensions](CONFIGINI.md#addextensions)                 | Advanced       |    Y     |       Y        |                |               |
 | [addFolders](CONFIGINI.md#addfolders)                       | Expert         |          |                |       Y        |               |
 | [artworkXml](CONFIGINI.md#artworkxml)                       | Advanced       |    Y     |       Y        |       Y        |               |
+| [backcovers](CONFIGINI.md#backcovers)                       | Basic          |    Y     |                |                |               |
 | [brackets](CONFIGINI.md#brackets)                           | Basic          |    Y     |       Y        |       Y        |               |
 | [cacheCovers](CONFIGINI.md#cachecovers)                     | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheFolder](CONFIGINI.md#cachefolder)                     | Basic          |    Y     |       Y        |                |               |
@@ -1098,6 +1099,23 @@ Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retr
 
 ---
 
+#### backcovers
+
+By default Skyscraper doesn't scrape and cache game backcover resources because
+not all scraping sites provide this data and also only some frontends support
+the display of the cover backside. If enabled Skyscraper will collect game
+manuals for the scraping modules that provide this data. For the frontends ES-DE
+and Batocera no further option must be set to enable the output of the boxback
+in the gamelist and into the appropriate folder during gamelist creation.
+You may want to review and [adjust the cache
+priorities](CACHE.md#resource-and-scraping-module-priorities) for the fanart
+selection when data from several scraping modules is present in your cache.
+
+Default value: false  
+Allowed in sections: `[main]`
+
+---
+
 #### fanarts
 
 By default Skyscraper doesn't scrape and cache game fanart resources because not
@@ -1107,10 +1125,13 @@ modules that provide this data. For the frontends ES-DE and Batocera no further
 option must be set to enable the output of fanart in the gamelist and into the
 appropriate folder during gamelist creation. For other EmulationStation forks
 where themes support the display of fanart, see also option
-[gameListVariants](CONFIGINI.md#gamelistvariants).
+[gameListVariants](CONFIGINI.md#gamelistvariants).  
+You may want to review and [adjust the cache
+priorities](CACHE.md#resource-and-scraping-module-priorities) for the fanart
+selection when data from several scraping modules is present in your cache.
 
 Default value: false  
-Allowed in sections: `[main]`, `[<PLATFORM>]`
+Allowed in sections: `[main]`
 
 ---
 
@@ -1124,6 +1145,9 @@ and Batocera no further option must be set to enable the output of the PDF
 manuals to the appropriate folder during gamelist creation. For other
 EmulationStation forks which support PDF manual display, see also option
 [gameListVariants](CONFIGINI.md#gamelistvariants).
+You may want to review and [adjust the cache
+priorities](CACHE.md#resource-and-scraping-module-priorities) for the fanart
+selection when data from several scraping modules is present in your cache.
 
 Default value: false  
 Allowed in sections: `[main]`, `[<PLATFORM>]`

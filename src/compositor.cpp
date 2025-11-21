@@ -53,6 +53,7 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <QPainter>
+#include <QSet>
 #include <QSettings>
 #include <QStringBuilder>
 #include <cmath>
@@ -290,8 +291,8 @@ void Compositor::addChildLayers(Layer &layer, QXmlStreamReader &xml) {
     }
 }
 
-void Compositor::saveAll(GameEntry &game, QString completeBaseName,
-                         bool isBatocera, bool isEsde) {
+GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
+                                     bool esdeMiximage) {
     bool createSubfolder = false;
     QString fn = "/" % completeBaseName;
     QString subPath = getSubpath(game.path);
@@ -301,13 +302,14 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
     }
     QMimeDatabase db;
     QRegularExpression reExt("^(.+)(\\.[^\\.]+)$");
-
+    GameEntry::Types artworkBins = GameEntry::Elem::NONE;
+    bool isBatocera = config->frontend == "batocera";
     for (auto &output : outputs.getLayers()) {
         QString filename = fn;
         if (isBatocera) {
-            filename = Batocera::getFileNameFor(output.resType, filename);
-        }
-        if (fn == filename) {
+            filename =
+                Batocera::getFileNameFor(output.resType, filename) % ".png";
+        } else {
             filename = filename % ".png";
         }
         if (output.resType == "cover") {
@@ -317,11 +319,14 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
                 continue;
             }
         } else if (output.resType == "screenshot") {
-            if (isEsde) {
+            if (esdeMiximage) {
                 filename.prepend(Config::lexicallyNormalPath(
                     config->screenshotsFolder % "/../miximages"));
                 createSubfolder = true;
             } else {
+                // remove potential miximage from earlier gamelist creation
+                QFile::remove(config->screenshotsFolder % "/../miximages/" %
+                              filename);
                 filename.prepend(config->screenshotsFolder);
             }
             if (config->skipExistingScreenshots &&
@@ -351,7 +356,7 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
         }
 
         QByteArray mediaData;
-        QString fnExt;
+        // TODO: maybe add backcover, (fanart?)
         if (output.resource == "cover") {
             mediaData = game.coverData;
         } else if (output.resource == "screenshot") {
@@ -365,10 +370,6 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
         }
 
         output.setCanvas(QImage::fromData(mediaData));
-        if (isBatocera) {
-            QMimeType mime = db.mimeTypeForData(mediaData);
-            fnExt = mime.preferredSuffix();
-        }
 
         if (output.canvas.isNull() && output.hasLayers()) {
             QImage tmpImage(10, 10, QImage::Format_ARGB32_Premultiplied);
@@ -394,23 +395,40 @@ void Compositor::saveAll(GameEntry &game, QString completeBaseName,
             }
         }
 
-        // check if image format matches extension
-        if (isBatocera) {
-            filename = filename.replace(reExt, "\\1." % fnExt);
-        }
-
-        if (output.resType == "cover" && output.save(filename)) {
-            game.coverFile = filename;
-        } else if (output.resType == "screenshot" && output.save(filename)) {
-            game.screenshotFile = filename;
-        } else if (output.resType == "wheel" && output.save(filename)) {
-            game.wheelFile = filename;
-        } else if (output.resType == "marquee" && output.save(filename)) {
-            game.marqueeFile = filename;
-        } else if (output.resType == "texture" && output.save(filename)) {
-            game.textureFile = filename;
+        // TODO: maybe add backcover, (fanart?)
+        bool saved = output.save(filename);
+        if (saved) {
+            if (output.resType == "cover") {
+                game.coverFile = filename;
+                artworkBins |= GameEntry::Elem::COVER;
+            } else if (output.resType == "screenshot") {
+                game.screenshotFile = filename;
+                // when miximages set, do not flag screenshot as saved
+                // thus it will be copied by copyMedia()
+                if (!esdeMiximage)
+                    artworkBins |= GameEntry::Elem::SCREENSHOT;
+            } else if (output.resType == "wheel") {
+                game.wheelFile = filename;
+                artworkBins |= GameEntry::Elem::WHEEL;
+            } else if (output.resType == "marquee") {
+                game.marqueeFile = filename;
+                artworkBins |= GameEntry::Elem::MARQUEE;
+            } else if (output.resType == "texture") {
+                game.textureFile = filename;
+                artworkBins |= GameEntry::Elem::TEXTURE;
+            }
+        } else {
+            qWarning() << QString(
+                              "Output of resource '%1' defined in artwork "
+                              "file, but no such data present for game '%2'. "
+                              "Output may not be as expected. To remediate "
+                              "this warning: Re-scrape to get the missing "
+                              "resource or adjust the artwork file.")
+                              .arg(output.resType)
+                              .arg(game.title);
         }
     }
+    return artworkBins;
 }
 
 void Compositor::processChildLayers(GameEntry &game, Layer &layer) {

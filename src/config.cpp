@@ -113,19 +113,25 @@ void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
             if (isPristine && (src.endsWith("peas.json") ||
                                src.endsWith("platforms_idmap.csv"))) {
                 // remove possible destination *.dist file
-                QFile::remove(dest % ".dist");
-                qDebug() << (dest % ".dist") << "removed as prisitine" << dest
-                         << "detected";
+                if (QFile::remove(dest % ".dist")) {
+                    qDebug() << (dest % ".dist") << "removed as prisitine"
+                             << dest << "detected";
+                }
             }
-            QFile::remove(dest);
-            QFile::copy(src, dest);
-            qDebug() << "Overwritten file" << dest
-                     << "with newer or same version";
+            if (QFileInfo(src).size() != QFileInfo(dest).size()) {
+                QFile::remove(dest);
+                QFile::copy(src, dest);
+                qDebug() << "Overwritten file" << dest
+                         << "bc. file size differed";
+            }
         } else if (fileOp == FileOp::CREATE_DIST) {
-            QString d = QString(dest + ".dist");
-            QFile::remove(d);
-            QFile::copy(src, d);
-            qDebug() << "Copied original distribution file" << src << "as" << d;
+            QString distfn = QString(dest + ".dist");
+            if (QFileInfo(src).size() != QFileInfo(distfn).size()) {
+                QFile::remove(distfn);
+                QFile::copy(src, distfn);
+                qDebug() << "Copied original distribution file" << src << "as"
+                         << distfn;
+            }
         }
     } else {
         QFile::copy(src, dest);

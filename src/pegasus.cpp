@@ -376,6 +376,10 @@ void Pegasus::replaceColon(QString &value, const QString &gameTitle) {
     }
 }
 
+QString Pegasus::getFilename(const QString &path) {
+    return path.mid(path.lastIndexOf("/"), path.length());
+}
+
 bool Pegasus::canSkip() { return true; }
 
 QString Pegasus::getGameListFileName() {

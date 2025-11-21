@@ -487,6 +487,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->fanart = v;
                 continue;
             }
+            if (k == "backcovers") {
+                config->backcovers = v;
+                continue;
+            }
         } else if (conv == "int") {
             bool intOk;
             int v = ss.toInt(&intOk);
@@ -737,6 +741,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->pretend = true;
     } else if (flag == "relative") {
         config->relativePaths = true;
+    } else if (flag == "skipexistingbackcovers") {
+        config->skipExistingBackcovers = true;
     } else if (flag == "skipexistingcovers") {
         config->skipExistingCovers = true;
     } else if (flag == "skipexistingmanuals") {
@@ -771,6 +777,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->manuals = true;
     } else if (flag == "fanarts") {
         config->fanart = true;
+    } else if (flag == "backcovers") {
+        config->backcovers = true;
     } else if (flag == "notidydesc") {
         config->tidyDesc = false;
     } else if (flag == "miximages") {
@@ -808,6 +816,7 @@ QStringList RuntimeCfg::parseFlags() {
                                "noscreenshot",
                                "notexture",
                                "nowheel",
+                               "skipexistingbackcover",
                                "skipexistingcover",
                                "skipexistingmarquee",
                                "skipexistingscreenshot",
@@ -816,6 +825,7 @@ QStringList RuntimeCfg::parseFlags() {
                                "skipexistingfanart",
                                "skipexistingvideo",
                                "skipexistingmanual",
+                               "backcover",
                                "fanart",
                                "video",
                                "manual",

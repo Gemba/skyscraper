@@ -27,6 +27,7 @@
 #define ATTRACTMODE_H
 
 #include "abstractfrontend.h"
+#include "gameentry.h"
 
 #include <QDir>
 
@@ -72,6 +73,11 @@ private:
     QString getMediaTypeFolder(QString type, bool detectVideoPath = false);
     bool checkEmulatorFile(QString fileName);
     QString concatPath(QString absPath, QString sub);
+    GameEntry::Types supportedMedia() override {
+        return GameEntry::Types(GameEntry::COVER | GameEntry::MARQUEE |
+                                GameEntry::SCREENSHOT | GameEntry::TEXTURE |
+                                GameEntry::VIDEO | GameEntry::WHEEL);
+    };
 };
 
 #endif // ATTRACTMODE_H

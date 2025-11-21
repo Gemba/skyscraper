@@ -3,16 +3,33 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.18.0 (2025-TBA)
+### Version 3.18.0 (2025-11-23)
+
+Opened [Github Discussions](https://github.com/Gemba/skyscraper/discussions),
+the place to put ideas or to table Skyscraper puzzles.
+
+#### Frontends and Scraping
 
 - Added: Support for [Batocera gamelists](FRONTENDS.md#batocera) incl. fanart
-  output
-- Added: Support for fanart gamelist output for ES-DE and some [EmulationStation
-  variants](CONFIGINI.md#gamelistvariants)
-- Added: Fanart scraping with Screenscraper-, TGDB- and Import-scraper. See flag
-  and config option [`fanarts`](CLIHELP.md#fanarts)
-- Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [flag
-  miximages](CLIHELP.md#miximages)
+  and boxback output, thanks for external testing and feedback, @RandomNinjaAtk.
+- Added: Support for fanart and backcover gamelist output for ES-DE and some
+  [EmulationStation variants](CONFIGINI.md#gamelistvariants)
+- Added: Fanart scraping with Screenscraper-, The Games DB-, IGDB- and
+  Import-scraper. See flag and config option [`fanarts`](CLIHELP.md#fanarts)
+- Added: Support for ES-DE miximages output (aka Skyscraper artwork) with [`--flag
+  miximages`](CLIHELP.md#miximages)
+- Added: Scraping of backcover (aka. boxback) from Screenscraper and The Games
+  DB and output for Batocera and ES-DE. See flag and config INI option
+  [`backcovers`](CLIHELP.md#backcovers)
+- Updated: The Games DB scraper for Sega Genesis also tries Sega Megadrive for
+  matches, if you made changes to `platforms_idmap.csv`, see [the platform
+  doc](PLATFORMS.md#transferring-local-platform-changes) to move it to another
+  file, to benefit from this update.
+- Fixed: Wrong IGDB token expire time calculation, which resulted in games not
+  to be found at their site in some scenarios.
+
+#### CLI and Options
+
 - Added: Option to force Screenscraper scrapes to use the stem of the game
   filename instead of derived parameters. See
   [`--searchstem`](CLIHELP.md#-searchstem-extension) and the last question in
@@ -25,7 +42,12 @@ humans](https://keepachangelog.com).
   to `--flags videos`. However, in the config file accept only plural as before.
 - Added: Flag [`--buildinfo`](CLIHELP.md#--buildinfo), comes in handy when
   reporting an issue.
-- Updated: Option `theInFront` covers also the indefinite article 'a'.
+- Updated: The prefix "~/" in path-like configuration options will be expanded
+  to [QDir:homePath()](https://doc.qt.io/qt-6/qdir.html#homePath).
+- Updated: Option `theInFront` now covers also the indefinite article 'a'.
+
+#### Varia
+
 - Updated: macOS installation instructions to use Qt6
 - Updated: Docker uses Ubuntu 24.04 and Qt6
 - Updated: Documentation, added usage level for configuration options. See
@@ -34,6 +56,7 @@ humans](https://keepachangelog.com).
   smaller edits
 - Fixed: Various edge cases remediated, esp. #167 and #169, thanks to all
   reporters!
+
 
 ### Version 3.17.0 (2025-05-04)
 

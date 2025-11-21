@@ -81,9 +81,11 @@ files into the `downloaded_media` folder (e.g.
 `~/ES-DE/downloaded_media/<PLATFORM>/screenshots/` for screenshots) from where
 ES-DE will pick them up. ES-DE does not support textures currently. Any manual
 or fanart data present in the cache will be put automagically into
-`~/ES-DE/downloaded_media/<PLATFORM>` where ES-DE will load it.
+`~/ES-DE/downloaded_media/<PLATFORM>` where ES-DE will load it.  
+This frontend automatically enables the output of backcovers, fanart and manuals
+during gamelist creation, whenever cached data is present for a game.
 
-!!! tip
+!!! tip The Environment Variable `ESDE_APPDATA_DIR`
 
     You may override the default storage folder of ES-DE (`/home/<USER>/ES-DE`)
     on a non-Windows build by setting the environment variable `ESDE_APPDATA_DIR`
@@ -124,13 +126,14 @@ This is the complete set of scraping binary data supported by Skyscraper:
 
 | Batocera Gamelist XML-Element | Skyscraper support |
 | :---------------------------- | :----------------: |
-| thumbnail (cover)             |         ✓          |
-| fanart                        |         ✓          |
-| image (in game Screenshot)    |         ✓          |
-| manual                        |         ✓          |
-| marquee                       |         ✓          |
-| video                         |         ✓          |
-| wheel                         |         ✓          |
+| `boxback`                     |         ✓          |
+| `thumbnail` (cover)           |         ✓          |
+| `fanart`                      |         ✓          |
+| `image` (in game Screenshot)  |         ✓          |
+| `manual`                      |         ✓          |
+| `marquee`                     |         ✓          |
+| `video`                       |         ✓          |
+| `wheel`                       |         ✓          |
 
 ROMs are expected to be in the input folder `/userdata/roms/<PLATFORM>` for
 every `<PLATFORM>` you scrape.
@@ -140,7 +143,9 @@ every `<PLATFORM>` you scrape.
 -   Default media file location: `/userdata/roms/<PLATFORM>/{images,videos,manuals}`
 
 If you set a game list location and do not specifiy the ROM folder (input
-folder) and media folder, then these are set relatively to the game list folder.
+folder) and media folder, then these are set relatively to the game list folder.  
+This frontend automatically enables the output of backcovers, fanart and manuals
+whenever cached data is present for a game.
 
 #### Metadata preservation
 
@@ -150,13 +155,11 @@ These extra elements are preserved when they are present in the Gamelist file.
 | :---------------------------- | :-----------------------: |
 | `bezel`                       | Preserved                 |
 | `boxart`                      | Preserved                 |
-| `boxback`                     | Preserved                 |
 | `cartridge`                   | Preserved                 |
 | `magazine`                    | Preserved                 |
 | `map`                         | Preserved                 |
 | `mix`                         | Preserved                 |
 | `music`                       | Preserved                 |
-| `thumbnail`                   | Preserved                 |
 | `titleshot`                   | Preserved                 |
 
 Also, all other non scrapable elements are preserved (Batocera EmulationStation
@@ -179,19 +182,19 @@ Windows desktop users can use SMB shares and can adapt the following steps.
    alongside to your `config.ini`. Add the artwork file in your configuration
    file as seen in the
    [`config.ini.example`](https://github.com/Gemba/skyscraper/blob/b8ca88f908b384c31148deccb8599ed439b81043/config.ini.example#L191-L192).
-1. Mount the root folder of Batocera in your Desktop system. Let the mountpoint
+2. Mount the root folder of Batocera in your Desktop system. Let the mountpoint
    be `/home/mylogin/bato_sshfs` in this example:
    ```bash
    mount -t sshfs root@batocera:/ /home/mylogin/bato_sshfs
    ```
-2. Change to the platform folder (in this case `snes`) you want to scrape:
+3. Change to the platform folder (in this case `snes`) you want to scrape:
    ```bash
    cd /home/mylogin/bato_sshfs/userdata/roms/snes
    ```
-3. Then run on your Desktop system to scrape data from screenscraper and put it
+4. Then run on your Desktop system to scrape data from screenscraper and put it
    into the Skyscraper cache on your Desktop system:
    ```bash
-   Skyscraper -s screenscraper -p snes --flags fanarts,manuals,videos -i "$(pwd)"
+   Skyscraper -s screenscraper -p snes --flags backcovers,fanarts,manuals,videos -i "$(pwd)"
    -g "$(pwd)" -o "$(pwd)"
    ```
    You can also set the values for [input-](CONFIGINI.md#inputfolder) (`-i`),
@@ -214,21 +217,28 @@ Windows desktop users can use SMB shares and can adapt the following steps.
    ```
    You may also set the default [frontend in the
    configuration](CONFIGINI.md#frontend), then you can even drop the `-f` CLI
-   parameter.
-4. Afterwards run the gamelist creation and media file deployment from
-   cache:
+   parameter.  
+   If you want to use your existing Batocera gamelist and mediafiles (to save
+   some online scrape cycles), you can do so by using the
+   [esgamelist](SCRAPINGMODULES.md#emulationstation-style-gamelists) scraping
+   module.
+5. Afterwards run the gamelist creation and media file deployment from cache.
+   You may omit the `-i`,`-g` and `-o` if you put the options in your config
+   file (see previous step):
    ```bash
    Skyscraper -f batocera -p snes --flags videos -i "$(pwd)" -g "$(pwd)" -o
    "$(pwd)"
    ```
-5. Do a SSH login to your Batocera system and restart the EmulationStation
+   If you use more than one scraping source you may want to adjust the
+   [priorities.xml](CACHE.md#resource-and-scraping-module-priorities) file.
+6. Do a SSH login to your Batocera system and restart the EmulationStation
    ```bash
    batocera-es-swissknife --restart && emulationstation-standalone
    ```
    Leave the SSH shell open to reload EmulationStation with ++ctrl+c++ for
    subsequent gamelist reloads. You can also restart the whole system, however
    it takes longer.
-6. Navigate to the system/platform you just scraped to review the scraping
+7. Navigate to the system/platform you just scraped to review the scraping
    result.
 
 !!! tip "New to Skyscraper?"

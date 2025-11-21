@@ -1,6 +1,6 @@
 ## Custom Data Import
 
-The following describes how to import your own custom textual, artwork and / or video data into the resource cache for later use when generating game lists (enable game list generation mode simply by leaving out the `-s` command line option).
+The following describes how to import your own custom textual, artwork and / or video data into the resource cache for later use when generating game lists (enable game list generation mode by leaving out the `-s` command line option).
 
 !!! tip 
   
@@ -16,9 +16,13 @@ To import videos or images into the resource cache, use the following procedure:
 
 -   Name your image or video file with the _exact_ base name of the rom you wish to connect it to. Example: `Bubble Bobble.nes` will import images with a filename of `Bubble Bobble.jpg` or `Bubble Bobble.png` or other well-known image formats. As long as the base name is an _exact_ match. Same goes for video files. I recommend only making use of well-known video formats since Skyscraper imports them directly without conversion (unless you [convert them](CONFIGINI.md#videoconvertcommand)), so they need to be supported directly by the frontend you plan to use.
 -   Game manuals are expected to use PDF format and have the extension `.pdf`. The base name must match the ROM file, thus the game manual of the example is `Bubble Bobble.pdf`.
--   Place all of your images, fanarts, videos or game manuals in the `/home/<USER>/.skyscraper/import/<PLATFORM>/screenshots`, `covers`, `wheels`, `marquees`, `fanarts`, `videos` or `manuals` folders.
+-   Place all of your images, fanarts, videos or game manuals in the `/home/<USER>/.skyscraper/import/<PLATFORM>/screenshots`, `covers`, `wheels`, `marquees`, `fanarts`, `backcovers`, `videos` or `manuals` folders.
 -   Now run Skyscraper with `Skyscraper -p <PLATFORM> -s import`. If you named your files correctly, they will now be imported. Look for the green 'YES' in the output at the rom(s) you've placed files for. This will tell you if it succeeded or not.
 -   The data is now imported into the resource cache. To make use of it read the section [How to actually use the data?](#how-to-actually-use-the-data) below.
+
+#### Format Restrictions
+
+Manuals are expected to have the `.pdf` file extension and PDF format. Backcovers and fanart can either be in JPEG or PNG format with the respective file extensions. The case of the extension is ignored.
 
 #### Special Note for Videos
 
@@ -69,7 +73,7 @@ Yes, the closing element may be on a different line.
 
 ```
 
-!!! tip
+!!! tip "Relaxed XML parsing"
 
     As with Skyscraper 3.9.2 onwards you are no longer required to have the same indention or whitespace (hard tabs, spaces) as in the XML-like `definitions.dat`. Matching is solely done via XML elements (e.g. `<title>`), which saves you headache in identifiying whitespace mismatch between the XML template and your XML import file. Any heading or trailing whitespace of the element value will be chopped off. If you use a custom XML-like `definitions.dat`: Use it as in the example definition shown above. In your import file assure to use also closing elements (`</title>`) and the same caSiNg in the elements between template and import file, i.e. provide a valid XML file.
 

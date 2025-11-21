@@ -31,8 +31,21 @@
 #include "settings.h"
 
 #include <QFileInfo>
+#include <QMimeDatabase>
 #include <QObject>
 #include <QSharedPointer>
+
+struct MediaProps {
+    GameEntry::Types type;
+    QByteArray *data;
+    QString *file;
+    bool skip;
+    QString ext;
+
+    MediaProps(GameEntry::Types type, QByteArray &data, QString &file,
+               bool skip)
+        : type(type), data(&data), file(&file), skip(skip), ext(""){};
+};
 
 class AbstractFrontend : public QObject {
     Q_OBJECT
@@ -59,12 +72,31 @@ public:
     virtual QString getVideosFolder() { return QString(); };
     virtual QString getManualsFolder() { return QString(); };
     virtual QString getFanartsFolder() { return QString(); };
+    virtual QString getBackcoversFolder() { return QString(); };
     virtual void sortEntries(QList<GameEntry> &gameEntries);
+    bool copyMedia(GameEntry::Types &, const QString &, const QString &,
+                   GameEntry &);
 
 protected:
+    virtual QString getTargetFileName(GameEntry::Types t,
+                                      const QString &baseName) {
+        (void)t;
+        return baseName;
+    };
+    virtual GameEntry::Types supportedMedia() {
+        return GameEntry::Types(GameEntry::NONE);
+    };
+    virtual bool gamelistHasMediaPaths() { return true; };
     Settings *config;
     QList<GameEntry> oldEntries;
-    QString getFilename(const QString &path);
+    QMimeDatabase mimeDb;
+
+private:
+    QString getTargetFilePath(GameEntry::Types t, const QString &baseName,
+                              const QString &subPath, const QString &cacheFn,
+                              QString ext = "");
+    bool doCopy(GameEntry::Types t, const QString &src, QString &tgt,
+                const QByteArray &data, bool skipExisting);
 };
 
 #endif // ABSTRACTFRONTEND_H

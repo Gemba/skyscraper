@@ -83,8 +83,10 @@ protected:
     virtual void getTexture(GameEntry &game);
     virtual void getTitle(GameEntry &);
     virtual void getVideo(GameEntry &game);
+    // sparse scraper support
     virtual void getManual(GameEntry &game) { (void)game; };
     virtual void getFanart(GameEntry &game) { (void)game; };
+    virtual void getBackcover(GameEntry &game) { (void)game; };
 
     virtual void nomNom(const QString nom, bool including = true);
     bool checkNom(const QString nom);

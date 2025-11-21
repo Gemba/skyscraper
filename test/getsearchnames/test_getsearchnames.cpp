@@ -280,8 +280,9 @@ private slots:
 
         QMap<QString, QPair<QString, QStringList>> tests_scummvm = {
             {"Mobygames, with scummvm.ini match",
+             /* cf. stopWords in mobygames.cpp */
              QPair<QString, QStringList>("./rom_samples/tentacle.svm",
-                                         {"day+of+the+tentacle"})},
+                                         {"day+the+tentacle"})},
             {"Mobygames, w/o scummvm.ini match",
              QPair<QString, QStringList>(
                  "./rom_samples/the yabba dabba doo.svm", {"yabba+dabba+doo"})},

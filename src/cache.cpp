@@ -46,6 +46,8 @@
 #include <QXmlStreamReader>
 #include <iostream>
 
+#define RESIZE_PX_THRESHOLD 800
+
 // user defined resource cache entries
 const QString SRC_USER = "user";
 
@@ -59,7 +61,18 @@ const QString ATTR_SRC = "source";
 const QString ATTR_TS = "timestamp";
 const QString ATTR_TYPE = "type";
 
-enum class Excludes : char { NONE = 0, VIDEO = 1, MANUAL = 2, FANART = 4 };
+const QStringList NO_RESIZE_MEDIA = {"fanart", "manual", "backcover"};
+
+// binary cache items to exclude
+// TODO streamline with GameEntry::Types
+enum Excludes : char {
+    NONE = 0,
+    VIDEO = 1,
+    MANUAL = VIDEO << 1,
+    FANART = VIDEO << 2,
+    BACKCOVER = VIDEO << 3,
+    ALL = 127
+};
 
 Excludes operator|(Excludes lhs, Excludes rhs) {
     using ExclType = std::underlying_type<Excludes>::type;
@@ -94,8 +107,17 @@ static inline QStringList binTypes(Excludes bins = Excludes::NONE) {
     if (Excludes::FANART != (bins & Excludes::FANART)) {
         binTypes.append("fanart");
     }
+    if (Excludes::BACKCOVER != (bins & Excludes::BACKCOVER)) {
+        binTypes.append("backcover");
+    }
     return binTypes;
 };
+
+const QStringList Cache::getAllResourceTypes() {
+    return txtTypes() + binTypes();
+}
+
+const QStringList Cache::getBinResourceTypes() { return binTypes(); }
 
 // this is the logical order used for keywords for cache maintenance
 static inline QStringList getKeywordOrder() {
@@ -122,10 +144,6 @@ static inline QString pluralizeWord(QString word, bool plural) {
 
 static inline std::string pluralizeWordStd(QString word, bool plural) {
     return pluralizeWord(word, plural).toStdString();
-}
-
-const QStringList Cache::getAllResourceTypes() {
-    return txtTypes() + binTypes();
 }
 
 Cache::Cache(const QString &cacheFolder) {
@@ -297,10 +315,11 @@ void Cache::printPriorities(QString cacheId) {
     }
 
     const QList<QPair<QString, QString>> prioBinRes = {
-        {"Cover", game.coverSrc},     {"Screenshot", game.screenshotSrc},
-        {"Wheel", game.wheelSrc},     {"Marquee", game.marqueeSrc},
-        {"Texture", game.textureSrc}, {"Video", game.videoSrc},
-        {"Manual", game.manualSrc},   {"Fanart", game.fanartSrc}};
+        {"Cover", game.coverSrc},        {"Screenshot", game.screenshotSrc},
+        {"Wheel", game.wheelSrc},        {"Marquee", game.marqueeSrc},
+        {"Texture", game.textureSrc},    {"Video", game.videoSrc},
+        {"Manual", game.manualSrc},      {"Fanart", game.fanartSrc},
+        {"Backcover", game.backcoverSrc}};
 
     // print out summary what was present in cache and from which source
     for (auto const &e : prioBinRes) {
@@ -369,7 +388,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
     }
 
     int queueLength = queue->length();
-    printf("\033[1;33mEntering resource cache editing mode! This mode allows "
+    printf("\033[1mEntering resource cache editing mode! This mode allows "
            "you to edit textual resources for your files. To add media "
            "resources use the 'import' scraping module instead.\nYou "
            "can provide one or more file names on command line to edit "
@@ -1321,7 +1340,8 @@ void Cache::printStats(bool totals) {
         {"Ages", 0},         {"Tags", 0},       {"Ratings", 0},
         {"ReleaseDates", 0}, {"Covers", 0},     {"Screenshots", 0},
         {"Wheels", 0},       {"Marquees", 0},   {"Textures", 0},
-        {"Videos", 0},       {"Manuals", 0},    {"Fanarts", 0}};
+        {"Videos", 0},       {"Manuals", 0},    {"Fanarts", 0},
+        {"Backcovers", 0}};
     for (auto it = resCountsMap.begin(); it != resCountsMap.end(); ++it) {
         if (!totals) {
             printf("'\033[1;32m%s\033[0m' module\n",
@@ -1345,6 +1365,7 @@ void Cache::printStats(bool totals) {
         resTotals["Videos"] += it.value().videos;
         resTotals["Manuals"] += it.value().manuals;
         resTotals["Fanarts"] += it.value().fanart;
+        resTotals["Backcovers"] += it.value().backcovers;
         if (!totals) {
             for (auto it = resTotals.begin(); it != resTotals.end(); ++it) {
                 printf("  %12s : %d\n", it.key().toStdString().c_str(),
@@ -1397,6 +1418,8 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].manuals++;
     } else if (type == "fanart") {
         resCountsMap[source].fanart++;
+    } else if (type == "backcover") {
+        resCountsMap[source].backcovers++;
     }
 }
 
@@ -1435,7 +1458,7 @@ void Cache::readPriorities() {
             continue;
         }
         QList<QString> sources;
-        // ALWAYS prioritize 'user' resources highest (added with edit mode)
+        // Always prioritize 'user' resources highest (added by cache edit mode)
         sources.append(SRC_USER);
         QDomNodeList sourceNodes = orderNodes.at(a).childNodes();
         if (sourceNodes.isEmpty()) {
@@ -1690,6 +1713,7 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"texture", !entry.textureData.isEmpty()},
         {"manual", !entry.manualData.isEmpty()},
         {"fanart", !entry.fanartData.isEmpty()},
+        {"backcover", !entry.backcoverData.isEmpty()},
         {"video", !entry.videoData.isEmpty() && entry.videoFormat != ""}};
 
     for (auto const &t : binTypes()) {
@@ -1708,7 +1732,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         const QString &cacheAbsolutePath,
                         const Settings &config, QString &output) {
     QMutexLocker locker(&cacheMutex);
-    bool notFound = true;
+    bool cacheMiss = true;
     // This type of iterator ensures we can delete items while iterating
     QMutableListIterator<Resource> it(resources);
     while (it.hasNext()) {
@@ -1718,14 +1742,14 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
             if (config.refresh) {
                 it.remove();
             } else {
-                notFound = false;
+                cacheMiss = false;
             }
             break;
         }
     }
 
-    if (notFound) {
-        bool okToAppend = true;
+    if (cacheMiss) {
+        bool addedToCache = true;
         QString cacheFile = cacheAbsolutePath + "/" + resource.value;
         if (binTypes(Excludes::VIDEO).contains(resource.type)) {
             QByteArray *imageData = nullptr;
@@ -1743,13 +1767,15 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 imageData = &entry.fanartData;
             } else if (resource.type == "manual") {
                 imageData = &entry.manualData;
+            } else if (resource.type == "backcover") {
+                imageData = &entry.backcoverData;
             }
-            if (config.cacheResize && resource.type != "fanart" &&
-                resource.type != "manual") {
+            if (config.cacheResize &&
+                !NO_RESIZE_MEDIA.contains(resource.type)) {
                 QImage image;
                 if (imageData->size() > 0 && image.loadFromData(*imageData) &&
                     !image.isNull()) {
-                    int max = 800;
+                    const int max = RESIZE_PX_THRESHOLD;
                     if (image.width() > max || image.height() > max) {
                         image = image.scaled(max, max, Qt::KeepAspectRatio,
                                              Qt::SmoothTransformation);
@@ -1759,9 +1785,9 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     b.open(QIODevice::WriteOnly);
                     if ((image.hasAlphaChannel() && hasAlpha(image)) ||
                         resource.type == "screenshot") {
-                        okToAppend = image.save(&b, "png");
+                        addedToCache = image.save(&b, "png");
                     } else {
-                        okToAppend = image.save(&b, "jpg", config.jpgQuality);
+                        addedToCache = image.save(&b, "jpg", config.jpgQuality);
                     }
                     b.close();
                     if (imageData->size() > resizedData.size()) {
@@ -1775,10 +1801,10 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         *imageData = resizedData;
                     }
                 } else {
-                    okToAppend = false;
+                    addedToCache = false;
                 }
             }
-            if (okToAppend) {
+            if (addedToCache) {
                 QFile f(cacheFile);
                 if (f.open(QIODevice::WriteOnly)) {
                     f.write(*imageData);
@@ -1786,7 +1812,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 } else {
                     output.append("Error writing file: '" + f.fileName() +
                                   "' to cache. Please check permissions.");
-                    okToAppend = false;
+                    addedToCache = false;
                 }
             } else {
                 // Image was faulty and could not be saved to cache so we clear
@@ -1810,13 +1836,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                                 "\033[1;31mFailed!\033[0m (set higher "
                                 "'--verbosity N' level for more info)");
                             f.remove();
-                            okToAppend = false;
+                            addedToCache = false;
                         }
                     }
                 } else {
                     output.append("Error writing file: '" + f.fileName() +
                                   "' to cache. Please check permissions.");
-                    okToAppend = false;
+                    addedToCache = false;
                 }
             } else {
                 output.append(
@@ -1826,19 +1852,19 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     "in '" %
                         Config::getSkyFolder(Config::SkyFolderType::CONFIG) %
                         "/config.ini.'");
-                okToAppend = false;
+                addedToCache = false;
                 entry.videoFormat = "";
             }
         }
 
-        if (okToAppend) {
-            if (binTypes(Excludes::VIDEO | Excludes::MANUAL | Excludes::FANART)
-                    .contains(resource.type)) {
+        if (addedToCache) {
+            if (binTypes(Excludes::ALL).contains(resource.type)) {
                 // Remove old style cache image if it exists
                 if (QFile::exists(cacheFile + ".png")) {
                     QFile::remove(cacheFile + ".png");
                 }
             }
+            // add record to cache index
             resources.append(resource);
         } else {
             printf("\033[1;33mWarning! Couldn't add resource to cache. Have "
@@ -2027,43 +2053,55 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
         QByteArray data;
         if (fillType(type, matchingResources, result, source)) {
             QFile f(cacheDir.path() + "/" + result);
-            if (f.open(QIODevice::ReadOnly)) {
+            if (type != "video" && f.open(QIODevice::ReadOnly)) {
+                // don't read any video data into RAM
                 data = f.readAll();
                 f.close();
             }
+            QFileInfo info(f);
             if (type == "cover") {
                 entry.coverData = data;
                 entry.coverSrc = source;
+                // failsafe when not defined in artwork.xml for all image data
+                // and for ES-DE (applies to all entry.*file)
+                entry.coverFile = info.absoluteFilePath();
             } else if (type == "screenshot") {
                 entry.screenshotData = data;
                 entry.screenshotSrc = source;
+                entry.screenshotFile = info.absoluteFilePath();
             } else if (type == "wheel") {
                 entry.wheelData = data;
                 entry.wheelSrc = source;
+                entry.wheelFile = info.absoluteFilePath();
             } else if (type == "marquee") {
                 entry.marqueeData = data;
                 entry.marqueeSrc = source;
+                entry.marqueeFile = info.absoluteFilePath();
             } else if (type == "texture") {
                 entry.textureData = data;
                 entry.textureSrc = source;
-            } else if (type == "video" && !data.isEmpty()) {
-                // video, manual and fanrt are not part of artwork.xml resp.
-                // compositor.cpp: set filename here
-                entry.videoData = data;
+                entry.textureFile = info.absoluteFilePath();
+            } else if (type == "video" && !source.isEmpty()) {
+                // video, manual and fanart, aso. are never part of artwork.xml
+                // resp. compositor.cpp, thus: set filename here
+                entry.videoSize = info.size();
+                // some bogus data to match later conditions
+                entry.videoData.append(0x17).append(0x2a);
                 entry.videoSrc = source;
-                QFileInfo info(f);
                 entry.videoFormat = info.suffix();
                 entry.videoFile = info.absoluteFilePath();
             } else if (type == "manual" && !data.isEmpty()) {
                 entry.manualData = data;
                 entry.manualSrc = source;
-                QFileInfo info(f);
                 entry.manualFile = info.absoluteFilePath();
             } else if (type == "fanart" && !data.isEmpty()) {
                 entry.fanartData = data;
                 entry.fanartSrc = source;
-                QFileInfo info(f);
                 entry.fanartFile = info.absoluteFilePath();
+            } else if (type == "backcover" && !data.isEmpty()) {
+                entry.backcoverData = data;
+                entry.backcoverSrc = source;
+                entry.backcoverFile = info.absoluteFilePath();
             }
             // PENDING: if thumbnail is ever used, add it here like video/manual
         }

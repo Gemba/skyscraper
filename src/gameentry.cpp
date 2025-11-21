@@ -25,36 +25,47 @@
 
 #include "gameentry.h"
 
+#include <QDebug>
+#include <math.h>
+
+// ignore texture (currently only supported by ScreenScraper.fr and import)
+static const int NO_OF_TYPES =
+    (int)(log2((GameEntry::Elem::ALL) + 1)) - 1 /* -1 for TEXTURE */;
+
 GameEntry::GameEntry() {}
 
 void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled,
-                                      bool fanartEnabled) {
+                                      bool fanartEnabled,
+                                      bool backcoverEnabled) {
     completeness = 100.0;
-    // ignore texture (currently only supported by ScreenScraper)
-    int noOfTypes = Elem::__LAST - 1;
+    int noOfTypes = NO_OF_TYPES;
     if (!videoEnabled)
         noOfTypes -= 1;
     if (!manualEnabled)
         noOfTypes -= 1;
     if (!fanartEnabled)
         noOfTypes -= 1;
+    if (!backcoverEnabled)
+        noOfTypes -= 1;
+
     double valuePerType = completeness / (double)noOfTypes;
+
     if (title.isEmpty()) {
         completeness -= valuePerType;
     }
     if (platform.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (coverData.isNull()) {
+    if (coverData.isNull() && coverSrc.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (screenshotData.isNull()) {
+    if (screenshotData.isNull() && screenshotSrc.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (wheelData.isNull()) {
+    if (wheelData.isNull() && wheelSrc.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (marqueeData.isNull()) {
+    if (marqueeData.isNull() && marqueeSrc.isEmpty()) {
         completeness -= valuePerType;
     }
     if (description.isEmpty()) {
@@ -84,10 +95,13 @@ void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled,
     if (videoEnabled && videoFormat.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (manualEnabled && manualData.isEmpty()) {
+    if (manualEnabled && manualData.isEmpty() && manualSrc.isEmpty()) {
         completeness -= valuePerType;
     }
-    if (fanartEnabled && fanartData.isEmpty()) {
+    if (fanartEnabled && fanartData.isEmpty() && fanartSrc.isEmpty()) {
+        completeness -= valuePerType;
+    }
+    if (backcoverEnabled && backcoverData.isEmpty() && backcoverSrc.isEmpty()) {
         completeness -= valuePerType;
     }
 }
@@ -101,8 +115,10 @@ void GameEntry::resetMedia() {
     marqueeData.clear();
     textureData.clear();
     videoData.clear();
+    videoSize = 0;
     manualData.clear();
     fanartData.clear();
+    backcoverData.clear();
 }
 
 const QString GameEntry::getEsExtra(const QString &tagName) const {
@@ -114,11 +130,11 @@ GameEntry::getEsExtraAttribs(const QString &tagName) const {
     return esExtras[tagName];
 };
 
-const QStringList GameEntry::extraTagNames(Format type,
+const QStringList GameEntry::extraTagNames(Format gameListFormat,
                                            const GameEntry &ge) const {
-    if (type != Format::BATOCERA) {
+    if (gameListFormat != Format::BATOCERA) {
         // same for every <game/>
-        return extraElemNames(type, ge.isFolder);
+        return extraElemNames(gameListFormat, ge.isFolder);
     }
     // can differ for each <game/> when Batocera
     return esExtras.keys();

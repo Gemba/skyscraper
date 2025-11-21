@@ -28,6 +28,7 @@
 
 #include <QByteArray>
 #include <QDomNamedNodeMap>
+#include <QFlags>
 #include <QList>
 #include <QMap>
 #include <QPair>
@@ -35,67 +36,76 @@
 
 class GameEntry {
 public:
-    enum Elem : unsigned char {
-        DESCRIPTION = 0,
-        DEVELOPER,
-        PUBLISHER,
-        PLAYERS,
-        TAGS,
-        RELEASEDATE,
-        COVER,
-        SCREENSHOT,
-        VIDEO,
-        RATING,
-        WHEEL,
-        MARQUEE,
-        AGES,
-        TITLE,
-        TEXTURE,
-        MANUAL,
-        FANART,
-        __LAST
+    enum Elem : uint {
+        NONE = 0x00,
+        TITLE = 0x01,
+        DESCRIPTION = 0x02,
+        DEVELOPER = 0x04,
+        PUBLISHER = 0x08,
+        PLAYERS = 0x10,
+        TAGS = 0x20,
+        RELEASEDATE = 0x40,
+        RATING = 0x80,
+        AGES = 0x100,
+        COVER = 0x200,
+        SCREENSHOT = 0x400,
+        WHEEL = 0x800,
+        MARQUEE = 0x1000,
+        TEXTURE = 0x2000,
+        VIDEO = 0x4000,
+        MANUAL = 0x8000,
+        FANART = 0x10000,
+        BACKCOVER = 0x20000,
+        ALL = (BACKCOVER << 1) - 1
     };
+    Q_DECLARE_FLAGS(Types, Elem)
 
-    enum Format { RETROPIE, ESDE, BATOCERA };
+    enum Format { RETROPIE, ESDE, BATOCERA, ATTRACT, PEGASUS };
 
-    static const QMap<unsigned char, QString>
-    commonGamelistElems(bool isBatocera = false) {
-        QMap<unsigned char, QString> m = QMap<unsigned char, QString>{
-            /* KEY, "gamelist XML element" */
-            {DESCRIPTION, "desc"},
-            {DEVELOPER, "developer"},
-            {PUBLISHER, "publisher"},
-            {PLAYERS, "players"},
-            {TAGS, "genre"},
-            {RELEASEDATE, "releasedate"},
-            {SCREENSHOT, "image"},
-            {VIDEO, "video"},
-            {RATING, "rating"},
-            // PENDING: does ES-DE utilize <wheel/> in GL? (ES: No, Bato: Yes)
-            {WHEEL, "wheel"},
-            {MARQUEE, "marquee"},
-            // ES (variants), ES-DE and Batocera
-            {AGES, "kidgame"},
-            {TITLE, "name"},
-            {TEXTURE, "texture"},
-            {MANUAL, "manual"},
-            // Batocera, ES-DE only and some ES dialects
-            {FANART, "fanart"}};
-        m.insert(COVER, "thumbnail");
-        (void)isBatocera;
+    static constexpr GameEntry::Types MEDIA =
+        GameEntry::Types(BACKCOVER | COVER | FANART | MANUAL | MARQUEE |
+                         SCREENSHOT | TEXTURE | VIDEO | WHEEL);
+
+    static constexpr GameEntry::Types IMAGE = GameEntry::Types(
+        BACKCOVER | COVER | FANART | MARQUEE | SCREENSHOT | TEXTURE | WHEEL);
+
+    static const QMap<Elem, QString> commonGamelistElems() {
+        /* KEY, "gamelist XML element" */
+        auto m = QMap<Elem, QString>{{COVER, "thumbnail"},
+                                     {DESCRIPTION, "desc"},
+                                     {DEVELOPER, "developer"},
+                                     {PUBLISHER, "publisher"},
+                                     {PLAYERS, "players"},
+                                     {TAGS, "genre"},
+                                     {RELEASEDATE, "releasedate"},
+                                     {SCREENSHOT, "image"},
+                                     {VIDEO, "video"},
+                                     {RATING, "rating"},
+                                     // ES, ES-DE, Bato: wheel usage via marquee
+                                     {WHEEL, "wheel"},
+                                     {MARQUEE, "marquee"},
+                                     {AGES, "kidgame"},
+                                     {TITLE, "name"},
+                                     {TEXTURE, "texture"},
+                                     // ES (variants), ES-DE and Batocera
+                                     {MANUAL, "manual"},
+                                     {FANART, "fanart"},
+                                     // Batocera: Part of Gamelist
+                                     // ES variants: maybe part of Gamelist
+                                     // ES-DE: Only in filesystem
+                                     {BACKCOVER, "boxback"}};
         return m;
     };
 
-    static const QString getTag(GameEntry::Elem e, bool isBatocera = false) {
-        QString elemName = commonGamelistElems(isBatocera)[e];
+    static const QString getTag(GameEntry::Elem e) {
+        QString elemName = commonGamelistElems()[e];
         return elemName;
     };
 
     GameEntry();
 
-    void calculateCompleteness(bool videoEnabled = false,
-                               bool manualEnabled = false,
-                               bool fanartEnabled = false);
+    void calculateCompleteness(bool videoEnabled, bool manualEnabled,
+                               bool fanartEnabled, bool backcoverEnabled);
     int getCompleteness() const;
     void resetMedia();
     const QString getEsExtra(const QString &tagName) const;
@@ -145,6 +155,7 @@ public:
     QByteArray textureData = QByteArray();
     QString textureFile = "";
     QString textureSrc = "";
+    qint64 videoSize = 0;
     QByteArray videoData = QByteArray();
     QString videoFile = "";
     QString videoSrc = "";
@@ -154,6 +165,9 @@ public:
     QByteArray fanartData = QByteArray();
     QString fanartFile = "";
     QString fanartSrc = "";
+    QByteArray backcoverData = QByteArray();
+    QString backcoverFile = "";
+    QString backcoverSrc = "";
 
     // internal
     int searchMatch = 0;
@@ -193,5 +207,7 @@ private:
     const QStringList extraElemNames(Format type, bool isFolder) const;
     double completeness = 0.0;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GameEntry::Types)
 
 #endif // GAMEENTRY_H

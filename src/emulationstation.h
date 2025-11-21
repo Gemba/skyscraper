@@ -58,6 +58,7 @@ public:
     QString getVideosFolder() override;
     QString getManualsFolder() override;
     QString getFanartsFolder() override;
+    QString getBackcoversFolder() override;
 
 protected:
     const QString INDENT = "  ";
@@ -65,10 +66,11 @@ protected:
     virtual QStringList createEsVariantXml(const GameEntry &entry);
     virtual QStringList extraGamelistTags(bool isFolder /* ignored on RP ES */);
     virtual void preserveVariants(const GameEntry &oldEntry, GameEntry &entry);
-    bool addEmptyElement() { return true; };
+    virtual bool addEmptyElement() { return true; };
+    virtual QString openingElement(GameEntry &entry);
+    GameEntry::Types supportedMedia() override;
     QString elem(const QString &elem, const QString &data, bool addEmptyElem,
                  bool isPath = false);
-    virtual QString openingElement(GameEntry &entry);
 
 private:
     QString createXml(GameEntry &entry);

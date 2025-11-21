@@ -6,45 +6,48 @@ Choosing a scraping module is as simply as setting the `-s <MODULE>` option when
 
 For scraping modules that support or require user credentials you have the option of either setting it on commandline with `-u <USER:PASSWD>` or `-u <KEY>` or better yet, by adding it permanently to the Skyscraper configuration at `/home/<USER>/.skyscraper/config.ini` as described in the [configuration documentation](CONFIGINI.md#usercredscredentials-or-key)
 
+Remember, on existing Skyscraper installations to adapt the `priorities.xml` file for the more recently added metadata like Manuals, Fan Art and Back of Cover. You may want to review the section [Resource and Scraping Module Priorities](CACHE.md#resource-and-scraping-module-priorities).
+
 ### Capabilities of Scrapers
 
 This table summarizes the game metadata provided by each scraping module. Hover
 over a table cell to display the scraper module as tooltip:
 
-| Capability &rarr;<br>Scraper &darr;          |                Title                |            Release Date             |             Description             |            Max. Players             |              Developer              |              Publisher              |             Genre/Tags              |               Rating                |           Age Recommend.            |                Cover                |             Screenshot              |                  Video                   |                Wheel/Logo                |                 Marquee                  |               Manual (PDF)               |                 Texture                  |                 Fan Art                  |
-| -------------------------------------------- | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: |
-| [Arcade DB](#arcadedb-by-motoschifo)         |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |     &nbsp; {title='Arcade DB'}      |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |     &nbsp; {title='Arcade DB'}      |     &nbsp; {title='Arcade DB'}      |       ✓ ¹ {title='Arcade DB'}       |        ✓ {title='Arcade DB'}        |          ✓ {title='Arcade DB'}           |          ✓ {title='Arcade DB'}           |          ✓ {title='Arcade DB'}           |        &nbsp; {title='Arcade DB'}        |        &nbsp; {title='Arcade DB'}        |        &nbsp; {title='Arcade DB'}        |
-| [ES GameList](#emulationstation-game-list)   |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |         ✓ {title='ES GameList'}          |       &nbsp; {title='ES GameList'}       |       &nbsp; {title='ES GameList'}       |         ✓ {title='ES GameList'}          |       &nbsp; {title='ES GameList'}       |       &nbsp; {title='ES GameList'}       |
-| [GameBase](#gamebase-db)                     |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |      &nbsp; {title='GameBase'}      |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |       ✓ ² {title='GameBase'}        |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |
-| [Internet Game DB (IGDB)](#igdb)             | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} |
-| [File Import](#custom-resource-import)       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |
-| [MobyGames](#mobygames)                      |        ✓ {title='MobyGames'}        |       ✓ ⁴ {title='MobyGames'}       |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        See ⁴ {title='MobyGames'}         |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |
-| [OpenRetro](#openretro)                      |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |     &nbsp; {title='OpenRetro'}      |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |          ✓ {title='OpenRetro'}           |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |
-| [ScreenScraper](#screenscraper)              |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |
-| [The Games DB](#thegamesdb-tgdb)             |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |    &nbsp; {title='The Games DB'}    |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      &nbsp; {title='The Games DB'}       |         ✓ {title='The Games DB'}         |         ✓ {title='The Games DB'}         |      &nbsp; {title='The Games DB'}       |      &nbsp; {title='The Games DB'}       |         ✓ {title='The Games DB'}         |
-| [ZXInfo](#zxinfo-formerly-world-of-spectrum) |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |       &nbsp; {title='ZXInfo'}       |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |        ✓ ³ {title='ZXInfo'}         |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |
-| Coverage                                     |                10/10                |                10/10                |                8/10                 |                9/10                 |                9/10                 |                10/10                |                10/10                |                7/10                 |                7/10                 |                10/10                |                10/10                |                   4/10                   |                   4/10                   |                   5/10                   |                   3/10                   |                   2/10                   |                   3/10                   |
+| Metadata &rarr;<br>Scraper (Metadata coverage) &darr;           |                Title                |            Release Date             |             Description             |            Max. Players             |              Developer              |              Publisher              |             Genre/Tags              |               Rating                |           Age Recommend.            |                Cover                |             Screenshot              |                Wheel/Logo                |                 Marquee                  |                  Video                   |          Manual (PDF) (v3.12+)           |          Fan Art (v3.18+)           |          Back of Cover (v3.18+)          |                 Texture                  |
+| --------------------------------------------------------------- | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :---------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: | :--------------------------------------: | :---------------------------------: | :--------------------------------------: | :--------------------------------------: |
+| [Arcade DB](#arcadedb-by-motoschifo) (11/18)                    |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |     &nbsp; {title='Arcade DB'}      |        ✓ {title='Arcade DB'}        |        ✓ {title='Arcade DB'}        |     &nbsp; {title='Arcade DB'}      |     &nbsp; {title='Arcade DB'}      |       ✓ ¹ {title='Arcade DB'}       |        ✓ {title='Arcade DB'}        |          ✓ {title='Arcade DB'}           |          ✓ {title='Arcade DB'}           |          ✓ {title='Arcade DB'}           |        &nbsp; {title='Arcade DB'}        |     &nbsp; {title='Arcade DB'}      |        &nbsp; {title='Arcade DB'}        |        &nbsp; {title='Arcade DB'}        |
+| [ES GameList](#emulationstation-style-gamelists) (15/18)        |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |    &nbsp; {title='ES GameList'}     |       ✓ {title='ES GameList'}       |       ✓ {title='ES GameList'}       |       &nbsp; {title='ES GameList'}       |        ✓ ² {title='ES GameList'}         |         ✓ {title='ES GameList'}          |         ✓ {title='ES GameList'}          |       ✓ {title='ES GameList'}       |         ✓ {title='ES GameList'}          |       &nbsp; {title='ES GameList'}       |
+| [GameBase](#gamebase-db) (10/18)                                |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |      &nbsp; {title='GameBase'}      |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |       ✓ ³ {title='GameBase'}        |        ✓ {title='GameBase'}         |        ✓ {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |      &nbsp; {title='GameBase'}      |        &nbsp; {title='GameBase'}         |        &nbsp; {title='GameBase'}         |
+| [Internet Game DB (IGDB)](#igdb-internet-game-database) (12/18) | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | ✓ {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} | &nbsp; {title='Internet Game DB (IGDB)'} |
+| [File Import](#custom-resource-import) (18/18)                  |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |       ✓ {title='File Import'}       |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |       ✓ {title='File Import'}       |         ✓ {title='File Import'}          |         ✓ {title='File Import'}          |
+| [MobyGames](#mobygames) (8/18)                                  |        ✓ {title='MobyGames'}        |       ✓ ⁴ {title='MobyGames'}       |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |      See ⁴ {title='MobyGames'}      |      See ⁴ {title='MobyGames'}      |        ✓ {title='MobyGames'}        |        ✓ {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |        See ⁴ {title='MobyGames'}         |        &nbsp; {title='MobyGames'}        |     &nbsp; {title='MobyGames'}      |        &nbsp; {title='MobyGames'}        |        &nbsp; {title='MobyGames'}        |
+| [OpenRetro](#openretro) (11/18)                                 |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |     &nbsp; {title='OpenRetro'}      |        ✓ {title='OpenRetro'}        |        ✓ {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |          ✓ {title='OpenRetro'}           |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |     &nbsp; {title='OpenRetro'}      |        &nbsp; {title='OpenRetro'}        |        &nbsp; {title='OpenRetro'}        |
+| [ScreenScraper](#screenscraper) (18/18)                         |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |      ✓ {title='ScreenScraper'}      |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |      ✓ {title='ScreenScraper'}      |        ✓ {title='ScreenScraper'}         |        ✓ {title='ScreenScraper'}         |
+| [The Games DB](#thegamesdb-tgdb) (14/18)                        |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |    &nbsp; {title='The Games DB'}    |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |      ✓ {title='The Games DB'}       |         ✓ {title='The Games DB'}         |         ✓ {title='The Games DB'}         |      &nbsp; {title='The Games DB'}       |      &nbsp; {title='The Games DB'}       |      ✓ {title='The Games DB'}       |         ✓ {title='The Games DB'}         |      &nbsp; {title='The Games DB'}       |
+| [ZXInfo](#zxinfo-formerly-world-of-spectrum) (10/18)            |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |       &nbsp; {title='ZXInfo'}       |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |        ✓ ⁵ {title='ZXInfo'}         |         ✓ {title='ZXInfo'}          |         ✓ {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |       &nbsp; {title='ZXInfo'}       |         &nbsp; {title='ZXInfo'}          |         &nbsp; {title='ZXInfo'}          |
+| Scraper coverage per metadata                                   |           10/10<br>Title            |        10/10<br>Release Date        |         8/10<br>Description         |        9/10<br>Max. Players         |          9/10<br>Developer          |         10/10<br>Publisher          |         10/10<br>Genre/Tags         |           7/10<br>Rating            |       6/10<br>Age Recommend.        |           10/10<br>Cover            |         10/10<br>Screenshot         |            4/10<br>Wheel/Logo            |             6/10<br>Marquee              |              4/10<br>Video               |              3/10<br>Manual              |           5/10<br>Fan Art           |          4/10<br>Back of Cover           |             2/10<br>Texture              |
 
 **Remarks**:  
- ¹ Skyscraper uses ArcadeDB's Flyer and as a failsafe the Title screen, as Arcade games usually where not sold in a box  
- ² GameBase provides only an adult flag, thus it is either 18 or no age rating  
- ³ The source zxinfo.dk provides only an x-rated flag, thus it is either 18 or no age rating  
- ⁴ Release date will contain the first release date worldwde with Hobbyist API subscription. Age Recommendation, Rating, Max. Players, Video and release date per platform require an APIv2 Bronze subscription or higher. Skyscraper supporting anything else than a Hobbyist subscription is very unlikely.
+ ¹ Skyscraper uses ArcadeDB's Flyer and as a failsafe the Title screen, as Arcade games usually were not sold in a box  
+ ² For historical reasons the gamelist element marquee contains the logo (wheel)  
+ ³ GameBase provides only an adult flag, thus it is either 18 or no age rating  
+ ⁴ Release date will contain the first release date worldwide with Hobbyist API subscription. Age Recommendation, Rating, Max. Players, Video and release date per platform require an APIv2 Bronze subscription or higher. Skyscraper supporting anything else than a Hobbyist subscription is very unlikely.  
+ ⁵ The source zxinfo.dk provides only an x-rated flag, thus it is either 18 or no age rating
 
 ### Recognized Keywords in Query
 
-| Module                   | Supported Formats `--query=""` Parameter                                                                                       |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| arcadedb                 | Only title                                                                                                                     |
-| esgamelist               | No query supported                                                                                                             |
-| gamebase                 | Game filename, Game title and Game CRC (automatically detected). Except for CRC, globbing patterns (`*` and `'?`) can be used. |
-| igdb                     | Title or use id=... to query by IGDB game ID                                                                                   |
-| import                   | No query supported                                                                                                             |
-| mobygames                | Title or numeric MobyGames ID (see _Moby ID:_ right below the title when displaying a game on the website)                     |
-| openretro                | Only title                                                                                                                     |
-| screenscraper            | romnom=, crc=, md5=, sha1=; see [Screenscraper documentation](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description    |
-| thegamesdb, tgdb         | Only title                                                                                                                     |
-| zxinfo (worldofspectrum) | Title, game Id (id=...) or game filehash (MD5 or SHA512)                                                                       |
+| Module                   | Supported Formats `--query=""` Parameter                                                                                                                                                                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| arcadedb                 | Only title                                                                                                                                                                                                                                                       |
+| esgamelist               | No query supported                                                                                                                                                                                                                                               |
+| gamebase                 | Game filename, Game title and Game CRC (automatically detected). Except for CRC, globbing patterns (`*` and `'?`) can be used.                                                                                                                                   |
+| igdb                     | Title or use id=... to query by IGDB game ID                                                                                                                                                                                                                     |
+| import                   | No query supported                                                                                                                                                                                                                                               |
+| mobygames                | Title or numeric MobyGames ID (see _Moby ID:_ right below the title when displaying a game on the website)                                                                                                                                                       |
+| openretro                | Only title                                                                                                                                                                                                                                                       |
+| screenscraper            | romnom=, crc=, md5=, sha1=, use of gameid= may timeout (see [#195](https://github.com/Gemba/skyscraper/issues/195)) ; see [Screenscraper documentation](https://www.screenscraper.fr/webapi2.php?alpha=0&numpage=0#jeuInfos) for description of these parameters |
+| thegamesdb, tgdb         | Only title                                                                                                                                                                                                                                                       |
+| zxinfo (worldofspectrum) | Title, game Id (id=...) or game filehash (MD5 or SHA512)                                                                                                                                                                                                         |
 
 !!! tip "Aliases for Game Filenames"
 
@@ -67,15 +70,18 @@ over a table cell to display the scraper module as tooltip:
 - User credential support: _Yes, and strongly recommended, but not required_
 - API request limit: _20k per day for registered users_
 - Thread limit: _1 or more depending on user credentials_
-- Platform support: _[Check list under "Systémes"](https://www.screenscraper.fr)_ or see `screenscraper_platforms.json` sibling to your `config.ini`
-- Media support: _`cover`, `screenshot`, `wheel`, `manual`, `marquee`, `video`_
-- Example use: `Skyscraper -p snes -s screenscraper`
+- Platform support: _[Check list under "Systémes"](https://www.screenscraper.fr) or see `screenscraper_platforms.json` sibling to your `config.ini`_
+- Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `texture`, `video`, `wheel`
+- Example use:
+  ```bash
+  Skyscraper -p snes -s screenscraper
+  ```
 
 ScreenScraper is probably the most versatile and complete retro gaming database out there. It searches for games using either the checksums of the files or by comparing the _exact_ file name to entries in their database.
 
 It can be used for gathering data for pretty much all platforms, but it does have issues with platforms that are ISO based. Still, even for those platforms, it does locate some games.
 
-It has the best support for the `wheel` and `marquee` artwork types of any of the databases, and also contains videos and manuals for a lot of the games.
+It has the best support for the `wheel` and `marquee` artwork types of any of the databases, and also contains videos, fanart, backcovers and manuals for a lot of the games.
 
 I strongly recommend supporting them by contributing data to the database, or by supporting them with a bit of money. This can also give you more threads to scrape with.
 
@@ -92,89 +98,22 @@ I strongly recommend supporting them by contributing data to the database, or by
 - User credential support: _Not required_
 - API request limit: _Limited to 3000 requests per IP per month_
 - Thread limit: _None_
-- Platform support: _[Link to list](https://thegamesdb.net/list_platforms.php)_ or see `tgdb_platforms.json` sibling to your `config.ini`
-- Media support: _`cover`, `screenshot`, `wheel`, `marquee`_
-- Example use: `Skyscraper -p snes -s thegamesdb`
+- Platform support: _[Link to list](https://thegamesdb.net/list_platforms.php) or see `tgdb_platforms.json` sibling to your `config.ini`_
+- Media support: `backcover`, `cover`, `fanart`, `marquee`, `screenshot`, `wheel`
+- Example use:
+  ```bash
+  Skyscraper -p snes -s thegamesdb
+  ```
 
-For newer games there's no way around TheGamesDb. It recently had a huge redesign and their database remains one of the best out there. I would recommend scraping your roms with `screenscraper` first, and then use `thegamesdb` to fill out the gaps in your cache.
+For newer games there's no way around TheGames DB. It recently had a huge redesign and their database remains one of the best out there. I would recommend scraping your roms with `screenscraper` first, and then use `thegamesdb` to fill out the gaps in your cache.
 
 There's a small caveat to this module, as it has a monthly request limit (see above) per IP per month. But this should be plenty for most people.
 
 Their API is based on a file name search. This means that the returned results do have a chance of being faulty. Skyscraper does a lot internally to make sure accepted data is for the correct game. But it is impossible to ensure 100% correct results, so do keep that in mind when using it. Consider using the `--flags interactive` command line flag if you want complete control of the accepted entries.
 
-### ArcadeDB (by motoschifo)
+The backcover files scraped with this scraper are in average larger than 1MiB. It is likely you get box back cover files between 2MiB and 5MiB. Keep this in mind when space is a premium on your system. Screenscraper in contrast provides hi-res back cover files below 1MiB each, the majority is around 500KiB.
 
-- Shortname: _`arcadedb`_
-- Type: _Online_
-- Website: _[adb.arcadeitalia.net](http://adb.arcadeitalia.net), [youtube](https://www.youtube.com/c/ArcadeDatabase)_
-- Contact: *arcadedatabase@gmail.com*
-- Type: _Mame file name id based_
-- User credential support: _None required_
-- API request limit: _None_
-- Thread limit: _1_
-- Platform support: _Exclusively arcade platforms using official MAME files_
-- Media support: _`cover`, `screenshot`, `wheel`, `marquee`, `video`_
-- Example use: `Skyscraper -p fba -s arcadedb`
-
-Several Arcade databases using the MAME file name id's have existed throughout the years. Currently the best one, in my opinion, is the ArcadeDB made by motoschifo. It goes without saying that this module is best used for arcade platforms such as `fba`, `arcade` and any of the mame sub-platforms.
-
-As it relies on the MAME file name id when searching, there's no use trying to use this module for any non-MAME files. It won't give you any results.
-
-This module also supports videos for many games.
-
-### OpenRetro
-
-- Shortname: _`openretro`_
-- Type: _Online_
-- Website: _[www.openretro.org](https://www.openretro.org)_
-- Type: _WHDLoad uuid based, File name search based_
-- User credential support: _None required_
-- API request limit: _None_
-- Thread limit: _1_
-- Platform support: _Primarily Amiga, but supports others as well. [Check list here to the right](https://openretro.org/browse/amiga/a)_
-- Media support: _`cover`, `screenshot`, `marquee`_
-- Example use: `Skyscraper -p amiga -s openretro`
-
-If you're looking to scrape the Amiga RetroPlay LHA files, there's no better way to do this than using the `openretro` module. It is by far the best WHDLoad Amiga database on the internet when it comes to data scraping, and maybe even the best Amiga game info database overall.
-
-The database also supports many non-Amiga platforms, but there's no doubt that Amiga is the strong point.
-
-### MobyGames
-
-- Shortname: _`mobygames`_
-- Type: _Online_
-- Website: _[www.mobygames.com](https://www.mobygames.com)_
-- Type: _File name_ or _MobyGames ID_ search based
-- User credential support: _None required_
-- API request limit: _1 request per 5 seconds (Hobbyist subscription)_
-- Thread limit: _1_
-- Platform support: _[List](https://www.mobygames.com/browse/games)_ or see `mobygames_platforms.json` sibling to your `config.ini`
-- Media support: _`cover`, `screenshot`_
-- Example use:
-  - `Skyscraper -p fba -s mobygames <SINGLE FILE TO SCRAPE>`
-  - `Skyscraper -p fba -s mobygames --startat <FILE TO START AT> --endat <FILE TO END AT>`
-
-MobyGames APIv2 imposes more limits than APIv1. Not only you will need a payed
-subscription (to get an API key), but even with the entry-level (=Hobbyist)
-subscription you cannot scrape the same data as with APIv1. These are the
-limitations:
-
-- Release date will contain only the first release date worldwde with Hobbyist API
-subscription. 
-- Age Recommendation, Rating, Maximum of Players, Video and release date per
-platform require an APIv2 Bronze subscription or higher. 
-
-Skyscraper supporting anything else than a Hobbyist subscription is very
-unlikely. It is saddening to see the service of MobyGames degrading after the
-acquisition by Atari SA.
-
-However, once you have obtained an API key (starting with `moby_...`) add it to
-the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the
-`[mobygames]` INI-file section.
-
-### IGDB
-
-![IGDB logo](resources/igdb.png)
+### IGDB (Internet Game Database)
 
 - Shortname: _`igdb`_
 - Type: _Online_
@@ -184,12 +123,14 @@ the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the
 - API request limit: _A maximum of 4 requests per seconds is allowed_
 - Thread limit: _4 (each being limited to 1 request per second)_
 - Platform support: _[List](https://www.igdb.com/platforms)_
-- Media support: _`cover`, `screenshot`_
+- Media support: `cover`, `fanart`, `screenshot`
 - Example use:
-  - `Skyscraper -p fba -s igdb <SINGLE FILE TO SCRAPE>`
-  - `Skyscraper -p fba -s igdb --startat <FILE TO START AT> --endat <FILE TO END AT>`
+  ```bash
+  Skyscraper -p fba -s igdb <SINGLE FILE TO SCRAPE>`
+  Skyscraper -p fba -s igdb --startat <FILE TO START AT> --endat <FILE TO END AT>
+  ```
 
-IGDB is a relatively new database on the market. But absolutely not a bad one at that. It has a couple caveats though, as the database doesn't distinguish between platform versions of the same game when it comes to any artwork resources (they are working to implement this at some point). This makes it less usable in a retro game scraping context as many of the games differ drastically visually between the old platforms. For that reason alone, this module will only provide textual data for your roms for the time being.
+IGDB is a relatively new database on the market. But absolutely not a bad one at that. It has made a big leap forward recently, placing it right after Screenscraper and The Games DB.
 
 It is _required_ to register with the Twitch dev program (IGDB is owned by Twitch) and create a free client-id and secret-key pair for use with Skyscraper. The process of getting this free client-id and secret-key pair is quite easy. Just follow the following steps:
 
@@ -208,9 +149,87 @@ userCreds="CLIENTID:SECRETKEY"
 
 Substitute CLIENTID and SECRETKEY with your own details. And that's it, you should now be able to use the IGDB module.
 
+### ArcadeDB (by motoschifo)
+
+- Shortname: _`arcadedb`_
+- Type: _Online_
+- Website: _[adb.arcadeitalia.net](http://adb.arcadeitalia.net), [youtube](https://www.youtube.com/c/ArcadeDatabase)_
+- Contact: *arcadedatabase@gmail.com*
+- Type: _Mame file name id based_
+- User credential support: _None required_
+- API request limit: _None_
+- Thread limit: _1_
+- Platform support: _Exclusively arcade platforms using official MAME files_
+- Media support: `cover`, `marquee`, `screenshot`, `video`, `wheel`
+- Example use:
+  ```bash
+  Skyscraper -p fba -s arcadedb
+  ```
+
+Several Arcade databases using the MAME file name id's have existed throughout the years. Currently the best one, in my opinion, is the ArcadeDB made by motoschifo. It goes without saying that this module is best used for arcade platforms such as `fba`, `arcade` and any of the mame sub-platforms.
+
+As it relies on the MAME file name id when searching, there's no use trying to use this module for any non-MAME files. It won't give you any results.
+
+This module also supports videos for many games.
+
+### OpenRetro
+
+- Shortname: _`openretro`_
+- Type: _Online_
+- Website: _[www.openretro.org](https://www.openretro.org)_
+- Type: _WHDLoad uuid based, File name search based_
+- User credential support: _None required_
+- API request limit: _None_
+- Thread limit: _1_
+- Platform support: _Primarily Amiga, but supports others as well. [Check list here to the right](https://openretro.org/browse/amiga/a)_
+- Media support: `cover`, `marquee`, `screenshot`
+- Example use:
+  ```bash
+  Skyscraper -p amiga -s openretro
+  ```
+
+If you're looking to scrape the Amiga RetroPlay LHA files, there's no better way to do this than using the `openretro` module. It is by far the best WHDLoad Amiga database on the internet when it comes to data scraping, and maybe even the best Amiga game info database overall.
+
+The database also supports many non-Amiga platforms, but there's no doubt that Amiga is the strong point.
+
+### MobyGames
+
+- Shortname: _`mobygames`_
+- Type: _Online_
+- Website: _[www.mobygames.com](https://www.mobygames.com)_
+- Type: _File name_ or _MobyGames ID_ search based
+- User credential support: _None required_
+- API request limit: _1 request per 5 seconds (Hobbyist subscription)_
+- Thread limit: _1_
+- Platform support: _[List](https://www.mobygames.com/browse/games) or see `mobygames_platforms.json` sibling to your `config.ini`_
+- Media support: `cover`, `screenshot`
+- Example use:
+  ```bash
+  Skyscraper -p fba -s mobygames <SINGLE FILE TO SCRAPE>`
+  Skyscraper -p fba -s mobygames --startat <FILE TO START AT> --endat <FILE TO END AT>
+  ```
+
+MobyGames APIv2 imposes more limits than APIv1. Not only you will need a payed
+subscription (to get an API key), but even with the entry-level (=Hobbyist)
+subscription you cannot scrape the same data as with APIv1. These are the
+limitations:
+
+- Release date will contain only the first release date worldwde with Hobbyist API
+  subscription.
+- Age Recommendation, Rating, Maximum of Players, Video and release date per
+  platform require an APIv2 Bronze subscription or higher.
+
+Skyscraper supporting anything else than a Hobbyist subscription is very
+unlikely. It is saddening to see the service of MobyGames degrading after the
+acquisition by Atari SA.
+
+However, once you have obtained an API key (starting with `moby_...`) add it to
+the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the
+`[mobygames]` INI-file section.
+
 ### ZXInfo (formerly World of Spectrum)
 
-- Shortname:  _`zxinfo`_, _`worldofspectrum`_, _`wos`_
+- Shortname: _`zxinfo`_, _`worldofspectrum`_, _`wos`_
 - Type: _Online_
 - Website: _[zxinfo.dk](https://zxinfo.dk)_
 - Type: _File name search_, _Game Id search_ or _Game hash search_
@@ -218,27 +237,13 @@ Substitute CLIENTID and SECRETKEY with your own details. And that's it, you shou
 - API request limit: _None_
 - Thread limit: _None_
 - Platform support: _Exclusively ZX Spectrum games_
-- Media support: _`cover`, `screenshot`_
-- Example use: `Skyscraper -p zxspectrum -s zxinfo`
+- Media support: `cover`, `screenshot`
+- Example use:
+  ```bash
+  Skyscraper -p zxspectrum -s zxinfo
+  ```
 
 If you're looking specifically for ZX Spectrum data, this is the module to use. ZXInfo is probably the most complete ZX Spectrum resource and information database in existence. I strongly recommend visiting the site if you have any interest in these little machines. It's a cornucopia of information on the platform.
-
-### EmulationStation Game List
-
-- Shortname: _`esgamelist`_
-- Type: _Local_
-- Website: _[https://emulationstation.org](https://emulationstation.org)_
-- Type: _Exact file name match_
-- User credential support: _None required_
-- API request limit: _None_
-- Thread limit: _None_
-- Platform support: _All_
-- Media support: _`screenshot`, `manual`, `marquee`, `video`_
-- Example use: `Skyscraper -p snes -s esgamelist`
-
-This module allows you to import data from an existing EmulationStation game list into the Skyscraper cache. This is useful if you already have a lot of data and artwork in a gamelist.xml file and you wish to use it with Skyscraper.
-
-Skyscraper will search for the `gamelist.xml` file at `<INPUT FOLDER>/gamelist.xml` which by default is `/home/<USER>/RetroPie/roms/<PLATFORM>/gamelist.xml`. If that file isn't found it will look for it at `/home/<USER>/.skyscraper/import/<PLATFORM>/gamelist.xml`.
 
 ### Custom Resource Import
 
@@ -250,9 +255,13 @@ Skyscraper will search for the `gamelist.xml` file at `<INPUT FOLDER>/gamelist.x
 - API request limit: _None_
 - Thread limit: _None_
 - Platform support: _All_
-- Media support: _`cover`, `screenshot`, `wheel`, `manual`, `marquee`, `video`_
-- Example use: `Skyscraper -p snes -s import`
+- Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `texture`, `video`, `wheel`
+- Example use:
+  ```bash
+  Skyscraper -p snes -s import
+  ```
 
+The import scraper has always set [--refresh](CLIHELP.md#--refresh) to true.  
 Read a thorough description of the [import module](IMPORT.md) to recognize all capabilities.
 
 ### GameBase DB
@@ -260,13 +269,16 @@ Read a thorough description of the [import module](IMPORT.md) to recognize all c
 - Shortname: _`gamebase`_
 - Type: _Local_
 - Website: _[about the format](https://www.bu22.com/wiki/home)_
-- Type: _filename, title or CRC match, for filename and title wildcards '*' and '?' can be applied anywhere_
+- Type: _filename, title or CRC match, for filename and title wildcards '\*' and '?' can be applied anywhere_
 - User credential support: _None required_
 - API request limit: _None_
 - Thread limit: 1
 - Platform support: For those platforms where the community has compiled a GameBase database, several dozen platforms do have a GameBase database. Some examples: Commodore Machines (VC-20,C64,Plus/4,Amiga), Sinclair Spectrum ("Speccy"), see the [most comprehensive list](http://gb64.com/forum/viewtopic.php?f=10&p=31353)
-- Media support: _`cover`, `screenshot`_
-- Example use: `Skyscraper -p zxspectrum -s gamebase`
+- Media support: `cover`, `screenshot`
+- Example use:
+  ```
+  Skyscraper -p zxspectrum -s gamebase
+  ```
 
 A GameBase DB is a community driven effort to collect game information of the
 common game releases for a platform, but also more importantly for Homebrew and
@@ -279,3 +291,63 @@ database is in Microsoft Access (`*.mdb`) format. Binary data is held in
 subfolders (e.g. Screenshots, Cover) on the filesystem.
 
 Read the setup and config description of the [GameBase DB module](CONFIGINI.md#gamebasefile).
+
+### EmulationStation Style Gamelists
+
+- Shortname: _`esgamelist`_
+- Type: _Local_
+- Website: _[https://emulationstation.org](https://emulationstation.org)_
+- Type: _Exact file name match_
+- User credential support: _None required_
+- API request limit: _None_
+- Thread limit: _None_
+- Platform support: _All_
+- Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `video`
+- Example use:
+  ```bash
+  Skyscraper -p snes -s esgamelist
+  Skyscraper -p megadrive -f batocera --refresh -s esgamelist
+  Skyscraper -p c64 -f batocera -s esgamelist <game filename(s)>
+  ```
+
+This module allows you to import data from an existing EmulationStation (ES)
+(flavors: RetroPie-ES, Batocera-ES and ES variants, but not ES-DE) game list
+into the Skyscraper cache. This is useful if you already have a lot of data and
+artwork in a `gamelist.xml` and associated media files and you wish to use it
+with Skyscraper. Usually this is a one-off scraper for each platform. If you
+want to re-import and overwrite already cached data from a previous run with
+this module, do set the `--refresh` flag. These mediatypes are implicitly set
+on: `backcover`, `fanart`, `manual` and `video`.  
+For historical reasons the gamelist element marquee contains the logo (wheel).
+This scraper will use the marquee gamelist element and store it in the wheel
+cache media type, to ensure consistency when generating a gamelist from this
+import again. This is why `<wheel>` is not ingested with this scraper from the
+gamelist.  
+This scraper does not scrape the kidgame flag from the gamelist, as Skyscraper
+internally uses the age to determine the kidgame output. Ingesting the
+`<kidgame>` from the ES Gamelist would be a loss of precision.  
+Also `<texture>` is not ingested, as it is usually not present in the majority
+of gamelist flavors.  
+Eventually, you may have to adjust your
+[priorities](CACHE.md#resource-and-scraping-module-priorities) file, to put
+esgamelist data higher in the output precedence.
+
+!!! tip "Sparse Import"
+
+    Remember you can also provide a single or a set of gamefiles on the
+    commandline or provide a list of gamefiles (e.g., with
+    [includeFrom](CLIHELP.md#--includefrom-filename)) to do a sparse import.
+    In that case no `--refresh` flag has to be provided, it is set to on
+    implicitly.
+
+Skyscraper will search for the `gamelist.xml` file at
+`<gameListFolder>/gamelist.xml` which by default is
+`/home/<USER>/RetroPie/roms/<PLATFORM>/gamelist.xml`. Media denoted by relative
+paths in the gamelist is by convention relative to the input folder for
+EmulationStation.
+
+!!! warning "Heads Up, Batocera Users"
+
+    It is advised to use the [frontend switch](CLIHELP.md#-f-frontend) whenever this
+    import is run for a non-RetroPie EmulationStation gamelist. That way the
+    matching gamelist folder, gamelist filenme and input folder will be used.

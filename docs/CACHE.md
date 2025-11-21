@@ -79,7 +79,7 @@ The developer of a game
 
 ##### players
 
-How many players are supported by a game
+How many players are supported by a game (simultaneous or alternating)
 
 ##### tags
 
@@ -111,7 +111,9 @@ Wheel (logo) image filename for a game (file stored below `wheels` subfolder)
 
 ##### marquee
 
-Marquee image filename for a game (file stored below `marquees` subfolder)
+Marquee image filename for a game (file stored below `marquees` subfolder).
+Historically this artwork contained the game title and the manufacturer. It
+was shown above the screen of an arcade machine.
 
 ##### texture
 
@@ -131,3 +133,8 @@ subfolder)
 
 Since v3.18: Background image displayed in some frontends (e.g. Batocera) and
 themes for a game (file stored below `fanarts` subfolder)
+
+##### backcover
+
+Since v3.18: Image of the back side of a game packaging, aka cover back side or
+box back (file stored below `backcovers` subfolder)
