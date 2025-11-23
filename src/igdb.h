@@ -57,6 +57,7 @@ private:
     void getRating(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
     void getCover(GameEntry &game) override;
+    void getFanart(GameEntry &game) override;
 
     QList<QString> getSearchNames(const QFileInfo &info,
                                   QString &debug) override;

@@ -70,6 +70,7 @@ private:
     void getVideo(GameEntry &game) override;
     void getManual(GameEntry &game) override;
     void getFanart(GameEntry &game) override;
+    void getBackcover(GameEntry &game) override;
 
     QString getJsonText(QJsonArray array, int attr,
                         QList<QString> types = QList<QString>());

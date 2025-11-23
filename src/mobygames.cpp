@@ -79,8 +79,6 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::DESCRIPTION);
     fetchOrder.append(GameEntry::Elem::COVER);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
-
-    mobyPlatformsMap = readJson("mobygames_platforms.json");
 }
 
 void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,

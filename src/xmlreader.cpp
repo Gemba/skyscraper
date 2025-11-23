@@ -115,11 +115,15 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MANUAL))
                 .text());
 
+        entry.fanartFile = Config::makeAbsolutePath(
+            inputFolder,
+            node.firstChildElement(GameEntry::getTag(GameEntry::Elem::FANART))
+                .text());
+        entry.backcoverFile = Config::makeAbsolutePath(
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::BACKCOVER))
+                             .text());
         if (!gamelistExtraTags.isEmpty()) {
-            entry.fanartFile = Config::makeAbsolutePath(
-                inputFolder, node.firstChildElement(
-                                     GameEntry::getTag(GameEntry::Elem::FANART))
-                                 .text());
             // preserve these elements for ES and ES-DE
             for (const auto &t : gamelistExtraTags) {
                 entry.setEsExtra(t, node.firstChildElement(t).text());
@@ -139,7 +143,7 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             for (int i = 0; i < elems.length(); i++) {
                 QDomElement glElem = elems.at(i).toElement();
                 QString k = glElem.tagName();
-                if (entry.commonGamelistElems(true).values().contains(k) ||
+                if (entry.commonGamelistElems().values().contains(k) ||
                     k == "path" ||
                     k == "sortname" /* when reading a non-batocera GL */) {
                     // it is a common/baseline gamelist element: do not keep in

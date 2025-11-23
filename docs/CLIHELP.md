@@ -452,6 +452,10 @@ From Skyscraper 3.5.0 all command-line options that change the scraping behaviou
 
 To enable multiple flags separate them by commas (eg. `--flags FLAG1,FLAG2`) or apply `--flags` option multiple times.
 
+#### backcovers
+
+By default Skyscraper doesn't scrape and cache game backcovers resources because not all scraping sites provide this data and also only some frontends support a boxback display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#backcovers) instead.
+
 #### fanarts
 
 By default Skyscraper doesn't scrape and cache game fanart resources because not all scraping sites provide this data and also only some frontends support fanart display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#fanarts) instead.
@@ -478,7 +482,7 @@ This is an epheremal flag and has only an effect when used with the ES-DE fronte
 
 !!! warning "Epheremal Flag for ES-DE"
 
-    Once the miximage of ES-DE feature has been released, this flag may be removed again from Skyscraper.
+    Once the miximage of ES-DE feature has been released, this flag may be removed again from Skyscraper and the logic will be adapted to match the ES-DE behaviour.
 
 #### nobrackets
 
@@ -552,6 +556,10 @@ This flag is _only_ relevant when generating a game list (by leaving out the `-s
 
 Only relevant when generating an EmulationStation, a Retrobat or a Pegasus game list, with the `-f` option. Emulationstation is the default frontend when the `-f` option is left out. The `relative` flag forces the rom and any media paths (if they are the same as the input folder) inside the game list to be relative to the rom input folder. Consider setting this in [`config.ini`](CONFIGINI.md#relativepaths) instead.
 
+#### skipexistingbackcovers
+
+When generating gamelists, skip copying backcovers that already exist in the media output folder.
+
 #### skipexistingcovers
 
 When generating gamelists, skip processing covers that already exist in the media output folder.
@@ -620,13 +628,12 @@ Some scraping modules use file checksums to identify the game in their databases
 
 #### videos
 
-By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#videos) instead.
+By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this flag, also explicitly set this flag to output videos for the frontend/gamelist. Consider setting this in [`config.ini`](CONFIGINI.md#videos) instead.
 
 **Example(s)**
 
 ```
-Skyscraper -p amiga --flags forcefilename,nosubdirs,skipexistingwheels
-Skyscraper -p nes --flags videos,nomarquees
+Skyscraper -p nes --flags videos
 ```
 
 ### --gamelistfilename &lt;FILENAME&gt;
@@ -763,9 +770,11 @@ Skyscraper has a resource cache which works just like the browser cache in Firef
 
 You can force all data to be refetched from the servers by setting this option, effectively updating the cached data with new data from the source.
 
+If you provide one or more game filenames on the command line, the refresh flag is automatically set.
+
 !!! note
 
-     _Only_ use this option if you know data has changed for several roms at the source. Otherwise you are hammering the servers for no reason.
+     _Only_ use this option if you know data has changed for several roms at the source. Otherwise you are hammering online servers for no reason.
 
 **Example(s)**
 

@@ -67,6 +67,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::VIDEO);
     fetchOrder.append(GameEntry::Elem::MANUAL);
     fetchOrder.append(GameEntry::Elem::FANART);
+    fetchOrder.append(GameEntry::Elem::BACKCOVER);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -413,6 +414,17 @@ void ScreenScraper::getCover(GameEntry &game) {
                           QList<QString>({"box-2D"}));
     }
     game.coverData = downloadImageWithRetry(url);
+}
+
+void ScreenScraper::getBackcover(GameEntry &game) {
+    QString url = "";
+    url = getJsonText(jsonObj["medias"].toArray(), REGION,
+                      QList<QString>({"box-2D-back"}));
+    game.backcoverData = downloadImageWithRetry(url);
+    if (game.backcoverData.size() < 20480) {
+        /* 20KiB, rare case of trash image */
+        game.backcoverData.clear();
+    }
 }
 
 void ScreenScraper::getScreenshot(GameEntry &game) {

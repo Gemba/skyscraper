@@ -26,6 +26,7 @@
 #ifndef SCRAPERWORKER_H
 #define SCRAPERWORKER_H
 
+#include "abstractfrontend.h"
 #include "abstractscraper.h"
 #include "cache.h"
 #include "netmanager.h"
@@ -40,6 +41,7 @@ class ScraperWorker : public QObject {
 
 public:
     ScraperWorker(QSharedPointer<Queue> queue, QSharedPointer<Cache> cache,
+                  QSharedPointer<AbstractFrontend> frontend,
                   QSharedPointer<NetManager> manager, Settings config,
                   QString threadId);
     ~ScraperWorker();
@@ -52,17 +54,12 @@ signals:
                     const QString &debug);
 
 private:
-    enum MediaHint : unsigned char {
-        VIDEO = 1,
-        MANUAL = VIDEO << 1,
-        FANART = VIDEO << 2,
-        SCREENSHOT = VIDEO << 3
-    };
     AbstractScraper *scraper;
 
     Settings config;
 
     QSharedPointer<Cache> cache;
+    QSharedPointer<AbstractFrontend> frontend;
     QSharedPointer<NetManager> manager;
     QSharedPointer<Queue> queue;
 
@@ -83,8 +80,6 @@ private:
     int getReleaseYear(const QString releaseDateString);
 
     bool limitReached(QString &output);
-    void copyMedia(MediaHint mediaHint, const QString &completeBaseName,
-                   const QString &subPath, GameEntry &game, bool isBatocera);
     bool matchTitles(const QString &thiz, const QString &that);
     QList<QString> splitTitle(const QString &title);
     bool matchWords(const QList<QString> theseWords,

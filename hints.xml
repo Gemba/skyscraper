@@ -39,4 +39,7 @@
   <hint>Skyscraper runs on Linux, macOS and Windows.</hint>
   <hint>You can use relative paths for almost every path related option. See https://gemba.github.io/skyscraper/PATHHANDLING</hint>
   <hint>For a file extension/suffix option value like '*.ext', you can use the shorter forms '.ext' or even only 'ext'.</hint>
+  <hint>The supplementary/ folder contains helper scripts to support you in the advanced Skyscraper configuration.</hint>
+  <hint>You can scrape fanart and backcovers with Skyscraper, check the respective options.</hint>
+  <hint>The flag --buildinfo provides useful information when reporting an issue.</hint>
 </hints>

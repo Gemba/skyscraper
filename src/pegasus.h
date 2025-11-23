@@ -51,6 +51,13 @@ public:
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
     QString getVideosFolder() override;
+    GameEntry::Types supportedMedia() override {
+        return GameEntry::Types(
+            /*GameEntry::BACKCOVER |*/ GameEntry::COVER |
+            /*GameEntry::FANART |*/ /* GameEntry::MANUAL | */
+            GameEntry::MARQUEE | GameEntry::SCREENSHOT | GameEntry::TEXTURE |
+            GameEntry::VIDEO | GameEntry::WHEEL);
+    }
 
 private:
     QString makeAbsolute(const QString &filePath, const QString &inputFolder);
@@ -60,6 +67,8 @@ private:
     QString addMediaFile(const QString &asset, bool useRelativePath,
                          QString mediaFile);
     void replaceColon(QString &value, const QString &gameTitle);
+    QString getFilename(const QString &path);
+
     QMap<QString, QString> headerPairs;
 };
 

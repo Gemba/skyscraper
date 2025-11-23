@@ -42,7 +42,6 @@ struct Settings {
     QString currentDir = "";
 
     QString cacheFolder = "";
-    QString gameListFileString = "";
     QString skippedFileString = "";
     QString configFile = "";
     QString frontend = "";
@@ -68,6 +67,7 @@ struct Settings {
     QString videosFolder = "";
     QString manualsFolder = "";
     QString fanartsFolder = "";
+    QString backcoversFolder = "";
     QString importFolder = "";
     QString nameTemplate = "";
     int doneThreads = 0;
@@ -120,6 +120,7 @@ struct Settings {
 
     bool manuals = false;
     bool fanart = false;
+    bool backcovers = false;
     QString gameListVariants = "";
     bool videos = false;
     bool videoPreferNormalized = true;
@@ -142,6 +143,7 @@ struct Settings {
     bool cacheTextures = true;
     bool skipExistingManuals = false;
     bool skipExistingFanart = false;
+    bool skipExistingBackcovers = false;
     bool miximages = false;
 
     QString innerBracketsReplace = "";
@@ -202,6 +204,7 @@ private:
         {"addExtensions",           QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"addFolders",              QPair<QString, int>("bool",                                     CfgType::FRONTEND                    )},
         {"artworkXml",              QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
+        {"backcovers",              QPair<QString, int>("bool", CfgType::MAIN                                                            )},
         {"brackets",                QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"cacheCovers",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheFolder",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},

@@ -437,10 +437,13 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "When generating gamelists, skip processing covers that already "
              "exist in the media output folder."},
             {"skipexistingmanuals",
-             "When generating gamelists, skip processing manuals that already "
+             "When generating gamelists, don't copy manuals that already "
+             "exist in the media output folder."},
+            {"skipexistingbackcovers",
+             "When generating gamelists, don't copy backcovers that already "
              "exist in the media output folder."},
             {"skipexistingfanarts",
-             "When generating gamelists, skip processing of fanart that "
+             "When generating gamelists, don't copy fanart that "
              "already exist in the media output folder."},
             {"skipexistingmarquees",
              "When generating gamelists, skip processing marquees that already "
@@ -452,7 +455,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "When generating gamelists, skip processing textures, covers, "
              "disc art that already exist in the media output folder."},
             {"skipexistingvideos",
-             "When generating gamelists, skip copying videos that already "
+             "When generating gamelists, don't copy videos that already "
              "exist in the media output folder."},
             {"skipexistingwheels",
              "When generating gamelists, skip processing wheels that already "
@@ -481,15 +484,23 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "'screenscraper' scraping module."},
             {"videos",
              "Enables scraping and caching of videos for the scraping modules "
-             "that support them. Beware, this takes up a lot of disk space!"},
+             "that support them. When set during gamelist creation it outputs "
+             "videos for the frontend. Beware, this takes up a lot of disk "
+             "space!"},
             {"manuals",
              "Enables scraping and caching of manuals for the scraping modules "
-             "that support them."},
+             "that support them. No need to set for gamelist creation, unless "
+             "for some ES variants."},
             {"fanarts",
              "Enables scraping and caching of fanart for the scraping modules "
-             "that support them."},
-            {"miximages",
-             "Enables output of Skyscraper's artwork as ES-DE miximage."},
+             "that support them. No need to set for gamelist creation, unless "
+             "for some ES variants."},
+            {"backcovers",
+             "Enables scraping and caching of backcovers for the scraping "
+             "modules that support them. No need to set for gamelist creation, "
+             "unless for some ES variants."},
+            {"miximages", "Enables output of Skyscraper's artwork as ES-DE "
+                          "miximage. Only applicable to ES-DE frontend."},
         };
     } else {
         QStringList resTypes = Cache::getAllResourceTypes();

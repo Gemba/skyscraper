@@ -40,8 +40,11 @@ inline const QStringList binaryGamelistElems() {
                         GameEntry::getTag(GameEntry::Elem::FANART),
                         GameEntry::getTag(GameEntry::Elem::MANUAL),
                         GameEntry::getTag(GameEntry::Elem::VIDEO), "bezel",
-                        "boxart", "boxback", "cartridge", "magazine", "map",
-                        "mix", "music", /*"thumbnail", -> COVER */ "titleshot"});
+                        "boxart" /* composed in Bato, never scraped */,
+                        GameEntry::getTag(GameEntry::Elem::BACKCOVER),
+                        "cartridge", "magazine", "map",
+                        "mix" /* 'artwork', never scraped  */, "music",
+                        /* "thumbnail" -> COVER */ "titleshot"});
 };
 
 void Batocera::setConfig(Settings *config) {
@@ -49,8 +52,9 @@ void Batocera::setConfig(Settings *config) {
     if (config->scraper == "cache") {
         // only enable for gamelist creation
         config->relativePaths = true;
-        config->manuals = true;
+        config->backcovers = true;
         config->fanart = true;
+        config->manuals = true;
     }
 }
 
@@ -68,6 +72,7 @@ QString Batocera::getWheelsFolder() { return getCoversFolder(); }
 QString Batocera::getMarqueesFolder() { return getCoversFolder(); }
 QString Batocera::getTexturesFolder() { return getCoversFolder(); }
 QString Batocera::getFanartsFolder() { return getCoversFolder(); }
+QString Batocera::getBackcoversFolder() { return getCoversFolder(); }
 
 QStringList Batocera::extraGamelistTags(bool isFolder) {
     (void)isFolder;
@@ -82,8 +87,8 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
         entry.extraTagNames(GameEntry::Format::BATOCERA, entry);
 
     const QMap<QString, QString> scrapedBinsMap = {
-        {GameEntry::getTag(GameEntry::Elem::COVER, false), entry.coverFile},
-        //{"boxart", entry.coverFile},
+        {GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile},
+        {GameEntry::getTag(GameEntry::Elem::BACKCOVER), entry.backcoverFile},
         {GameEntry::getTag(GameEntry::Elem::SCREENSHOT), entry.screenshotFile},
         {GameEntry::getTag(GameEntry::Elem::MARQUEE), entry.marqueeFile},
         {GameEntry::getTag(GameEntry::Elem::WHEEL), entry.wheelFile},
@@ -92,15 +97,16 @@ QStringList Batocera::createEsVariantXml(const GameEntry &entry) {
         {GameEntry::getTag(GameEntry::Elem::VIDEO), entry.videoFile}};
 
     for (auto const &el : scrapedBinsMap.keys()) {
-        l.append(elem(el, scrapedBinsMap[el], addEmptyElem(), true));
+        l.append(elem(el, scrapedBinsMap[el], addEmptyElement(), true));
     }
 
     for (auto const &el : elemNames) {
         if (binaryGamelistElems().contains(el)) {
             if (!scrapedBinsMap.keys().contains(el)) {
                 // write back binaries which are currently not scraped by
-                // Skyscraper, set isPath to false to avoid any changes
-                l.append(elem(el, entry.getEsExtra(el), addEmptyElem(), false));
+                // Skyscraper; set param isPath to false to avoid any changes
+                l.append(
+                    elem(el, entry.getEsExtra(el), addEmptyElement(), false));
             } else {
                 qWarning() << "Twin element" << el
                            << "detected in extra-elements for" << entry.path;
@@ -156,4 +162,49 @@ void Batocera::preserveVariants(const GameEntry &oldEntry, GameEntry &entry) {
             entry.setEsExtra(t, p.first, p.second);
         }
     }
+}
+
+QString Batocera::getTargetFileName(GameEntry::Types t,
+                                    const QString &baseName) {
+    // TODO: Streamline cache restype with GameEntry::Types
+    QString fn = baseName;
+    switch (t) {
+    case GameEntry::BACKCOVER:
+        fn = getFileNameFor("backcover", baseName);
+        break;
+    case GameEntry::COVER:
+        fn = getFileNameFor("cover", baseName);
+        break;
+    case GameEntry::FANART:
+        fn = getFileNameFor("fanart", baseName);
+        break;
+    case GameEntry::MANUAL:
+        fn = getFileNameFor("manual", baseName);
+        break;
+    case GameEntry::MARQUEE:
+        fn = getFileNameFor("marquee", baseName);
+        break;
+    case GameEntry::SCREENSHOT:
+        fn = getFileNameFor("screenshot", baseName);
+        break;
+    case GameEntry::TEXTURE:
+        fn = getFileNameFor("texture", baseName);
+        break;
+    case GameEntry::VIDEO:
+        fn = getFileNameFor("video", baseName);
+        break;
+    case GameEntry::WHEEL:
+        fn = getFileNameFor("wheel", baseName);
+        break;
+    default:
+        break;
+    }
+    return fn;
+}
+
+GameEntry::Types Batocera::supportedMedia() {
+    return GameEntry::Types(GameEntry::BACKCOVER | GameEntry::COVER |
+                            GameEntry::FANART | GameEntry::MANUAL |
+                            GameEntry::MARQUEE | GameEntry::SCREENSHOT |
+                            GameEntry::VIDEO | GameEntry::WHEEL);
 }

@@ -31,6 +31,7 @@
 
 #include <QDebug>
 #include <QJsonArray>
+#include <QStringBuilder>
 
 TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -52,6 +53,7 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::WHEEL);
     fetchOrder.append(GameEntry::Elem::MARQUEE);
     fetchOrder.append(GameEntry::Elem::FANART);
+    fetchOrder.append(GameEntry::Elem::BACKCOVER);
 }
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
@@ -64,16 +66,18 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         }
     }
 
-    netComm->request(
+    QString req =
         searchUrlPre +
         StrTools::unMagic(
             "187;161;217;126;172;149;202;122;163;197;163;219;162;171;203;197;"
             "139;151;215;173;122;206;161;162;200;216;217;123;124;215;200;170;"
             "171;132;158;155;215;120;149;169;140;164;122;154;178;174;160;172;"
             "157;131;210;161;203;137;159;117;205;166;162;139;171;169;210;163") +
-        "&name=" + searchName + "&filter[platform]=" + pIds.join(","));
+        "&name=" + searchName + "&filter[platform]=" + pIds.join(",");
+    netComm->request(req);
     q.exec();
     data = netComm->getData();
+    qDebug() << req;
 
     jsonDoc = QJsonDocument::fromJson(data);
     if (jsonDoc.isEmpty()) {
@@ -225,6 +229,16 @@ void TheGamesDb::getCover(GameEntry &game) {
     if (game.coverData.isEmpty()) {
         game.coverData = downloadMedia(req + ".png");
     }
+    if (!game.coverData.isEmpty())
+        qDebug() << "tgdb: got cover from " << req;
+}
+
+void TheGamesDb::getBackcover(GameEntry &game) {
+    QString req = gfxUrl + "/boxart/back/" + game.id + "-1";
+    game.backcoverData = downloadMedia(req + ".jpg");
+    if (game.backcoverData.isEmpty()) {
+        game.backcoverData = downloadMedia(req + ".png");
+    }
 }
 
 void TheGamesDb::getScreenshot(GameEntry &game) {
@@ -240,13 +254,12 @@ void TheGamesDb::getScreenshot(GameEntry &game) {
             netComm->request(req);
             q.exec();
             k++;
-        } while (k < 2 && netComm->getError() != QNetworkReply::NoError);
+        } while (k < 2 && netComm->ok());
         i++;
-    } while (i < 2 && netComm->getError() != QNetworkReply::NoError);
+    } while (i < 2 && netComm->ok());
 
     QImage image;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        image.loadFromData(netComm->getData())) {
+    if (netComm->ok() && image.loadFromData(netComm->getData())) {
         game.screenshotData = netComm->getData();
         qDebug() << "tgdb: got screenshot from " << req;
     }

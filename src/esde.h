@@ -33,12 +33,13 @@ public:
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
-    QString getFanartsFolder() override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
     QStringList extraGamelistTags(bool isFolder) override;
-    bool addEmptyElem() { return false; };
+    GameEntry::Types supportedMedia() override;
+    bool addEmptyElement() override { return false; };
+    bool gamelistHasMediaPaths() override { return false; };
 };
 
 #endif // ESDE_H

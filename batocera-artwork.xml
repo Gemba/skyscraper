@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <artwork>
-  <!-- copies the resourcetypes without any artwork applied to the respective mediafolder -->
-  <output type="screenshot"/>
-  <output type="marquee" resource="wheel" />
-  <output type="cover" />
-  <output type="wheel" />
+  <!-- 
+    No artwork is applied and the media files are copied as-is for the gamelist.
+    See ARTWORK.md or artwork.xml.example* for options.
+   -->
 </artwork>

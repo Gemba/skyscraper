@@ -63,7 +63,6 @@ private:
 
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
-    QVariantMap mobyPlatformsMap;
     int gamePlatformId = 0;
 };
 

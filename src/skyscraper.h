@@ -83,17 +83,19 @@ private:
     void loadWhdLoadMap();
     void setRegionPrios();
     void setLangPrios();
+    void cleanUp();
     QString normalizePath(QFileInfo fileInfo);
     QString &removeSurplusPlatformPath(const QString &platform,
                                        const QString &lastPath,
                                        QString &sourcePath);
-    // void migrate(QString filename);
-    void setFolder(const bool doCacheScraping, QString &outFolder,
+    void setFolder(const bool generateGamelist, QString &outFolder,
                    const bool createMissingFolder = true);
+    void createMediaOutFolders();
+    const char *mediaSubFolderCStr(QString &in);
 
     QList<QString> readFileListFrom(const QString &filename);
 
-    AbstractFrontend *frontend;
+    QSharedPointer<AbstractFrontend> frontend;
 
     QSharedPointer<Cache> cache;
 
@@ -111,8 +113,8 @@ private:
     int avgCompleteness;
     int currentFile;
     int totalFiles;
-    bool cacheScrapeMode; // config.scraper == "cache"
-    bool doCacheScraping; // cacheScrapeMode && pretend == false
+    bool cacheScrapeMode;  // config.scraper == "cache"
+    bool generateGamelist; // cacheScrapeMode && pretend == false
 };
 
 #endif // SKYSCRAPER_H

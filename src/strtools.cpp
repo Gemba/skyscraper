@@ -32,11 +32,11 @@
 #include <QStringBuilder>
 
 inline void issueParseWarning(QString msg, QString v) {
-    qWarning() << msg << v;
+    qWarning() << "\033[1m" << msg << v;
     qWarning()
         << "Please report an issue at https://github.com/Gemba/skyscraper";
     qWarning() << "Use the first line of this warning message as issue title, "
-                  "no further details needed. Thank you!";
+                  "no further details needed. Thank you!\033[0m";
 }
 
 QString StrTools::xmlUnescape(QString str) {
@@ -173,6 +173,7 @@ QString StrTools::conformAges(QString str) {
                                      {"KA", "6"},
                                      {"Kids to Adults", "6"},
                                      {"G8+", "8"},
+                                     {"E10", "10"},
                                      {"E10+", "10"},
                                      {"E10+ - Everyone 10+", "10"},
                                      {"Everyone 10+", "10"},

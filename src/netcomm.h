@@ -41,6 +41,8 @@ public:
                      QList<QPair<QString, QString>>());
     QByteArray getData();
     QNetworkReply::NetworkError getError(const int &verbosity = 0);
+    bool ok() { return error == QNetworkReply::NoError; };
+    int getHttpStatus() { return httpStatus; };
     QByteArray getContentType();
     QByteArray getRedirUrl();
     QString getHeaderValue(const QString headerKey);
@@ -60,6 +62,7 @@ private:
     QNetworkReply::NetworkError error;
     QByteArray contentType;
     QByteArray redirUrl;
+    int httpStatus;
     QNetworkReply *reply;
     QList<QNetworkReply::RawHeaderPair> headerPairs;
 };

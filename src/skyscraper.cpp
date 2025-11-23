@@ -25,6 +25,7 @@
 
 #include "skyscraper.h"
 
+#include "abstractfrontend.h"
 #include "attractmode.h"
 #include "batocera.h"
 #include "cli.h"
@@ -82,12 +83,12 @@ void Skyscraper::run() {
     }
 
     cacheScrapeMode = config.scraper == "cache";
-    doCacheScraping = cacheScrapeMode && !config.pretend;
+    generateGamelist = cacheScrapeMode && !config.pretend;
     printf("Platform:         '\033[1;32m%s\033[0m'\n",
            config.platform.toStdString().c_str());
     printf("Scraping module:  '\033[1;32m%s\033[0m'\n",
            config.scraper.toStdString().c_str());
-    if (cacheScrapeMode) {
+    if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
         printf("Frontend:         '\033[1;32m%s\033[0m'\n",
                config.frontend.toStdString().c_str());
         if (!config.frontendExtra.isEmpty()) {
@@ -99,29 +100,46 @@ void Skyscraper::run() {
            config.inputFolder.toStdString().c_str());
     printf("Game list folder: '\033[1;32m%s\033[0m'\n",
            config.gameListFolder.toStdString().c_str());
-    printf("Media folder:     '\033[1;32m%s\033[0m'\n",
-           config.mediaFolder.toStdString().c_str());
-    printf("  Covers folder:  '\033[1;32m%s\033[0m'\n",
-           config.coversFolder.toStdString().c_str());
-    printf("  Screenshots:    '\033[1;32m%s\033[0m'\n",
-           config.screenshotsFolder.toStdString().c_str());
-    printf("  Wheels:         '\033[1;32m%s\033[0m'\n",
-           config.wheelsFolder.toStdString().c_str());
-    printf("  Marquees:       '\033[1;32m%s\033[0m'\n",
-           config.marqueesFolder.toStdString().c_str());
-    printf("  Textures:       '\033[1;32m%s\033[0m'\n",
-           config.texturesFolder.toStdString().c_str());
-    if (config.videos) {
-        printf("  Videos:         '\033[1;32m%s\033[0m'\n",
-               config.videosFolder.toStdString().c_str());
-    }
-    if (config.manuals && !config.manualsFolder.isEmpty()) {
-        printf("  Manuals:        '\033[1;32m%s\033[0m'\n",
-               config.manualsFolder.toStdString().c_str());
-    }
-    if (config.fanart && !config.fanartsFolder.isEmpty()) {
-        printf("  Fanarts:        '\033[1;32m%s\033[0m'\n",
-               config.fanartsFolder.toStdString().c_str());
+    if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
+        printf("Media folder:     '\033[1;32m%s\033[0m'\n",
+               config.mediaFolder.toStdString().c_str());
+        printf("  Covers folder:  '├── \033[1;32m%s\033[0m'\n",
+               mediaSubFolderCStr(config.coversFolder));
+        printf("  Screenshots:    '├── \033[1;32m%s\033[0m'\n",
+               mediaSubFolderCStr(config.screenshotsFolder));
+        printf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
+               mediaSubFolderCStr(config.wheelsFolder));
+        printf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
+               mediaSubFolderCStr(config.marqueesFolder));
+        bool notLast = config.videos || config.manuals || config.backcovers ||
+                       config.fanart;
+        printf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+               notLast ? "├" : "└", mediaSubFolderCStr(config.texturesFolder));
+        if (config.videos) {
+            notLast = config.manuals || config.backcovers || config.fanart;
+            printf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
+                   notLast ? "├" : "└",
+                   mediaSubFolderCStr(config.videosFolder));
+        }
+        // config.*Folder are not empty on frontends supporting that media
+        if (config.manuals && !config.manualsFolder.isEmpty()) {
+            notLast = config.backcovers || config.fanart;
+            printf("  Manuals:        '%s── \033[1;32m%s\033[0m'\n",
+                   notLast ? "├" : "└",
+                   mediaSubFolderCStr(config.manualsFolder));
+        }
+        if (config.fanart && !config.fanartsFolder.isEmpty()) {
+            notLast = config.backcovers;
+            printf("  Fanarts:        '%s── \033[1;32m%s\033[0m'\n",
+                   notLast ? "├" : "└",
+                   mediaSubFolderCStr(config.fanartsFolder));
+        }
+        if (config.backcovers && !config.backcoversFolder.isEmpty()) {
+            notLast = false;
+            printf("  Backcovers:     '%s── \033[1;32m%s\033[0m'\n",
+                   notLast ? "├" : "└",
+                   mediaSubFolderCStr(config.backcoversFolder));
+        }
     }
     printf("Cache folder:     '\033[1;32m%s\033[0m'\n",
            config.cacheFolder.toStdString().c_str());
@@ -277,11 +295,11 @@ void Skyscraper::run() {
     state = SINGLE;
 
     gameListFileString =
-        config.gameListFolder + "/" + frontend->getGameListFileName();
+        Config::concatPath(config.gameListFolder, config.gameListFilename);
 
     QFile gameListFile(gameListFileString);
 
-    if (doCacheScraping && config.gameListBackup) {
+    if (generateGamelist && config.gameListBackup) {
         QString gameListBackup =
             gameListFile.fileName() + "-" +
             QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
@@ -290,19 +308,19 @@ void Skyscraper::run() {
         gameListFile.copy(gameListBackup);
     }
 
-    if (doCacheScraping && !config.unattend && !config.unattendSkip &&
+    if (generateGamelist && !config.unattend && !config.unattendSkip &&
         gameListFile.exists()) {
         std::string userInput = "";
         printf("\033[1;34m'\033[0m\033[1;33m%s\033[0m\033[1;34m' already "
                "exists, do you want to overwrite it\033[0m (y/N)? ",
-               frontend->getGameListFileName().toStdString().c_str());
+               config.gameListFilename.toStdString().c_str());
         getline(std::cin, userInput);
         if (userInput != "y" && userInput != "Y") {
             printf("User chose not to overwrite, now exiting...\n");
             exit(0);
         }
         printf("Checking if '\033[1;33m%s\033[0m' is writable?... ",
-               frontend->getGameListFileName().toStdString().c_str());
+               config.gameListFilename.toStdString().c_str());
 
         if (gameListFile.open(QIODevice::Append)) {
             printf("\033[1;32mIt is! :)\033[0m\n");
@@ -346,7 +364,7 @@ void Skyscraper::run() {
     totalFiles = queue->length();
     if (totalFiles == 0) {
         QString extraInfo =
-            doCacheScraping
+            generateGamelist
                 ? "in cache"
                 : "matching these extensions '" +
                       getPlatformFileExtensions().split(' ').join(", ") + "'";
@@ -357,7 +375,7 @@ void Skyscraper::run() {
                 "entries (see config: unattendSkip) from this "
                 "\nSkyscraper run and there is none remaining to ";
             unattendSkipStr =
-                unattendSkipStr % ((doCacheScraping)
+                unattendSkipStr % ((generateGamelist)
                                        ? "generate a gamelist entry for."
                                        : "scrape.");
         }
@@ -407,7 +425,7 @@ void Skyscraper::run() {
         exit(1);
     }
 
-    if (!doCacheScraping) {
+    if (!generateGamelist) {
         printf("Starting scraping run on \033[1;32m%d\033[0m files using "
                "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
                "the work! :)\n",
@@ -415,14 +433,17 @@ void Skyscraper::run() {
     }
     printf("\n");
 
+    createMediaOutFolders();
+
     timer.start();
     currentFile = 1;
 
     QList<QThread *> threadList;
     for (int curThread = 1; curThread <= config.threads; ++curThread) {
         QThread *thread = new QThread;
-        ScraperWorker *worker = new ScraperWorker(queue, cache, manager, config,
-                                                  QString::number(curThread));
+        ScraperWorker *worker =
+            new ScraperWorker(queue, cache, frontend, manager, config,
+                              QString::number(curThread));
         worker->moveToThread(thread);
         connect(thread, &QThread::started, worker, &ScraperWorker::run);
         connect(worker, &ScraperWorker::entryReady, this,
@@ -462,23 +483,11 @@ void Skyscraper::prepareFileQueue() {
         exit(1);
     }
 
-    setFolder(doCacheScraping, config.gameListFolder);
-    setFolder(doCacheScraping, config.coversFolder);
-    setFolder(doCacheScraping, config.screenshotsFolder);
-    setFolder(doCacheScraping, config.wheelsFolder);
-    setFolder(doCacheScraping, config.marqueesFolder);
-    setFolder(doCacheScraping, config.texturesFolder);
-    if (config.videos) {
-        setFolder(doCacheScraping, config.videosFolder);
-    }
-    if (config.manuals) {
-        setFolder(doCacheScraping, config.manualsFolder);
-    }
-    if (config.fanart) {
-        setFolder(doCacheScraping, config.fanartsFolder);
-    }
-
-    setFolder(doCacheScraping, config.importFolder, false);
+    // always create gamelist folder
+    setFolder(generateGamelist, config.gameListFolder);
+    // check importFolder is existing when no gamelist is created (e.g., import
+    // scraping), but never create
+    setFolder(!generateGamelist, config.importFolder, false);
 
     QList<QFileInfo> infoList = inputDir.entryInfoList();
     if (!cacheScrapeMode &&
@@ -586,11 +595,32 @@ void Skyscraper::prepareFileQueue() {
     }
 }
 
-void Skyscraper::setFolder(const bool doCacheScraping, QString &outFolder,
+void Skyscraper::createMediaOutFolders() {
+    // make and check iff gamelist is outputted
+    setFolder(generateGamelist, config.coversFolder, generateGamelist);
+    setFolder(generateGamelist, config.screenshotsFolder, generateGamelist);
+    setFolder(generateGamelist, config.wheelsFolder, generateGamelist);
+    setFolder(generateGamelist, config.marqueesFolder, generateGamelist);
+    setFolder(generateGamelist, config.texturesFolder, generateGamelist);
+    if (config.videos) {
+        setFolder(generateGamelist, config.videosFolder, generateGamelist);
+    }
+    if (config.manuals) {
+        setFolder(generateGamelist, config.manualsFolder, generateGamelist);
+    }
+    if (config.fanart) {
+        setFolder(generateGamelist, config.fanartsFolder, generateGamelist);
+    }
+    if (config.backcovers) {
+        setFolder(generateGamelist, config.backcoversFolder, generateGamelist);
+    }
+}
+
+void Skyscraper::setFolder(const bool generateGamelist, QString &outFolder,
                            const bool createMissingFolder) {
     if (!outFolder.isEmpty()) {
         QDir dir(outFolder);
-        if (doCacheScraping) {
+        if (generateGamelist) {
             checkForFolder(dir, createMissingFolder);
         }
         outFolder = dir.absolutePath();
@@ -753,10 +783,10 @@ void Skyscraper::checkThreads() {
         state = SINGLE;
     }
 
-    if (!doCacheScraping || totalFiles > 0) {
+    if (!generateGamelist || totalFiles > 0) {
         printf("\033[1;34m---- And here are some neat stats :) ----\033[0m\n");
     }
-    if (!doCacheScraping) {
+    if (!generateGamelist) {
         printf("Total completion time: \033[1;33m%s\033[0m\n\n",
                secsToString(timer.elapsed()).toStdString().c_str());
     }
@@ -780,19 +810,8 @@ void Skyscraper::checkThreads() {
         printf("\n\n");
     }
 
-    if (doCacheScraping) {
-        QStringList mediaDirs = {
-            config.coversFolder,   config.screenshotsFolder,
-            config.wheelsFolder,   config.marqueesFolder,
-            config.texturesFolder, config.videosFolder,
-            config.manualsFolder,  config.fanartsFolder};
-        for (const auto &f : mediaDirs) {
-            QDir dir(f);
-            dir.rmdir(f);
-        }
-    }
-
     // All done, now clean up and exit to terminal
+    cleanUp();
     emit finished();
 }
 
@@ -884,9 +903,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         if (scrapers.contains(_scraper)) {
             config.scraper = _scraper;
         } else {
-            printf("\033[1;31mBummer! Unknown scrapingmodule '%s'. Known "
-                   "scrapers are: %s.\nHint: Try TAB-completion to avoid "
-                   "typos.\033[0m\n",
+            printf("\033[1;31mBummer!\033[0m Unknown scrapingmodule "
+                   "'\033[1;31m%s\033[0m'. Known scrapers are: %s.\nHint: Try "
+                   "TAB-completion to avoid typos.\n",
                    _scraper.toStdString().c_str(),
                    scrapers.join(", ").toStdString().c_str());
             exit(1);
@@ -916,15 +935,15 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {
-        frontend = new EmulationStation;
+        frontend = QSharedPointer<AbstractFrontend>(new EmulationStation());
     } else if (config.frontend == "attractmode") {
-        frontend = new AttractMode;
+        frontend = QSharedPointer<AbstractFrontend>(new AttractMode());
     } else if (config.frontend == "pegasus") {
-        frontend = new Pegasus;
+        frontend = QSharedPointer<AbstractFrontend>(new Pegasus());
     } else if (config.frontend == "esde") {
-        frontend = new Esde;
+        frontend = QSharedPointer<AbstractFrontend>(new Esde());
     } else if (config.frontend == "batocera") {
-        frontend = new Batocera;
+        frontend = QSharedPointer<AbstractFrontend>(new Batocera());
     }
 
     // Choose default scraper if none has been set yet
@@ -980,10 +999,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     } else {
         QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
         if (inputDirFileInfo.isRelative()) {
-            printf("Bummer! The parameter 'inputFolder' is provided as "
-                   "relative path which is not valid for this frontend. "
-                   "Provide the input folder as absolute path to remediate. "
-                   "Now quitting...\n");
+            printf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
+                   "provided as relative path which is not valid for this "
+                   "frontend. Provide the input folder as absolute path to "
+                   "remediate. Now quitting...\n");
             exit(1);
         }
         QString last = config.inputFolder.split("/").last();
@@ -1004,7 +1023,16 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             Config::makeAbsolutePath(config.inputFolder, config.mediaFolder);
     }
     config.inputFolder = Config::lexicallyNormalPath(config.inputFolder);
+    if (!QFile::exists(config.inputFolder)) {
+        printf("\033[1;31mBummer!\033[0m The provided input folder "
+               "'\033[1;31m%s\033[0m' does not exist.\nFix your setup. Now "
+               "quitting...\n",
+               config.inputFolder.toStdString().c_str());
+        exit(1);
+    }
     config.mediaFolder = Config::lexicallyNormalPath(config.mediaFolder);
+
+    config.gameListFilename = frontend->getGameListFileName();
 
     // only resolve after config.mediaFolder is set
     config.coversFolder = frontend->getCoversFolder();
@@ -1015,6 +1043,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     config.videosFolder = frontend->getVideosFolder();
     config.manualsFolder = frontend->getManualsFolder();
     config.fanartsFolder = frontend->getFanartsFolder();
+    config.backcoversFolder = frontend->getBackcoversFolder();
 
     if (config.importFolder.isEmpty()) {
         config.importFolder =
@@ -1078,6 +1107,12 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     // Add query only if a single filename was passed on command line
     if (parser.isSet("query")) {
+        if (QStringList({"esgamelist", "import", "cache"})
+                .contains(config.scraper)) {
+            printf("'--query' can not be applied for gamelist creation or for "
+                   "this scraper. Now quitting...\n");
+            exit(0);
+        }
         if (cliFiles.length() == 1) {
             config.searchName = parser.value("query");
             config.threads = 1;
@@ -1105,11 +1140,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             config.minMatch = 0;
             config.refresh = true;
         }
-    }
-
-    if (config.scraper == "import") {
-        // Always force the cache to be refreshed when using import scraper
-        config.refresh = true;
     }
 
     if (!config.userCreds.isEmpty()) {
@@ -1269,6 +1299,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
     if (config.threads > 4) {
         // Don't change! This limit was set by request from IGDB
         config.threads = 4;
+        // max. 4 request per sec
         printf("\033[1;33mAdjusting to %d threads to accomodate limits in "
                "the IGDB API\033[0m\n\n",
                config.threads);
@@ -1294,10 +1325,18 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
     if (config.user != tokenData.split(';').at(0)) {
         updateToken = true;
     }
-    qlonglong tokenLife = tokenData.split(';').at(2).toLongLong() -
-                          (QDateTime::currentMSecsSinceEpoch() / 1000);
-    // 2 days, should be plenty for a scraping run
-    if (tokenLife < 60 * 60 * 24 * 2) {
+    // convert token validity-end-date to a duration
+    qlonglong validDuration = tokenData.split(';').at(2).toLongLong() -
+                              QDateTime::currentSecsSinceEpoch();
+    // rectify bug in Skyscraper < 3.18.0 (expiry of token calculated to long).
+    // https://github.com/muldjord/skyscraper/blob/03d8d657d1ea3dfc5d3b1047922b76971bdf5ff5/src/skyscraper.cpp#L1736-L1738
+    // igdb token is usually 60 days valid, if it is much longer valid, force
+    // refresh to rectify bug
+    if (validDuration > 3600 * 24 * 60) {
+        updateToken = true;
+    }
+    // two days, should be plenty for a scraping run, below that refresh token
+    if (validDuration < 3600 * 24 * 2) {
         updateToken = true;
     }
     config.igdbToken = tokenData.split(';').at(1);
@@ -1314,15 +1353,12 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
             jsonObj.contains("expires_in") && jsonObj.contains("token_type")) {
             config.igdbToken = jsonObj["access_token"].toString();
             printf("...token acquired, ready to scrape!\n");
-            tokenLife = (QDateTime::currentMSecsSinceEpoch() / 1000) +
-                        jsonObj["expires_in"].toInt();
+            qlonglong tokenEol = QDateTime::currentSecsSinceEpoch() +
+                                 jsonObj["expires_in"].toInt();
             if (tokenFile.open(QIODevice::WriteOnly)) {
-                tokenFile.write(
-                    config.user.toUtf8() + ";" + config.igdbToken.toUtf8() +
-                    ";" +
-                    QByteArray::number(
-                        (QDateTime::currentMSecsSinceEpoch() / 1000) +
-                        tokenLife));
+                tokenFile.write(config.user.toUtf8() + ";" +
+                                config.igdbToken.toUtf8() + ";" +
+                                QString::number(tokenEol).toUtf8());
                 tokenFile.close();
             }
         } else {
@@ -1548,6 +1584,26 @@ QString &Skyscraper::removeSurplusPlatformPath(const QString &platform,
     return sourcePath;
 }
 
+void Skyscraper::cleanUp() {
+    QStringList mediaDirs = {config.coversFolder,    config.screenshotsFolder,
+                             config.wheelsFolder,    config.marqueesFolder,
+                             config.texturesFolder,  config.videosFolder,
+                             config.manualsFolder,   config.fanartsFolder,
+                             config.backcoversFolder};
+    // remove folders that are empty
+    for (const auto &f : mediaDirs) {
+        if (!f.isEmpty()) {
+            // qDebug() << "rmdir " << f;
+            QDir dir(f);
+            dir.rmdir(f);
+        }
+    }
+}
+
+const char *Skyscraper::mediaSubFolderCStr(QString &in) {
+    QString ret = Config::lexicallyRelativePath(config.mediaFolder, in);
+    return ret.toUtf8().constData();
+}
 // --- Console colors ---
 // Black        0;30     Dark Gray     1;30
 // Red          0;31     Light Red     1;31

@@ -323,6 +323,7 @@ QString NameTools::getSqrNotes(QString baseName) {
         {"[_[]{1}(Ntsc|ntsc|NTSC)[_\\]]{0,1}", "NTSC"},
         {"(Demo|demo|DEMO)[_\\]]{1}", "Demo"}};
     // Don't add PAL detection as it will also match with "_Palace" and such
+    // TODO: Add PAL detection, similar: PAL[^a-z]
     QMapIterator<QString, QString> i(replacements);
     while (i.hasNext()) {
         i.next();

@@ -115,4 +115,17 @@
     <source>esgamelist</source>
     <source>screenscraper</source>
   </order>
+  <order type="fanart">
+    <source>import</source>
+    <source>esgamelist</source>
+    <source>screenscraper</source>
+    <source>thegamesdb</source>
+    <source>igdb</source>
+  </order>
+  <order type="backcover">
+    <source>import</source>
+    <source>esgamelist</source>
+    <source>screenscraper</source>
+    <source>thegamesdb</source>
+  </order>
 </priorities>

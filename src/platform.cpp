@@ -178,7 +178,7 @@ QStringList Platform::getAliases(QString platform) const {
     // Platform name itself is always appended as the first alias
     aliases.append(platform);
     aliases.append(peas[platform].toHash()["aliases"].toStringList());
-    qDebug() << "getAliases():" << aliases;
+    // qDebug() << "getAliases():" << aliases;
     return aliases;
 }
 

@@ -67,6 +67,7 @@ struct ResCounts {
     int videos;
     int manuals;
     int fanart;
+    int backcovers;
 };
 
 class Cache {
@@ -80,6 +81,8 @@ public:
     static void validateAllPlatform(Settings config, Skyscraper *app);
 
     static const QStringList getAllResourceTypes();
+    static const QStringList getBinResourceTypes();
+
     bool createFolders(const QString &scraper);
     bool read();
     void printPriorities(QString cacheId);

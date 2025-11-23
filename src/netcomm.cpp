@@ -80,6 +80,8 @@ void NetComm::replyReady() {
     contentType = reply->rawHeader("Content-Type");
     redirUrl = reply->rawHeader("Location");
     headerPairs = reply->rawHeaderPairs();
+    httpStatus =
+        reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     reply->deleteLater();
     emit dataReady();
 }
@@ -97,58 +99,54 @@ QString NetComm::getHeaderValue(const QString headerKey) {
 }
 
 QNetworkReply::NetworkError NetComm::getError(const int &verbosity) {
-    if (error != QNetworkReply::NoError && verbosity >= 1) {
+    if (!ok() && verbosity >= 1) {
+        printf("\033[1;31mNetwork error: ");
         switch (error) {
         case QNetworkReply::RemoteHostClosedError:
             // 'screenscraper' will often give this error when it's overloaded.
             // But since we retry a couple of times, it's rarely a problem.
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::RemoteHostClosedError', scraping module "
-                   "service might be overloaded.\033[0m\n");
+            printf("'QNetworkReply::RemoteHostClosedError', scraping module "
+                   "service might be overloaded.");
             break;
         case QNetworkReply::TimeoutError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::TimeoutError'\033[0m\n");
+            printf("'QNetworkReply::TimeoutError'");
             break;
         case QNetworkReply::NetworkSessionFailedError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::NetworkSessionFailedError'\033[0m\n");
+            printf("'QNetworkReply::NetworkSessionFailedError'");
             break;
         case QNetworkReply::ContentNotFoundError:
             // Don't show an error on these. For some modules I am guessing for
             // urls and sometimes they simply don't exist. It's not an error in
             // those cases.
-            // printf("\033[1;31mNetwork error:
-            // 'QNetworkReply::ContentNotFoundError'\033[0m\n");
+            // printf("Network error:
+            // 'QNetworkReply::ContentNotFoundError'");
             break;
         case QNetworkReply::ContentReSendError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::ContentReSendError'\033[0m\n");
+            printf("'QNetworkReply::ContentReSendError'");
             break;
         case QNetworkReply::ContentGoneError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::ContentGoneError'\033[0m\n");
+            printf("'QNetworkReply::ContentGoneError'");
             break;
         case QNetworkReply::InternalServerError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::InternalServerError'\033[0m\n");
+            printf("'QNetworkReply::InternalServerError'");
             break;
         case QNetworkReply::UnknownNetworkError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::UnknownNetworkError'\033[0m\n");
+            printf("'QNetworkReply::UnknownNetworkError'");
             break;
         case QNetworkReply::UnknownContentError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::UnknownContentError'\033[0m\n");
+            printf("'QNetworkReply::UnknownContentError'");
             break;
         case QNetworkReply::UnknownServerError:
-            printf("\033[1;31mNetwork error: "
-                   "'QNetworkReply::UnknownServerError'\033[0m\n");
+            printf("'QNetworkReply::UnknownServerError'");
+            break;
+        case QNetworkReply::AuthenticationRequiredError:
+            printf("'QNetworkReply::AuthenticationRequiredError'");
             break;
         default:
-            printf("\033[1;31mNetwork error: '%d'\033[0m\n", error);
+            printf("'%d' (QNetworkReply::NetworkError)", error);
             break;
         }
+        printf(" (HTTP status: %d)\033[0m\n", getHttpStatus());
     }
     return error;
 }

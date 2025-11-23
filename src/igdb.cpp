@@ -32,6 +32,7 @@
 #include <QJsonArray>
 #include <QRandomGenerator>
 #include <QRegularExpression>
+#include <QStringBuilder>
 
 Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -67,6 +68,7 @@ Igdb::Igdb(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::AGES);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
     fetchOrder.append(GameEntry::Elem::COVER);
+    fetchOrder.append(GameEntry::Elem::FANART); /* IGDB: artworks */
 }
 
 void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
@@ -100,11 +102,21 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
         QString("fields %1; %2 & game.version_parent = null;")
             .arg(fields.join(","))
             .arg(clause);
+    qDebug() << headers;
     qDebug() << baseUrl + "/search/";
     qDebug() << postData;
     netComm->request(baseUrl + "/search/", postData, headers);
     q.exec();
     data = netComm->getData();
+    if (!netComm->ok()) {
+        const QString httpStatusStr =
+            " (HTTP status " % QString::number(netComm->getHttpStatus()) % ")";
+        printf("\033[1;31mThe IGDB request failed%s, can't proceed!\033[0m\n",
+               config->verbosity < 1 ? httpStatusStr.toStdString().c_str()
+                                     : "");
+        reqRemaining = 0;
+        return;
+    }
 
     jsonDoc = QJsonDocument::fromJson(data);
     if (jsonDoc.isEmpty()) {
@@ -137,9 +149,8 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                     if (releaseDate.toObject()["platform"].toInt() ==
                         platformId) {
                         game.releaseDate =
-                            QDateTime::fromMSecsSinceEpoch(
-                                (qint64)releaseDate.toObject()["date"].toInt() *
-                                1000)
+                            QDateTime::fromSecsSinceEpoch(
+                                (qint64)releaseDate.toObject()["date"].toInt())
                                 .date()
                                 .toString(Qt::ISODate);
                     }
@@ -167,13 +178,24 @@ void Igdb::getGameData(GameEntry &game) {
         "release_dates.region",
         "screenshots.url",
         "summary",
-        "total_rating"
+        "total_rating",
+        /* fanart */
+        "artworks.artwork_type",
+        "artworks.url",
+        "artworks.width",
+        "artworks.height",
         // clang-format on
     };
+    /* artwork_type, resolve order:
+     *  2: "Key art without logo"
+     *  1: "Artwork"
+     *  3: "Key art with logo"
+     */
     const QString postData = QString("fields %1; where id = %2;")
                                  .arg(fields.join(","))
                                  .arg(game.id.split(";").first());
     netComm->request(baseUrl + "/games/", postData, headers);
+    qDebug() << headers;
     qDebug() << baseUrl + "/games/";
     qDebug() << postData;
     q.exec();
@@ -208,8 +230,8 @@ void Igdb::getReleaseDate(GameEntry &game) {
                     game.id.split(";").last() &&
                 region == curRegion) {
                 game.releaseDate =
-                    QDateTime::fromMSecsSinceEpoch(
-                        (qint64)jsonDate.toObject()["date"].toInt() * 1000)
+                    QDateTime::fromSecsSinceEpoch(
+                        (qint64)jsonDate.toObject()["date"].toInt())
                         .toString("yyyy-MM-dd");
                 regionMatch = true;
                 break;
@@ -400,6 +422,44 @@ void Igdb::getCover(GameEntry &game) {
     QByteArray img = mediaFromJsonRef("cover", mediaUrl);
     if (!img.isEmpty()) {
         game.coverData = img;
+    }
+}
+
+void Igdb::getFanart(GameEntry &game) {
+    QJsonArray artworks = jsonObj["artworks"].toArray();
+    QStringList awkUrls = {"", "", ""};
+    for (int k = 0; k < artworks.count(); k++) {
+        QJsonObject awk = artworks.at(k).toObject();
+        int type = awk["artwork_type"].toInt();
+        if (type < 1 && type > 3) {
+            continue;
+        }
+        double aspect =
+            (double)awk["width"].toInt() / (double)awk["height"].toInt();
+        if (aspect < 0.85) {
+            qDebug() << "Skipping portrait mode artwork"
+                     << "https://" % awk["url"].toString();
+            /* skip portrait artwork */
+            continue;
+        }
+        // Only keep first of each artwork type
+        if (type == 1 && awkUrls[1].isEmpty()) {
+            // "Artwork"
+            awkUrls[1] = awk["url"].toString();
+        } else if (type == 2 && awkUrls[0].isEmpty()) {
+            // "Key art without logo"
+            awkUrls[0] = awk["url"].toString();
+        } else if (type == 3 && awkUrls[2].isEmpty()) {
+            // "Key art with logo"
+            awkUrls[2] = awk["url"].toString();
+        }
+    }
+    qDebug() << "Got Artwork" << awkUrls;
+    for (auto const &url : awkUrls) {
+        if (!url.isEmpty()) {
+            game.fanartData = mediaFromJsonRef("artwork", url);
+            break;
+        }
     }
 }
 

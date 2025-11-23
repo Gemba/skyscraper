@@ -31,18 +31,16 @@ class Batocera : public EmulationStation {
 public:
     Batocera();
 
-    static QString getFileNameFor(const QString &resType, QString &filename) {
-        QPair<QString, QString> params = getFilenameParams(resType);
-        if (!params.first.isEmpty()) {
-            QString fn = QString("%1-%2.%3")
-                             .arg(filename)
-                             .arg(params.first)
-                             .arg(params.second);
+    static QString getFileNameFor(const QString &resType,
+                                  const QString &basename) {
+        QString fnPostfix = getFilenamePostfix(resType);
+        if (!fnPostfix.isEmpty()) {
+            QString fn = QString("%1-%2").arg(basename).arg(fnPostfix);
             qDebug() << "lookup" << resType << "got filename" << fn;
             return fn;
         }
-        qDebug() << "lookup" << resType << "got filename" << filename;
-        return filename;
+        qDebug() << "lookup" << resType << "returning input" << basename;
+        return basename;
     }
 
     void setConfig(Settings *config) override;
@@ -56,26 +54,28 @@ public:
     QString getMarqueesFolder() override;
     QString getTexturesFolder() override;
     QString getFanartsFolder() override;
+    QString getBackcoversFolder() override;
 
     QStringList extraGamelistTags(bool isFolder) override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
     void preserveVariants(const GameEntry &oldEntry, GameEntry &entry) override;
-    bool addEmptyElem() { return false; };
+    bool addEmptyElement() { return false; };
     QString openingElement(GameEntry &entry) override;
+    QString getTargetFileName(GameEntry::Types t,
+                              const QString &basename) override;
+    GameEntry::Types supportedMedia() override;
 
 private:
-    static QPair<QString, QString> getFilenameParams(QString k) {
-        QMap<QString, QPair<QString, QString>> cacheResFn = {
-            // key: "binary type in cache", value: <"-postfix", ".ext">
-            {"cover", QPair<QString, QString>("thumb", "jpg")},
-            {"fanart", QPair<QString, QString>("fanart", "jpg")},
-            {"manual", QPair<QString, QString>("manual", "pdf")},
-            {"marquee", QPair<QString, QString>("marquee", "jpg")},
-            {"screenshot", QPair<QString, QString>("image", "jpg")},
-            {"video", QPair<QString, QString>("video", "mp4")},
-            {"wheel", QPair<QString, QString>("wheel", "png")},
+    static QString getFilenamePostfix(QString k) {
+        QMap<QString, QString> cacheResFn = {
+            // key: "binary type in cache", value: "-postfix"
+            // extension will be derived from media data with Qt's mimedatabase
+            {"backcover", "boxback"}, {"cover", "thumb"},
+            {"fanart", "fanart"},     {"manual", "manual"},
+            {"marquee", "marquee"},   {"screenshot", "image"},
+            {"video", "video"},       {"wheel", "wheel"},
             // 'texture' not in Bato
         };
         return cacheResFn[k];

@@ -34,6 +34,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QRegularExpression>
+#include <QStringBuilder>
 
 AbstractScraper::AbstractScraper(Settings *config,
                                  QSharedPointer<NetManager> manager,
@@ -159,6 +160,11 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
         case GameEntry::Elem::FANART:
             if (config->fanart) {
                 getFanart(game);
+            }
+            break;
+        case GameEntry::Elem::BACKCOVER:
+            if (config->backcovers) {
+                getBackcover(game);
             }
             break;
         default:;
@@ -445,8 +451,7 @@ QByteArray AbstractScraper::downloadMedia(const QString &url, bool isImage) {
     q.exec();
     QByteArray d;
     QImage img;
-    if (netComm->getError() == QNetworkReply::NoError &&
-        (!isImage || img.loadFromData(netComm->getData()))) {
+    if (netComm->ok() && (!isImage || img.loadFromData(netComm->getData()))) {
         d = netComm->getData();
     }
     return d;
@@ -689,8 +694,11 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
                 candidates.sort(Qt::CaseInsensitive);
                 QString pad1 = candidates.length() > 3 ? "\n  " : "";
                 QString pad2 = candidates.length() > 3 ? "\n  " : ", ";
-                debug.append(QString("Candidates: ") + pad1 +
-                             candidates.join(pad2) + "\n");
+                debug.append(
+                    QString("Candidate%1: ")
+                            .arg(candidates.length() == 1 ? " " : "s") %
+                        pad1 +
+                    candidates.join(pad2) % "\n");
             }
         }
         if (!gameEntries.isEmpty()) {

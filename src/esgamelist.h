@@ -45,7 +45,9 @@ private:
     QByteArray loadBinaryData(const QString fileName);
     void loadVideoData(GameEntry &game, const QString fileName);
     QString getAbsoluteFileName(const QString fileName);
+    QString getElementText(GameEntry::Elem key);
 
+    QFile gameListFile;
     QDomNodeList games;
     QDomNode gameNode;
 };
