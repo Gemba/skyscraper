@@ -4,17 +4,34 @@ Whenever you scrape any platform with any scraping module, Skyscraper caches eac
 
 Think of the resource cache as the cache in an internet browser. Most of the data on webpages don't change much. By caching some of the data locally, it can load parts of a webpage from that data instead of loading it from the remote server. This is exactly how the Skyscraper cache works. It helps keep the online servers healthy by not hammering them whenever you need resources you already downloaded once. And it allows you to re-generate the frontend game lists if you add new games or perhaps want to change the style of the exported artwork.
 
-**Default resource cache folder**
+### Default resource cache folder
 
 The default base folder for all of Skyscrapers' locally cached data is in the `/home/<USER>/.skyscraper/cache` folder. In this folder you'll find individual platform subfolders. Any of these are selfcontained and contains all of the cached data for that particular platform.
 
-**Resource and scraping module priorities**
+### Resource and scraping module priorities
 
-There is ONE file that you can and should edit inside each of the `/home/<USER>/.skyscraper/cache/<PLATFORM>` folders. That file is called `priorities.xml` and decides the scraper priority of resources for each resource type. For instance, if you know that `thegamesdb` always provides the best `descriptions` for games, you'd add an `<order type="description">` node with a `<source>thegamesdb</source>` subnode. You can have multiple `<source>` nodes, Skyscraper will then prefer the topmost source when generating a game list. If the topmost isn't found it'll prioritize the next one and so forth. Any source that isn't listed with an `<order>` node will be prioritized using timestamps (newest wins) for when each resource was added to the cache. So you don't _have_ to add all of them.
+There is ONE file that you can and should edit inside each of the `/home/<USER>/.skyscraper/cache/<PLATFORM>` folders. That file is called `priorities.xml` and decides the scraper priority of resources for each resource type. Here is the part of that file:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<priorities>
+  [...]
+  <order type="description">
+    <source>import</source>
+    <source>esgamelist</source>
+    <source>mobygames</source>
+    <source>thegamesdb</source>
+    <source>screenscraper</source>
+    <source>openretro</source>
+  </order>
+  [...]
+```
+
+For instance, if you know that `thegamesdb` always provides the best `descriptions` for games, you'd add an `<order type="description">` node with a `<source>thegamesdb</source>` subnode. You can have multiple `<source>` nodes, Skyscraper will then prefer the topmost source when generating a game list. If the topmost isn't found it'll prioritize the next one and so forth. Any source that isn't listed with an `<order>` node will be prioritized using timestamps (newest wins) for when each resource was added to the cache. So you don't _have_ to add all of them.
 
 Skyscraper provides the example file `/home/<USER>/.skyscraper/cache/priorities.xml.example`. Please don't edit this file manually, as it will be overwritten when you update Skyscraper. When a platform is scraped for the first time, it will automatically copy the example file to `/home/<USER>/.skyscraper/cache/<PLATFORM>/priorities.xml` unless it already exists. You can of course also copy the file yourself before scraping a platform. If you do so, be sure to remove the `.example` part of the filename so it's just called `priorities.xml`.
 
-**Update locally cached data**
+### Update locally cached data
 
 If you wish to update / refresh the locally cached resources for a particular platform and scraping module, Skyscraper provides the `--refresh` option. If this flag is set on the command line, any data in the resource cache will be updated with the new incoming data.
 
