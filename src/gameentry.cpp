@@ -30,7 +30,7 @@
 
 // ignore texture (currently only supported by ScreenScraper.fr and import)
 static const int NO_OF_TYPES =
-    (int)(log2((GameEntry::Elem::ALL) + 1)) - 1 /* -1 for TEXTURE */;
+    (int)(log2((uint)GameEntry::Elem::ALL + 1)) - 1 /* -1 for TEXTURE */;
 
 GameEntry::GameEntry() {}
 
