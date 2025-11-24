@@ -11,11 +11,18 @@ _test_android() {
    echo "$res" | grep "$1"
 }
 
+_smoke_test() {
+    # Qt5
+    /usr/local/bin/Skyscraper --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+5\."
+    # Qt6
+    "${SKYSCRAPER_HOME}/Skyscraper" --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+6\."
+}
+
 main() {
    case "${1:-}" in
       "android-aarch64") _test_android "aarch64";;
       "android-arm") _test_android "ARM" ;;
-      *) Skyscraper -h | grep 'Running' ;;
+      *) _smoke_test ;;
    esac
 }
 

@@ -74,6 +74,7 @@ main() {
       ;;
     "linux")
       _install build-essential qtbase5-dev qt5-qmake qtbase5-dev-tools
+      _install qt6-base-dev qmake6 qt6-base-dev-tools
       ;;
    esac
 }

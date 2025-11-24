@@ -30,15 +30,16 @@ build() {
    fi
 
    cd "$SKYSCRAPER_HOME"
-   echo "--- Cleaning out old build if one exists ---"
-   make --ignore-errors clean || true
-   rm --force .qmake.stash || true
+   # Qt5
+   make --ignore-errors distclean || true
    qmake
-   echo "--- Building Skyscraper v.$LATEST ---"
-   make "-j$(nproc)"
-   echo "--- Installing Skyscraper v.$LATEST ---"
+   jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
+   make "-j$jobs"
    sudo make install
-   echo "--- Skyscraper has been updated to v.$LATEST ---"
+   # Qt6
+   make --ignore-errors distclean || true
+   qmake6
+   make "-j$jobs"
 }
 
 main() {
