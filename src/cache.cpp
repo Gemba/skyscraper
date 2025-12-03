@@ -1782,12 +1782,24 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     }
                     QByteArray resizedData;
                     QBuffer b(&resizedData);
-                    b.open(QIODevice::WriteOnly);
+                    // Qt 5.15.18 on NixOS 25.11
+                    if (!b.open(QIODevice::WriteOnly)) {
+                        qWarning() << "Opening WriteOnly buffer failed with"
+                                   << b.openMode();
+                    }
                     if ((image.hasAlphaChannel() && hasAlpha(image)) ||
                         resource.type == "screenshot") {
                         addedToCache = image.save(&b, "png");
+                        if (!addedToCache)
+                            qWarning()
+                                << "Save to buffer as PNG failed. Data not "
+                                   "written to cache.";
                     } else {
                         addedToCache = image.save(&b, "jpg", config.jpgQuality);
+                        if (!addedToCache)
+                            qWarning()
+                                << "Save to buffer as JPG failed. Data not "
+                                   "written to cache.";
                     }
                     b.close();
                     if (imageData->size() > resizedData.size()) {
