@@ -42,4 +42,5 @@
   <hint>The supplementary/ folder contains helper scripts to support you in the advanced Skyscraper configuration.</hint>
   <hint>You can scrape fanart and backcovers with Skyscraper, check the respective options.</hint>
   <hint>The flag --buildinfo provides useful information when reporting an issue.</hint>
+  <hint>Default built-in extensions for game files are: *.m3u, *.ml, *.zip and *.7z</hint>
 </hints>

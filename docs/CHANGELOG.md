@@ -3,6 +3,11 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.18.1 (2025-12-TBA)
+
+- Updated: File extension `*.m3u` now recognized automatically for all
+  platforms/systems, thanks @RandomNinjaAtk
+
 ### Version 3.18.0 (2025-11-23)
 
 Opened [Github Discussions](https://github.com/Gemba/skyscraper/discussions),

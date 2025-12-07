@@ -275,7 +275,8 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "f046b81f403b132379a4f93e3e5d9482e60b69ce3d18a13539a895ea2d6583d8",
                  "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9",
                  "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d",
-                 "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1"}
+                 "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1",
+                 "fcb923fa1b38441a462511b5b842705c284d91f560d5f30c0a45e68d2444facf"}
             )
         },
         {"platforms_idmap.csv", QStringList(
