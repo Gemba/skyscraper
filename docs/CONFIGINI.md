@@ -891,7 +891,7 @@ Adds the rom extensions to the ones that are already supported by the platform, 
 
     If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper.
 
-Default value: `*.zip *.7z *.ml` (if and only if `extensions` parameter is unset)  
+Default value: `*.ml *.m3u *.zip *.7z` (if and only if `extensions` parameter is unset)  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 ---

@@ -130,7 +130,7 @@
 ;skipped="false"
 ;artworkXml="artwork.xml"
 ;relativePaths="false"
-;extensions="*.zip *.uae *.adf"
+;extensions="*.uae *.adf"
 ;addExtensions="*.zst *.rom"
 ;subdirs="true"
 ;searchStem=".desktop"
