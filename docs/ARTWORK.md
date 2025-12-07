@@ -10,7 +10,7 @@ Read on for an example `artwork.xml` and a more thorough description of the `<ou
 
 !!! warning
 
-    Some users seem to have a habbit of editing the `/home/<USER>/skysource/artwork.xml` file. _This is not the correct file!_ Please re-read the first paragraph. :)
+    Some users seem to have a habit of editing the `/home/<USER>/skysource/artwork.xml` file. _This is not the correct file!_ Please re-read the first paragraph. :)
 
 !!! tip
 
