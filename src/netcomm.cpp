@@ -29,11 +29,12 @@
 #include <QNetworkRequest>
 #include <QUrl>
 
-constexpr int MAXSIZE = 100 * 1000 * 1000;
+constexpr int DL_MAXSIZE = 100 * 1000 * 1000;
 
-NetComm::NetComm(QSharedPointer<NetManager> manager) : manager(manager) {
+NetComm::NetComm(QSharedPointer<NetManager> manager, int timeout)
+    : manager(manager), timeout(timeout) {
     requestTimer.setSingleShot(true);
-    requestTimer.setInterval(30000);
+    requestTimer.setInterval(timeout * 1000);
     connect(&requestTimer, &QTimer::timeout, this, &NetComm::requestTimeout);
 }
 
@@ -155,16 +156,19 @@ QByteArray NetComm::getContentType() { return contentType; }
 
 QByteArray NetComm::getRedirUrl() { return redirUrl; }
 
-void NetComm::dataDownloaded(qint64 bytesReceived, qint64) {
-    if (bytesReceived > MAXSIZE) {
-        printf("Retrieved data size exceeded maximum of 100 MB, cancelling "
-               "network request...\n");
+void NetComm::dataDownloaded(qint64 bytesReceived, qint64 /* bytesTotal */) {
+    if (bytesReceived > DL_MAXSIZE) {
+        printf("Retrieved data size (%d MB) exceeded maximum of %d MB, "
+               "cancelling network request...\n",
+               static_cast<int>(bytesReceived / (1000 * 1000)),
+               DL_MAXSIZE / (1000 * 1000));
         reply->abort();
     }
 }
 
 void NetComm::requestTimeout() {
-    printf("\033[1;33mRequest timed out, server might be busy / "
-           "overloaded...\033[0m\n");
+    printf("\033[1;33mRequest timed out after %d secs, server might be busy / "
+           "overloaded...\033[0m\n",
+           timeout);
     reply->abort();
 }

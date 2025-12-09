@@ -7,6 +7,9 @@ humans](https://keepachangelog.com).
 
 - Updated: File extension `*.m3u` now recognized automatically for all
   platforms/systems, thanks @RandomNinjaAtk
+- Fixed: Some games on Screenscraper failed to scrape due to long response times.
+  Caused by large response sets to be aggregated on the server (cf. #195),
+  thanks for reporting @ZacharyFoxx
 
 ### Version 3.18.0 (2025-11-23)
 

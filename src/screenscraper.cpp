@@ -37,11 +37,12 @@
 #include <QRegularExpression>
 
 constexpr int RETRIESMAX = 4;
+constexpr int TIMEOUT_SEC = 60;
 constexpr int MINARTSIZE = 256;
 
 ScreenScraper::ScreenScraper(Settings *config,
                              QSharedPointer<NetManager> manager)
-    : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
+    : AbstractScraper(config, manager, MatchType::MATCH_ONE, TIMEOUT_SEC) {
     connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
     limitTimer.setInterval(
         1200); // 1.2 second request limit set a bit above 1.0 as requested by
