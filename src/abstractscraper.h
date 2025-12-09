@@ -45,7 +45,7 @@ public:
     enum MatchType { ABSTRACT, MATCH_ONE, MATCH_MANY };
 
     AbstractScraper(Settings *config, QSharedPointer<NetManager> manager,
-                    MatchType type = ABSTRACT);
+                    MatchType type = ABSTRACT, int timeout = 30 /* secs */);
     virtual ~AbstractScraper();
     virtual void getGameData(GameEntry &game);
     virtual QList<QString> getSearchNames(const QFileInfo &info,

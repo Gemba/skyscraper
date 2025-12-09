@@ -38,9 +38,9 @@
 
 AbstractScraper::AbstractScraper(Settings *config,
                                  QSharedPointer<NetManager> manager,
-                                 MatchType type)
+                                 MatchType type, int timeout)
     : config(config), type(type) {
-    netComm = new NetComm(manager);
+    netComm = new NetComm(manager, timeout);
     connect(netComm, &NetComm::dataReady, &q, &QEventLoop::quit);
 }
 

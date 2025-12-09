@@ -35,7 +35,8 @@ class NetComm : public QObject {
     Q_OBJECT
 
 public:
-    NetComm(QSharedPointer<NetManager> manager);
+    NetComm(QSharedPointer<NetManager> manager, int timeout = 30 /* secs */);
+
     void request(QString query, QString postData = QString(),
                  QList<QPair<QString, QString>> headers =
                      QList<QPair<QString, QString>>());
@@ -49,7 +50,7 @@ public:
 
 private slots:
     void replyReady();
-    void dataDownloaded(qint64 bytesReceived, qint64);
+    void dataDownloaded(qint64 bytesReceived, qint64 /* bytesTotal */);
     void requestTimeout();
 
 signals:
@@ -65,6 +66,7 @@ private:
     int httpStatus;
     QNetworkReply *reply;
     QList<QNetworkReply::RawHeaderPair> headerPairs;
+    int timeout;
 };
 
 #endif // NETCOMM_H
