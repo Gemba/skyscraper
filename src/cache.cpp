@@ -1479,7 +1479,7 @@ void Cache::readPriorities() {
                errors, errors == 1 ? "" : "s",
                prioFilePath().toStdString().c_str());
     }
-    printf("!\n\n");
+    printf("!\n");
 }
 
 bool Cache::write(const bool onlyQuickId) {
@@ -1782,7 +1782,6 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     }
                     QByteArray resizedData;
                     QBuffer b(&resizedData);
-                    // Qt 5.15.18 on NixOS 25.11
                     if (!b.open(QIODevice::WriteOnly)) {
                         qWarning() << "Opening WriteOnly buffer failed with"
                                    << b.openMode();
@@ -1797,6 +1796,8 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     } else {
                         addedToCache = image.save(&b, "jpg", config.jpgQuality);
                         if (!addedToCache)
+                            // fails on Qt 5.15.18 on NixOS 25.11 (missing
+                            // libqjpeg)
                             qWarning()
                                 << "Save to buffer as JPG failed. Data not "
                                    "written to cache.";

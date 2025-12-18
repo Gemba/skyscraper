@@ -563,15 +563,18 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
     if (!unpack) {
         // For normal file reading
         QFile romFile(info.absoluteFilePath());
-        romFile.open(QIODevice::ReadOnly);
-        while (!romFile.atEnd()) {
+        if (romFile.open(QIODevice::ReadOnly)) {
+            while (!romFile.atEnd()) {
 
-            QByteArray dataSeg = romFile.read(1024);
-            md5.addData(dataSeg);
-            sha1.addData(dataSeg);
-            crc.pushData(1, dataSeg.data(), dataSeg.length());
+                QByteArray dataSeg = romFile.read(1024);
+                md5.addData(dataSeg);
+                sha1.addData(dataSeg);
+                crc.pushData(1, dataSeg.data(), dataSeg.length());
+            }
+            romFile.close();
+        } else {
+            qWarning() << "Romfile not readable" << romFile;
         }
-        romFile.close();
     }
 
     QString crcResult = QString::number(crc.releaseInstance(1), 16);
