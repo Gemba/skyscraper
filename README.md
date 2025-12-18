@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#macos">macOS</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
+  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#macos">NixOS</a>|<a href="#macos">macOS</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
   <a href="#-how-to-use-skyscraper">Quick Usage</a> •
   <a href="https://gemba.github.io/skyscraper/">User Manual</a> •
   <a href="https://gemba.github.io/skyscraper/CHANGELOG/">Changelog</a>
@@ -58,11 +58,15 @@ You can configure and add platforms without having the needs to edit the code so
 These files are copied into the folder `/home/pi/.skyscraper` on RetroPie (or `/usr/local/etc/skyscraper/` in general) at the first run of the program.
 
 ## 🕹 Frontends Supported (set with '-f'):
+
 * EmulationStation
 * ES-DE (EmulationStation Desktop Edition)
+* Batocera
 * AttractMode
 * Pegasus
 * RetroBat
+
+More details in the [frontends documentation](https://gemba.github.io/skyscraper/FRONTENDS/)
 
 ## 📚 Supported scraping modules (set with '-s')
 Skyscraper supports a variety of different scraping sources called *scraping modules*. Use these to gather game data into the Skyscraper resource cache. Check the full list of [scraping modules](https://gemba.github.io/skyscraper/SCRAPINGMODULES/) and read more about the [resource cache](https://gemba.github.io/skyscraper/CACHE/).
@@ -75,14 +79,17 @@ Follow the steps below to install the latest version of Skyscraper. Lines beginn
 
 NOTE! If you are using the RetroPie distribution, you have the option to install Skyscraper directly from the RetroPie-Setup script (*you need to update the script before installing it!*). Read more about all of that [in the RetroPie documentation](https://retropie.org.uk/docs/Scraper/#skyscraper).
 
-### Installation of Skyscraper on RetroPie and Programmable Completion
-This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie_setup.sh` and folow the menus (_Manage packages_ -> _Manage optional packages_ -> then look for _Skyscraper_) or run `sudo RetroPie-Setup/retropie_packages.sh skyscraper`. This will also automagically install programmable completion (aka. bash completion) for the Skyscraper command line (see [command line completion](https://gemba.github.io/skyscraper/CLIHELP#programmable-completion)).
+### Installation of Skyscraper on RetroPie <img src="docs/resources/os/RetroPie.svg" width="20px">
+This goes in the usual RetroPie stanza: Either run `sudo RetroPie-Setup/retropie_setup.sh` and folow the menus (_Manage packages_ -> _Manage optional packages_ -> then look for _Skyscraper_) or run `sudo RetroPie-Setup/retropie_packages.sh skyscraper`.
+
+#### Programmable Completion (aka. Bash Completion)
+The scriptmodule will also automagically install programmable completion for the Skyscraper command line, see [command line completion](https://gemba.github.io/skyscraper/CLIHELP#programmable-completion) for more details.
 
 ### Installation Prerequisites on Other Systems or Architectures
 
-_Qt5 is end-of-life by end of May 2025_: You can still use and compile Skyscraper with Qt5 with no restrictions, when your setup does not provide Qt6. However, if you have the option to use Qt6 I strongly recommend it, Skyscraper works well with Qt6. Use Qt6 especially when you use Skyscraper on a recent Linux distribution, macOS or Windows. In rare cases you may have to use `qmake6` instead of `qmake`. If you find a mismatch in the build scripts, please file an issue.
+_Qt5 is end-of-life by end of May 2025_: You can still use and compile Skyscraper with Qt5 with no restrictions, when your setup does not provide Qt6. However, if you have the option to use Qt6 I strongly recommend it, Skyscraper works well with Qt6. Use Qt6 especially when you use Skyscraper on a recent Linux distribution, macOS or Windows. In some cases you may have to use `qmake6` instead of `qmake`. If you find a mismatch in the build scripts, please file an issue.
 
-#### Linux
+#### Linux <img src="docs/resources/os/Tux.svg" width="20px">
 _For Qt6_:
 ```bash
 $ sudo apt update
@@ -96,9 +103,23 @@ $ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5sql5-
 # You may need these too, if they are not installed already
 $ sudo apt install make g++ gcc git
 ```
-To install Qt5 on other Linux distributions, please refer to their documentation.
+To install Qt5 (disencouraged) or Qt6 (preferred) on other Linux distributions, please refer to their documentation.
 
-#### macOS
+#### NixOS <img src="docs/resources/os/NixOS.svg" width="20px">
+Only use Qt6. Apply:
+
+```bash
+nix-shell -p \
+  gcc_multi \
+  gnumake42 \
+  p7zip \
+  qt6.qtbase \
+  qt6.qmake \
+  qt6.qtimageformats
+```
+You may omit `p7zip` if you don't want to enable the [`unpack`](https://gemba.github.io/skyscraper/CLIHELP/?h=unp#unpack) option of Skyscraper. If you want to use the `update_skyscraper.sh` script also install `python3`. Then proceed with this [section](#updating-skyscraper) for release build or this [section](#download-compile-and-install) for a development build of `main/HEAD`.
+
+#### macOS <img src="docs/resources/os/macOS.svg" width="20px">
 Skyscraper works perfectly on macOS as well but is not officially supported as I don't own a Mac. Here are the commands needed to install the Qt6 and other prerequisites. You can skip the Qt5 _un_install if you don't have it installed:
 ```
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -107,12 +128,12 @@ $ brew install gnu-tar
 $ brew install wget
 $ brew install qt
 ```
-You may also need a recent installation of [XCode](https://xcodereleases.com/) for the development tools. Then proceed to the default installation instructions in the "Download, compile and install" section. It should work and give you a working installation of Skyscraper.
+You may also need a recent installation of [XCode](https://xcodereleases.com/) for the development tools. Then proceed to the default installation instructions in the "Download, compile and install" section. It will give you a working installation of Skyscraper.
 
-#### Docker 
+#### Docker <img src="docs/resources/os/docker-mark-blue.svg" width="20px">
 Two Docker setups exist: One general in the `docker/` folder. The other resides in the `.devcontainer/` and its use is for [MS Dev Containers](https://microsoft.github.io/code-with-engineering-playbook/developer-experience/devcontainers/).
 
-#### Windows
+#### Windows <img src="docs/resources/os/ms-windows.svg" width="20px">
 Windows is not officially supported at this time. However, you [may roll your own](win32/README.md) Windows 64-bit version that works just fine with a recent Windows. It even supports colored terminal output.
 
 ### Download, compile and install
@@ -146,10 +167,10 @@ If you want to build the latest `main/HEAD` version use the following commands. 
 ```bash
 git clone --depth 1 https://github.com/Gemba/skyscraper.git
 cd skyscraper
-[[ -f Makefile ]] && make --ignore-errors clean
-rm --force .qmake.stash
+[[ -f Makefile ]] && make --ignore-errors distclean
 # You may need to issue qmake6 with Qt6 for the next command instead of qmake
-qmake  # Add also PREFIX=/path/to before qmake if you want a different PREFIX than /usr/local
+# Add also PREFIX=/path/to before qmake if you want a different PREFIX than /usr/local
+qmake  # or qmake6
 make -j$(nproc)
 sudo make install
 ```

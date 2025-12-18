@@ -356,8 +356,9 @@ void Skyscraper::run() {
                     frontend->skipExisting(gameEntries, queue);
                 }
             }
+            printf("\n");
         } else {
-            printf("\033[1;33mNot found or unsupported!\033[0m\n");
+            printf("\033[1;33mNot found or unsupported!\033[0m\n\n");
         }
     }
 
@@ -411,12 +412,11 @@ void Skyscraper::run() {
                 "either supply a few rom filenames on command line, apply the "
                 "--flags onlymissing option, or make use of the '--startat' "
                 "and / or '--endat' command line options to adhere to this. "
-                "Please check '--help' for more info.\n\nNow quitting...\n",
+                "Please check '--help' for more info.\n\nNow quitting...\n\n",
                 config.romLimit);
             exit(0);
         }
     }
-    printf("\n");
 
     if (!Compositor::preCheckArtworkXml(config.artworkXml)) {
         printf("Parsing artwork XML from '%s', failed, see above."
@@ -428,10 +428,9 @@ void Skyscraper::run() {
     if (!generateGamelist) {
         printf("Starting scraping run on \033[1;32m%d\033[0m files using "
                "\033[1;32m%d\033[0m threads.\nSit back, relax and let me do "
-               "the work! :)\n",
+               "the work! :)\n\n",
                totalFiles, config.threads);
     }
-    printf("\n");
 
     createMediaOutFolders();
 
@@ -682,9 +681,12 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
     } else {
         notFound++;
         QFile skippedFile(skippedFileString);
-        skippedFile.open(QIODevice::Append);
-        skippedFile.write(entry.absoluteFilePath.toUtf8() + "\n");
-        skippedFile.close();
+        if (skippedFile.open(QIODevice::Append)) {
+            skippedFile.write(entry.absoluteFilePath.toUtf8() + "\n");
+            skippedFile.close();
+        } else {
+            qWarning() << "File not writeable" << skippedFileString;
+        }
         if (config.skipped) {
             gameEntries.append(entry);
         }

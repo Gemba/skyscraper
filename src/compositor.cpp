@@ -51,7 +51,6 @@
 #include <QDir>
 #include <QDomDocument>
 #include <QFileInfo>
-#include <QMimeDatabase>
 #include <QPainter>
 #include <QSet>
 #include <QSettings>
@@ -300,7 +299,6 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
         fn.prepend("/" % subPath);
         createSubfolder = true;
     }
-    QMimeDatabase db;
     QRegularExpression reExt("^(.+)(\\.[^\\.]+)$");
     GameEntry::Types artworkBins = GameEntry::Elem::NONE;
     bool isBatocera = config->frontend == "batocera";
