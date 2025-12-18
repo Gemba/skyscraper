@@ -169,9 +169,9 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                            "191;167;200;198;192;228;169;156"),
                          "****");
             data.replace(config->password.toUtf8(), "****");
-            QFile errorResponse(
-                Config::getSkyFolder(Config::SkyFolderType::LOG) +
-                "/screenscraper_error.txt");
+            QString errFile = Config::getSkyFolder(Config::SkyFolderType::LOG) %
+                              "/screenscraper_error.txt";
+            QFile errorResponse(errFile);
             if (errorResponse.open(QIODevice::WriteOnly)) {
                 if (data.length() > 64) {
                     if (data.startsWith("****I****l**** "
@@ -182,16 +182,12 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                             "\nEN: Mandatory fields are missing in the URL.\n");
                     }
                     errorResponse.write(data);
-                    printf("The erroneous answer was written to "
-                           "'%s'. "
-                           "If this file contains game data, please consider "
-                           "filing a bug report at "
+                    printf("The erroneous answer was written to '%s'. If you "
+                           "expected to scrape game data and this error "
+                           "persists, please consider filing a bug report at "
                            "'https://github.com/Gemba/skyscraper/issues' and "
                            "attach that file.\n",
-                           QFileInfo(errorResponse)
-                               .absoluteFilePath()
-                               .toStdString()
-                               .c_str());
+                           Config::pathToCStr(errFile));
                 }
                 errorResponse.close();
             }
@@ -573,7 +569,7 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
             }
             romFile.close();
         } else {
-            qWarning() << "Romfile not readable" << romFile;
+            qWarning() << "Romfile not readable" << info.absoluteFilePath();
         }
     }
 

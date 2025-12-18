@@ -18,11 +18,15 @@ _smoke_test() {
     "${SKYSCRAPER_HOME}/Skyscraper" --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+6\."
 }
 
+_unit_tests() {
+	cd "${SKYSCRAPER_HOME}/test/" && make tests
+}
+
 main() {
    case "${1:-}" in
       "android-aarch64") _test_android "aarch64";;
       "android-arm") _test_android "ARM" ;;
-      *) _smoke_test ;;
+      *) _smoke_test && _unit_tests ;;
    esac
 }
 

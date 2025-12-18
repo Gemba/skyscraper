@@ -149,7 +149,7 @@ This is an alphabetical index of all configuration options their usage level and
 
 Sets the rom input folder. By default Skyscraper will look for roms in the `/home/<USER>/RetroPie/roms/<PLATFORM>` folder. If your roms are located in a non-default location, you can set the input path using this option.
 
-!!! note
+!!! note "Path Appended With `<PLATFORM>`"
 
     If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
@@ -157,6 +157,13 @@ Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
+
+!!! tip "Usage in `[<FRONTEND>]` Section"
+
+    When you use this option in a `[<FRONTEND>]` section other than
+    the default `emulationstation`, then it is only evaluated when you provide
+    either `-f` command line parameter or have set the [`frontend`](#frontend)
+    option during a scraping run. 
 
 ---
 
@@ -164,7 +171,7 @@ The default is valid for the most frontends, very few [frontends](FRONTENDS.md) 
 
 Sets the game list export folder. By default Skyscraper exports the game list to the same directory as the rom input folder. This enables you to change that to a non-default location.
 
-!!! note
+!!! note "Path Appended With `<PLATFORM>`"
 
     If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
@@ -172,6 +179,13 @@ Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
+
+!!! tip "Usage in `[<FRONTEND>]` Section"
+
+    When you use this option in a `[<FRONTEND>]` section other than
+    the default `emulationstation`, then it is only evaluated when you provide
+    either `-f` command line parameter or have set the [`frontend`](#frontend)
+    option during a scraping run. 
 
 ---
 
@@ -199,7 +213,7 @@ Sets the artwork / media output folder. By default (ie. if the option `mediaFold
 
 Read more about the [artwork compositing](ARTWORK.md).
 
-!!! note
+!!! note "Path Appended With `<PLATFORM>`"
 
     If this is set in the `[main]` or `[<FRONTEND>]` section it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
@@ -207,6 +221,13 @@ Default value: `/home/<USER>/RetroPie/roms/<PLATFORM>/media`
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 The default is valid for the most frontends, very few [frontends](FRONTENDS.md) do use a different default value.
+
+!!! tip "Usage in `[<FRONTEND>]` Section"
+
+    When you use this option in a `[<FRONTEND>]` section other than
+    the default `emulationstation`, then it is only evaluated when you provide
+    either `-f` command line parameter or have set the [`frontend`](#frontend)
+    option during a scraping run. 
 
 ---
 
