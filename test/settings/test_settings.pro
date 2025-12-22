@@ -1,8 +1,12 @@
 QT += core network xml testlib
 TEMPLATE = app
 TARGET = test_settings
-INCLUDEPATH += ../..
+DEPENDPATH += .
+INCLUDEPATH += ../../src
+CONFIG += debug
+QMAKE_CXXFLAGS += -std=c++17
 
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 PREFIX = /usr/local
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
 
@@ -13,8 +17,7 @@ QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../peas.json)) .;
 QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../platforms_idmap.csv)) .;
 
 # Input
-HEADERS += test_settings.h \
-           ../../src/cache.h \
+HEADERS += ../../src/cache.h \
            ../../src/cli.h \
            ../../src/config.h \
            ../../src/gameentry.h \

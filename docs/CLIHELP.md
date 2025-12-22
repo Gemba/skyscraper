@@ -191,13 +191,13 @@ Skyscraper -p snes -s import
 
 Read more about [each scraping module](SCRAPINGMODULES.md).
 
-### -t &lt;1-8&gt;
+### -t &lt;1-...&gt;
 
-Sets the desired number of parallel threads to be run when scraping. By default it is set to 4.
+Sets the desired number of parallel threads to be run when scraping. By default it is set to 4. You can not set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your system.
 
 !!! note
 
-    Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted.
+    Some scraping modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. For gamelist creation runs you may set it to the maximum.
 
 **Example(s)**
 

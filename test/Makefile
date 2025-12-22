@@ -1,13 +1,13 @@
-SUBDIRS = $(shell find . -maxdepth 1 -mindepth 1 -type d | sed 's,\./,,g')
+SUBDIRS = $(shell find . -maxdepth 1 -mindepth 1 -type d | sed 's,\./,,g' | sort)
 QMAKE = qmake6
 
 tests:
-	rm -f "../moc_*"
 	$(foreach subdir, $(SUBDIRS), \
-		echo "\n[*] Making all in $(subdir)"; \
+		echo "\n[*] Making all in test/$(subdir) ..."; \
 		cd $(subdir) && $(QMAKE); \
 		$(MAKE) -j$(shell nproc) all || exit 1; \
 		./test_$(subdir) || exit 1; \
+		echo "[*] ... done tests in test/$(subdir).\n"; \
 		cd .. ; \
 	)
 

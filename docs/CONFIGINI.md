@@ -656,7 +656,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 #### threads
 
-Sets the desired number of parallel threads to be run when scraping. Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. By default it is set to 4.
+Sets the desired number of parallel threads to be run when scraping or creating the gamelist. Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. By default it is set to 4. You can not set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your Linux system.
 
 Default value: `4`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`

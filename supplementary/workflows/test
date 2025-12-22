@@ -5,6 +5,8 @@ set -x
 export SKYSCRAPER_HOME="$(cd "$(dirname "$0")/../.." && pwd)"
 source "${SKYSCRAPER_HOME}/supplementary/workflows/core.sh"
 
+export QT_QPA_PLATFORM=offscreen
+
 _test_android() {
    local -r res="$(file "$TARGET_BIN")"
    echo "$res" 
