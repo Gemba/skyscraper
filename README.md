@@ -100,7 +100,7 @@ $ sudo apt install \
     python3
 ```
 
-Python3 is needed for the `update_skyscraper.sh` script and if you want to use the Python scripts in the supplementary/ folder.
+Python3 is needed for the `update_skyscraper.sh` script and if you want to use the Python scripts in the `supplementary/` folder.
 
 #### Linux <img src="docs/resources/os/Tux.svg" width="20px">
 _For Qt6_:
