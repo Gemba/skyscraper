@@ -46,6 +46,7 @@ namespace Config {
     QString lexicallyRelativePath(const QString &base, const QString &other);
     QString lexicallyNormalPath(const QString &pathWithDots);
     QString &expandHomePath(QString &path);
+    const char *pathToCStr(QString &in);
 } // namespace Config
 
 #endif // CONFIG_H

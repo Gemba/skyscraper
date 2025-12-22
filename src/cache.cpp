@@ -1179,12 +1179,15 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
 
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
     for (const auto &resType : resTypeList) {
-        QFile reportFile(reportsDir.absolutePath() + "/report-" +
-                         config.platform + "-missing_" + resType + "-" +
-                         dateTime + ".txt");
+        QString rFn = QString("{1}/report-{2}-missing_{3}-{4}.txt")
+                          .arg(reportsDir.absolutePath())
+                          .arg(config.platform)
+                          .arg(resType)
+                          .arg(dateTime);
+        QFile reportFile(rFn);
         printf("Report filename: '\033[1;32m%s\033[0m'\nAssembling report, "
                "please wait...",
-               reportFile.fileName().toStdString().c_str());
+               Config::pathToCStr(rFn));
         if (reportFile.open(QIODevice::WriteOnly)) {
             int missing = 0;
             int dots = 0;

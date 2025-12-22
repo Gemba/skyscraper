@@ -254,9 +254,9 @@ void TheGamesDb::getScreenshot(GameEntry &game) {
             netComm->request(req);
             q.exec();
             k++;
-        } while (k < 2 && netComm->ok());
+        } while (k < 2 && !netComm->ok());
         i++;
-    } while (i < 2 && netComm->ok());
+    } while (i < 2 && !netComm->ok());
 
     QImage image;
     if (netComm->ok() && image.loadFromData(netComm->getData())) {

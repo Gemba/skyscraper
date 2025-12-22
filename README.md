@@ -89,6 +89,19 @@ The scriptmodule will also automagically install programmable completion for the
 
 _Qt5 is end-of-life by end of May 2025_: You can still use and compile Skyscraper with Qt5 with no restrictions, when your setup does not provide Qt6. However, if you have the option to use Qt6 I strongly recommend it, Skyscraper works well with Qt6. Use Qt6 especially when you use Skyscraper on a recent Linux distribution, macOS or Windows. In some cases you may have to use `qmake6` instead of `qmake`. If you find a mismatch in the build scripts, please file an issue.
 
+In general you should have these packages installed:
+
+```
+$ sudo apt install \
+    make \
+    g++ \
+    gcc \
+    git \
+    python3
+```
+
+Python3 is needed for the `update_skyscraper.sh` script and if you want to use the Python scripts in the supplementary/ folder.
+
 #### Linux <img src="docs/resources/os/Tux.svg" width="20px">
 _For Qt6_:
 ```bash
@@ -100,8 +113,6 @@ _For Qt5 (these are legacy installation prerequisites!)_: Skyscraper needs Qt5.1
 ```bash
 $ sudo apt update
 $ sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5sql5-sqlite p7zip-full
-# You may need these too, if they are not installed already
-$ sudo apt install make g++ gcc git
 ```
 To install Qt5 (disencouraged) or Qt6 (preferred) on other Linux distributions, please refer to their documentation.
 

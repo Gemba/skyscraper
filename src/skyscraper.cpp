@@ -97,12 +97,12 @@ void Skyscraper::run() {
         }
     }
     printf("Input folder:     '\033[1;32m%s\033[0m'\n",
-           config.inputFolder.toStdString().c_str());
+           Config::pathToCStr(config.inputFolder));
     printf("Game list folder: '\033[1;32m%s\033[0m'\n",
-           config.gameListFolder.toStdString().c_str());
+           Config::pathToCStr(config.gameListFolder));
     if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
         printf("Media folder:     '\033[1;32m%s\033[0m'\n",
-               config.mediaFolder.toStdString().c_str());
+               Config::pathToCStr(config.mediaFolder));
         printf("  Covers folder:  '├── \033[1;32m%s\033[0m'\n",
                mediaSubFolderCStr(config.coversFolder));
         printf("  Screenshots:    '├── \033[1;32m%s\033[0m'\n",
@@ -142,10 +142,10 @@ void Skyscraper::run() {
         }
     }
     printf("Cache folder:     '\033[1;32m%s\033[0m'\n",
-           config.cacheFolder.toStdString().c_str());
+           Config::pathToCStr(config.cacheFolder));
     if (config.scraper == "import") {
         printf("Import folder:    '\033[1;32m%s\033[0m'\n",
-               config.importFolder.toStdString().c_str());
+               Config::pathToCStr(config.importFolder));
     }
 
     printf("\n");
@@ -803,11 +803,11 @@ void Skyscraper::checkThreads() {
         printf("\033[1;32mSuccessfully processed games: %d\033[0m\n", found);
         printf("\033[1;33mSkipped games: %d\033[0m", notFound);
         if (notFound > 0) {
-            printf(" (Filenames saved to '\033[1;33m%s/%s\033[0m')",
-                   Config::getSkyFolder(Config::SkyFolderType::LOG)
-                       .toStdString()
-                       .c_str(),
-                   skippedFileString.toStdString().c_str());
+            QString skippedFn = Config::concatPath(
+                Config::getSkyFolder(Config::SkyFolderType::LOG),
+                skippedFileString);
+            printf(" (Filenames saved to '\033[1;33m%s\033[0m')",
+                   Config::pathToCStr(skippedFn));
         }
         printf("\n\n");
     }
@@ -1065,7 +1065,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     skippedFileString =
-        "skipped-" + config.platform + "-" + config.scraper + ".txt";
+        QString("skipped-{1}-{2}.txt").arg(config.platform).arg(config.scraper);
 
     // Grab all requested files from cli, if any
     QList<QString> requestedFiles = parser.positionalArguments();
@@ -1431,16 +1431,17 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
                                      .toObject()["maxthreads"]
                                      .toString()
                                      .toInt();
-            if (allowedThreads != 0) {
-                if (config.threadsSet && config.threads <= allowedThreads) {
-                    printf("User is allowed %d threads, but user has set "
-                           "it manually to %d, using the latter value.\n\n",
-                           allowedThreads, config.threads);
+            if (allowedThreads > 0) {
+                if (config.threadsSet && config.threads < allowedThreads) {
+                    printf(
+                        "User is allowed %d thread%s, but user has set thread "
+                        "value manually to %d: Using the lower value.\n\n",
+                        allowedThreads, allowedThreads > 1 ? "s" : "",
+                        config.threads);
                 } else {
-                    config.threads = (allowedThreads <= 8 ? allowedThreads : 8);
+                    config.threads = allowedThreads;
                     printf("Setting threads to \033[1;32m%d\033[0m as "
-                           "allowed for the authenticated Screenscraper "
-                           "account.\n\n",
+                           "allowed for your Screenscraper account.\n\n",
                            config.threads);
                 }
             }
@@ -1606,6 +1607,7 @@ const char *Skyscraper::mediaSubFolderCStr(QString &in) {
     QString ret = Config::lexicallyRelativePath(config.mediaFolder, in);
     return ret.toUtf8().constData();
 }
+
 // --- Console colors ---
 // Black        0;30     Dark Gray     1;30
 // Red          0;31     Light Red     1;31

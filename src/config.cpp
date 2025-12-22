@@ -384,3 +384,11 @@ QString &Config::expandHomePath(QString &path) {
     }
     return path;
 }
+
+const char *Config::pathToCStr(QString &in) {
+    QString ret = in;
+#ifndef Q_OS_WIN
+    ret = ret.replace(QDir::homePath(), "~");
+#endif
+    return ret.toUtf8().constData();
+}

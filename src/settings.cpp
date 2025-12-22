@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QStringBuilder>
+#include <QThread>
 #include <filesystem>
 
 static inline bool isArcadePlatform(const QString &platform) {
@@ -146,7 +147,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
         default:;
         }
         qInfo() << "Section type" << type << "[" << section << "]"
-                << "has surplus key(s) (=ignored): " << invalid;
+                << "has surplus key(s), which will be ignored: " << invalid;
     }
 
     for (auto k : retained) {
@@ -495,19 +496,17 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             bool intOk;
             int v = ss.toInt(&intOk);
             if (!intOk) {
-                printf("\033[1;31mConversion of %s to integer failed for key "
-                       "%s. Please fix in config.ini.\n\033[0m",
-                       ss.toString().toUtf8().constData(),
-                       k.toUtf8().constData());
+                printf(
+                    "\033[1;31mConversion of %s to integer failed for option "
+                    "%s. Please fix in config.ini.\n\033[0m",
+                    ss.toString().toUtf8().constData(), k.toUtf8().constData());
                 exit(1);
             }
             if (k == "jpgQuality") {
                 if (0 < v && v <= 100) {
                     config->jpgQuality = v;
                 } else {
-                    printf("\033[1;33mValue of %d is out of range and is "
-                           "ignored! Consult the documentation.\n\033[0m",
-                           v);
+                    outOfRange(k, v);
                 }
                 continue;
             }
@@ -519,9 +518,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 if (0 < v && v <= 200) {
                     config->maxFails = v;
                 } else {
-                    printf("\033[1;33mValue of %d is out of range and is "
-                           "ignored! Consult the documentation.\n\033[0m",
-                           v);
+                    outOfRange(k, v);
                 }
                 continue;
             }
@@ -532,24 +529,24 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                     config->minMatch = v;
                     config->minMatchSet = true;
                 } else {
-                    printf("\033[1;33mValue of %d is out of range and is "
-                           "ignored! Consult the documentation.\n\033[0m",
-                           v);
+                    outOfRange(k, v);
                 }
                 continue;
             }
             if (k == "threads") {
-                config->threads = v;
-                config->threadsSet = true;
+                if (v > 0 && v <= QThread::idealThreadCount()) {
+                    config->threads = v;
+                    config->threadsSet = true;
+                } else {
+                    outOfRange(k, v);
+                }
                 continue;
             }
             if (k == "verbosity") {
                 if (0 < v && v <= 3) {
                     config->verbosity = v;
                 } else {
-                    printf("\033[1;33mValue of %d is out of range and is "
-                           "ignored! Consult the documentation.\n\033[0m",
-                           v);
+                    outOfRange(k, v);
                 }
                 continue;
             }
@@ -567,7 +564,8 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         parser->value("l").toInt() <= 10000) {
         config->maxLength = parser->value("l").toInt();
     }
-    if (parser->isSet("t") && parser->value("t").toInt() <= 8) {
+    if (parser->isSet("t") && parser->value("t").toInt() > 0 &&
+        parser->value("t").toInt() <= QThread::idealThreadCount()) {
         config->threads = parser->value("t").toInt();
         config->threadsSet = true;
     }
@@ -913,4 +911,10 @@ QString RuntimeCfg::getAllExtensionsOfPlatform() {
     return Platform::get()
         .getFormats(config->platform, config->extensions, config->addExtensions)
         .remove('*');
+}
+
+void RuntimeCfg::outOfRange(QString &k, int v) {
+    printf("\033[1;33mValue of %d is out of range for option %s and is "
+           "ignored! Consult the documentation.\n\033[0m",
+           v, k.toStdString().c_str());
 }

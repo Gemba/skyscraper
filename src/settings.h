@@ -195,6 +195,7 @@ private:
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
     QString parseExtensions(const QString &optionVal);
     QString getAllExtensionsOfPlatform();
+    void outOfRange(QString &k, int v);
 
     Settings *config;
     const QCommandLineParser *parser;
