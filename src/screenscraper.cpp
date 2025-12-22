@@ -573,7 +573,7 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
             }
             romFile.close();
         } else {
-            qWarning() << "Romfile not readable" << romFile;
+            qWarning() << "Romfile not readable" << info.absoluteFilePath();
         }
     }
 
