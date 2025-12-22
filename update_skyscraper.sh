@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 {
-    type -P python3 || printf '%s\n' "--- Python is missing, please install the Python3 for your system. Exiting. ---" && exit 1
+    type -P python3 >/dev/null || (printf '%s\n' "--- Python is missing, please install the Python3 for your system. Exiting. ---" && exit 1)
     LATEST=$(wget -q -O - "https://api.github.com/repos/Gemba/skyscraper/releases/latest" | python3 -c 'import sys; import json; print(json.loads(sys.stdin.read())["tag_name"])')
     [[ -z "$LATEST" ]] && printf '%s\n' "--- Remote server unreachable. Check internet connectivity. Exiting. ---" && exit 1
 
