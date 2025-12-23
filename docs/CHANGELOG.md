@@ -3,13 +3,18 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.18.1 (2025-12-TBA)
+### Version 3.18.1 (2025-12-23)
 
 - Updated: File extension `*.m3u` now recognized automatically for all
   platforms/systems, thanks @RandomNinjaAtk
+- Updated: On non-Windows OSes the home path is replaced with `~/` for less
+  visual clutter in the terminal output
 - Fixed: Some games on Screenscraper failed to scrape due to long response times.
   Caused by large response sets to be aggregated on the server (cf. #195),
   thanks for reporting @ZacharyFoxx
+- Fixed: Screenshot scraping of scraping module The GamesDB
+- Fixed: NixOS build (cf. #194) TL;DR: Use Qt6. Thanks for reporting
+  @extjs-fan and @dlip
 
 ### Version 3.18.0 (2025-11-23)
 
