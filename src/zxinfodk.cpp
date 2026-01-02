@@ -28,6 +28,7 @@
 #include "zxinfodk.h"
 
 #include "gameentry.h"
+#include "platform.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -39,6 +40,8 @@
 static const QList<QPair<QString, QString>>
     headers({QPair<QString, QString>("User-Agent", "Skyscraper / " VERSION)});
 static const QString mediaUrl = "https://zxinfo.dk/media";
+static const QRegularExpression RE_HASH =
+    QRegularExpression("^([a-f0-9]{32}|[a-f0-9]{128})$");
 
 ZxInfoDk::ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
@@ -56,11 +59,44 @@ ZxInfoDk::ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
 }
 
+QList<QString> ZxInfoDk::getSearchNames(const QFileInfo &info, QString &debug) {
+    QList<QString> searchNames;
+    if (config->searchName.isEmpty()) {
+        // Only use automated hash search when no --query is given
+        QString sha512sum = sha512FromFile(info);
+        if (!sha512sum.isEmpty()) {
+            searchNames.append(sha512sum);
+        }
+    }
+    QString baseName = info.completeBaseName();
+    // don't use baseName() as it may chop off too much
+    // Fix for #205
+    for (auto const &ext : Platform::get()
+                               .getFormats(config->platform, config->extensions,
+                                           config->addExtensions)
+                               .split(" *")) {
+        if (baseName.toLower().endsWith(ext)) {
+            baseName.chop(ext.length());
+        }
+    }
+    debug.append("Base name: '" + baseName + "'\n");
+    // only do aliasMap lookup if user
+    // decided to use it, esp. for year hint like "Yabba Dabba (YYYY)"
+    searchNames.append(lookupAliasMap(baseName, debug));
+    return searchNames;
+}
+
 void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,
                                 QString searchName, QString platform) {
     QString queryUrl = getQueryUrl(searchName);
     if (queryUrl.isEmpty())
         return;
+
+    if (gameEntries.size() == 1 && queryUrl.contains("/search?")) {
+        // exact match (filehash, first in searchnames) was successful. skip
+        // searchstring second query attempt.
+        return;
+    }
 
     netComm->request(queryUrl, nullptr /* force GET */, headers);
     q.exec();
@@ -80,11 +116,12 @@ void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,
             jsonDoc.object()["hits"].toObject()["hits"].toArray();
 
         for (const auto &hit : jsonGamesHits) {
-            GameEntry game;
             QJsonObject jsonGameDetails = hit.toObject()["_source"].toObject();
             const QString id = hit.toObject()["_id"].toString();
             gameEntries.append(
                 createMinimumGameEntry(id, jsonGameDetails, platform, false));
+            gameEntries.last().url =
+                "textsearch"; // flag for bestMatch eval later
         }
     } else {
         // max. one hit
@@ -95,7 +132,6 @@ void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,
             return;
         }
 
-        GameEntry game;
         QJsonObject jsonGameDetails;
         QString id;
         if (queryUrl.contains("/games/")) {
@@ -275,10 +311,9 @@ QString ZxInfoDk::getQueryUrl(QString searchName) {
     if (id > 0) {
         queryUrl = QString("%1/games/%2?mode=compact")
                        .arg(baseUrl)
-                       .arg(QString::number(id), 7, '0');
-    } else if (QRegularExpression("^([a-f0-9]{32}|[a-f0-9]{128})$")
-                   .match(searchName.toLower())
-                   .hasMatch()) {
+                       .arg(QString::number(id), 7,
+                            '0'); /* left-padding to 7 digits */
+    } else if (RE_HASH.match(searchName.toLower()).hasMatch()) {
         queryUrl = QString("%1/filecheck/%2?%3")
                        .arg(baseUrl)
                        .arg(searchName.toLower())
@@ -292,4 +327,22 @@ QString ZxInfoDk::getQueryUrl(QString searchName) {
 
     qDebug() << queryUrl;
     return queryUrl;
+}
+
+QString ZxInfoDk::sha512FromFile(const QFileInfo &info) {
+    QFile romFile(info.absoluteFilePath());
+    if (info.size() > 0 && romFile.open(QIODevice::ReadOnly)) {
+        QCryptographicHash sha512(QCryptographicHash::Sha512);
+        while (!romFile.atEnd()) {
+            sha512.addData(romFile.read(4096));
+        }
+        romFile.close();
+        return sha512.result().toHex();
+    }
+
+    qWarning() << QString("Couldn't calculate SHA512 of rom file '%1', please "
+                          "check permissions, filesize and try again. Scrape "
+                          "result may not be accurate!")
+                      .arg(info.fileName());
+    return "";
 }

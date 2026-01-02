@@ -1065,7 +1065,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     skippedFileString =
-        QString("skipped-{1}-{2}.txt").arg(config.platform).arg(config.scraper);
+        QString("skipped-%1-%2.txt")
+            .arg(config.platform)
+            .arg(config.scraper != "worldofspectrum" ? config.scraper
+                                                     : "zxinfo");
 
     // Grab all requested files from cli, if any
     QList<QString> requestedFiles = parser.positionalArguments();

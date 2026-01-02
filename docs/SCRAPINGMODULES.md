@@ -241,9 +241,13 @@ the [userCreds](CONFIGINI.md#usercreds) configuration (without any colon) in the
 - Example use:
   ```bash
   Skyscraper -p zxspectrum -s zxinfo
+  Skyscraper -p zxspectrum -s zxinfo --refresh --query="id=03012" ManicMiner.tzx
+  Skyscraper -p zxspectrum -s zxinfo --refresh --query="f55584f3a77b28f77145ac6e3925ff60" ManicMiner.tzx
   ```
 
-If you're looking specifically for ZX Spectrum data, this is the module to use. ZXInfo is probably the most complete ZX Spectrum resource and information database in existence. I strongly recommend visiting the site if you have any interest in these little machines. It's a cornucopia of information on the platform.
+If you're looking specifically for ZX Spectrum data, this is the module to use. ZXInfo is probably the most complete ZX Spectrum resource and information database in existence. I strongly recommend visiting the site if you have any interest in these little machines. It's a cornucopia of information on the platform.  
+This module always tries to match the file hash (SHA512) first, which will give you the most accurate match when you use well known ZX Spectrum game collections. If the file hash has no match the filename is used. As with ZX Spectrum there are often many fan made clones, you may hint Skyscraper to return the wanted match by adding the release year to either the filename or in the file `aliasMap.csv`, for example `Manic Miner (1983).tzx` as file or `ManicMiner;Manic Miner (1983)` in `aliasMap.csv` (aliasing the source file `ManicMiner.tzx` or `ManicMiner.tzx.zip`), also make sure to have the configuration option [`ignoreYearInFilename`](CONFIGINI.md#ignoreyearinfilename) set to `false` (which is the default).  
+If all else fails you can use the [`--query`](CLIHELP.md#--query-string) option for single games. If you use the query option no automatic file hash lookup is performed. Here you may either use `id=0...` (see [zxinfo.dk](https://zxinfo.dk) for the ID, it must start with at least one `0`, Skyscraper will pad with the remaining zeros to match the 7 digit format expected). Or you may use a specific MD5 / SHA512 hash to force exactly this game metadata to be scraped, use the hash directly as query value without any keyword.
 
 ### Custom Resource Import
 
