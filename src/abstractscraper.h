@@ -54,8 +54,10 @@ public:
     virtual void runPasses(QList<GameEntry> &gameEntries, const QFileInfo &info,
                            QString &output, QString &debug);
 
-    int reqRemaining = -1;
+    QString lookupAliasMap(const QString &baseName, QString &debug);
     MatchType getType() const { return type; };
+
+    int reqRemaining = -1;
 
 #ifdef TESTING
     QList<QString> getRegionPrios() { return regionPrios; }
@@ -98,7 +100,6 @@ protected:
 
     QString lookupSearchName(const QFileInfo &info, const QString &baseName,
                              QString &debug);
-    QString lookupAliasMap(const QString &baseName, QString &debug);
     QByteArray downloadMedia(const QString &url, bool isImage = true);
     QVariantMap readJson(const QString &filename);
 

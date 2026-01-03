@@ -1179,7 +1179,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
 
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
     for (const auto &resType : resTypeList) {
-        QString rFn = QString("{1}/report-{2}-missing_{3}-{4}.txt")
+        QString rFn = QString("%1/report-%2-missing_%3-%4.txt")
                           .arg(reportsDir.absolutePath())
                           .arg(config.platform)
                           .arg(resType)
@@ -1779,9 +1779,11 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 if (imageData->size() > 0 && image.loadFromData(*imageData) &&
                     !image.isNull()) {
                     const int max = RESIZE_PX_THRESHOLD;
+                    bool scaled = false;
                     if (image.width() > max || image.height() > max) {
                         image = image.scaled(max, max, Qt::KeepAspectRatio,
                                              Qt::SmoothTransformation);
+                        scaled = true;
                     }
                     QByteArray resizedData;
                     QBuffer b(&resizedData);
@@ -1806,7 +1808,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                                    "written to cache.";
                     }
                     b.close();
-                    if (imageData->size() > resizedData.size()) {
+                    if (scaled && imageData->size() > resizedData.size()) {
                         if (config.verbosity >= 3) {
                             printf("%s: '%d' > '%d', choosing resize for "
                                    "optimal result!\n",

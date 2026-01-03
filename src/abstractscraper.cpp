@@ -36,6 +36,8 @@
 #include <QRegularExpression>
 #include <QStringBuilder>
 
+static const QRegularExpression RE_THE = QRegularExpression(", [Tt]he");
+
 AbstractScraper::AbstractScraper(Settings *config,
                                  QSharedPointer<NetManager> manager,
                                  MatchType type, int timeout)
@@ -600,7 +602,7 @@ QString AbstractScraper::getCompareTitle(const QFileInfo &info) {
     QRegularExpressionMatch match;
 
     // Always move ", The" to the beginning of the name
-    match = QRegularExpression(", [Tt]he").match(compareTitle);
+    match = RE_THE.match(compareTitle);
     if (match.hasMatch()) {
         compareTitle = compareTitle.replace(match.captured(0), "")
                            .prepend(match.captured(0).right(3) + " ");
@@ -672,11 +674,11 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
 
     int pass = 0;
     for (const auto &sn : searchNames) {
-        output.append("\033[1;35mPass " + QString::number(++pass) + "\033[0m ");
+        output.append("\033[1;35mPass " % QString::number(++pass) % "\033[0m ");
         getSearchResults(gameEntries, sn, config->platform);
         if (config->verbosity >= 3) {
-            debug.append("Tried with: '" + sn + "'\n");
-            debug.append("Platform  : " + config->platform + "\n");
+            debug.append("Tried with: '" % sn % "'\n");
+            debug.append("Platform  : " % config->platform % "\n");
             QStringList candidates;
             for (auto const &ge : gameEntries) {
                 QString c = ge.title;
@@ -686,7 +688,7 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
                 if (!ge.publisher.isEmpty())
                     extra.append(ge.publisher);
                 if (!extra.isEmpty())
-                    c = c + " (" + extra.join(", ") + ")";
+                    c = c % " (" % extra.join(", ") % ")";
 
                 candidates.append(c);
             }
@@ -694,11 +696,9 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
                 candidates.sort(Qt::CaseInsensitive);
                 QString pad1 = candidates.length() > 3 ? "\n  " : "";
                 QString pad2 = candidates.length() > 3 ? "\n  " : ", ";
-                debug.append(
-                    QString("Candidate%1: ")
-                            .arg(candidates.length() == 1 ? " " : "s") %
-                        pad1 +
-                    candidates.join(pad2) % "\n");
+                debug.append(QString("Candidate%1: ")
+                                 .arg(candidates.length() == 1 ? " " : "s") %
+                             pad1 % candidates.join(pad2) % "\n");
             }
         }
         if (!gameEntries.isEmpty()) {

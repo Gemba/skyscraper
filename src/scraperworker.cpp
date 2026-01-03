@@ -218,15 +218,28 @@ void ScraperWorker::run() {
             game.found = false;
         } else {
             int compareYear = UNDEF_YEAR;
-            if (!config.ignoreYearInFilename) {
+            if (!cacheScraper && !config.ignoreYearInFilename) {
                 QString baseParNotes =
                     NameTools::getParNotes(info.completeBaseName());
                 // If baseParNotes matches (NNNN), compareYear = NNNN
+                if (baseParNotes.isEmpty()) {
+                    QString ignore;
+                    QString alias = scraper->lookupAliasMap(
+                        info.completeBaseName(), ignore);
+                    baseParNotes = NameTools::getParNotes(alias);
+                    if (baseParNotes.isEmpty()) {
+                        alias =
+                            scraper->lookupAliasMap(info.baseName(), ignore);
+                        baseParNotes = NameTools::getParNotes(alias);
+                    }
+                }
                 QRegularExpressionMatch match =
                     QRegularExpression("\\((\\d{4})\\)").match(baseParNotes);
                 if (match.hasMatch()) {
                     QString yyyy = match.captured(1);
                     compareYear = yyyy.toInt();
+                    qDebug() << "Got compare year from file/aliasMap:"
+                             << compareYear;
                 }
             }
             if (!config.searchName.isEmpty() && config.scraper == "gamebase") {
@@ -636,7 +649,8 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
     QString debugMsg = "Match was discarded as ROM file name contains (%1) "
                        "and scrape data contains %2 as release year. No "
                        "match. See config option ignoreYearInFilename, or "
-                       "remove/adjust year from ROM filename to rectify.\n";
+                       "remove/adjust year from ROM filename (or via "
+                       "aliasMap.csv) to rectify.\n";
     if (scraper->getType() == scraper->MatchType::MATCH_ONE) {
         GameEntry entry = gameEntries.first();
         releaseYear = getReleaseYear(entry.releaseDate);
@@ -654,8 +668,11 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
         return game;
     }
     if (config.scraper == "cache" ||
-        (config.scraper == "openretro" && gameEntries.first().url.isEmpty()) ||
-        (config.scraper == "gamebase" && gameEntries.size() == 1)) {
+        (config.scraper == "openretro" &&
+         gameEntries.first().url.isEmpty() /* exact WHDload match */) ||
+        (config.scraper == "gamebase" && gameEntries.size() == 1) ||
+        (config.scraper == "worldofspectrum" &&
+         gameEntries.first().url.isEmpty() /* exact one match */)) {
         lowestDistance = 0;
         game = gameEntries.first();
         game.title = StrTools::xmlUnescape(game.title);
@@ -681,10 +698,9 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
             }
         }
         releaseYear = getReleaseYear(entry.releaseDate);
-        // If year was specified, and doesn't match, skip.
         if (compareYear != UNDEF_YEAR && releaseYear != UNDEF_YEAR &&
             compareYear != releaseYear) {
-            debug.append(debugMsg.arg(compareYear).arg(releaseYear));
+            // If year was specified, and doesn't match, skip.
             continue;
         }
         if (config.scraper != "openretro") {
@@ -702,15 +718,15 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
         return game;
     }
 
-    int mostSimilar = 0;
+    int bestMatchIdx = 0;
     // Run through the potentials and find the best match
-    for (int a = 0; a < potentials.length(); ++a) {
-        QString entryTitle = potentials.at(a).title;
+    for (int idx = 0; idx < potentials.length(); ++idx) {
+        game = potentials.at(idx);
+        QString entryTitle = game.title;
 
         // If we have a perfect hit, always use this result
         if (compareTitle == entryTitle) {
             lowestDistance = 0;
-            game = potentials.at(a);
             return game;
         }
 
@@ -719,7 +735,6 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
                      matchTitles(entryTitle, compareTitle);
         if (match) {
             lowestDistance = 0;
-            game = potentials.at(a);
             return game;
         }
 
@@ -730,11 +745,11 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
         QList<QString> entryTitleWords = splitTitle(entryTitle);
         if (matchWords(compareTitleWords, entryTitleWords)) {
             lowestDistance = 0;
-            return potentials.at(a);
+            return game;
         }
         if (matchWords(entryTitleWords, compareTitleWords)) {
             lowestDistance = 0;
-            return potentials.at(a);
+            return game;
         }
 
         // If only one title has a subtitle (eg. has ":" or similar in name),
@@ -756,7 +771,6 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
                 if (entLower.right(comLower.length()) == comLower &&
                     comLower.length() >= 10) {
                     lowestDistance = 0;
-                    game = potentials.at(a);
                     return game;
                 }
                 entryTitle =
@@ -771,7 +785,6 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
                 if (comLower.right(entLower.length()) == entLower &&
                     entLower.length() >= 10) {
                     lowestDistance = 0;
-                    game = potentials.at(a);
                     return game;
                 }
                 compareTitle =
@@ -783,15 +796,26 @@ GameEntry ScraperWorker::getBestEntry(const QList<GameEntry> &gameEntries,
             }
         }
 
-        int currentDistance = editDistance(
+        int currentDistance = 0;
+        if (!config.ignoreYearInFilename && compareYear != UNDEF_YEAR) {
+            if (getReleaseYear(game.releaseDate) == compareYear) {
+                // bonus to place this match highest
+                currentDistance = -2;
+            }
+        }
+
+        currentDistance += editDistance(
             StrTools::xmlUnescape(compareTitle).toLower().toStdString(),
             StrTools::xmlUnescape(entryTitle).toLower().toStdString());
         if (currentDistance < lowestDistance) {
             lowestDistance = currentDistance;
-            mostSimilar = a;
+            bestMatchIdx = idx;
         }
     }
-    game = potentials.at(mostSimilar);
+    if (lowestDistance < 0) {
+        lowestDistance = 0;
+    }
+    game = potentials.at(bestMatchIdx);
     return game;
 }
 

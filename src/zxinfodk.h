@@ -31,6 +31,7 @@
 #include "abstractscraper.h"
 #include "gameentry.h"
 
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -41,6 +42,8 @@ public:
     ZxInfoDk(Settings *config, QSharedPointer<NetManager> manager);
 
 private:
+    QList<QString> getSearchNames(const QFileInfo &info,
+                                  QString &debug) override;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
     void getGameData(GameEntry &game) override;
@@ -59,6 +62,8 @@ private:
                                      const QJsonObject &jsonGameObj,
                                      const QString &platform,
                                      bool filecheckQuery);
+    QString sha512FromFile(const QFileInfo &info);
+
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
 };
