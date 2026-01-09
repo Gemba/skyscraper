@@ -365,13 +365,14 @@ void Pegasus::replaceColon(QString &value, const QString &gameTitle) {
         // PENDING: use sliced() instead of mid() when Qt5
         // is no longer supported (ie. RetroPie moved away from Buster)
         ctxStr = ctxStr % value.mid(begin, end - begin) % endStr;
-        value.replace(idx, 1, ".");
-        qWarning() << QString(
-                          "Description of '%1' contains a colon (:) at '%2', "
-                          "Skyscraper replaced it with '.'. Consider "
-                          "editing the description to remediate this warning.")
-                          .arg(gameTitle)
-                          .arg(ctxStr);
+        const QChar modColon = QChar(0xa789);
+        value.replace(idx, 1, modColon);
+        qInfo() << QString("Description of '%1' contains a colon (:) at '%2', "
+                           "Skyscraper replaced it with '%3' (UTF-8 Modified "
+                           "Letter Colon).")
+                       .arg(gameTitle)
+                       .arg(ctxStr)
+                       .arg(modColon);
         idx = value.indexOf(':');
     }
 }

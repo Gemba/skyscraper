@@ -58,6 +58,9 @@ public:
             GameEntry::MARQUEE | GameEntry::SCREENSHOT | GameEntry::TEXTURE |
             GameEntry::VIDEO | GameEntry::WHEEL);
     }
+#ifdef TESTING
+    void replaceColon(QString &value, const QString &gameTitle);
+#endif
 
 private:
     QString makeAbsolute(const QString &filePath, const QString &inputFolder);
@@ -66,7 +69,9 @@ private:
     QString toPegasusFormat(const QString &key, const QString &value);
     QString addMediaFile(const QString &asset, bool useRelativePath,
                          QString mediaFile);
+#ifndef TESTING
     void replaceColon(QString &value, const QString &gameTitle);
+#endif
     QString getFilename(const QString &path);
 
     QMap<QString, QString> headerPairs;
