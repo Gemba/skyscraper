@@ -1,0 +1,4 @@
+Makefile
+test_pegasus
+*.o
+*.moc
