@@ -1,3 +1,5 @@
 Makefile
 *.o
-test_*
+*.moc
+moc_*
+test_nametools

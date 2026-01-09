@@ -1,5 +1,7 @@
 Makefile
 *.o
+*.moc
+moc_*
 test_settings
 peas.json
 platforms_idmap.csv

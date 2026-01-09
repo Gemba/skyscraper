@@ -3,6 +3,18 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.19.0 (2026-TBA)
+
+- Updated: ZXInfo scraper now checks first for file hash match, allow overriding
+  with query parameter or hinting with release year in parenthesis in filename or
+  via `aliasMap.csv` (since 3.18.2)
+- Changed: More pleasant replacement for colons in texts for Pegasus frontend.
+  Now uses the Unicode counterpart (Modifier Letter Colon, 0xa789). Thanks
+  @LeeBigelow. 
+- Fixed: Filename output name of cache operations, thanks @SineSwiper (since
+  3.18.2)
+- Fixed: A set of edgecase bugs, thanks to all reporters.
+
 ### Version 3.18.1 (2025-12-23)
 
 - Updated: File extension `*.m3u` now recognized automatically for all
