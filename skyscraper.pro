@@ -29,6 +29,12 @@ isEmpty(PREFIX) {
   PREFIX = /usr/local
 }
 
+# System configuration directory
+SYSCONFDIR = $$(SYSCONFDIR)
+isEmpty(SYSCONFDIR) {
+  SYSCONFDIR = $${PREFIX}/etc
+}
+
 unix:target.path=$${PREFIX}/bin
 unix:target.files=Skyscraper Skyscraper.app/Contents/MacOS/Skyscraper
 
@@ -39,25 +45,25 @@ unix:supplementary.files=\
   supplementary/scraperdata/peas_and_idmap_verify.py \
   supplementary/scraperdata/README-Skyscraper-Scripts.md
 
-unix:config.path=$${PREFIX}/etc/skyscraper
+unix:config.path=$${SYSCONFDIR}/skyscraper
 unix:config.files=aliasMap.csv hints.xml mameMap.csv \
   mobygames_platforms.json peas.json platforms_idmap.csv \
   screenscraper_platforms.json tgdb_developers.json \
   tgdb_genres.json tgdb_platforms.json tgdb_publishers.json
 
-unix:examples.path=$${PREFIX}/etc/skyscraper
+unix:examples.path=$${SYSCONFDIR}/skyscraper
 unix:examples.files=config.ini.example README.md artwork.xml \
   artwork.xml.example1 artwork.xml.example2 artwork.xml.example3 \
   artwork.xml.example4 batocera-artwork.xml docs/ARTWORK.md docs/CACHE.md
 
-unix:cacheexamples.path=$${PREFIX}/etc/skyscraper/cache
+unix:cacheexamples.path=$${SYSCONFDIR}/skyscraper/cache
 unix:cacheexamples.files=cache/priorities.xml.example docs/CACHE.md
 
-unix:impexamples.path=$${PREFIX}/etc/skyscraper/import
+unix:impexamples.path=$${SYSCONFDIR}/skyscraper/import
 unix:impexamples.files=docs/IMPORT.md import/definitions.dat.example1 \
   import/definitions.dat.example2
 
-unix:resexamples.path=$${PREFIX}/etc/skyscraper/resources
+unix:resexamples.path=$${SYSCONFDIR}/skyscraper/resources
 unix:resexamples.files=resources/maskexample.png resources/frameexample.png \
   resources/boxfront.png resources/boxside.png resources/scanlines1.png \
   resources/scanlines2.png
@@ -73,6 +79,7 @@ unix:count(dev, 1) {
 }
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
+DEFINES+=SYSCONFDIR=\\\"$$SYSCONFDIR\\\"
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 

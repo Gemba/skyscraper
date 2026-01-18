@@ -234,7 +234,7 @@ void Config::setupUserConfig() {
         }
     }
 
-    QString localEtcPath = QString(PREFIX "/etc/skyscraper/");
+    QString localEtcPath = QString(SYSCONFDIR "/skyscraper/");
     if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
         // RetroPie or Windows installation type: handled externally
         return;
