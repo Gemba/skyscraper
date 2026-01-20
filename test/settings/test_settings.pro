@@ -8,7 +8,9 @@ QMAKE_CXXFLAGS += -std=c++17
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 PREFIX = /usr/local
+SYSCONFDIR = $${PREFIX}/etc
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
+DEFINES+=SYSCONFDIR=\\\"$$SYSCONFDIR\\\"
 
 include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
