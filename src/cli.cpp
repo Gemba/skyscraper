@@ -349,7 +349,8 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"show", "Prints a status of all cached resources for the selected "
                      "platform."},
             {"validate",
-             "Checks the consistency of the cache for the selected platform."},
+             "Checks the consistency of the cache for the selected platform. "
+             "If platform is omitted it validates over all platforms."},
             {"edit",
              "Let's you edit resources for the selected platform for all files "
              "or a range of files. Add a filename on command line to edit "
@@ -365,19 +366,22 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "roms."},
             {"vacuum",
              "Compares your romset to any cached resource and removes the "
-             "resources that you no longer have roms for."},
+             "resources that you no longer have roms for. If no platform is "
+             "given every platform cache is vacuumed."},
             {"report:missing=<OPTION>",
              "Generates reports with all files that are missing the "
              "specified resources. Check '--cache report:missing=help' "
-             "for more info."},
+             "for more info. When no platform is given, then reports for all "
+             "platforms are created."},
             {"merge:<PATH>",
              "Merges two resource caches together. It will merge the resource "
              "cache specified by <PATH> into the local resource cache by "
              "default. To merge into a non-default destination cache folder "
              "set it with '-d <PATH>'. Both should point to folders with the "
              "'db.xml' inside."},
-            {"purge:all",
-             "Removes ALL cached resources for the selected platform."},
+            {"purge:all", "Removes ALL cached resources for the selected "
+                          "platform. Attn.: If no platform is given with -p, "
+                          "cache data or EVERY platform will be deleted!"},
             {"purge:m=<MODULE>,t=<TYPE>",
              "Removes cached resources related to the selected module(m) and / "
              "or type(t). Either one can be left out in which case ALL "

@@ -77,8 +77,6 @@ void Skyscraper::run() {
         } else if (config.cacheOptions == "validate") {
             Cache::validateAllPlatform(config, this);
             exit(0);
-        } else {
-            exit(1);
         }
     }
 
@@ -257,8 +255,8 @@ void Skyscraper::run() {
     // remaining cache subcommand validation
     bool cacheEditCmd = config.cacheOptions.left(4) == "edit";
     if (!config.cacheOptions.isEmpty() && !cacheEditCmd) {
-        printf("\033[1;31mAmbiguous cache subcommand '--cache %s', "
-               "please check '--cache help' for more info.\n\033[0m",
+        printf("\033[1;31mAmbiguous cache subcommand '--cache %s'\033[0m, "
+               "check '--cache help' for more info.\n",
                config.cacheOptions.toStdString().c_str());
         exit(0);
     }

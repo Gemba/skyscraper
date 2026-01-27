@@ -284,23 +284,28 @@ This is a powerful option that allows you to purge the requested resources from 
 
 You can purge _all_ resources from the cache for the chosen platform using the keyword `all`.
 
-If no platform is specified, the `purge:all` operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
+If no platform is specified, the `purge:all` operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the configfile will be disregarded.
 
-You can purge specific resources from a certain module with `m=<MODULE>` or of a certain type with `t=<TYPE>` or a combination of the two separated by a `,`.
+You can purge specific resources from a certain module with `m=<MODULE>` or of a certain type with `t=<TYPE>` or a combination of the two separated by a comma. If both `m=` and `t=` are provided, then only resources are removed which match both criterias. See also examples below.
 
-Supported modules can be seen under `-s` when using the `--help` option. Supported types are: `title`, `platform`, `description`, `publisher`, `developer`, `ages`, `tags`, `rating`, `releasedate`, `cover`, `screenshot`, `wheel`, `marquee`, `video`.
+Supported _modules_ (scraping sources) can be seen under `-s` when using the `--help` option. Supported textual _types_ are: `title`, `platform`, `description`, `publisher`, `developer`, `ages`, `tags`, `rating`, and `releasedate`. Supported media _types_ are: `cover`, `screenshot`, `wheel`, `marquee`, `video`, `manual`, `fanart` and `backcover`.
 
-!!! danger "Possible dangerous command"
+!!! danger "Possible dangerous commands"
 
     Purging anything from the cache cannot be undone, so please consider making a backup.
 
 **Example(s)**
 
 ```
+# Purge all cached data for platform snes
 Skyscraper -p snes --cache purge:all
+# Purge all data from thegamesdb source for platform snes
 Skyscraper -p snes --cache purge:m=thegamesdb
-Skyscraper -p snes --cache purge:t=cover
-Skyscraper -p snes --cache purge:m=thegamesdb,t=cover
+# Purge all covers from any scraping source for platform switch
+Skyscraper -p switch --cache purge:t=cover
+# Purge all covers from source thegamesdb for platform psx
+Skyscraper -p psx --cache purge:m=thegamesdb,t=cover
+# Here be dragons: Zap your cache for all platforms!
 Skyscraper --cache purge:all
 ```
 
