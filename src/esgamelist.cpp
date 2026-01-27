@@ -39,11 +39,6 @@ ESGameList::ESGameList(Settings *config, QSharedPointer<NetManager> manager)
         gameListFile.close();
         games = xmlDoc.elementsByTagName("game");
     }
-    // force true for esgamelist
-    config->fanart = true;
-    config->manuals = true;
-    config->videos = true;
-    config->backcovers = true;
 }
 
 void ESGameList::getSearchResults(QList<GameEntry> &gameEntries,

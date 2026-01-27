@@ -309,7 +309,7 @@ Read the setup and config description of the [GameBase DB module](CONFIGINI.md#g
 - Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `video`
 - Example use:
   ```bash
-  Skyscraper -p snes -s esgamelist
+  Skyscraper -p snes -s esgamelist --flags video
   Skyscraper -p megadrive -f batocera --refresh -s esgamelist
   Skyscraper -p c64 -f batocera -s esgamelist <game filename(s)>
   ```
@@ -320,8 +320,10 @@ into the Skyscraper cache. This is useful if you already have a lot of data and
 artwork in a `gamelist.xml` and associated media files and you wish to use it
 with Skyscraper. Usually this is a one-off scraper for each platform. If you
 want to re-import and overwrite already cached data from a previous run with
-this module, do set the `--refresh` flag. These mediatypes are implicitly set
-on: `backcover`, `fanart`, `manual` and `video`.  
+this module, do set the `--refresh` flag.  
+By default these mediatypes are not ingested: `backcover`, `fanart`, `manual`
+and `video`. If you want also these mediatypes to be ingested, then set them
+with `--flags` or the respective configuration file option.  
 For historical reasons the gamelist element marquee contains the logo (wheel).
 This scraper will use the marquee gamelist element and store it in the wheel
 cache media type, to ensure consistency when generating a gamelist from this
