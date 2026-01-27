@@ -26,6 +26,7 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QStringBuilder>
 #include <QThread>
 #include <filesystem>
@@ -660,7 +661,8 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         exit(0);
     }
     if (parser->isSet("cache")) {
-        config->cacheOptions = parser->value("cache");
+        config->cacheOptions =
+            parser->value("cache").simplified().replace(" ", "");
         if (config->cacheOptions == "refresh") {
             config->refresh = true;
             config->cacheOptions = "";
@@ -670,6 +672,15 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         } else if (config->cacheOptions == "report:missing=help") {
             Cli::cacheReportMissingUsage();
             exit(0);
+        } else if (config->cacheOptions.startsWith("purge:")) {
+            bool invalid = validatePurgeParameters(config->cacheOptions);
+            if (invalid) {
+                printf(
+                    "\033[1;31mInvalid purge: parameter '--cache %s'\033[0m, "
+                    "please check '--cache help' for more info.\n",
+                    config->cacheOptions.toStdString().c_str());
+                exit(2);
+            }
         }
     }
     if (parser->isSet("gamelistfilename")) {
@@ -862,6 +873,78 @@ bool RuntimeCfg::validateFileParameter(const QString &param, QString &val) {
         return false;
     }
     return true;
+}
+
+bool RuntimeCfg::validatePurgeParameters(QString &purgeParam) {
+    const QRegularExpression REGEX_PURGE_OPTS = QRegularExpression(
+        "^purge:(?<all>all$)|(?<p1>m=\\w+|t=\\w+)(,(?<p2>m=\\w+|t=\\w+))?$");
+    // only check for m=, t= and all
+    QRegularExpressionMatch m = REGEX_PURGE_OPTS.match(purgeParam);
+    QString all = m.captured("all");
+    QString para1 = m.captured("p1");
+    qDebug() << para1;
+    QString para2 = m.captured("p2");
+    qDebug() << para2;
+    bool invalid = false;
+    if (all.isNull() && para1.isNull()) {
+        // no further suboption given
+        invalid = true;
+    } else if (!para1.isNull() || !para2.isNull()) {
+        if (!para2.isNull() && (para1.split("=")[0] == para2.split("=")[0])) {
+            printf("\033[1;31mpurge:%s=\033[0m may only be applied "
+                   "once.\n",
+                   para1.split("=")[0].toStdString().c_str());
+            invalid = true;
+        }
+        // validate t=<resourcetype>
+        QStringList resTypes = Cache::getAllResourceTypes();
+        for (QString &r : resTypes) {
+            if (r == "genres") {
+                r.replace("genres", "tags");
+                break;
+            }
+        }
+        resTypes.sort();
+        QString typeParam;
+        if (para1.startsWith("t")) {
+            typeParam = para1.split("=")[1];
+        } else if (!para2.isNull() && para2.startsWith("t")) {
+            typeParam = para2.split("=")[1];
+        }
+        if (!typeParam.isEmpty() && !resTypes.contains(typeParam)) {
+            invalid = true;
+            printf("\033[1;31mpurge:t=%s is invalid\033[0m: t= may only "
+                   "contain one of: %s.\n",
+                   typeParam.toStdString().c_str(),
+                   resTypes.join(", ").toStdString().c_str());
+        }
+        // validate m=<scraper>
+        QStringList scrapers = {"arcadedb",       "esgamelist",    "gamebase",
+                                "igdb",           "import",        "mobygames",
+                                "openretro",      "screenscraper", "thegamesdb",
+                                "worldofspectrum"};
+        QString moduleParam;
+        if (para1.startsWith("m")) {
+            moduleParam = para1.split("=")[1];
+        } else if (!para2.isNull() && para2.startsWith("m")) {
+            moduleParam = para2.split("=")[1];
+        }
+        if (!moduleParam.isEmpty() && !scrapers.contains(moduleParam)) {
+            invalid = true;
+            printf("\033[1;31mpurge:m=%s is invalid\033[0m: m= may only "
+                   "contain one of: %s.\n",
+                   moduleParam.toStdString().c_str(),
+                   scrapers.join(", ").toStdString().c_str());
+        }
+    }
+    if (!invalid && all.isNull()) {
+        // rewrite clean parameters for further processing
+        purgeParam = "purge:" % para1;
+        if (!para2.isNull()) {
+            purgeParam.append("," % para2);
+        }
+    }
+    return invalid;
 }
 
 bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,

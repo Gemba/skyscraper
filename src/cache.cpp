@@ -373,15 +373,15 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
             if (!txtTypes().contains(type)) {
                 QStringList sortedTypes = txtTypes();
                 sortedTypes.sort();
-                printf("Unknown resource type '%s', please specify any of the "
-                       "following: '%s'.\n",
+                printf("\033[1;31mUnknown resource type '%s', please specify "
+                       "one of the following:\033[0m '%s'.\n",
                        type.toStdString().c_str(),
                        sortedTypes.join("', '").toStdString().c_str());
                 return;
             }
         } else {
-            printf("Unknown command '%s', please specify one of the following: "
-                   "'new'.\n",
+            printf("\033[1;31mUnknown command '%s', please specify one of the "
+                   "following: 'new'.\033[0m\n",
                    command.toStdString().c_str());
             return;
         }
@@ -867,7 +867,6 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
 
 bool Cache::purgeResources(QString purgeStr) {
     purgeStr.replace("purge:", "");
-    printf("Purging requested resources from cache, please wait...\n");
 
     QString module = "";
     QString type = "";
@@ -875,14 +874,17 @@ bool Cache::purgeResources(QString purgeStr) {
     QList<QString> definitions = purgeStr.split(",");
     for (const auto &definition : definitions) {
         if (definition.left(2) == "m=") {
-            module = definition.split("=").at(1).simplified();
-            printf("Module: '%s'\n", module.toStdString().c_str());
+            module = definition.split("=").at(1);
         }
         if (definition.left(2) == "t=") {
-            type = definition.split("=").at(1).simplified();
-            printf("Type: '%s'\n", type.toStdString().c_str());
+            type = definition.split("=").at(1);
         }
     }
+    QString msg = QString(
+        "module is '\033[1;33m%1\033[0m' and type is '\033[1;33m%2\033[0m'");
+    msg = msg.arg(module.isEmpty() ? "<any>" : module)
+              .arg(type.isEmpty() ? "<any>" : type);
+    printf("Purging resources where %s...\n", msg.toStdString().c_str());
 
     int purged = 0;
 
@@ -959,7 +961,6 @@ bool Cache::purgeAll(const bool unattend) {
 
 bool Cache::isCommandValidOnAllPlatform(const QString &command) {
     QList<QString> validCommands({"help", "purge:all", "vacuum", "validate"});
-
     return validCommands.contains(command) ||
            command.contains("report:missing");
 }
@@ -1518,8 +1519,9 @@ bool Cache::write(const bool onlyQuickId) {
     QFile cacheFile(dbFilePath());
     if (cacheFile.open(QIODevice::WriteOnly)) {
         int resCountNew = static_cast<int>(resources.length());
-        printf("Writing %d (%d new) resources to cache, please wait... ",
-               resCountNew, resCountNew - resAtLoad);
+        int delta = resCountNew - resAtLoad;
+        printf("Writing %d (%d%s) resources to cache, please wait... ",
+               resCountNew, delta, delta < 0 ? "" : " new");
         fflush(stdout);
         QXmlStreamWriter xml(&cacheFile);
         xml.setAutoFormatting(true);

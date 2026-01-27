@@ -190,6 +190,7 @@ private:
     QStringList parseFlags();
     void reportInvalidPlatform();
     bool validateFileParameter(const QString &param, QString &val);
+    bool validatePurgeParameters(QString &purgeParam);
     bool scraperAllowedForMatch(const QString &providedScraper,
                                 const QString &opt);
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
