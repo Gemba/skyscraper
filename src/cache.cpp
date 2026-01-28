@@ -890,7 +890,9 @@ bool Cache::purgeResources(QString purgeStr) {
     while (it.hasNext()) {
         Resource res = it.next();
         bool remove = false;
-        if (res.source == module || res.type == type) {
+        if ((res.source == module && res.type == type) ||
+            (module.isEmpty() && res.type == type) ||
+            (res.source == module && type.isEmpty())) {
             remove = true;
         }
         if (remove) {
