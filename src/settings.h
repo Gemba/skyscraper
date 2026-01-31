@@ -99,6 +99,9 @@ struct Settings {
     bool skipped = false;
     bool tidyDesc = true;
     bool ignoreYearInFilename = false;
+    // in use for the cache commands possible without providing a platform
+    bool inputFolderNotMain = false;
+    bool cacheFolderNotMain = false;
     QString artworkConfig = "";
     QByteArray artworkXml = "";
     QString excludePattern = "";
@@ -191,6 +194,7 @@ private:
     void reportInvalidPlatform();
     bool validateFileParameter(const QString &param, QString &val);
     bool validatePurgeParameters(QString &purgeParam);
+    bool validateCacheSubCommand(const QString &subcommand);
     bool scraperAllowedForMatch(const QString &providedScraper,
                                 const QString &opt);
     QString toAbsolutePath(bool isCliOpt, QString optionVal);

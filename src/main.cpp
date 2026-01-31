@@ -45,11 +45,18 @@ int sigIntRequests = 0;
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext &,
                           const QString &msg) {
+    const QStringList libpngNoise = QStringList(
+        {"known incorrect sRGB profile", "cHRM chunk does not match sRGB",
+         "profile matches sRGB but writing iCCP instead",
+         "known incorrect sRGB profile"});
     QString txt;
     // Decide which type of debug message it is, and add string to signify it
     // Then append the debug message itself to the same string.
     switch (type) {
     case QtInfoMsg:
+        for (auto const &pngMsg : libpngNoise)
+            if (msg.contains(pngMsg))
+                return;
         txt += QString(" INFO: %1").arg(msg);
         break;
     case QtDebugMsg:
@@ -58,18 +65,16 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &,
     case QtWarningMsg:
         if (msg.contains("NetManager") ||
             msg.contains(
-                "QSqlQuery::value: not positioned on a valid record") ||
-            // libpng warnings
-            msg.contains("known incorrect sRGB profile") ||
-            msg.contains("cHRM chunk does not match sRGB") ||
-            msg.contains("profile matches sRGB but writing iCCP instead") ||
-            msg.contains("known incorrect sRGB profile")) {
+                "QSqlQuery::value: not positioned on a valid record")) {
             /* ugly, needs proper fix: */
             // NetManager "Cannot create children for a parent that is in a
             // different thread."
             return;
         }
-        txt += QString(" WARN: %1").arg(msg);
+        for (auto const &pngMsg : libpngNoise)
+            if (msg.contains(pngMsg))
+                return;
+        txt += QString(" \033[1;33mWARN\033[0m: %1").arg(msg);
         break;
     case QtCriticalMsg:
         txt += QString(" CRIT: %1").arg(msg);

@@ -211,7 +211,9 @@ bool Cache::read() {
             }
         }
         printf("\033[1;32mDone!\033[0m\n");
-        printf("Cached %d files\n\n", static_cast<int>(fileEntries.count()));
+        int count = static_cast<int>(fileEntries.count());
+        printf("Cached %d %s\n\n", count,
+               pluralizeWordStd("file", count != 1).c_str());
 
         printf("Reading and parsing resource cache, please wait... ");
         fflush(stdout);
@@ -905,14 +907,20 @@ bool Cache::purgeResources(QString purgeStr) {
             purged++;
         }
     }
-    printf("Successfully purged %d %s from the cache.\n", purged,
-           pluralizeWordStd("resource", purged != 1).c_str());
+    if (purged == 0) {
+        printf("No resources for the current platform found or no match for "
+               "the criteria.\n");
+        return false;
+    } else {
+        printf("Successfully purged %d %s from the resource cache.\n", purged,
+               pluralizeWordStd("resource", purged != 1).c_str());
+    }
     return true;
 }
 
-bool Cache::purgeAll(const bool unattend) {
+bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
     if (!unattend) {
-        printf("\033[1;31mWARNING! You are about to purge / remove ALL "
+        printf("\033[1;31mWARNING! You are about to remove ALL "
                "resources from the Skyscaper cache connected to the currently "
                "selected platform. THIS CANNOT BE UNDONE!\033[0m\n\n");
         printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
@@ -946,12 +954,13 @@ bool Cache::purgeAll(const bool unattend) {
         it.remove();
         purged++;
     }
-    printf("\033[1;32m Done!\033[0m\n");
     if (purged == 0) {
+        printf("\033[1;32m Foiled!\033[0m\n");
         printf("No resources for the current platform found in the resource "
                "cache.\n");
         return false;
     } else {
+        printf("\033[1;32m Done!\033[0m\n");
         printf("Successfully purged %d %s from the resource cache.\n", purged,
                pluralizeWordStd("resource", purged != 1).c_str());
     }
@@ -962,12 +971,14 @@ bool Cache::purgeAll(const bool unattend) {
 bool Cache::isCommandValidOnAllPlatform(const QString &command) {
     QList<QString> validCommands({"help", "purge:all", "vacuum", "validate"});
     return validCommands.contains(command) ||
-           command.contains("report:missing");
+           command.startsWith("report:missing=");
 }
 
-void Cache::purgeAllPlatform(Settings config, Skyscraper *app) {
-    printf("\033[1;31mWARNING! You are about to purge / remove ALL "
-           "resources from the Skyscaper cache. \033[0m\n\n");
+void Cache::purgeAllOnAllPlatforms(Settings &config, Skyscraper *app) {
+    printf("\033[1;31mWARNING! You are about to remove ALL "
+           "resources for EVERY platform from the Skyscaper cache. Please "
+           "consider making a backup of your Skyscraper cache before "
+           "performing this action. THIS CANNOT BE UNDONE!\033[0m\n\n");
     printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
     std::string userInput = "";
     getline(std::cin, userInput);
@@ -982,7 +993,7 @@ void Cache::purgeAllPlatform(Settings config, Skyscraper *app) {
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
         Cache cache(cacheDir.filePath(platform));
-        if (cache.read() && cache.purgeAll(true)) {
+        if (cache.read() && cache.purgeAllOnSinglePlatform(true)) {
             app->state = Skyscraper::OpMode::NO_INTR;
             cache.write();
             app->state = Skyscraper::OpMode::SINGLE;
@@ -990,19 +1001,28 @@ void Cache::purgeAllPlatform(Settings config, Skyscraper *app) {
     }
 }
 
-void Cache::reportAllPlatform(Settings config, Skyscraper *app) {
+bool Cache::reportAllPlatform(Settings &config, Skyscraper *app) {
     QDir cacheDir(config.cacheFolder);
+    QString initCacheFolder = config.cacheFolder;
+    QString initInputFolder = config.inputFolder;
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
-        Cache cache(cacheDir.filePath(platform));
+        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
+        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        qDebug() << "reportAllPlatform()" << config.inputFolder;
+        Cache cache(config.cacheFolder);
         if (cache.read()) {
-            cache.assembleReport(config, app->getPlatformFileExtensions());
-        }
+            if (!cache.assembleReport(
+                    config, app->getPlatformFileExtensions(platform))) {
+                return false;
+            }
+        } // ignore empty cache: cache.read() returns false
     }
+    return true;
 }
 
-void Cache::vacuumAllPlatform(Settings config, Skyscraper *app) {
+void Cache::vacuumAllPlatform(Settings &config, Skyscraper *app) {
     printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
            "resources that don't match your current romset. Please consider "
            "making a backup of your "
@@ -1017,14 +1037,19 @@ void Cache::vacuumAllPlatform(Settings config, Skyscraper *app) {
         return;
     }
 
+    QString initCacheFolder = config.cacheFolder;
+    QString initInputFolder = config.inputFolder;
     QDir cacheDir(config.cacheFolder);
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-        Cache cache(cacheDir.filePath(platform));
         config.platform = platform;
+        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
+        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        qDebug() << "vacuumAllPlatform()" << config.inputFolder;
+        Cache cache(config.cacheFolder);
         if (cache.read() &&
             cache.vacuumResources(QDir(config.inputFolder).filePath(platform),
-                                  app->getPlatformFileExtensions(),
+                                  app->getPlatformFileExtensions(platform),
                                   config.verbosity, true)) {
             app->state = Skyscraper::OpMode::NO_INTR;
             cache.write();
@@ -1033,11 +1058,16 @@ void Cache::vacuumAllPlatform(Settings config, Skyscraper *app) {
     }
 }
 
-void Cache::validateAllPlatform(Settings config, Skyscraper *app) {
+void Cache::validateAllPlatform(Settings &config, Skyscraper *app) {
+    QString initCacheFolder = config.cacheFolder;
+    QString initInputFolder = config.inputFolder;
     QDir cacheDir(config.cacheFolder);
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
+        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
+        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        qDebug() << "validateAllPlatform()" << config.inputFolder;
         Cache cache(cacheDir.filePath(platform));
         if (cache.read()) {
             cache.validate();
@@ -1063,7 +1093,7 @@ QList<QFileInfo> Cache::getFileInfos(const QString &inputFolder,
             fileInfos.append(dirIt.fileInfo());
         }
         if (fileInfos.isEmpty()) {
-            printf("\nInput folder returned no entries...\n\n");
+            printf("Input folder returned no entries...\n");
         }
     } else {
         printf("Found less than two suffix filters. Something is wrong...\n");
@@ -1091,15 +1121,8 @@ QList<QString> Cache::getCacheIdList(const QList<QFileInfo> &fileInfos) {
     return cacheIdList;
 }
 
-void Cache::assembleReport(const Settings &config, const QString filter) {
+bool Cache::assembleReport(const Settings &config, const QString filter) {
     QString reportStr = config.cacheOptions;
-
-    if (!reportStr.contains("report:missing=")) {
-        printf("\033[1;31mAmbiguous cache report option '%s'.\n\033[0m",
-               reportStr.toStdString().c_str());
-        Cli::cacheReportMissingUsage();
-        return;
-    }
     reportStr.remove("report:missing=");
 
     QString missingOption = reportStr.simplified();
@@ -1132,21 +1155,14 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             printf("\033[1;31mUnknown resource type '%s'!\033[0m\n",
                    resType.toStdString().c_str());
             Cli::cacheReportMissingUsage();
-            return;
+            return false;
         }
     }
-    if (resTypeList.isEmpty()) {
-        printf("Resource type list is empty, cancelling...\n");
-        return;
-    } else {
-        printf("Creating %s for resource %s:\n",
-               pluralizeWordStd("report", resTypeList.size() != 1).c_str(),
-               pluralizeWordStd("type", resTypeList.size() != 1).c_str());
-        for (const auto &resType : resTypeList) {
-            printf("  %s\n", resType.toStdString().c_str());
-        }
-        printf("\n");
-    }
+
+    printf("Creating %s for resource %s:\n",
+           pluralizeWordStd("report", resTypeList.size() != 1).c_str(),
+           pluralizeWordStd("type", resTypeList.size() != 1).c_str());
+    printf("  %s\n", resTypeList.join(", ").toStdString().c_str());
 
     // Create the reports folder
     QDir reportsDir(Config::getSkyFolder(Config::SkyFolderType::REPORT));
@@ -1155,7 +1171,7 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
             printf("Couldn't create reports folder '%s'. Please check "
                    "permissions then try again...\n",
                    reportsDir.absolutePath().toStdString().c_str());
-            return;
+            return false;
         }
     }
 
@@ -1167,8 +1183,9 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
     if (!config.includePattern.isEmpty()) {
         fileInfos.filterFiles(config.includePattern, true);
     }
-    printf("%d compatible files found for the '%s' platform!\n",
-           static_cast<int>(fileInfos.length()),
+    int count = static_cast<int>(fileInfos.length());
+    printf("%d compatible %s found for the '%s' platform!\n", count,
+           pluralizeWordStd("file", count != 1).c_str(),
            config.platform.toStdString().c_str());
     printf("Creating file id list for all files, please wait...");
     QList<QString> cacheIdList = getCacheIdList(fileInfos);
@@ -1177,10 +1194,11 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
     if (fileInfos.length() != cacheIdList.length()) {
         printf("Length of cache id list mismatch the number of files, "
                "something is wrong! Please file an issue. Can't continue...\n");
-        return;
+        return false;
     }
 
     QString dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
+    bool hasMissing = false;
     for (const auto &resType : resTypeList) {
         QString rFn = QString("%1/report-%2-missing_%3-%4.txt")
                           .arg(reportsDir.absolutePath())
@@ -1188,10 +1206,12 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
                           .arg(resType)
                           .arg(dateTime);
         QFile reportFile(rFn);
-        printf("Report filename: '\033[1;32m%s\033[0m'\nAssembling report, "
-               "please wait...",
-               Config::pathToCStr(rFn));
-        if (reportFile.open(QIODevice::WriteOnly)) {
+        printf("Assembling report for platform '\033[1;32m%s\033[0m' and "
+               "resource '\033[1;32m%s\033[0m', please wait...",
+               config.platform.toStdString().c_str(),
+               resType.toStdString().c_str());
+
+        if (fileInfos.length() > 0 && reportFile.open(QIODevice::WriteOnly)) {
             int missing = 0;
             int dots = 0;
             int dotMod = fileInfos.size() * 0.1 + 1;
@@ -1216,11 +1236,17 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
                         fileInfos.at(a).absoluteFilePath().toUtf8() + "\n");
                 }
             }
+            hasMissing |= missing > 0;
             reportFile.close();
-            printf("\033[1;32m Done!\033[0m\n\033[1;33m%d %s "
-                   "do miss the '%s' resource.\033[0m\n\n",
-                   missing, pluralizeWordStd("file", missing != 1).c_str(),
+            printf("\033[1;32m Done!\033[0m\n\033[1;33m  %d of %d %s "
+                   "miss the '%s' resource.\033[0m\n",
+                   missing, fileInfos.length(),
+                   pluralizeWordStd("file", fileInfos.length() != 1).c_str(),
                    resType.toStdString().c_str());
+            if (missing > 0) {
+                printf("  Files in: %s\n", Config::pathToCStr(rFn));
+            }
+            printf("\n");
         } else {
             printf("Report file could not be opened for writing, please check "
                    "permissions of folder '%s', then try "
@@ -1228,14 +1254,17 @@ void Cache::assembleReport(const Settings &config, const QString filter) {
                    Config::getSkyFolder(Config::SkyFolderType::REPORT)
                        .toStdString()
                        .c_str());
-            return;
+            return false;
         }
     }
-    printf("\033[1;32mAll done!\033[0m\nConsider using the '\033[1;33m--cache "
-           "edit --includefrom <REPORTFILE>\033[0m' or the '\033[1;33m-s "
-           "import\033[0m' module to add the missing resources. Check "
-           "'\033[1;33m--help\033[0m' and '\033[1;33m--cache help\033[0m' for "
-           "more information.\n\n");
+    if (hasMissing) {
+        printf("\033[1;32mAll done!\033[0m\nConsider using the "
+               "'\033[1;33m--cache edit --includefrom <REPORTFILE>\033[0m' or "
+               "the '\033[1;33m-s import\033[0m' module to add the missing "
+               "resources. Check '\033[1;33m--help\033[0m' and "
+               "'\033[1;33m--cache help\033[0m' for more information.\n\n");
+    }
+    return true;
 }
 
 bool Cache::vacuumResources(const QString inputFolder, const QString filter,
@@ -1264,9 +1293,6 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
         }
     }
 
-    printf("Vacuuming cache for %s platform, this can take several minutes, "
-           "please wait...",
-           cacheDir.dirName().toStdString().c_str());
     QList<QFileInfo> fileInfos = getFileInfos(inputFolder, filter);
     // Clean the quick id's aswell
     QMap<QString, QPair<qint64, QString>> quickIdsCleaned;
@@ -1283,18 +1309,13 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
         return false;
     }
 
+    printf("Vacuuming cache for %s platform, hang on...\n",
+           cacheDir.dirName().toStdString().c_str());
+
     int vacuumed = 0;
     {
-        int dots = 0;
-        int dotMod = resources.size() * 0.1 + 1;
-
         QMutableListIterator<Resource> it(resources);
         while (it.hasNext()) {
-            if (dots % dotMod == 0) {
-                printf(".");
-                fflush(stdout);
-            }
-            dots++;
             Resource res = it.next();
             bool remove = true;
             for (const auto &cacheId : cacheIdList) {
@@ -1318,8 +1339,8 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
     }
     printf("\033[1;32m Done!\033[0m\n");
     if (vacuumed == 0) {
-        printf("All resources match a file in your romset. No resources "
-               "vacuumed.\n");
+        printf("All resources match a file in your romset. Done with "
+               "housekeeping.\n");
         return false;
     } else {
         printf("Successfully vacuumed %d resources from the resource cache.\n",

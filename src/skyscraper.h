@@ -52,9 +52,16 @@ public:
     int state = SINGLE;
 
     void loadConfig(const QCommandLineParser &parser);
-    const inline QString getPlatformFileExtensions() {
-        return Platform::get().getFormats(config.platform, config.extensions,
-                                          config.addExtensions);
+    const inline QString getPlatformFileExtensions(QString platform = "") {
+        QString exts;
+        if (platform.isEmpty()) {
+            exts = Platform::get().getFormats(
+                config.platform, config.extensions, config.addExtensions);
+        } else {
+            // ignore extension variations (for cache ALL operations)
+            exts = Platform::get().getFormats(config.platform, "", "");
+        }
+        return exts;
     }
 
 public slots:

@@ -304,8 +304,9 @@ void Cli::subCommandUsage(const QString subCmd) {
                "following is a list of valid flags\nand what they do.\n");
     }
 
-    printf("\nShowing '\033[1;33m--%s ...\033[0m' help:\n\n",
-           subCmd.toUtf8().constData());
+    printf("\nShowing '\033[1;33m--%s%s...\033[0m' help:\n\n",
+           subCmd.toUtf8().constData(),
+           subCmd == "cache report:missing=" ? "" : " ");
 
     QMap<QString, QString> subOptions;
     subOptions = getSubCommandOpts(subCmd);
@@ -551,7 +552,7 @@ void Cli::showHint() {
 #ifdef Q_OS_LINUX
     hint = hint.replace(QDir::homePath(), "~");
 #endif
-    hint = "\033[1;33mDID YOU KNOW:\033[0m " + hint;
+    hint = "\033[1;33mDID YOU KNOW\033[0m: " + hint;
 
     QStringList hintWrapped;
     int ptr = 0;
