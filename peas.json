@@ -9,10 +9,12 @@
     },
     "3ds": {
         "aliases": [
-            "nintendo 3ds"
+            "nintendo 3ds",
+            "n3ds"
         ],
         "formats": [
-            "*.3ds"
+            "*.3ds",
+            "*.cci"
         ]
     },
     "actionmax": {

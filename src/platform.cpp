@@ -276,7 +276,8 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "cdcd6abdfdb5b797df183feb03094908bb638f8b2038177769fb73f49caba7e9",
                  "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d",
                  "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1",
-                 "fcb923fa1b38441a462511b5b842705c284d91f560d5f30c0a45e68d2444facf"}
+                 "fcb923fa1b38441a462511b5b842705c284d91f560d5f30c0a45e68d2444facf",
+                 "fceca636224ec01e50e4d2ce47f43e2ab1d603c008f8292bf50808fcf7f708a3"}
             )
         },
         {"platforms_idmap.csv", QStringList(
@@ -284,7 +285,8 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "30c443a6a6c7583433e62e89febe8d10bae075040e5c1392623a71f348f3f476",
                  "bf12d0f2f7161d45041f8996c44d6c3c2f666cfc33938dbcbd506c1f766062c4",
                  "44a416856327c01c1ec73c41252f9c3318bf703c33fd717935f31b37e635f413",
-                 "9af2abea78af7b94b8c86d97417fb4aff347a8b6eef5c0fdab37be31938f5f9a"}
+                 "9af2abea78af7b94b8c86d97417fb4aff347a8b6eef5c0fdab37be31938f5f9a",
+                 "0c4a1cb2cde6c772c3125d59a1ae776a0cc05888520f131b3e058fbb91be00dd"}
             )
         }
         // clang-format on
