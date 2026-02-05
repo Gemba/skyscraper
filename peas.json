@@ -52,6 +52,7 @@
             "*.cue",
             "*.dms",
             "*.hdf",
+            "*.hdz",
             "*.img",
             "*.ipf",
             "*.iso",
@@ -363,6 +364,24 @@
             "*.dat"
         ]
     },
+    "bbcmicro": {
+        "aliases": [
+            "Acorn BBC Micro",
+            "Acorn BBC Microcomputer System",
+            "BBC Micro",
+            "BBC Microcomputer System"
+        ],
+        "formats": [
+            "*.adf",
+            "*.adl",
+            "*.csw",
+            "*.dsd",
+            "*.fdi",
+            "*.img",
+            "*.ssd",
+            "*.uef"
+        ]
+    },
     "c128": {
         "aliases": [
             "commodore 128",
@@ -465,6 +484,7 @@
         "formats": [
             "*.asc",
             "*.bas",
+            "*.bin",
             "*.cas",
             "*.ccc",
             "*.dmk",
@@ -513,6 +533,7 @@
         "formats": [
             "*.asc",
             "*.bas",
+            "*.bin",
             "*.cas",
             "*.ccc",
             "*.dmk",
