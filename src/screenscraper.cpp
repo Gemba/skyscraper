@@ -36,8 +36,10 @@
 #include <QProcess>
 #include <QRegularExpression>
 
-constexpr int RETRIESMAX = 4;
-constexpr int TIMEOUT_SEC = 60;
+constexpr int RETRIESMAX = 3;
+constexpr int TIMEOUT_SEC = 75;
+constexpr int DELAY_NOTE_AFTER_SEC = 15;
+
 constexpr int MINARTSIZE = 256;
 
 ScreenScraper::ScreenScraper(Settings *config,
@@ -49,6 +51,16 @@ ScreenScraper::ScreenScraper(Settings *config,
                // the good folks at ScreenScraper. Don't change!
     limitTimer.setSingleShot(false);
     limitTimer.start();
+
+    connect(&statusTimer, &QTimer::timeout, this, [=]() {
+        tctr = tctr + 1;
+        if (tctr >= DELAY_NOTE_AFTER_SEC) {
+            printf(" \033[1;32m%2s\033[0mResponse delayed for "
+                   "%ds\r",
+                   tctr % 2 ? " •" : "• ", 5 * ((int)(tctr / 5)));
+            fflush(stdout);
+        }
+    });
 
     baseUrl = "http://www.screenscraper.fr";
 
@@ -94,36 +106,48 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
         "&output=json&" + searchName;
 
+    tctr = 0;
+    statusTimer.start(1000);
+
     for (int retries = 0; retries < RETRIESMAX; ++retries) {
         limiter.exec();
         netComm->request(gameUrl);
         q.exec();
         data = netComm->getData();
 
-        QByteArray headerData =
-            data.left(1024); // Minor optimization with minimal more RAM usage
+        // Minor optimization with minimal more RAM usage
+        QByteArray headerData = data.left(1024);
         // Do error checks on headerData. It's more stable than checking the
         // potentially faulty JSON
         if (headerData.isEmpty()) {
-            printf("\033[1;33mRetrying request...\033[0m\n\n");
+            int timeout = TIMEOUT_SEC << (1 + retries);
+            printf(
+                "\033[1;33mRetrying request with timeout of %ds...\033[0m\n\n",
+                timeout);
+            netComm->setTimeout(timeout);
+            tctr = 0;
             continue;
         } else if (headerData.contains("non trouvée")) {
+            statusTimer.stop();
             return;
         } else if (headerData.contains("API totalement fermé")) {
             printf("\033[1;31mThe ScreenScraper API is currently closed, "
                    "exiting nicely...\033[0m\n\n");
+            statusTimer.stop();
             reqRemaining = 0;
             return;
         } else if (headerData.contains(
                        "Le logiciel de scrape utilisé a été blacklisté")) {
             printf("\033[1;31mSkyscraper has apparently been blacklisted at "
                    "ScreenScraper, exiting nicely...\033[0m\n\n");
+            statusTimer.stop();
             reqRemaining = 0;
             return;
         } else if (headerData.contains("Votre quota de scrape est")) {
             printf("\033[1;31mYour daily ScreenScraper request limit has been "
                    "reached, exiting nicely...\033[0m\n\n");
             reqRemaining = 0;
+            statusTimer.stop();
             return;
         } else if (
             headerData.contains("API fermé pour les non membres") ||
@@ -147,11 +171,17 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                 Config::getSkyFolder().toStdString().c_str());
             if (retries == RETRIESMAX - 1) {
                 reqRemaining = 0;
+                statusTimer.stop();
                 return;
             } else {
                 continue;
             }
         }
+
+        if (tctr >= DELAY_NOTE_AFTER_SEC) {
+            printf("Response after %ds           \n", tctr);
+        }
+        statusTimer.stop();
 
         // Fix faulty JSON that is sometimes received back from ScreenScraper
         data.replace("],\n\t\t}", "]\n\t\t}");

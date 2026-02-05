@@ -47,6 +47,7 @@ public:
     QByteArray getContentType();
     QByteArray getRedirUrl();
     QString getHeaderValue(const QString headerKey);
+    void setTimeout(int secs);
 
 private slots:
     void replyReady();

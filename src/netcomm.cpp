@@ -34,7 +34,6 @@ constexpr int DL_MAXSIZE = 100 * 1000 * 1000;
 NetComm::NetComm(QSharedPointer<NetManager> manager, int timeout)
     : manager(manager), timeout(timeout) {
     requestTimer.setSingleShot(true);
-    requestTimer.setInterval(timeout * 1000);
     connect(&requestTimer, &QTimer::timeout, this, &NetComm::requestTimeout);
 }
 
@@ -71,7 +70,7 @@ void NetComm::request(QString query, QString postData,
     connect(reply, &QNetworkReply::finished, this, &NetComm::replyReady);
     connect(reply, &QNetworkReply::downloadProgress, this,
             &NetComm::dataDownloaded);
-    requestTimer.start();
+    requestTimer.start(timeout * 1000);
 }
 
 void NetComm::replyReady() {
@@ -172,3 +171,5 @@ void NetComm::requestTimeout() {
            timeout);
     reply->abort();
 }
+
+void NetComm::setTimeout(int secs) { timeout = secs; }
