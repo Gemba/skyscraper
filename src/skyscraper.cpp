@@ -65,12 +65,26 @@ Skyscraper::~Skyscraper() { frontend->deleteLater(); }
 void Skyscraper::run() {
     // called after loadConfig()
     if (config.platform.isEmpty()) {
+        if (config.inputFolderNotMain || config.cacheFolderNotMain) {
+            printf("\033[1;33m'The hat trick never works!'\033[0m You have set "
+                   "either the input folder or cache folder outside the [main] "
+                   "configuration section. Paired with the ALL cache command "
+                   "this may produce inconsistent results. Use the command "
+                   "with a explicit platform (-p) or remove the setting(s). "
+                   "Quitting...\n");
+            exit(0);
+        }
         if (config.cacheOptions == "purge:all") {
-            Cache::purgeAllPlatform(config, this);
+            Cache::purgeAllOnAllPlatforms(config, this);
             exit(0);
-        } else if (config.cacheOptions.contains("report:missing")) {
-            Cache::reportAllPlatform(config, this);
-            exit(0);
+        } else if (config.cacheOptions.startsWith("report:missing=")) {
+            bool ok = Cache::reportAllPlatform(config, this);
+            if (ok) {
+                exit(0);
+            } else {
+                printf("Premature end of Skyscraper run.\n");
+                exit(1);
+            }
         } else if (config.cacheOptions == "vacuum") {
             Cache::vacuumAllPlatform(config, this);
             exit(0);
@@ -197,17 +211,17 @@ void Skyscraper::run() {
             exit(0);
         }
     }
-    if (config.cacheOptions.contains("purge:") ||
-        config.cacheOptions.contains("vacuum")) {
+    if (config.cacheOptions.startsWith("purge:") ||
+        config.cacheOptions == "vacuum") {
         bool success = true;
         if (config.cacheOptions == "purge:all") {
-            success = cache->purgeAll(config.unattend || config.unattendSkip);
+            success = cache->purgeAllOnSinglePlatform(config.unattend ||
+                                                      config.unattendSkip);
         } else if (config.cacheOptions == "vacuum") {
             success = cache->vacuumResources(
                 config.inputFolder, getPlatformFileExtensions(),
                 config.verbosity, config.unattend || config.unattendSkip);
-        } else if (config.cacheOptions.contains("purge:m=") ||
-                   config.cacheOptions.contains("purge:t=")) {
+        } else if (config.cacheOptions.startsWith("purge:")) {
             success = cache->purgeResources(config.cacheOptions);
         }
         if (success) {
@@ -217,7 +231,7 @@ void Skyscraper::run() {
         }
         exit(0);
     }
-    if (config.cacheOptions.contains("report:")) {
+    if (config.cacheOptions.startsWith("report:")) {
         cache->assembleReport(config, getPlatformFileExtensions());
         exit(0);
     }
@@ -228,7 +242,7 @@ void Skyscraper::run() {
         state = SINGLE;
         exit(0);
     }
-    if (config.cacheOptions.contains("merge:")) {
+    if (config.cacheOptions.startsWith("merge:")) {
         QFileInfo mergeCacheInfo(config.cacheOptions.replace("merge:", ""));
 
         if (mergeCacheInfo.isRelative()) {
@@ -248,19 +262,13 @@ void Skyscraper::run() {
             printf("Path to merge from '%s' does not exist or is not a path, "
                    "can't continue...\n",
                    absMergeCacheFilePath.toStdString().c_str());
+            exit(1);
         }
         exit(0);
     }
 
-    // remaining cache subcommand validation
-    bool cacheEditCmd = config.cacheOptions.left(4) == "edit";
-    if (!config.cacheOptions.isEmpty() && !cacheEditCmd) {
-        printf("\033[1;31mAmbiguous cache subcommand '--cache %s'\033[0m, "
-               "check '--cache help' for more info.\n",
-               config.cacheOptions.toStdString().c_str());
-        exit(0);
-    }
-
+    // remaining cache subcommand check
+    bool cacheEditCmd = config.cacheOptions.startsWith("edit");
     cache->readPriorities();
 
     // Create shared queue with files to process
@@ -929,10 +937,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // 5. Command line configs, overrides all
     rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
 
-    if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
-        return; // cache option to be applied to all platform
-    }
-
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {
         frontend = QSharedPointer<AbstractFrontend>(new EmulationStation());
@@ -1023,6 +1027,11 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             Config::makeAbsolutePath(config.inputFolder, config.mediaFolder);
     }
     config.inputFolder = Config::lexicallyNormalPath(config.inputFolder);
+
+    if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
+        return; // cache option to be applied to all platform
+    }
+
     if (!QFile::exists(config.inputFolder)) {
         printf("\033[1;31mBummer!\033[0m The provided input folder "
                "'\033[1;31m%s\033[0m' does not exist.\nFix your setup. Now "

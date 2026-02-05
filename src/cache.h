@@ -75,10 +75,11 @@ public:
     Cache(const QString &cacheFolder);
 
     static bool isCommandValidOnAllPlatform(const QString &command);
-    static void purgeAllPlatform(Settings config, Skyscraper *app);
-    static void reportAllPlatform(Settings config, Skyscraper *app);
-    static void vacuumAllPlatform(Settings config, Skyscraper *app);
-    static void validateAllPlatform(Settings config, Skyscraper *app);
+
+    static void purgeAllOnAllPlatforms(Settings &config, Skyscraper *app);
+    static bool reportAllPlatform(Settings &config, Skyscraper *app);
+    static void vacuumAllPlatform(Settings &config, Skyscraper *app);
+    static void validateAllPlatform(Settings &config, Skyscraper *app);
 
     static const QStringList getAllResourceTypes();
     static const QStringList getBinResourceTypes();
@@ -88,11 +89,11 @@ public:
     void printPriorities(QString cacheId);
     void editResources(QSharedPointer<Queue> queue, const QString &command = "",
                        const QString &type = "");
-    bool purgeAll(const bool unattend = false);
+    bool purgeAllOnSinglePlatform(const bool unattend = false);
     bool purgeResources(QString purgeStr);
     bool vacuumResources(const QString inputFolder, const QString filters,
                          const int verbosity, const bool unattend = false);
-    void assembleReport(const Settings &config, const QString filters);
+    bool assembleReport(const Settings &config, const QString filters);
     void showStats(int verbosity);
     void readPriorities();
     bool write(const bool onlyQuickId = false);

@@ -284,7 +284,7 @@ This is a powerful option that allows you to purge the requested resources from 
 
 You can purge _all_ resources from the cache for the chosen platform using the keyword `all`.
 
-If no platform is specified, the `purge:all` operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the configfile will be disregarded.
+If _no platform is specified_, then the `purge:all` operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in Skyscraper's configfile will be disregarded.
 
 You can purge specific resources from a certain module with `m=<MODULE>` or of a certain type with `t=<TYPE>` or a combination of the two separated by a comma. If both `m=` and `t=` are provided, then only resources are removed which match both criterias. See also examples below.
 
@@ -333,7 +333,7 @@ You can use any of the following:
 
 Supported resource types are: `title`, `platform`, `description`, `publisher`, `developer`, `ages`, `tags`, `rating`, `releasedate`, `cover`, `screenshot`, `wheel`, `marquee`, `video`.
 
-If no platform is specified, reports will be generated for all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
+If _no platform is specified_, reports will be generated for all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in Skyscraper's configfile will be disregarded, especially any settings or commandline parameters for [`addExtensions`](CONFIGINI.md#addextensions) or [`extensions`](CONFIGINI.md#extensions).
 
 !!! tip
 
@@ -362,7 +362,7 @@ Skyscraper -p snes --cache show
 
 You can purge all resources that don't have any connection to your current romset for the selected platform by using the `vacuum` command. This is extremely useful if you've removed a bunch of roms from your collection and you wish to purge any cached data you don't need anymore.
 
-If no platform is specified, the vacuum operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in the config.ini file will be disregarded.
+If no platform is specified, the vacuum operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in Skyscraper's configfile will be disregarded, especially any settings or commandline parameters for [`addExtensions`](CONFIGINI.md#addextensions) or [`extensions`](CONFIGINI.md#extensions).
 
 !!! danger "Possible dangerous command"
 
