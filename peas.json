@@ -9,10 +9,12 @@
     },
     "3ds": {
         "aliases": [
-            "nintendo 3ds"
+            "nintendo 3ds",
+            "n3ds"
         ],
         "formats": [
-            "*.3ds"
+            "*.3ds",
+            "*.cci"
         ]
     },
     "actionmax": {
@@ -52,6 +54,7 @@
             "*.cue",
             "*.dms",
             "*.hdf",
+            "*.hdz",
             "*.img",
             "*.ipf",
             "*.iso",
@@ -363,6 +366,24 @@
             "*.dat"
         ]
     },
+    "bbcmicro": {
+        "aliases": [
+            "Acorn BBC Micro",
+            "Acorn BBC Microcomputer System",
+            "BBC Micro",
+            "BBC Microcomputer System"
+        ],
+        "formats": [
+            "*.adf",
+            "*.adl",
+            "*.csw",
+            "*.dsd",
+            "*.fdi",
+            "*.img",
+            "*.ssd",
+            "*.uef"
+        ]
+    },
     "c128": {
         "aliases": [
             "commodore 128",
@@ -465,6 +486,7 @@
         "formats": [
             "*.asc",
             "*.bas",
+            "*.bin",
             "*.cas",
             "*.ccc",
             "*.dmk",
@@ -513,6 +535,7 @@
         "formats": [
             "*.asc",
             "*.bas",
+            "*.bin",
             "*.cas",
             "*.ccc",
             "*.dmk",

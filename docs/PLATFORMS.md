@@ -196,8 +196,8 @@ Outline:
    as documented in the 
    [RetroPie documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
 
-There is also a an verbatim example, you may skip the next section initially and
-can continue with the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
+There is also a verbatim example, you may skip the next section initially and
+jump directly into the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
 
 ### Updating `peas_local.json` and `platforms_idmap_local.csv`
 

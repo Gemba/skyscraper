@@ -12,6 +12,7 @@ folder,screenscraper_id,mobygames_id,tgdb_id
 
 ### Begin RetroPie OOTB supported systems
 
+# platform/folder,screenscraper_id,moby_id,tgdb_id
 3do,29,35,25
 ags,138,3,1
 amiga,64,19,4911
@@ -107,6 +108,7 @@ arduboy,263,215,-1
 astrocade,44,160,4968
 atarijaguarcd,171,-1,29
 atomiswave,53,-1,23
+bbcmicro,37,92,5013
 cd32,130,56,4947
 cdi,133,73,4917
 cdtv,129,83,-1
