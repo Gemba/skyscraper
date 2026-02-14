@@ -87,7 +87,15 @@ void ESGameList::getGameData(GameEntry &game) {
     game.rating = getElementText(GameEntry::Elem::RATING);
     game.tags = getElementText(GameEntry::Elem::TAGS);
     game.description = getElementText(GameEntry::Elem::DESCRIPTION);
-
+    if (game.description.endsWith("[...]")) {
+        qWarning()
+            << QString(
+                   "Game title '%1' has shortened description '[...]' at %2 "
+                   "chars. Consider using a different source than esgamelist "
+                   "when the current maxLength setting is higher than %2.")
+                   .arg(game.title)
+                   .arg(game.description.length());
+    }
     if (config->cacheWheels) {
         // ES uses XML "marquee" but content is wheel (logo)
         game.wheelData =
