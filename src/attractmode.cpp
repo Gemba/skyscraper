@@ -196,8 +196,10 @@ void AttractMode::assembleList(QString &finalOutput,
             QFile descFile(descDir.absolutePath() % "/" % entry.baseName %
                            ".txt");
             if (descFile.open(QIODevice::WriteOnly)) {
-                descFile.write(entry.description.trimmed().toUtf8().left(
-                    config->maxLength));
+                descFile.write(
+                    StrTools::shortenText(entry.description.trimmed(),
+                                          config->maxLength)
+                        .toUtf8());
                 descFile.close();
             }
         }

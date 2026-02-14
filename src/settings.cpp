@@ -546,7 +546,11 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "maxLength") {
-                config->maxLength = v;
+                if (0 < v && v <= 10000) {
+                    config->maxLength = v;
+                } else {
+                    outOfRange(k, v);
+                }
                 continue;
             }
             if (k == "maxFails") {

@@ -401,3 +401,9 @@ QString StrTools::tidyText(QString text, bool ignoreBangs) {
     }
     return po.join("\n");
 }
+
+QString StrTools::shortenText(QString text, int maxLength) {
+    if (text.length() > maxLength && maxLength > 4)
+        return text.left(maxLength - 5) % "[...]";
+    return text;
+}

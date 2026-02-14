@@ -638,7 +638,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 #### maxLength
 
-Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500.
+Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500. Allowed range is 0 to 10000 characters. A truncated text will end with [...] (Ellipsis).
 
 Default value: `2500`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
