@@ -297,15 +297,16 @@ QString StrTools::getVersionHeader() {
 }
 
 QString StrTools::getVersionBanner() {
-    QStringList g = {"62", "60", "95", "132", "131", "167", "203"};
+    QStringList colors = {"62", "60", "95", "132", "131", "167", "203"};
     int idx = 0;
     QString ver = VERSION;
     QString pad;
     const int fieldSize = 12;
     const int ps = ver.length() - fieldSize;
     bool padded = false;
-    while (ps > 0 && pad.length() < ps &&
-           pad.length() < 80 - 69 /* width - longest line unpadded */) {
+    // calc padding if version string is exceeds fieldsize space
+    while (pad.length() < ps &&
+           pad.length() < 80 - 69 /* maxwidth - longest line unpadded */) {
         pad += " ";
         padded = true;
     }
@@ -315,19 +316,18 @@ QString StrTools::getVersionBanner() {
 #else
     QString xdg = "     ";
 #endif
-    QStringList b = {
+    QStringList banner = {
         // clang-format off
-         g[idx++] % "m _______ __                                                   "%pad%" ___",
-         g[idx++] % "m|   _   |  |--.--.--.-----.----.----.---.-.-----.-----.----.  "%pad%"|\"\"\"|",
-         g[idx++] % "m|   1___|    <|  |  |__ --|  __|   _|  _  |  _  |  -__|   _|  "%pad%"|\"\"\"|",
-         g[idx++] % "m|____   |__|__|___  |_____|____|__| |___._|   __|_____|__|    "%pad%"|\"\"\"|",
-        (g[idx++] + "m|:  1   |     |_____|                     |__| %1  %2|\"\"\"|").arg(ver, fieldSize).arg(padded ? "" : " "),
-        (g[idx++] + "m|::.. . |                                             %1   "%pad%"|\"\"\"|").arg(xdg),
-         g[idx++] % "m`-------' by Lars Muldjord and contributors                  "%pad%"\"\"''''\"",
+         colors[idx++] % "m _______ __                                                   " % pad % " ___",
+         colors[idx++] % "m|   _   |  |--.--.--.-----.----.----.---.-.-----.-----.----.  " % pad % "|\"\"\"|",
+         colors[idx++] % "m|   1___|    <|  |  |__ --|  __|   _|  _  |  _  |  -__|   _|  " % pad % "|\"\"\"|",
+         colors[idx++] % "m|____   |__|__|___  |_____|____|__| |___._|   __|_____|__|    " % pad % "|\"\"\"|",
+        (colors[idx++] + "m|:  1   |     |_____|                     |__| %1  %2|\"\"\"|").arg(ver, fieldSize).arg(padded ? "" : " "),
+        (colors[idx++] + "m|::.. . |                                             %1   " % pad % "|\"\"\"|").arg(xdg),
+         colors[idx++] % "m`-------' by Lars Muldjord and contributors                  " % pad % "\"\"''''\"",
         // clang-format on
     };
-    QString bs = "\b\b\b\b\b\b\b\b\b\b\b";
-    return bs % "\033[38;5;" % b.join("\n\033[38;5;") % "\033[0m \n";
+    return "\r\033[38;5;" % banner.join("\n\033[38;5;") % "\033[0m \n";
 }
 
 QString StrTools::stripBrackets(const QString str) {
