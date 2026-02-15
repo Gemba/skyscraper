@@ -733,16 +733,32 @@ QVector<int> AbstractScraper::getPlatformId(const QString) {
 QVariantMap AbstractScraper::readJson(const QString &filename) {
     QVariantMap m;
     QFile jsonFile(filename);
-    if (jsonFile.open(QIODevice::ReadOnly)) {
-        QJsonObject jsonObj =
-            QJsonDocument::fromJson(jsonFile.readAll()).object();
-        m = jsonObj.toVariantMap();
-        jsonFile.close();
-    } else {
-        printf("\033[1;31mFile '%s' not found. Please fix.\n\nNow "
-               "quitting...\033[0m\n",
+    QJsonObject jsonObj;
+    bool canRead = jsonFile.open(QIODevice::ReadOnly);
+    if (canRead) {
+        jsonObj = QJsonDocument::fromJson(jsonFile.readAll()).object();
+        if (!jsonObj.isEmpty()) {
+            m = jsonObj.toVariantMap();
+            jsonFile.close();
+        }
+    }
+    if (!canRead) {
+        printf("\033[1;31mFile '%s' not found or not readable. Please "
+               "fix.\nNot scraping...\n\033[0m",
                filename.toUtf8().constData());
-        exit(1);
+    } else if (jsonObj.isEmpty()) {
+        printf("\033[1;31mFile '%s' has invalid JSON format. Please fix.\nNot "
+               "scraping...\n\033[0m",
+               filename.toUtf8().constData());
     }
     return m;
+}
+
+void AbstractScraper::bury(const int &returnCode, const QString &effect,
+                           const QString &cause) {
+    if (config->stdErr) {
+        fprintf(stderr, "Skyscraper: %s: %s\n", effect.toStdString().c_str(),
+                cause.toStdString().c_str());
+    }
+    exit(returnCode);
 }

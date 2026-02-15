@@ -27,6 +27,7 @@
 
 #include "config.h"
 #include "crc32.h"
+#include "pathtools.h"
 #include "platform.h"
 #include "strtools.h"
 
@@ -217,7 +218,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                            "persists, please consider filing a bug report at "
                            "'https://github.com/Gemba/skyscraper/issues' and "
                            "attach that file.\n",
-                           Config::pathToCStr(errFile));
+                           PathTools::pathToCStr(errFile));
                 }
                 errorResponse.close();
             }

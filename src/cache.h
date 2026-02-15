@@ -87,8 +87,8 @@ public:
     bool createFolders(const QString &scraper);
     bool read();
     void printPriorities(QString cacheId);
-    void editResources(QSharedPointer<Queue> queue, const QString &command = "",
-                       const QString &type = "");
+    int editResources(QSharedPointer<Queue> queue, const QString &command = "",
+                      const QString &type = "");
     bool purgeAllOnSinglePlatform(const bool unattend = false);
     bool purgeResources(QString purgeStr);
     bool vacuumResources(const QString inputFolder, const QString filters,

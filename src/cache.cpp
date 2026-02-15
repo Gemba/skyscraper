@@ -29,6 +29,7 @@
 #include "cli.h"
 #include "config.h"
 #include "nametools.h"
+#include "pathtools.h"
 #include "queue.h"
 #include "skyscraper.h"
 
@@ -367,30 +368,22 @@ void Cache::printCacheEditMenu() {
            "\033[1;33mx\033[0m)\n");
 }
 
-void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
-                          const QString &type) {
+int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
+                         const QString &type) {
     // Check sanity of command and parameters, if any
-    if (!command.isEmpty()) {
-        if (command == "new") {
-            if (!txtTypes().contains(type)) {
-                QStringList sortedTypes = txtTypes();
-                sortedTypes.sort();
-                printf("\033[1;31mUnknown resource type '%s', please specify "
-                       "one of the following:\033[0m '%s'.\n",
-                       type.toStdString().c_str(),
-                       sortedTypes.join("', '").toStdString().c_str());
-                return;
-            }
-        } else {
-            printf("\033[1;31mUnknown command '%s', please specify one of the "
-                   "following: 'new'.\033[0m\n",
-                   command.toStdString().c_str());
-            return;
-        }
+    if (command == "new" && !txtTypes().contains(type)) {
+        QStringList sortedTypes = txtTypes();
+        sortedTypes.sort();
+        printf("\033[1;31mUnknown resource type '%s', please specify "
+               "one of the following:\033[0m '%s'.\n",
+               type.toStdString().c_str(),
+               sortedTypes.join("', '").toStdString().c_str());
+        return -1;
     }
 
+    int retVal = 0;
     int queueLength = queue->length();
-    printf("\033[1mEntering resource cache editing mode! This mode allows "
+    printf("\033[1mEntering resource cache editing mode.\n\nThis mode allows "
            "you to edit textual resources for your files. To add media "
            "resources use the 'import' scraping module instead.\nYou "
            "can provide one or more file names on command line to edit "
@@ -616,9 +609,9 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         }
                         resources.append(newRes);
                         if (updated) {
-                            printf("[*] Updated existing ");
+                            printf("[\033[1;34m*\033[0m] Updated existing ");
                         } else {
-                            printf("[+] Added ");
+                            printf("[\033[1;32m+\033[0m] Added ");
                         }
                         printf("resource with value '\033[1;32m%s\033[0m'\n\n",
                                value.toStdString().c_str());
@@ -713,7 +706,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         QString delType = resources[idxInResList].type;
                         QString delSource = resources[idxInResList].source;
                         resources.removeAt(idxInResList);
-                        printf("[-] Removed resource: %s (%s)\n\n",
+                        printf("[\033[1;31m-\033[0m] Removed resource: %s "
+                               "(%s)\n\n",
                                delType.toStdString().c_str(),
                                delSource.toStdString().c_str());
 
@@ -727,7 +721,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 while (it.hasNext()) {
                     Resource res = it.next();
                     if (res.cacheId == cacheId) {
-                        printf("[-] Removed \033[1;33m%s\033[0m (%s) with "
+                        printf("[\033[1;31m-\033[0m] Removed "
+                               "\033[1;33m%s\033[0m (%s) with "
                                "value '\033[1;32m%s\033[0m'\n",
                                res.type.toStdString().c_str(),
                                res.source.toStdString().c_str(),
@@ -784,7 +779,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("[-] Removed %d %s connected to rom from "
+                    printf("[\033[1;31m-\033[0m] Removed %d %s connected to "
+                           "rom from "
                            "module '\033[1;32m%s\033[0m'\n\n",
                            removed,
                            pluralizeWordStd("resource", removed != 1).c_str(),
@@ -842,7 +838,8 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("[-] Removed %d %s connected to rom of "
+                    printf("[\033[1;31m-\033[0m] Removed %d %s connected to "
+                           "rom of "
                            "type '\033[1;32m%s\033[0m'\n\n",
                            removed,
                            pluralizeWordStd("resource", removed != 1).c_str(),
@@ -853,8 +850,11 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                            typeInput.c_str());
                 }
             } else if (userInput == "c" || userInput == "x") {
-                printf("[!] Exiting without saving changes.\n");
-                exit(0);
+                printf(
+                    "[\033[1;33m!\033[0m] Exiting without saving changes.\n");
+                queue->clear();
+                doneEdit = true;
+                retVal = 1;
             } else if (userInput == "q" || userInput == "w") {
                 queue->clear();
                 doneEdit = true;
@@ -865,6 +865,7 @@ void Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
             }
         }
     }
+    return retVal;
 }
 
 bool Cache::purgeResources(QString purgeStr) {
@@ -1008,8 +1009,8 @@ bool Cache::reportAllPlatform(Settings &config, Skyscraper *app) {
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
-        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
-        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
+        config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "reportAllPlatform()" << config.inputFolder;
         Cache cache(config.cacheFolder);
         if (cache.read()) {
@@ -1043,8 +1044,8 @@ void Cache::vacuumAllPlatform(Settings &config, Skyscraper *app) {
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
-        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
-        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
+        config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "vacuumAllPlatform()" << config.inputFolder;
         Cache cache(config.cacheFolder);
         if (cache.read() &&
@@ -1065,8 +1066,8 @@ void Cache::validateAllPlatform(Settings &config, Skyscraper *app) {
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
-        config.cacheFolder = Config::concatPath(initCacheFolder, platform);
-        config.inputFolder = Config::concatPath(initInputFolder, platform);
+        config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
+        config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "validateAllPlatform()" << config.inputFolder;
         Cache cache(cacheDir.filePath(platform));
         if (cache.read()) {
@@ -1240,11 +1241,11 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
             reportFile.close();
             printf("\033[1;32m Done!\033[0m\n\033[1;33m  %d of %d %s "
                    "miss the '%s' resource.\033[0m\n",
-                   missing, fileInfos.length(),
+                   missing, static_cast<int>(fileInfos.length()),
                    pluralizeWordStd("file", fileInfos.length() != 1).c_str(),
                    resType.toStdString().c_str());
             if (missing > 0) {
-                printf("  Files in: %s\n", Config::pathToCStr(rFn));
+                printf("  Files in: %s\n", PathTools::pathToCStr(rFn));
             }
             printf("\n");
         } else {
@@ -1698,12 +1699,6 @@ QList<Resource> Cache::getResources() { return resources; }
 
 void Cache::addResources(GameEntry &entry, const Settings &config,
                          QString &output) {
-    if (entry.source.isEmpty()) {
-        printf("Something is wrong, resource with cache id '%s' has no source, "
-               "exiting...\n",
-               entry.cacheId.toStdString().c_str());
-        exit(1);
-    }
     if (entry.cacheId.isEmpty()) {
         return;
     }

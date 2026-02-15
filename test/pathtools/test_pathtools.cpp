@@ -1,3 +1,4 @@
+#include "pathtools.h"
 #include "config.h"
 
 #include <QDebug>
@@ -5,7 +6,7 @@
 #include <QFileInfo>
 #include <QTest>
 
-class TestConfig : public QObject {
+class TestPathTools : public QObject {
     Q_OBJECT
 
 private:
@@ -16,80 +17,80 @@ private slots:
     void initTestCase() {}
 
     void testConcatPath() {
-        QString actual = Config::concatPath("tmp/cache/", "/covers");
+        QString actual = PathTools::concatPath("tmp/cache/", "/covers");
         QCOMPARE(actual, "tmp/cache/covers");
-        actual = Config::concatPath("tmp/cache", "/wheels");
+        actual = PathTools::concatPath("tmp/cache", "/wheels");
         QCOMPARE(actual, "tmp/cache/wheels");
-        actual = Config::concatPath("/tmp/cache", "../wheels");
+        actual = PathTools::concatPath("/tmp/cache", "../wheels");
         QCOMPARE(actual, "/tmp/cache/../wheels");
-        actual = Config::concatPath("../yadda/yadda", ".");
+        actual = PathTools::concatPath("../yadda/yadda", ".");
         QCOMPARE(actual, "../yadda/yadda");
-        actual = Config::concatPath("aaa", ".bbb");
+        actual = PathTools::concatPath("aaa", ".bbb");
         QCOMPARE(actual, "aaa/.bbb");
     }
 
     void testOnlyAbs() {
-        QCOMPARE(Config::makeAbsolutePath("/home/pi/RetroPie/roms", "/tmp"),
+        QCOMPARE(PathTools::makeAbsolutePath("/home/pi/RetroPie/roms", "/tmp"),
                  "/tmp");
-        QCOMPARE(Config::makeAbsolutePath("/path/to/cwd", "config.ini"),
+        QCOMPARE(PathTools::makeAbsolutePath("/path/to/cwd", "config.ini"),
                  "/path/to/cwd/config.ini");
         // rationale for returning "": ease of use when subpath is empty
         // -> complete value is empty -> do not output in/for frontend
-        QCOMPARE(Config::makeAbsolutePath("/blarf/blubb////", ""),
+        QCOMPARE(PathTools::makeAbsolutePath("/blarf/blubb////", ""),
                  "");
         // ES writes ~/bla in some circumstance instead of absolute path /home/foo/bla
         // --> return unchanged        
-        QCOMPARE(Config::makeAbsolutePath("/home/pi/RetroPie/roms", "~/.emulationstation/downloaded_media/apple2/videos/loderunr.mp4"),
+        QCOMPARE(PathTools::makeAbsolutePath("/home/pi/RetroPie/roms", "~/.emulationstation/downloaded_media/apple2/videos/loderunr.mp4"),
                  "~/.emulationstation/downloaded_media/apple2/videos/loderunr.mp4");
     }
 
     void testAbsWithRel() {
         QString actual =
-            Config::makeAbsolutePath("/home/pi/RetroPie/roms", "./amiga");
+            PathTools::makeAbsolutePath("/home/pi/RetroPie/roms", "./amiga");
         QCOMPARE(actual, "/home/pi/RetroPie/roms/amiga");
 
         actual =
-            Config::makeAbsolutePath("/home/pi/RetroPie/roms/", ".///amiga");
+            PathTools::makeAbsolutePath("/home/pi/RetroPie/roms/", ".///amiga");
         QCOMPARE(actual, "/home/pi/RetroPie/roms/amiga");
 
-        actual = Config::makeAbsolutePath("/path/to/pegasus", "../roms/snes");
+        actual = PathTools::makeAbsolutePath("/path/to/pegasus", "../roms/snes");
         QCOMPARE(actual, "/path/to/pegasus/../roms/snes");
 
-        actual = Config::makeAbsolutePath("/yadda", ".");
+        actual = PathTools::makeAbsolutePath("/yadda", ".");
         QCOMPARE(actual, "/yadda");
 
-        actual = Config::makeAbsolutePath("/yadda/meh///", "wuff");
+        actual = PathTools::makeAbsolutePath("/yadda/meh///", "wuff");
         QCOMPARE(actual, "/yadda/meh/wuff");
     }
 
     void testlexicalRel() {
-        QString actual = Config::lexicallyRelativePath(
+        QString actual = PathTools::lexicallyRelativePath(
             "/home/pi/RetroPie/roms", "/home/pi/RetroPie/roms/amiga");
         QCOMPARE(actual, "amiga");
-        actual = Config::lexicallyRelativePath(
+        actual = PathTools::lexicallyRelativePath(
             "/home/pi/RetroPie/roms/amiga", "/home/pi/RetroPie/roms/amiga/screen.png");
         QCOMPARE(actual, "screen.png");
         // inputFolder is not the default
-        actual = Config::lexicallyRelativePath(
+        actual = PathTools::lexicallyRelativePath(
             "/home/pi/inputfolder/some/where/else/amiga", "/home/pi/RetroPie/roms/amiga");
         QCOMPARE(actual, "../../../../../RetroPie/roms/amiga");
-        actual = Config::lexicallyRelativePath("/path/to/pegasus/",
+        actual = PathTools::lexicallyRelativePath("/path/to/pegasus/",
                                                "/path/to/pegasus/../roms/snes");
         QCOMPARE(actual, "../roms/snes");
         actual =
-            Config::lexicallyRelativePath("/path/to/pegasus/", "../roms/snes");
+            PathTools::lexicallyRelativePath("/path/to/pegasus/", "../roms/snes");
         QCOMPARE(actual, "");
-        actual = Config::lexicallyRelativePath("relative/path/to/pegasus/",
+        actual = PathTools::lexicallyRelativePath("relative/path/to/pegasus/",
                                                "roms/fba");
         QCOMPARE(actual, "../../../../roms/fba");
-        actual = Config::lexicallyRelativePath("/path/to/pegasus/",
+        actual = PathTools::lexicallyRelativePath("/path/to/pegasus/",
                                                "/path/to/roms/ports");
         QCOMPARE(actual, "../roms/ports");
-        actual = Config::lexicallyRelativePath("/path/to/pegasus/",
+        actual = PathTools::lexicallyRelativePath("/path/to/pegasus/",
                                                "/other/path/to/roms/apple2");
         QCOMPARE(actual, "../../../other/path/to/roms/apple2");
     }
 };
 
-QTEST_MAIN(TestConfig)
-#include "test_config.moc"
+QTEST_MAIN(TestPathTools)
+#include "test_pathtools.moc"

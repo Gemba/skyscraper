@@ -16,3 +16,5 @@ clean:
 		cd $(subdir) && $(MAKE) --ignore-errors distclean; \
 		cd .. ; \
 	)
+
+all: clean tests

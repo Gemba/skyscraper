@@ -38,7 +38,7 @@ public:
     static Platform &get();
 
     bool loadConfig();
-    bool isPlatformCfgfilePristine(const QString &platformCfgFilePath);
+    int isPlatformCfgfilePristine(const QString &platformCfgFilePath);
     void clearConfigData();
 
     QStringList getPlatforms() const;

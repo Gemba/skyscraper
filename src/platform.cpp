@@ -264,7 +264,8 @@ bool Platform::loadPlatformsIdMap() {
   Whereas user edits in such files should go into _local files (introduced with
   3.13).
 */
-bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
+// 0: pristine, 1: local changes, -1 not readable, -2 non existing
+int Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
     QMap<QString, QStringList> sha256sums = {
         // clang-format off
         {"peas.json", QStringList(
@@ -293,24 +294,21 @@ bool Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
     };
     QFileInfo cfgFileInfo = QFileInfo(cfgFilePath);
     if (!cfgFileInfo.exists()) {
-        return true;
+        return -2;
     }
 
     QCryptographicHash sha256 = QCryptographicHash(QCryptographicHash::Sha256);
     QFile cfgFile(cfgFilePath);
-    bool isPristine = false;
+    int isPristine = 1;
     if (cfgFile.open(QFile::ReadOnly)) {
         sha256.addData(cfgFile.readAll());
         QString currentSha256 = sha256.result().toHex();
         QString cfgBn = cfgFileInfo.fileName();
-        isPristine = sha256sums[cfgBn].contains(currentSha256);
+        isPristine = sha256sums[cfgBn].contains(currentSha256) ? 0 : 1;
         qDebug() << cfgFileInfo.absoluteFilePath() << currentSha256
-                 << "is pristine:" << isPristine;
+                 << "is pristine:" << (isPristine == 0);
     } else {
-        printf("\033[1;31mFile '%s' can not be read. Please fix. "
-               "Quitting.\033[0m\n",
-               cfgFilePath.toUtf8().constData());
-        exit(1);
+        isPristine = -1;
     }
     return isPristine;
 }
@@ -333,13 +331,3 @@ QVector<int> Platform::getPlatformIdOnScraper(const QString platform,
              << "and scraper" << scraper;
     return id;
 }
-
-// --- Console colors ---
-// Black        0;30     Dark Gray     1;30
-// Red          0;31     Light Red     1;31
-// Green        0;32     Light Green   1;32
-// Brown/Orange 0;33     Yellow        1;33
-// Blue         0;34     Light Blue    1;34
-// Purple       0;35     Light Purple  1;35
-// Cyan         0;36     Light Cyan    1;36
-// Light Gray   0;37     White         1;37

@@ -2,4 +2,4 @@ Makefile
 *.o
 *.moc
 moc_*
-test_config
+test_pathtools

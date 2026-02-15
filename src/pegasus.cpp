@@ -25,8 +25,8 @@
 
 #include "pegasus.h"
 
-#include "config.h"
 #include "nametools.h"
+#include "pathtools.h"
 #include "strtools.h"
 
 #include <QDate>
@@ -132,7 +132,7 @@ bool Pegasus::loadOldGameList(const QString &gameListFileString) {
 
 QString Pegasus::makeAbsolute(const QString &filePath,
                               const QString &inputFolder) {
-    return Config::makeAbsolutePath(inputFolder, QString(filePath));
+    return PathTools::makeAbsolutePath(inputFolder, QString(filePath));
 }
 
 void Pegasus::skipExisting(QList<GameEntry> &gameEntries,
@@ -272,8 +272,8 @@ void Pegasus::assembleList(QString &finalOutput,
         out.append(toPegasusFormat("game", entry.title));
 
         if (useRelPath) {
-            entry.path = Config::lexicallyRelativePath(config->gameListFolder,
-                                                       entry.path);
+            entry.path = PathTools::lexicallyRelativePath(
+                config->gameListFolder, entry.path);
         }
 
         out.append(toPegasusFormat("file", entry.path));
@@ -343,7 +343,7 @@ QString Pegasus::addMediaFile(const QString &asset, bool useRelativePath,
                               QString mediaFile) {
     if (useRelativePath) {
         mediaFile =
-            Config::lexicallyRelativePath(config->gameListFolder, mediaFile);
+            PathTools::lexicallyRelativePath(config->gameListFolder, mediaFile);
     }
     return toPegasusFormat(asset, mediaFile);
 }

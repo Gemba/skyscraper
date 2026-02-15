@@ -35,7 +35,6 @@
 
 TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_MANY) {
-    loadMaps();
 
     baseUrl = "https://api.thegamesdb.net/v1";
     searchUrlPre = baseUrl + "/Games/ByGameName?apikey=";
@@ -58,6 +57,11 @@ TheGamesDb::TheGamesDb(Settings *config, QSharedPointer<NetManager> manager)
 
 void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
                                   QString searchName, QString platform) {
+    if (!loadMaps()) {
+        reqRemaining = 0;
+        return;
+    }
+
     const QVector<int> configuredPlfIds = getPlatformId(config->platform);
     QStringList pIds;
     for (const auto &p : configuredPlfIds) {
@@ -307,11 +311,24 @@ void TheGamesDb::getFanart(GameEntry &game) {
     }
 }
 
-void TheGamesDb::loadMaps() {
+bool TheGamesDb::loadMaps() {
     genreMap = readJson("tgdb_genres.json");
+    if (genreMap.isEmpty()) {
+        return false;
+    }
     developerMap = readJson("tgdb_developers.json");
+    if (developerMap.isEmpty()) {
+        return false;
+    }
     publisherMap = readJson("tgdb_publishers.json");
+    if (publisherMap.isEmpty()) {
+        return false;
+    }
     platformMap = readJson("tgdb_platforms.json");
+    if (platformMap.isEmpty()) {
+        return false;
+    }
+    return true;
 }
 
 QVector<int> TheGamesDb::getPlatformId(const QString platform) {

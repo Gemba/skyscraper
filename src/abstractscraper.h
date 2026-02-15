@@ -64,6 +64,12 @@ public:
     void detectRegionFromFilename(const QFileInfo &info);
 #endif
 
+signals:
+    void die(const int &, const QString &, const QString &);
+
+public slots:
+    void bury(const int &, const QString &, const QString &);
+
 protected:
     Settings *config;
 

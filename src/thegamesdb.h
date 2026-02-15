@@ -62,7 +62,7 @@ private:
     QJsonDocument jsonDoc;
     QJsonObject jsonObj;
 
-    void loadMaps();
+    bool loadMaps();
     QVariantMap platformMap;
     QVariantMap genreMap;
     QVariantMap developerMap;

@@ -8,28 +8,59 @@ source "${SKYSCRAPER_HOME}/supplementary/workflows/core.sh"
 export QT_QPA_PLATFORM=offscreen
 
 _test_android() {
-   local -r res="$(file "$TARGET_BIN")"
-   echo "$res" 
-   echo "$res" | grep "$1"
+	local -r res="$(file "$TARGET_BIN")"
+	echo "$res"
+	echo "$res" | grep "$1"
 }
 
 _smoke_test() {
-    # Qt5
-    /usr/local/bin/Skyscraper --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+5\."
-    # Qt6
-    "${SKYSCRAPER_HOME}/Skyscraper" --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+6\."
+	# Qt5
+	/usr/local/bin/Skyscraper --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+5\."
+	# Qt6
+	"${SKYSCRAPER_HOME}/Skyscraper" --buildinfo | grep -q -oPz "(?s)Skyscraper:\s+\d+\..+Qt:\s+6\."
 }
 
 _unit_tests() {
+	# Qt6
 	cd "${SKYSCRAPER_HOME}/test/" && make tests
 }
 
+_exit_test() {
+	# Qt6
+	if { "${SKYSCRAPER_HOME}/Skyscraper" --stderr -p snes -f attractmode >/dev/null; } 2>&1 | tee /tmp/errmsg; then
+		return 1
+	fi
+	grep -q "Skyscraper: incomplete configuration:" /tmp/errmsg
+
+	mkdir -p "$HOME/RetroPie/roms/astrocade"
+	touch "$HOME/RetroPie/roms/astrocade/dummy.zip"
+	if { "${SKYSCRAPER_HOME}/Skyscraper" --stderr -p astrocade -s esgamelist >/dev/null; } 2>&1 | tee /tmp/errmsg; then
+		return 1
+	fi
+	grep -q "Skyscraper: cannot access gamelist 'gamelist.xml'" /tmp/errmsg
+	
+	cp "$HOME/.skyscraper/peas.json" "$HOME/.skyscraper/peas.json_orig"
+	echo "x" >>"$HOME/.skyscraper/peas.json"
+	if { "${SKYSCRAPER_HOME}/Skyscraper" --stderr -p astrocade --cache show >/dev/null; } 2>&1 | tee /tmp/errmsg; then
+		return 1
+	fi
+	mv -f "$HOME/.skyscraper/peas.json_orig" "$HOME/.skyscraper/peas.json"
+	grep -q "Skyscraper: cannot parse platform configuration:" /tmp/errmsg
+
+	if { "${SKYSCRAPER_HOME}/Skyscraper" --stderr --flags testies -p astrocade >/dev/null; } 2>&1 | tee /tmp/errmsg; then
+		return 1
+	fi
+	grep -q "Skyscraper: unknown flag 'testies'" /tmp/errmsg
+
+	return 0
+}
+
 main() {
-   case "${1:-}" in
-      "android-aarch64") _test_android "aarch64";;
-      "android-arm") _test_android "ARM" ;;
-      *) _smoke_test && _unit_tests ;;
-   esac
+	case "${1:-}" in
+	"android-aarch64") _test_android "aarch64" ;;
+	"android-arm") _test_android "ARM" ;;
+	*) _smoke_test && _unit_tests && _exit_test;;
+	esac
 }
 
 main "$@"
