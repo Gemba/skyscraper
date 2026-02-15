@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Usage:
-#   ./scrape.sh [ROMS_DIR] [PLATFORM]
+#   ./save.sh [ROMS_DIR] [PLATFORM]
 # Example
-#   ./scrape.sh ./roms/snes snes
+#   ./save.sh ./roms/snes snes
 
 TAG=skyscraper
 
@@ -14,4 +14,4 @@ docker run \
   -v "$ROMS_DIR:/tmp/roms/$PLATFORM" \
   -v "$(pwd)/cache:/tmp/skyscraper_cache" \
   $TAG \
-  -p $PLATFORM -i /tmp/roms/$PLATFORM -d /tmp/skyscraper_cache --flags relative,unattendskip
+  -p $PLATFORM -i /tmp/roms/$PLATFORM -g /tmp/roms/$PLATFORM -o /tmp/roms/$PLATFORM/media -d /tmp/skyscraper_cache --flags relative,unattend

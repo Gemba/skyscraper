@@ -73,3 +73,6 @@ platforms_idmap_local.csv
 # VS Code
 *.code-workspace
 .vscode
+
+# docker config
+docker/config.ini
