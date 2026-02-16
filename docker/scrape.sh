@@ -11,8 +11,17 @@ ROMS_DIR=$1
 PLATFORM=$2
 SOURCE=$3
 
-docker run \
-  -v "$ROMS_DIR:/tmp/roms/$PLATFORM" \
-  -v "$(pwd)/cache:/tmp/skyscraper_cache" \
-  $TAG \
-  -p $PLATFORM -s $SOURCE -i /tmp/roms/$PLATFORM -d /tmp/skyscraper_cache
+if [ -f ./config.ini ]; then
+  docker run \
+    -v "$ROMS_DIR:/tmp/roms/$PLATFORM" \
+    -v "$(pwd)/cache:/tmp/skyscraper_cache" \
+    -v "$(pwd)/config.ini:/root/.skyscraper/config.ini" \
+    $TAG \
+    -p $PLATFORM -s $SOURCE -i /tmp/roms/$PLATFORM -d /tmp/skyscraper_cache
+else
+  docker run \
+    -v "$ROMS_DIR:/tmp/roms/$PLATFORM" \
+    -v "$(pwd)/cache:/tmp/skyscraper_cache" \
+    $TAG \
+    -p $PLATFORM -s $SOURCE -i /tmp/roms/$PLATFORM -d /tmp/skyscraper_cache
+fi
