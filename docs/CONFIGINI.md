@@ -1056,6 +1056,13 @@ or
 userCreds="<Client-ID>:<Client-Secret>"
 ```
 
+or
+
+```ini
+[thegamesdb]
+userCreds="<your-private-api-key-of-64chars>"
+```
+
 Default value: unset  
 Allowed in sections: `[<SCRAPER>]`
 
