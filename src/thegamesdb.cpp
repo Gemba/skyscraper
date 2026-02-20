@@ -66,32 +66,48 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         }
     }
     QString k = getKey();
-    QString req = searchUrlPre + k + "&name=" + searchName +
-                  "&filter[platform]=" + pIds.join(",");
+    QString req = searchUrlPre % k % "&name=" % searchName %
+                  "&filter[platform]=" % pIds.join(",");
     netComm->request(req);
-    q.exec();
-    data = netComm->getData();
     qDebug() << req;
-
+    q.exec();
+    int httpStatus = netComm->getHttpStatus();
+    qDebug() << "HTTP status" << httpStatus;
+    data = netComm->getData();
     jsonDoc = QJsonDocument::fromJson(data);
+    QString apiStatus = jsonDoc.object()["status"].toString();
+
+    if (httpStatus >= 400) {
+        printf(
+            "\033[1;31mServer response status %d\033[0m: Cannot continue! See "
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/"
+            "Status/%d\n",
+            httpStatus, httpStatus);
+        reqRemaining = 0;
+        if (!apiStatus.isEmpty()) {
+            printf("\033[1;31mAPI status message\033[0m: %s\n",
+                   apiStatus.toStdString().c_str());
+        }
+        return;
+    }
+
     if (jsonDoc.isEmpty()) {
         return;
     }
 
-    QString status = jsonDoc.object()["status"].toString();
-    if (status != "Success") {
-        QString code = jsonDoc.object()["code"].toString();
-        if (code != "200") {
-            printf("\033[1;31mServer response HTTP %s: %s\033[0m\n",
-                   code.toStdString().c_str(), status.toStdString().c_str());
-        }
+    if (!apiStatus.isEmpty() && apiStatus != "Success") {
+        printf("\033[1;31mAPI status message\033[0m: %s. Cannot continue...\n",
+               apiStatus.toStdString().c_str());
+        reqRemaining = 0;
         return;
     }
+
     QJsonObject obj = jsonDoc.object();
     reqRemaining = obj["extra_allowance"].toInt();
     if (reqRemaining <= 0) {
         reqRemaining = obj["remaining_monthly_allowance"].toInt();
     }
+
     if (reqRemaining <= 0)
         printf("\033[1;31mYou've reached TheGamesdDb's request limit for this "
                "month with %s API key.\033[0m\n",
