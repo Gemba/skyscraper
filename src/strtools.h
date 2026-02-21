@@ -44,6 +44,7 @@ public:
     static QString stripHtmlTags(QString str);
     static QString getMd5Sum(const QByteArray &data);
     static QString tidyText(QString text, bool ignoreBangs);
+    static QString shortenText(QString text, int maxLength);
 };
 
 #endif // STRTOOLS_H

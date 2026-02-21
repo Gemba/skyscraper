@@ -284,7 +284,8 @@ void Pegasus::assembleList(QString &finalOutput,
                 QString::number((int)(entry.rating.toDouble() * 100)) % "%"));
         }
         if (!entry.description.isEmpty()) {
-            QString desc = entry.description.left(config->maxLength);
+            QString desc =
+                StrTools::shortenText(entry.description, config->maxLength);
             replaceColon(desc, entry.title);
             out.append(toPegasusFormat("description", desc));
         }

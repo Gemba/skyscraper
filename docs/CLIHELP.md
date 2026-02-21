@@ -130,7 +130,7 @@ Skyscraper -p snes -i "/path/to/your/snes/roms"
 
 ### -l &lt;0-10000&gt;
 
-Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500 (which is approx. two-thirds of a typewriter page). Consider setting this in [`config.ini`](CONFIGINI.md#maxlength) instead.
+Sets the maximum length of returned game descriptions. This is a convenience option if you feel like game descriptions are too long. By default it is set to 2500 (approx. two-thirds of a typewriter page). Consider setting this in [`config.ini`](CONFIGINI.md#maxlength) instead.
 
 **Example(s)**
 

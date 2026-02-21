@@ -344,7 +344,8 @@ QString EmulationStation::createXml(GameEntry &entry) {
     l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
                   addEmptyElem));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::DESCRIPTION),
-                  entry.description, addEmptyElem));
+                  StrTools::shortenText(entry.description, config->maxLength),
+                  addEmptyElem));
 
     QString released = entry.releaseDate;
     QRegularExpressionMatch m = isoTimeRe().match(released);
