@@ -23,7 +23,9 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 
 # Building skyscraper
-COPY ./* ./
+RUN mkdir -p /opt/skyscraper
+WORKDIR /opt/skyscraper
+COPY . .
 RUN rm -f ./VERSION.ini
 RUN chmod +x update_skyscraper.sh  && ./update_skyscraper.sh
 

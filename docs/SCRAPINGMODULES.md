@@ -96,7 +96,7 @@ I strongly recommend supporting them by contributing data to the database, or by
 - Website: _[www.thegamesdb.net](http://www.thegamesdb.net)_
 - Type: _File name search based_
 - User credential support: _Not required_
-- API request limit: _Limited to 3000 requests per IP per month_
+- API request limit: _Limited to 1000 requests per IP per month_
 - Thread limit: _None_
 - Platform support: _[Link to list](https://thegamesdb.net/list_platforms.php) or see `tgdb_platforms.json` sibling to your `config.ini`_
 - Media support: `backcover`, `cover`, `fanart`, `marquee`, `screenshot`, `wheel`
@@ -107,7 +107,7 @@ I strongly recommend supporting them by contributing data to the database, or by
 
 For newer games there's no way around TheGames DB. It recently had a huge redesign and their database remains one of the best out there. I would recommend scraping your roms with `screenscraper` first, and then use `thegamesdb` to fill out the gaps in your cache.
 
-There's a small caveat to this module, as it has a monthly request limit (see above) per IP per month. But this should be plenty for most people.
+There's a small caveat to this module, as it has a monthly request limit (see above) per IP per month. As per Feb 17th of 2026 TGDB have changed they API usage policy: You may have to register for your private API key to increase the above limits. Put your private API key then in the [`userCreds=`](CONFIGINI.md#usercreds) section of `[thegamesdb]`, or use the `-u` option when scraping with this module.
 
 Their API is based on a file name search. This means that the returned results do have a chance of being faulty. Skyscraper does a lot internally to make sure accepted data is for the correct game. But it is impossible to ensure 100% correct results, so do keep that in mind when using it. Consider using the `--flags interactive` command line flag if you want complete control of the accepted entries.
 

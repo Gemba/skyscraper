@@ -699,7 +699,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     if (parser->isSet("cache")) {
         config->cacheOptions =
             parser->value("cache").simplified().replace(" ", "");
-        if (config->cacheOptions == "refresh") {
+        bool valid = validateCacheSubCommand(config->cacheOptions);
+        if (!valid) {
+            printf("\033[1;31mInvalid parameter '--cache %s'\033[0m, "
+                   "please check '--cache help' for more info.\n",
+                   config->cacheOptions.toStdString().c_str());
+            exit(2);
+        } else if (config->cacheOptions == "refresh") {
             config->refresh = true;
             config->cacheOptions = "";
         } else if (config->cacheOptions == "help") {
@@ -709,8 +715,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             Cli::cacheReportMissingUsage();
             exit(0);
         } else if (config->cacheOptions.startsWith("purge:")) {
-            bool valid = validatePurgeParameters(config->cacheOptions);
-            if (!valid) {
+            if (!validatePurgeParameters(config->cacheOptions)) {
                 printf(
                     "\033[1;31mInvalid purge: parameter '--cache %s'\033[0m, "
                     "please check '--cache help' for more info.\n",

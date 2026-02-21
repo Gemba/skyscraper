@@ -65,33 +65,54 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
             pIds.append(QString::number(p));
         }
     }
-
-    QString req =
-        searchUrlPre +
-        StrTools::unMagic(
-            "187;161;217;126;172;149;202;122;163;197;163;219;162;171;203;197;"
-            "139;151;215;173;122;206;161;162;200;216;217;123;124;215;200;170;"
-            "171;132;158;155;215;120;149;169;140;164;122;154;178;174;160;172;"
-            "157;131;210;161;203;137;159;117;205;166;162;139;171;169;210;163") +
-        "&name=" + searchName + "&filter[platform]=" + pIds.join(",");
+    QString k = getKey();
+    QString req = searchUrlPre % k % "&name=" % searchName %
+                  "&filter[platform]=" % pIds.join(",");
     netComm->request(req);
-    q.exec();
-    data = netComm->getData();
     qDebug() << req;
-
+    q.exec();
+    int httpStatus = netComm->getHttpStatus();
+    qDebug() << "HTTP status" << httpStatus;
+    data = netComm->getData();
     jsonDoc = QJsonDocument::fromJson(data);
+    QString apiStatus = jsonDoc.object()["status"].toString();
+
+    if (httpStatus >= 400) {
+        printf(
+            "\033[1;31mServer response status %d\033[0m: Cannot continue! See "
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/"
+            "Status/%d\n",
+            httpStatus, httpStatus);
+        reqRemaining = 0;
+        if (!apiStatus.isEmpty()) {
+            printf("\033[1;31mAPI status message\033[0m: %s\n",
+                   apiStatus.toStdString().c_str());
+        }
+        return;
+    }
+
     if (jsonDoc.isEmpty()) {
         return;
     }
 
-    reqRemaining = jsonDoc.object()["remaining_monthly_allowance"].toInt();
-    if (reqRemaining <= 0)
-        printf("\033[1;31mYou've reached TheGamesdDb's request limit for this "
-               "month.\033[0m\n");
-
-    if (jsonDoc.object()["status"].toString() != "Success") {
+    if (!apiStatus.isEmpty() && apiStatus != "Success") {
+        printf("\033[1;31mAPI status message\033[0m: %s. Cannot continue...\n",
+               apiStatus.toStdString().c_str());
+        reqRemaining = 0;
         return;
     }
+
+    QJsonObject obj = jsonDoc.object();
+    reqRemaining = obj["extra_allowance"].toInt();
+    if (reqRemaining <= 0) {
+        reqRemaining = obj["remaining_monthly_allowance"].toInt();
+    }
+
+    if (reqRemaining <= 0)
+        printf("\033[1;31mYou've reached TheGamesdDb's request limit for this "
+               "month with %s API key.\033[0m\n",
+               config->userCreds.isEmpty() ? "the public" : "your private");
+
     if (jsonDoc.object()["data"].toObject()["count"].toInt() < 1) {
         return;
     }
@@ -109,17 +130,11 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
         GameEntry game;
 
         game.id = QString::number(jsonGame["id"].toInt());
-        game.url =
-            QString("%1/Games/ByGameID?id=%2&apikey=%3&fields=%4")
-                .arg(baseUrl)
-                .arg(game.id)
-                .arg(QString(StrTools::unMagic(
-                    "187;161;217;126;172;149;202;122;163;197;163;219;162;"
-                    "171;203;197;139;151;215;173;122;206;161;162;200;216;"
-                    "217;123;124;215;200;170;171;132;158;155;215;120;149;"
-                    "169;140;164;122;154;178;174;160;172;157;131;210;161;"
-                    "203;137;159;117;205;166;162;139;171;169;210;163")))
-                .arg(fields.join(","));
+        game.url = QString("%1/Games/ByGameID?id=%2&apikey=%3&fields=%4")
+                       .arg(baseUrl)
+                       .arg(game.id)
+                       .arg(k)
+                       .arg(fields.join(","));
 
         game.title = jsonGame["game_title"].toString();
         // Remove anything at the end with a parentheses. 'thegamesdb' has a
@@ -301,4 +316,16 @@ void TheGamesDb::loadMaps() {
 
 QVector<int> TheGamesDb::getPlatformId(const QString platform) {
     return Platform::get().getPlatformIdOnScraper(platform, config->scraper);
+}
+
+QString TheGamesDb::getKey() {
+    QString k = config->userCreds;
+    if (k.isEmpty()) {
+        k = StrTools::unMagic(
+            "189;159;218;132;218;153;203;170;166;155;168;177;211;217;203;153;"
+            "137;152;167;175;126;161;209;162;150;165;216;128;173;168;149;169;"
+            "213;137;203;161;163;170;196;215;182;168;118;156;132;171;202;165;"
+            "153;177;168;208;155;134;212;166;164;163;161;184;168;163;160;211");
+    }
+    return k;
 }
