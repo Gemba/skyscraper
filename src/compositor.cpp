@@ -26,7 +26,6 @@
 #include "compositor.h"
 
 #include "batocera.h" // TODO: Does not fit in here
-#include "config.h"
 #include "fxbalance.h"
 #include "fxblur.h"
 #include "fxbrightness.h"
@@ -45,6 +44,7 @@
 #include "fxstroke.h"
 #include "gameentry.h"
 #include "imgtools.h"
+#include "pathtools.h"
 #include "strtools.h"
 
 #include <QDebug>
@@ -318,7 +318,7 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
             }
         } else if (output.resType == "screenshot") {
             if (esdeMiximage) {
-                filename.prepend(Config::lexicallyNormalPath(
+                filename.prepend(PathTools::lexicallyNormalPath(
                     config->screenshotsFolder % "/../miximages"));
                 createSubfolder = true;
             } else {

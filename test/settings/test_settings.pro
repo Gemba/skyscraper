@@ -25,6 +25,7 @@ HEADERS += ../../src/cache.h \
            ../../src/gameentry.h \
            ../../src/nametools.h \
            ../../src/platform.h \
+           ../../src/pathtools.h \
            ../../src/queue.h \
            ../../src/settings.h \
            ../../src/strtools.h
@@ -35,6 +36,7 @@ SOURCES += test_settings.cpp \
            ../../src/gameentry.cpp \
            ../../src/nametools.cpp \
            ../../src/platform.cpp \
+           ../../src/pathtools.cpp \
            ../../src/queue.cpp \           
            ../../src/settings.cpp \
            ../../src/strtools.cpp

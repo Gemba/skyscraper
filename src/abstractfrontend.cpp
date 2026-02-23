@@ -25,8 +25,8 @@
 
 #include "abstractfrontend.h"
 
-#include "config.h"
 #include "gameentry.h"
+#include "pathtools.h"
 
 #include <QDebug>
 #include <QDir>
@@ -117,7 +117,7 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
                               "maybe incomplete.";
             }
         }
-        fp = Config::lexicallyNormalPath(fp);
+        fp = PathTools::lexicallyNormalPath(fp);
     } else {
         fp = "";
     }

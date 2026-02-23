@@ -25,6 +25,7 @@
 
 #include "nametools.h"
 
+#include "skyscraper.h"
 #include "strtools.h"
 
 #include <QCryptographicHash>

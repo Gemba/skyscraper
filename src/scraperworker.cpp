@@ -88,17 +88,13 @@ void ScraperWorker::run() {
     } else if (config.scraper == "import") {
         scraper = new ImportScraper(&config, manager);
     } else if (config.scraper == "gamebase") {
-        if (config.gameBaseFile.isEmpty()) {
-            printf("\033[0;31mBummer! No value for gameBaseFile parameter "
-                   "provided for [%s] in config.ini. Can't "
-                   "continue...\033[0m\n\n",
-                   config.platform.toStdString().c_str());
-            exit(1);
-        }
         scraper = new GamebaseScraper(&config, manager);
     } else {
         scraper = new AbstractScraper(&config, manager);
     }
+    // currently only ESGameList
+    QObject::connect(scraper, &AbstractScraper::die, scraper,
+                     &AbstractScraper::bury);
 
     if (config.platform == "amigacd32") {
         config.platform = "amiga";
@@ -931,13 +927,3 @@ int ScraperWorker::getReleaseYear(const QString releaseDateString) {
     }
     return UNDEF_YEAR;
 }
-
-// --- Console colors ---
-// Black        0;30     Dark Gray     1;30
-// Red          0;31     Light Red     1;31
-// Green        0;32     Light Green   1;32
-// Brown/Orange 0;33     Yellow        1;33
-// Blue         0;34     Light Blue    1;34
-// Purple       0;35     Light Purple  1;35
-// Cyan         0;36     Light Cyan    1;36
-// Light Gray   0;37     White         1;37

@@ -447,7 +447,7 @@ Allowed in sections: `[main]`
 This option is _only_ applicable when also setting the `frontend="attractmode"` option. It sets the _emulator_ to be used when generating the `attractmode` game list. On RetroPie the emulator name is mostly the same as the platform.
 
 Default value: unset  
-Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+Allowed in sections: `[main]`, `[<PLATFORM>]` and frontend `[attractmode]`
 
 ---
 

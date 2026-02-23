@@ -17,16 +17,21 @@ include(../../VERSION.ini)
 DEFINES+=TESTING
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
-HEADERS += ../../src/pegasus.h \
-           ../../src/abstractfrontend.h \
-           ../../src/config.h \
-           ../../src/gameentry.h \
-           ../../src/platform.h
+HEADERS += \
+            ../../src/pegasus.h \
+            ../../src/abstractfrontend.h \
+            ../../src/config.h \
+            ../../src/gameentry.h \
+            ../../src/pathtools.h \
+            ../../src/platform.h \
+            ../../src/strtools.h
 
 SOURCES += test_pegasus.cpp \
            ../../src/pegasus.cpp \
            ../../src/abstractfrontend.cpp \
            ../../src/config.cpp \
            ../../src/gameentry.cpp \
-           ../../src/platform.cpp
+            ../../src/pathtools.cpp \
+           ../../src/platform.cpp \
+           ../../src/strtools.cpp
 

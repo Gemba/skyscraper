@@ -22,6 +22,7 @@
 #include "cache.h"
 #include "cli.h"
 #include "config.h"
+#include "pathtools.h"
 #include "platform.h"
 
 #include <QDebug>
@@ -52,7 +53,7 @@ void RuntimeCfg::reportInvalidPlatform() {
     }
     printf("\033[1;31mPlease set a valid platform with '-p "
            "<PLATFORM>'\nCheck '--help' for a list of supported "
-           "platforms. Qutting.\n\033[0m");
+           "platforms. Qutting.\033[0m\n");
 }
 
 void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
@@ -87,7 +88,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                            cacheOpts.startsWith("report:")
                                ? "--cache report:missing=help"
                                : "--cache help");
-                    exit(2);
+                    emit die(2, "ambigous command --cache " % cacheOpts,
+                             "Cache subcommand can not be applied");
                 }
                 noPlatformCmd = Cache::isCommandValidOnAllPlatform(cacheOpts);
                 // noPlatformCmd is true for purge:all
@@ -98,7 +100,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                                "%s'\033[0m, please check '--cache help' for "
                                "more info.\n",
                                cacheOpts.toStdString().c_str());
-                        exit(2);
+                        emit die(
+                            2, "invalid cache command",
+                            QString("Cannot apply --cache %1").arg(cacheOpts));
                     }
                 }
             } else {
@@ -112,7 +116,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             if (invalidPlatform || purgeOnPlatform ||
                 (!noPlatformCmd && !infoAndExitOption)) {
                 reportInvalidPlatform();
-                exit(2);
+                emit die(
+                    2, "ambigous platform parameter",
+                    "Platform parameter missing or unknown platform provided");
             }
         }
     }
@@ -159,25 +165,27 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
 
     // check if config.ini has not-applicable keys in section
     QSet<QString> invalid = cfgIniKeys.subtract(allowedKeys);
+    QString section;
+    switch (type) {
+    case CfgType::MAIN:
+        section = "main";
+        break;
+    case CfgType::PLATFORM:
+        section = config->platform;
+        break;
+    case CfgType::FRONTEND:
+        section = config->frontend;
+        break;
+    case CfgType::SCRAPER:
+        section = config->scraper;
+        break;
+    default:;
+    }
     if (!invalid.isEmpty()) {
-        QString section;
-        switch (type) {
-        case CfgType::MAIN:
-            section = "main";
-            break;
-        case CfgType::PLATFORM:
-            section = config->platform;
-            break;
-        case CfgType::FRONTEND:
-            section = config->frontend;
-            break;
-        case CfgType::SCRAPER:
-            section = config->scraper;
-            break;
-        default:;
-        }
-        qInfo() << "Section type" << type << "[" << section << "]"
-                << "has surplus key(s), which will be ignored: " << invalid;
+        qWarning() << "INI-file section [" % section % "] has surplus key" %
+                          (invalid.count() > 1 ? "s" : "") %
+                          ", which will be ignored: "
+                   << invalid;
     }
 
     for (auto k : retained) {
@@ -197,7 +205,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "cacheFolder") {
                 v = (type == CfgType::MAIN)
-                        ? Config::concatPath(v, config->platform)
+                        ? PathTools::concatPath(v, config->platform)
                         : v;
                 config->cacheFolder = toAbsolutePath(false, v);
                 if (type != CfgType::MAIN) {
@@ -237,7 +245,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             if (k == "gameListFolder") {
                 v = (type == CfgType::MAIN ||
                      type == CfgType::FRONTEND /* #68 */)
-                        ? Config::concatPath(v, config->platform)
+                        ? PathTools::concatPath(v, config->platform)
                         : v;
                 config->gameListFolder = toAbsolutePath(false, v);
                 gameListFolderSet = true;
@@ -245,7 +253,13 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "frontend") {
                 if (!validateFrontend(v)) {
-                    exit(1);
+                    emit die(1,
+                             QString("configuration %1=\"%2\" is unknown in "
+                                     "section [%3]")
+                                 .arg(k)
+                                 .arg(v)
+                                 .arg(section),
+                             "Configuration cannot be applied");
                 }
                 config->frontend = v;
                 continue;
@@ -256,7 +270,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "gameBaseFile") {
                 if (!validateFileParameter(k, v)) {
-                    exit(1);
+                    emit die(
+                        1,
+                        QString(
+                            "cannot access %1= with path '%2' in section [%3]")
+                            .arg(k)
+                            .arg(v)
+                            .arg(section),
+                        "No such file or directory");
                 }
                 config->gameBaseFile = v;
             }
@@ -289,7 +310,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             if (k == "inputFolder") {
                 config->inputFolder =
                     (type == CfgType::MAIN)
-                        ? Config::concatPath(v, config->platform)
+                        ? PathTools::concatPath(v, config->platform)
                         : v;
                 inputFolderSet = true;
                 if (type != CfgType::MAIN) {
@@ -318,7 +339,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->mediaFolder =
                     (type == CfgType::MAIN ||
                      type == CfgType::FRONTEND /* #68 */)
-                        ? Config::concatPath(v, config->platform)
+                        ? PathTools::concatPath(v, config->platform)
                         : v;
                 mediaFolderSet = true;
                 continue;
@@ -341,7 +362,14 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "scummIni") {
                 if (!validateFileParameter(k, v)) {
-                    exit(1);
+                    emit die(
+                        1,
+                        QString(
+                            "cannot access %1= with path '%2' in section [%3]")
+                            .arg(k)
+                            .arg(v)
+                            .arg(section),
+                        "No such file or directory");
                 }
                 config->scummIni = v;
                 continue;
@@ -535,13 +563,19 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                        "option %s. Please fix in config.ini.\n\033[0m",
                        ss.toString().toUtf8().constData(),
                        k.toUtf8().constData());
-                exit(1);
+                emit die(
+                    1,
+                    QString("invalid integer value %1=\"%2\" in section [%3]")
+                        .arg(k)
+                        .arg(v)
+                        .arg(section),
+                    "Value must be a number");
             }
             if (k == "jpgQuality") {
                 if (0 < v && v <= 100) {
                     config->jpgQuality = v;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -549,7 +583,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 if (0 < v && v <= 10000) {
                     config->maxLength = v;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -557,7 +591,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 if (0 < v && v <= 200) {
                     config->maxFails = v;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -568,7 +602,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                     config->minMatch = v;
                     config->minMatchSet = true;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -577,7 +611,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                     config->threads = v;
                     config->threadsSet = true;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -585,7 +619,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 if (0 < v && v <= 3) {
                     config->verbosity = v;
                 } else {
-                    outOfRange(k, v);
+                    outOfRange(k, v, section);
                 }
                 continue;
             }
@@ -636,7 +670,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     } else if (config->artworkConfig.isEmpty()) {
         // failsafe: no CLI and no config.ini artworkConfig provided
         config->artworkConfig =
-            Config::concatPath(Config::getSkyFolder(), "artwork.xml");
+            PathTools::concatPath(Config::getSkyFolder(), "artwork.xml");
     }
     if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m") &&
         parser->value("m").toInt() >= 0 && parser->value("m").toInt() <= 100) {
@@ -651,7 +685,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->cacheFolderNotMain = true;
     } else if (config->cacheFolder.isEmpty()) {
         // failsafe: no CLI and no config.ini cacheFolder provided
-        config->cacheFolder = Config::concatPath(
+        config->cacheFolder = PathTools::concatPath(
             Config::getSkyFolder(Config::SkyFolderType::CACHE),
             config->platform);
     }
@@ -670,9 +704,11 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
 
     if (parser->isSet("searchstem")) {
         if (parser->isSet("searchstem-all")) {
-            puts("Cannot use both --searchstem and --searchstem-all "
-                 "at the same time, please use only one at a time. Exiting...");
-            exit(1);
+            printf("Cannot use both --searchstem and --searchstem-all "
+                   "at the same time, please use only one at a time. "
+                   "Exiting...\n");
+            emit die(2, "surplus parameter for searchstem",
+                     "Cannot apply both --searchstem and --searchstem-all");
         }
         QString exts = parser->value("searchstem");
         config->searchStem = exts.toLower() == "all"
@@ -708,7 +744,10 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             printf("\033[1;31mInvalid parameter '--cache %s'\033[0m, "
                    "please check '--cache help' for more info.\n",
                    config->cacheOptions.toStdString().c_str());
-            exit(2);
+            emit die(
+                2, "invalid cache command",
+                QString("Cannot apply --cache %1").arg(config->cacheOptions));
+
         } else if (config->cacheOptions == "refresh") {
             config->refresh = true;
             config->cacheOptions = "";
@@ -724,7 +763,9 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
                     "\033[1;31mInvalid purge: parameter '--cache %s'\033[0m, "
                     "please check '--cache help' for more info.\n",
                     config->cacheOptions.toStdString().c_str());
-                exit(2);
+                emit die(2, "invalid cache purge command",
+                         QString("Cannot apply --cache %1")
+                             .arg(config->cacheOptions));
             }
         }
     }
@@ -841,7 +882,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         printf("Unknown flag '%s', please check '--flags help' for "
                "a list of valid flags. Exiting...\n",
                flag.toStdString().c_str());
-        exit(1);
+        emit die(2, QString("unknown flag '%1'").arg(flag),
+                 "Cannot apply flags");
     }
 }
 
@@ -906,7 +948,7 @@ bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
 }
 
 bool RuntimeCfg::validateFileParameter(const QString &param, QString &val) {
-    Config::expandHomePath(val);
+    PathTools::expandHomePath(val);
     if (QFileInfo(val).isRelative()) {
         printf("Parameter %s must be absolute path, got: %s\nPlease fix!\n",
                param.toStdString().c_str(), val.toStdString().c_str());
@@ -1018,15 +1060,15 @@ bool RuntimeCfg::scraperAllowedForMatch(const QString &providedScraper,
 }
 
 QString RuntimeCfg::toAbsolutePath(bool isCliOpt, QString optionVal) {
-    Config::expandHomePath(optionVal);
+    PathTools::expandHomePath(optionVal);
     if (QFileInfo(optionVal).isRelative()) {
         // make absolute
         const QString configIniAbsPath =
             QFileInfo(config->configFile).absolutePath();
-        optionVal = Config::concatPath(
+        optionVal = PathTools::concatPath(
             isCliOpt ? config->currentDir : configIniAbsPath, optionVal);
     }
-    return Config::lexicallyNormalPath(optionVal);
+    return PathTools::lexicallyNormalPath(optionVal);
 }
 
 QString RuntimeCfg::parseExtensions(const QString &optionVal) {
@@ -1052,8 +1094,9 @@ QString RuntimeCfg::getAllExtensionsOfPlatform() {
         .remove('*');
 }
 
-void RuntimeCfg::outOfRange(QString &k, int v) {
-    printf("\033[1;33mValue of %d is out of range for option %s and is "
+void RuntimeCfg::outOfRange(QString &k, int v, const QString &section) {
+    printf("\033[1;33mValue of %d is out of range for option %s in section "
+           "[%s] and is "
            "ignored! Consult the documentation.\n\033[0m",
-           v, k.toStdString().c_str());
+           v, k.toStdString().c_str(), section.toStdString().c_str());
 }

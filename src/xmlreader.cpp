@@ -24,8 +24,8 @@
  */
 #include "xmlreader.h"
 
-#include "config.h"
 #include "gameentry.h"
+#include "pathtools.h"
 
 #include <QDebug>
 #include <QFile>
@@ -79,47 +79,47 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
         GameEntry entry;
         const QDomNode node = nodes.at(a);
 
-        entry.path = Config::makeAbsolutePath(
+        entry.path = PathTools::makeAbsolutePath(
             inputFolder, node.firstChildElement("path").text());
 
         addTextual(entry, node);
 
-        entry.coverFile = Config::makeAbsolutePath(
+        entry.coverFile = PathTools::makeAbsolutePath(
             /* inputFolder is correct here as ES reads/expects relative media
                filepath in relation to the inputFolder */
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::COVER))
                 .text());
 
-        entry.screenshotFile = Config::makeAbsolutePath(
+        entry.screenshotFile = PathTools::makeAbsolutePath(
             inputFolder, node.firstChildElement(
                                  GameEntry::getTag(GameEntry::Elem::SCREENSHOT))
                              .text());
-        entry.marqueeFile = Config::makeAbsolutePath(
+        entry.marqueeFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MARQUEE))
                 .text());
-        entry.textureFile = Config::makeAbsolutePath(
+        entry.textureFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::TEXTURE))
                 .text());
-        entry.videoFile = Config::makeAbsolutePath(
+        entry.videoFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::VIDEO))
                 .text());
         if (!entry.videoFile.isEmpty()) {
             entry.videoFormat = "fromxml";
         }
-        entry.manualFile = Config::makeAbsolutePath(
+        entry.manualFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MANUAL))
                 .text());
 
-        entry.fanartFile = Config::makeAbsolutePath(
+        entry.fanartFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::FANART))
                 .text());
-        entry.backcoverFile = Config::makeAbsolutePath(
+        entry.backcoverFile = PathTools::makeAbsolutePath(
             inputFolder, node.firstChildElement(
                                  GameEntry::getTag(GameEntry::Elem::BACKCOVER))
                              .text());

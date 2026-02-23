@@ -77,6 +77,9 @@ public:
     bool copyMedia(GameEntry::Types &, const QString &, const QString &,
                    GameEntry &);
 
+signals:
+    void die(const int &, const QString &, const QString &);
+
 protected:
     virtual QString getTargetFileName(GameEntry::Types t,
                                       const QString &baseName) {

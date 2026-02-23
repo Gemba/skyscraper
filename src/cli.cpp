@@ -254,7 +254,11 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption buildinfoOption("buildinfo",
                                        "Show Skyscraper's build information "
                                        "(for reporting an issue) and quit.");
+    QCommandLineOption stderrOption("stderr",
+                                    "If Skyscraper could not proceed, print "
+                                    "a one-line error message to stderr.");
 
+    // order alphabetically, per character: long options before short option
     parser->addOption(addextOption);
     parser->addOption(aOption);
     parser->addOption(buildinfoOption);
@@ -262,19 +266,20 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(cOption);
     parser->addOption(dOption);
     parser->addOption(endatOption);
-    parser->addOption(eOption);
     parser->addOption(excludefromOption);
     parser->addOption(excludepatternOption);
+    parser->addOption(eOption);
     parser->addOption(flagsOption);
     parser->addOption(fOption);
-    parser->addOption(gOption);
     parser->addOption(gamelistfilenameOption);
+    parser->addOption(gOption);
     parser->addHelpOption();
     parser->addOption(hintOption);
     parser->addOption(includefromOption);
     parser->addOption(includepatternOption);
     parser->addOption(iOption);
     parser->addOption(langOption);
+    parser->addOption(listExt);
     parser->addOption(lOption);
     parser->addOption(maxfailsOption);
     parser->addOption(mOption);
@@ -285,9 +290,9 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(regionOption);
     parser->addOption(searchStemOption);
     parser->addOption(searchStemAllOption);
-    parser->addOption(listExt);
-    parser->addOption(sOption);
     parser->addOption(startatOption);
+    parser->addOption(stderrOption);
+    parser->addOption(sOption);
     parser->addOption(tOption);
     parser->addOption(uOption);
     parser->addOption(verbosityOption);
@@ -389,8 +394,8 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "resources from the selected module or ALL resources rom the "
              "selected type will be removed."},
             {"refresh", "Forces a refresh of existing cached resources for any "
-                        "scraping module. Requires a scraping module set with "
-                        "'-s'. Similar to '--refresh'."},
+                        "scraping module. Equal to '--refresh'. Requires a "
+                        "scraping module set with '-s'."},
         };
     } else if (subCmd == "flags") {
         m = {
@@ -554,6 +559,7 @@ void Cli::showHint() {
 #endif
     hint = "\033[1;33mDID YOU KNOW\033[0m: " + hint;
 
+    // TODO: put into StrTools
     QStringList hintWrapped;
     int ptr = 0;
     QString line;

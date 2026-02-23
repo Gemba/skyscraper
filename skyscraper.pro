@@ -136,6 +136,7 @@ HEADERS += src/skyscraper.h \
            src/fxrotate.h \
            src/fxscanlines.h \
            src/nametools.h \
+           src/pathtools.h \
            src/queue.h
 
 SOURCES += src/main.cpp \
@@ -190,6 +191,7 @@ SOURCES += src/main.cpp \
            src/fxrotate.cpp \
            src/fxscanlines.cpp \
            src/nametools.cpp \
+           src/pathtools.cpp \
            src/queue.cpp
 
 SUBDIRS += \

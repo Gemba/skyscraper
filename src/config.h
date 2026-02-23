@@ -21,32 +21,31 @@
 #define CONFIG_H
 
 #include <QMap>
+#include <QObject>
 #include <QString>
 
-namespace Config {
+class Config : public QObject {
+    Q_OBJECT
+
+public:
     enum class FileOp { KEEP, OVERWRITE, CREATE_DIST };
     enum class SkyFolderType { CONFIG, CACHE, IMPORT, RESOURCE, REPORT, LOG };
 
     typedef QMap<SkyFolderType, QString> SkyFolders;
 
-    void initSkyFolders();
-    QString getSkyFolder(SkyFolderType type = SkyFolderType::CONFIG);
+    static QString getSkyFolder(SkyFolderType type = SkyFolderType::CONFIG);
+    static QString getRetropieVersion();
 
-    void copyFile(const QString &src, const QString &dest, bool isPristine,
-                  FileOp fileOp = FileOp::OVERWRITE);
+    void initSkyFolders();
     void setupUserConfig();
     void checkLegacyFiles();
-    bool isPlatformCfgPristine(QString platformCfgFilePath);
+    void copyFile(const QString &src, const QString &dest, bool isPristine,
+                  FileOp fileOp = FileOp::OVERWRITE);
+    int isPlatformCfgPristine(QString platformCfgFilePath);
     QString getSupportedPlatforms();
-    QString getRetropieVersion();
 
-    // TODO: These do not fit in here
-    QString concatPath(QString absPath, QString subPath);
-    QString makeAbsolutePath(const QString &prePath, QString subPath);
-    QString lexicallyRelativePath(const QString &base, const QString &other);
-    QString lexicallyNormalPath(const QString &pathWithDots);
-    QString &expandHomePath(QString &path);
-    const char *pathToCStr(QString &in);
-} // namespace Config
+signals:
+    void die(const int &, const QString &, const QString &);
+};
 
 #endif // CONFIG_H

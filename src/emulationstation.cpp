@@ -25,8 +25,8 @@
 
 #include "emulationstation.h"
 
-#include "config.h"
 #include "gameentry.h"
+#include "pathtools.h"
 #include "strtools.h"
 #include "xmlreader.h"
 
@@ -260,7 +260,7 @@ void EmulationStation::assembleList(QString &finalOutput,
         preserveFromOld(entry);
 
         if (config->relativePaths) {
-            entry.path = "./" + Config::lexicallyRelativePath(
+            entry.path = "./" + PathTools::lexicallyRelativePath(
                                     config->inputFolder, entry.path);
         }
         finalOutput.append(createXml(entry));
@@ -401,12 +401,12 @@ QString EmulationStation::elem(const QString &elem, const QString &data,
                 // fp is always different from inputFolder
                 // it is save to add "./" as it will always return sth relative
                 fp = "./" +
-                     Config::lexicallyRelativePath(config->inputFolder, fp);
+                     PathTools::lexicallyRelativePath(config->inputFolder, fp);
             } else {
                 // edge case when unattendSkip=true and a new game is added to
                 // an existing gamelist with relative paths and relativePaths
                 // has been changed from also true to false in the same run
-                fp = Config::lexicallyNormalPath(fp);
+                fp = PathTools::lexicallyNormalPath(fp);
             }
         }
         fp = StrTools::xmlEscape(fp);

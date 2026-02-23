@@ -148,6 +148,7 @@ struct Settings {
     bool skipExistingFanart = false;
     bool skipExistingBackcovers = false;
     bool miximages = false;
+    bool stdErr = false; // for AbstractScraper slot
 
     QString innerBracketsReplace = "";
     QString innerParenthesesReplace = "";
@@ -187,6 +188,9 @@ public:
 
     bool validateFrontend(const QString &providedFrontend);
 
+signals:
+    void die(const int &, const QString &, const QString &);
+
 private:
     void setFlag(const QString flag);
     QSet<QString> getKeys(CfgType type);
@@ -200,7 +204,7 @@ private:
     QString toAbsolutePath(bool isCliOpt, QString optionVal);
     QString parseExtensions(const QString &optionVal);
     QString getAllExtensionsOfPlatform();
-    void outOfRange(QString &k, int v);
+    void outOfRange(QString &k, int v, const QString &section);
 
     Settings *config;
     const QCommandLineParser *parser;

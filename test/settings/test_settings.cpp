@@ -1,6 +1,7 @@
 
 #include "cli.h"
 #include "config.h"
+#include "pathtools.h"
 #include "platform.h"
 #include "settings.h"
 
@@ -25,7 +26,8 @@ private slots:
         QSettings settings("config_paths.ini", QSettings::IniFormat);
         config.configFile = config.currentDir + "/config_paths.ini";
 
-        Config::initSkyFolders();
+        Config configCls;
+        configCls.initSkyFolders();
         QString platform = "amiga";
         QCommandLineParser *parser = new QCommandLineParser();
         Cli::createParser(parser, platform);
@@ -50,22 +52,22 @@ private slots:
 
         // test defaults for ES
         QString exp;
-        exp = Config::makeAbsolutePath(
-            Config::getSkyFolder(Config::SkyFolderType::CACHE), platform);
+        exp = PathTools::makeAbsolutePath(
+            configCls.getSkyFolder(Config::SkyFolderType::CACHE), platform);
         QCOMPARE(config.cacheFolder, exp);
 
-        exp = Config::makeAbsolutePath(Config::getSkyFolder(), "artwork.xml");
+        exp = PathTools::makeAbsolutePath(configCls.getSkyFolder(), "artwork.xml");
         QCOMPARE(config.artworkConfig, exp);
 
         // platform subfolder will be used when present in import/ but not
         // explicitly added like with gameListFolder
-        exp = Config::getSkyFolder(Config::SkyFolderType::IMPORT);
+        exp = configCls.getSkyFolder(Config::SkyFolderType::IMPORT);
         QStringList p = exp.split("/");
         p[2] = "pi";
         exp = p.join("/");
         QCOMPARE(config.importFolder, exp);
 
-        exp = Config::makeAbsolutePath("/home/pi/RetroPie/roms", platform);
+        exp = PathTools::makeAbsolutePath("/home/pi/RetroPie/roms", platform);
         QCOMPARE(config.gameListFolder, exp);
 
         exp = config.gameListFolder;
@@ -79,8 +81,8 @@ private slots:
         params.append("../rel/artworks/artwork.xml");
         parser->parse(params);
         rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
-        exp = Config::lexicallyNormalPath(
-            Config::makeAbsolutePath(config.currentDir, params.last()));
+        exp = PathTools::lexicallyNormalPath(
+            PathTools::makeAbsolutePath(config.currentDir, params.last()));
         QCOMPARE(config.artworkConfig, exp);
 
         params.removeLast();
@@ -94,7 +96,7 @@ private slots:
         params.append("./rel/gamelists/");
         parser->parse(params);
         rtConf->applyCli(inputFolderSet, gameListFolderSet, mediaFolderSet);
-        exp = Config::makeAbsolutePath(config.currentDir, params.last());
+        exp = PathTools::makeAbsolutePath(config.currentDir, params.last());
         QCOMPARE(config.gameListFolder, exp);
 
         params.removeLast();
@@ -112,29 +114,29 @@ private slots:
                                mediaFolderSet);
         settings.endGroup();
 
-        exp = Config::makeAbsolutePath(config.currentDir, "amiga_artwork.xml");
+        exp = PathTools::makeAbsolutePath(config.currentDir, "amiga_artwork.xml");
         QCOMPARE(config.artworkConfig, exp);
 
         exp =
-            Config::makeAbsolutePath(config.currentDir, "cfgini/rel/gamelist");
+            PathTools::makeAbsolutePath(config.currentDir, "cfgini/rel/gamelist");
         QCOMPARE(config.gameListFolder, exp);
 
         // Config::makeAbsolutePath is called in skyscraper.cpp:loadConfig()
-        exp = Config::makeAbsolutePath(config.gameListFolder,
+        exp = PathTools::makeAbsolutePath(config.gameListFolder,
                                        "../../rel/inout-roms");
         QCOMPARE(config.gameListFolder % "/" % config.inputFolder, exp);
 
-        exp = Config::makeAbsolutePath(config.gameListFolder, "./rel/media");
+        exp = PathTools::makeAbsolutePath(config.gameListFolder, "./rel/media");
         QCOMPARE(config.gameListFolder % config.mediaFolder.replace(".", ""),
                  exp);
 
-        exp = Config::makeAbsolutePath(config.gameListFolder, "./");
+        exp = PathTools::makeAbsolutePath(config.gameListFolder, "./");
         QCOMPARE(config.gameListFolder, exp);
 
-        exp = Config::makeAbsolutePath(config.gameListFolder, ".");
+        exp = PathTools::makeAbsolutePath(config.gameListFolder, ".");
         QCOMPARE(config.gameListFolder, exp);
 
-        exp = Config::makeAbsolutePath(config.gameListFolder, "~/dont/change");
+        exp = PathTools::makeAbsolutePath(config.gameListFolder, "~/dont/change");
         QCOMPARE("~/dont/change", exp);
     }
 
@@ -220,7 +222,7 @@ private slots:
         // QCOMPARE(config.gameListFolder, exp);
         exp = settings.value("gameListFolder");
         QCOMPARE(config.gameListFolder,
-                 Config::lexicallyNormalPath(exp.toString() + "amiga"));
+                 PathTools::lexicallyNormalPath(exp.toString() + "amiga"));
         QCOMPARE(gameListFolderSet, true);
         exp = settings.value("hints");
         QCOMPARE(config.hints, exp);
@@ -382,7 +384,7 @@ private slots:
         QCOMPARE(config.forceFilename, exp);
         exp = settings.value("gameListFolder");
         QCOMPARE(config.gameListFolder,
-                 Config::lexicallyNormalPath(exp.toString()));
+                 PathTools::lexicallyNormalPath(exp.toString()));
         exp = settings.value("importFolder");
         QCOMPARE(config.importFolder, exp);
         exp = settings.value("includeFrom");

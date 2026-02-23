@@ -847,6 +847,32 @@ Skyscraper -p snes --cache edit --startat "rom name.zip"
 Skyscraper -p snes -s thegamesdb --startat "relative/path/to/rom name.zip"
 ```
 
+### --stderr
+
+Prints a brief one-liner on `stderr` when Skyscraper ran into an error and exits with a non-zero return value. This is mainly useful when you call Skyscraper from another program. If you combine it with a redirect of `stdout` to `/dev/null` you can mute the general Skyscraper output. The format of the one-liner is: `Skyscraper: <cause>: <effect>`, thus it can be easily parsed by the calling program. Additionally, an exit code of 2 means some CLI parameter is wrong, an exit code of 1 is used by Skyscraper to signal other error conditions (with a `config.ini` setting or during runtime).
+
+**Example(s)**
+
+Try these in contrast to see the difference in output:
+
+```bash
+# Force an error condition.
+$ Skyscraper -p dontexist
+[...]
+$ Skyscraper --stderr -p dontexist
+[...]
+$ Skyscraper --stderr -p dontexist > /dev/null
+Skyscraper: ambigous platform parameter: Platform parameter missing or unknown platform provided
+$ echo $?        # returns 2 as platform is not valid
+
+# Assume input folder ~/RetroPie/roms/bbcmicro does not yet exist.
+# However, platform name is valid.
+```bash
+$ Skyscraper --stderr -p bbcmicro > /dev/null
+Skyscraper: cannot access '/home/pi/RetroPie/roms/bbcmicro': No such directory
+$ echo $?        # returns 1 as platform is valid but the input folder does not exist
+```
+
 ### --verbosity &lt;0-3&gt;
 
 Sets how verbose Skyscraper should be when running. Default level is 0. The higher the value, the more info Skyscraper will output to the terminal while running. Maximum value is 3. Consider setting this in [`config.ini`](CONFIGINI.md#verbosity) instead.

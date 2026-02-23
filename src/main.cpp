@@ -40,7 +40,7 @@
 #include <windows.h>
 #endif
 
-Skyscraper *x = nullptr;
+Skyscraper *skyscraper = nullptr;
 int sigIntRequests = 0;
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext &,
@@ -97,25 +97,25 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
 #endif
         sigIntRequests++;
         if (sigIntRequests <= 2) {
-            if (x != nullptr) {
-                if (x->state == Skyscraper::OpMode::SINGLE) {
+            if (skyscraper != nullptr) {
+                if (skyscraper->state == Skyscraper::OpMode::SINGLE) {
                     // Nothing important going on, just exit
                     exit(1);
-                } else if (x->state == Skyscraper::OpMode::NO_INTR) {
+                } else if (skyscraper->state == Skyscraper::OpMode::NO_INTR) {
                     // Ignore signal, something important is going on
                     // that needs to finish!
-                } else if (x->state == Skyscraper::OpMode::CACHE_EDIT) {
+                } else if (skyscraper->state == Skyscraper::OpMode::CACHE_EDIT) {
                     // Cache being edited, clear the queue to quit
                     // nicely
-                    x->queue->clearAll();
-                    x->state = Skyscraper::OpMode::CACHE_EDIT_DISMISS;
-                } else if (x->state == Skyscraper::OpMode::THREADED) {
+                    skyscraper->queue->clearAll();
+                    skyscraper->state = Skyscraper::OpMode::CACHE_EDIT_DISMISS;
+                } else if (skyscraper->state == Skyscraper::OpMode::THREADED) {
                     // Threads are running, clear queue for a nice exit
                     printf(
                         "\033[1;33mUser wants to quit, trying to exit "
                         "nicely. This can take a few seconds depending "
                         "on how many threads are running...\033[0m\n");
-                    x->queue->clearAll();
+                    skyscraper->queue->clearAll();
                 }
             } else {
                 exit(1);
@@ -161,25 +161,39 @@ int main(int argc, char *argv[]) {
     // need this.
     QString currentDir = QDir::currentPath();
 
-    // Install the custom debug message handler used by qDebug()
+    // Install the custom debug message handler
     qInstallMessageHandler(customMessageHandler);
 
-    Config::initSkyFolders();
-    Config::setupUserConfig();
-    Config::checkLegacyFiles();
+    skyscraper = new Skyscraper(currentDir);
+    for (char **pargv = argv+1; *pargv != argv[argc]; pargv++) {
+        if (QString(*pargv) == "--stderr") {
+            skyscraper->stdErr = true;
+            break;
+        }
+    }
+
+    Config configCls;
+    configCls.initSkyFolders();
+    configCls.setupUserConfig();
+    configCls.checkLegacyFiles();
+    QObject::connect(&configCls, &Config::die,
+                         skyscraper, &Skyscraper::bury);
 
     QCommandLineParser parser;
-    Cli::createParser(&parser, Config::getSupportedPlatforms());
+    Cli::createParser(&parser, configCls.getSupportedPlatforms());
     parser.process(app);
-
     if (argc <= 1 || parser.isSet("help") || parser.isSet("h")) {
         parser.showHelp();
     } else {
-        x = new Skyscraper(currentDir);
-        x->loadConfig(parser);
-        QObject::connect(x, &Skyscraper::finished, &app,
+        if (!parser.isSet("buildinfo")) {
+            printf("%s", StrTools::getVersionHeader().toStdString().c_str());
+        }
+        QObject::connect(skyscraper, &Skyscraper::finished, &app,
                             &QCoreApplication::quit);
-        QTimer::singleShot(0, x, SLOT(run()));
+        QObject::connect(skyscraper, &Skyscraper::die,
+                         skyscraper, &Skyscraper::bury);
+        skyscraper->loadConfig(parser);
+        QTimer::singleShot(0, skyscraper, SLOT(run()));
     }
     return app.exec();
 }
