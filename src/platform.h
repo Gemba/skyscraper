@@ -52,7 +52,7 @@ public:
 private:
     bool loadPlatformsIdMap();
     bool parsePlatformsIdCsv(const QString &fnplatformsIdCsvFn);
-    QJsonObject loadLocalConfig();
+    QJsonObject loadLocalConfig(bool &ok);
 
     QStringList platforms;
     QVariantMap peas;
