@@ -88,13 +88,20 @@ bool Platform::loadConfig() {
     QJsonDocument json(QJsonDocument::fromJson(jsonData));
 
     if (json.isNull() || json.isEmpty()) {
-        printf("\033[1;31mFile '%s' empty or no JSON format. Now "
+        printf("\033[1;31mFile '%s' empty or invalid JSON format. Now "
                "quitting...\033[0m\n",
                fnPeas.toUtf8().constData());
         return false;
     }
 
-    QJsonObject jObjLocal = loadLocalConfig();
+    bool ok = true;
+    QJsonObject jObjLocal = loadLocalConfig(ok);
+    if (!ok) {
+        printf("\033[1;31mFile '%s' has invalid JSON format. Now "
+               "quitting...\033[0m\n",
+               fnPeasLocal.toUtf8().constData());
+        return false;
+    }
     QJsonObject jObj = json.object();
 
     for (auto plit = jObjLocal.constBegin(); plit != jObjLocal.constEnd();
@@ -116,17 +123,22 @@ bool Platform::loadConfig() {
     return true;
 }
 
-QJsonObject Platform::loadLocalConfig() {
+QJsonObject Platform::loadLocalConfig(bool &ok) {
     QJsonObject peasLocal;
     QFile configFile(fnPeasLocal);
 
     if (configFile.open(QIODevice::ReadOnly)) {
         QByteArray jsonData = configFile.readAll();
-        QJsonDocument json(QJsonDocument::fromJson(jsonData));
+        QJsonParseError err;
+        QJsonDocument json(QJsonDocument::fromJson(jsonData, &err));
 
         if (!json.isNull() && !json.isEmpty()) {
             qDebug() << "successfully loaded" << fnPeasLocal;
             peasLocal = json.object();
+        } else if (err.error != QJsonParseError::NoError) {
+            qWarning()
+                << QString("JSON is malformed: %1").arg(err.errorString());
+            ok = false;
         }
     }
     return peasLocal;
@@ -234,7 +246,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
                     } else {
                         ids[col].append(-1);
                         printf("\033[1;33mFile '%s', line '%s,%s' has "
-                               "unparsable or too negative int value '%s' (use "
+                               "unparsable or too negative number '%s' (use "
                                "-1 for unknown platform id). Assumming -1 for "
                                "now, please fix to mute this warning.\033[0m\n",
                                fn, pkey.toUtf8().constData(),

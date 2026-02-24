@@ -61,10 +61,11 @@ maintain local changes to the `platforms_idmap.csv` in a separate file with a
 !!! tip "Avoid Duplication"
 
     If you need a specific folder name for a platform (on your setup or due to an
-    EmulationStation theme) use a symbolic link (for example `megadrive` (=folder)
-    and `genesis` (=symlink) on RetroPie setups or another example: `plus4`
-    (=folder) and `c16` (=symlink)) instead of duplicating the platform in the JSON
-    file.
+    EmulationStation theme) use a symbolic link. For example `megadrive` (=folder)
+    and `genesis` (=symlink) on RetroPie setups or `plus4` (=folder) and `c16`
+    (=symlink). Example for ES-DE `n3ds` (=folder) and `3ds` (=symlink) Use this
+    approach instead of duplicating the platform in the JSON file and it saves you
+    from maintaining the `*_local*` files. Command `ln -s <folder> <symlink>`
 
 ### File Two: Exact platform mapping
 
@@ -84,7 +85,11 @@ c64,66,27,40
 
 !!! tip "The Games DB"
 
-    The game data at TGDB is in rare case in different platforms to be found. Prominent example is Sega's Genesis respecitve Mega Drive. For these edgecases you may find the platform ids in the `platforms_idmap.csv` separated with an `|`. This means all platform ids will be tried to find a match in left-to-right order of the definition.
+    The game data at TGDB is in rare case in different platforms to be found.
+    Prominent example is Sega's Genesis respecitve Mega Drive. For these edgecases
+    you may find the platform ids in the `platforms_idmap.csv` separated with an
+    `|`. This means all platform ids will be tried to find a match in left-to-right
+    order of the definition.
 
 
 You can display the number with their platform name on each of the three
@@ -170,8 +175,13 @@ Example: Copy this excerpt from `peas.json`...
 ```
 
 If you have multiple platforms defined in your local file make sure the platform
-blocks are separated by a comma `,`.
-
+blocks are separated by a comma `,`.  
+To validate your `peas_local.json` file you can use the script
+`peas_validate_with_json_schema.py` (you can find it in the
+`supplementary/scraperdata` folder or sibling to the `Skyscraper` executable on
+a RetroPie installation (usually `/opt/retropie/supplementary/skyscraper/`)). See
+the comments in the script for usage, but after installing the dependency it
+boils down to provide the path to your JSON file as parameter to the script.
 
 !!! tip "Case-sensitivity in EmulationStation Configuration"
 
@@ -183,18 +193,18 @@ blocks are separated by a comma `,`.
 Outline:
 
 1. Create a file `peas_local.json` sibling to `peas.json`. Enter in this file an
-   empty `{}` JSON object.
-2. Create a new platform block in `peas_local.json` inside the outer (empty)
-   block created before, or copy an existing block and adapt to your needs. For
-   RetroPie your chosen `<platform_name>` must match the folder in
-   `~/RetroPie/roms/<platform_name>`.
-3. Use `<platform_name>` also in `platforms_idmap_local.csv`. If you need to
+   empty `{}` JSON object. Then create a new platform block in `peas_local.json`
+   inside the outer (empty) block created before, or copy an existing block and
+   adapt to your needs. For RetroPie your chosen `<platform_name>` must match
+   the folder in `~/RetroPie/roms/<platform_name>`.
+2. Use `<platform_name>` also in `platforms_idmap_local.csv`. If you need to
    create an `platforms_idmap_local.csv` put in the column names
    `folder,screenscraper_id,mobygames_id,tgdb_id` (i.e. the first line of
    `platforms_idmap.csv`) . See also below for details of this CSV-file.
-4. If you use RetroPie do add the platform/system also to your `es_systems.cfg`
+3. If you use RetroPie do add the platform/system also to your `es_systems.cfg`
    as documented in the 
    [RetroPie documentation](https://retropie.org.uk/docs/Add-a-New-System-in-EmulationStation/).
+4. That's it. Happy scraping!
 
 There is also a verbatim example, you may skip the next section initially and
 jump directly into the [hands-on example](PLATFORMS.md#sample-usecase-adding-platform-satellaview).
@@ -235,7 +245,11 @@ folder on your filesystem where you keep your games.
 
 !!! example "Use of Aliases"
 
-    The platforms ScummVM and Steam do not have an exact match on Mobygames, however you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS', 'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or `"steam": ...` section of `peas.json`. Usually you find the platforms a game runs on if you lookup the game manually on the scraping website.
+    The platforms ScummVM and Steam do not have an exact match on Mobygames, however
+    you may scrape successfully for ScummVM and Steam games if you use 'PC', 'DOS',
+    'Windows', 'Linux' or similar as `"aliases": ...` in the `"scummvm": ...` or
+    `"steam": ...` section of `peas.json`. Usually you find the platforms a game
+    runs on if you lookup the game manually on the scraping website.
 
 ### Sample Usecase: Adding Platform _Satellaview_
 
@@ -323,12 +337,12 @@ for additional information on this.
 
 - Line 3 defines the platform name, respective the folder name for your ROMs.
   Thus, Skyscraper expects to find ROMs in `/home/pi/RetroPie/roms/satellaview`.
-- Line 6 contains the extensions which are recognized by EmulationStation. These
-  extensions should be also be present in the `"formats":` block of `peas.json`.
-  However, Skyscraper uses case insensitive file extension mapping. The
-  extensions `.7z` and `.zip` are added automagically by Skyscraper, thus the
-  `"formats":` list is usually shorter than the EmulationStation `<extension/>`
-  list.
+- Line 6 contains the extensions which are recognized by EmulationStation
+  (explicitly in lowercase and UPPERCASE). These extensions should be also be
+  present in the `"formats":` block of `peas.json`. However, Skyscraper uses
+  case insensitive file extension mapping (lowercase only). The extensions `.7z`
+  and `.zip` are added automagically by Skyscraper, thus the `"formats":` list
+  is usually shorter than the EmulationStation `<extension/>` list.
 - Line 9: If your theme doesn't support Satellaview, you can also use `snes` as
   <theme> value.
 
@@ -457,7 +471,7 @@ Forum/Skyscraper Thread](https://retropie.org.uk/forum/topic/34588). Thank you!
 
 ### Migrating `platforms.json` and `screenscraper.json`
 
-This section is only applicable if you update from Skyscraper 3.7.7-2.
+This section is only applicable if you update from Skyscraper 3.7.7-2 or earlier.
 
 !!! tip
 

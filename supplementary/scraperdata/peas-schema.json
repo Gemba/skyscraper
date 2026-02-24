@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Skyscraper's Platform, Extensions, Aliases and Scraper definition format (PEAS)",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "properties": {
+      "aliases": {
+        "type": "array",
+        "description": "Alias(es) of a platform for scraping modules that do not use a platform id. They use the defined alias(es) for a platform match.",
+        "uniqueItems": true,
+        "items": { "type": "string" }
+      },
+      "formats": {
+        "type": "array",
+        "description": "Recognized gamefile extensions, lowercase, unique. Define extension beginning with '*.'.",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^\\*.[a-z0-9\\.]+$"
+        }
+      }
+    },
+    "required": ["aliases", "formats"]
+  }
+}
