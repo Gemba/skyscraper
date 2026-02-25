@@ -146,18 +146,27 @@ void GameEntry::setEsExtra(const QString &tagName, QString value,
 };
 
 const QStringList GameEntry::extraElemNames(Format type, bool isFolder) const {
-    QStringList tagNames;
-    tagNames += {"favorite",   "hidden",  "playcount",
-                 "lastplayed", "kidgame", "sortname"};
+    QStringList tagNames = QStringList({"favorite", "hidden", "kidgame",
+                                        "lastplayed", "playcount", "sortname"});
     if (type == Format::RETROPIE) {
         return tagNames;
     }
     // ES-DE
-    tagNames +=
-        {"collectionsortname", "completed",    "broken",     "nogamecount",
-         "nomultiscrape",      "hidemetadata", "controller", "altemulator"};
+    // cf. src/es-app/MetaData.cpp
+    tagNames += {"altemulator", "broken",        "collectionsortname",
+                 "completed",   "controller",    "hidemetadata",
+                 "nogamecount", "nomultiscrape", "playtime"};
     if (isFolder) {
         tagNames.append("folderlink");
+        // these are not for folders but don't care to remove them from tagNames
+        // as these tags won't be around initially anyway.
+        //
+        // "altemulator"
+        // "collectionsortname"
+        // "nogamecount"
+        // "playcount"
+        // "playtime"
+        // "sortname"
     }
     return tagNames;
 };
