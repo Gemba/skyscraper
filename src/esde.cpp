@@ -20,11 +20,21 @@
 #include "esde.h"
 
 #include "emulationstation.h"
+#include "xmlreader.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QProcessEnvironment>
+#include <QRegularExpression>
 #include <QStringBuilder>
 #include <QStringList>
+#include <QTemporaryFile>
+
+static const QRegularExpression RE_ALT_EMU =
+    QRegularExpression("(<alternativeEmulator>)(.*?)(</"
+                       "alternativeEmulator>)|(<alternativeEmulator/>)",
+                       QRegularExpression::CaseInsensitiveOption |
+                           QRegularExpression::DotMatchesEverythingOption);
 
 Esde::Esde() {}
 
@@ -38,6 +48,69 @@ inline const QString baseFolder() {
     }
 #endif
     return QString(QDir::homePath() % "/ES-DE");
+}
+
+bool Esde::loadOldGameList(const QString &gameListFileString) {
+    XmlReader gameListReader = XmlReader(config->inputFolder);
+
+    QFile esDeGamelist = QFile(gameListFileString);
+    altEmu = "";
+    // Coding Horror: For some reason ES-DE decided to create a gamelist file
+    // with two root XML elements. This clearly violates the XML standard!
+    // However, to keep the UX for ES-DE users smooth, this is a workaround. cf.
+    // #219 and https://gitlab.com/es-de/emulationstation-de/-/issues/1705
+    if (esDeGamelist.open(QIODevice::ReadOnly)) {
+        // assume the offending part in first 1K
+        QString clutter = esDeGamelist.read(1024);
+        esDeGamelist.close();
+        QRegularExpressionMatch m = RE_ALT_EMU.match(clutter);
+        if (m.hasMatch()) {
+            altEmu = m.captured(0).replace("\t", "  ") % "\n";
+            qDebug() << "Non-XML compliant ES-DE gamelist detected, applying "
+                        "workaround";
+            // move orig file
+            QString tmpFn;
+            if (QTemporaryFile tmpFile; tmpFile.open()) {
+                tmpFn = tmpFile.fileName();
+            }
+            if (!QFile::copy(gameListFileString, tmpFn)) {
+                qDebug() << "Copy failed from" << gameListFileString << "to"
+                         << tmpFn;
+                return false;
+            }
+            if (!QFile::remove(gameListFileString)) {
+                qDebug() << "Remove failed, file" << gameListFileString;
+                return false;
+            }
+            QFile invalidXmlFile = QFile(tmpFn);
+            if (invalidXmlFile.open(QIODevice::ReadOnly) &&
+                esDeGamelist.open(QIODevice::ReadWrite | QIODevice::Text)) {
+                // create a standard compliant XML
+                QString part;
+                bool replaced = false;
+                while (!invalidXmlFile.atEnd()) {
+                    part = invalidXmlFile.read(4096);
+                    if (QString tmpPart = part.remove(RE_ALT_EMU);
+                        !replaced && tmpPart.length() != part.length()) {
+                        replaced = true;
+                        part = tmpPart;
+                    };
+                    esDeGamelist.write(part.toStdString().c_str(),
+                                       part.length());
+                }
+                esDeGamelist.close();
+                invalidXmlFile.close();
+                qDebug() << "Gamelist now XML compliant, removed temporarily:"
+                         << altEmu;
+            }
+            invalidXmlFile.remove();
+        }
+    }
+    if (gameListReader.setFile(gameListFileString)) {
+        oldEntries = gameListReader.getEntries(extraGamelistTags(true));
+        return true;
+    }
+    return false;
 }
 
 void Esde::setConfig(Settings *config) {
