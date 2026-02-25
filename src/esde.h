@@ -33,6 +33,7 @@ public:
     QString getInputFolder() override;
     QString getGameListFolder() override;
     QString getMediaFolder() override;
+    bool loadOldGameList(const QString &gameListFileString) override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
@@ -40,6 +41,10 @@ protected:
     GameEntry::Types supportedMedia() override;
     bool addEmptyElement() override { return false; };
     bool gamelistHasMediaPaths() override { return false; };
+    QString taintGamelist() override { return altEmu; };
+
+private:
+    QString altEmu;
 };
 
 #endif // ESDE_H

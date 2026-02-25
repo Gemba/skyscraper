@@ -241,6 +241,7 @@ void EmulationStation::assembleList(QString &finalOutput,
     int dotMod = 1 + gameEntries.length() * 0.1;
 
     finalOutput.append("<?xml version=\"1.0\"?>\n");
+    finalOutput.append(taintGamelist());
     finalOutput.append("<gameList>\n");
 
     for (auto &entry : gameEntries) {

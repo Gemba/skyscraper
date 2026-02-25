@@ -71,6 +71,8 @@ protected:
     GameEntry::Types supportedMedia() override;
     QString elem(const QString &elem, const QString &data, bool addEmptyElem,
                  bool isPath = false);
+    // ES-DE may return <alternativeEmulator/> element
+    virtual QString taintGamelist() { return ""; };
 
 private:
     QString createXml(GameEntry &entry);
