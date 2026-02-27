@@ -32,6 +32,7 @@
 #include "pathtools.h"
 #include "queue.h"
 #include "skyscraper.h"
+#include "strtools.h"
 
 #include <QBuffer>
 #include <QDateTime>
@@ -383,14 +384,16 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
 
     int retVal = 0;
     int queueLength = queue->length();
-    printf("\033[1mEntering resource cache editing mode.\n\nThis mode allows "
-           "you to edit textual resources for your files. To add media "
-           "resources use the 'import' scraping module instead.\nYou "
-           "can provide one or more file names on command line to edit "
-           "resources for just those specific files. You can also use the "
-           "'--startat' and '--endat' command line options to narrow down the "
-           "span of the roms you wish to edit. Otherwise Skyscraper will edit "
-           "ALL files found in the input folder one by one.\033[0m\n\n");
+    const QString cacheEditHint =
+        "\033[1m\nEntering resource cache editing mode.\033[0m\nThis mode "
+        "allows you to edit textual resources for your files. To add media and "
+        "text resources use the 'import' scraping module instead.\nIn the "
+        "cache editing mode you can provide one or more file names on command "
+        "line to edit resources for just those specific files. You can also "
+        "use the '--startat' and '--endat' command line options to narrow down "
+        "the span of the roms you wish to edit. Otherwise Skyscraper will edit "
+        "ALL files found in the input folder one by one.\n";
+    printf("%s", StrTools::wrapText(cacheEditHint).toStdString().c_str());
     while (queue->hasEntry()) {
         QFileInfo info = queue->takeEntry();
         QString cacheId = getQuickId(info);

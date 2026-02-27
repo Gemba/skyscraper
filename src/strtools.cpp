@@ -407,3 +407,33 @@ QString StrTools::shortenText(QString text, int maxLength) {
         return text.left(maxLength - 5) % "[...]";
     return text;
 }
+
+QString StrTools::wrapText(const QString &inText, int width) {
+    QStringList wrappedLines;
+    int ptr = 0;
+    QString line;
+    for (auto const &ws : inText.split(' ', Qt::SkipEmptyParts)) {
+        for (auto const &wn : ws.split('\n')) {
+            bool nl = wn.isEmpty() || (wn != ws && !ws.endsWith(wn));
+            if (nl || ptr + wn.length() >= width) {
+                ptr = 0;
+                line.chop(1);
+                if (nl) {
+                    line.append(' ');
+                    line.append(wn);
+                }
+                wrappedLines.append(line);
+                line = "";
+                if (nl) {
+                    continue;
+                }
+            }
+            ptr += wn.length() + 1;
+            line.append(wn);
+            line.append(' ');
+        }
+    }
+    line.chop(1);
+    wrappedLines.append(line);
+    return wrappedLines.join("\n");
+}

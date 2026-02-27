@@ -26,25 +26,25 @@
 #ifndef STRTOOLS_H
 #define STRTOOLS_H
 
-#include <QObject>
+#include <QByteArray>
+#include <QString>
 
-class StrTools : public QObject {
-public:
-    static QString xmlUnescape(QString str);
-    static QString xmlEscape(QString str);
-    static QByteArray magic(const QByteArray str);
-    static QByteArray unMagic(const QByteArray str);
-    static QString conformPlayers(const QString str);
-    static QString conformAges(QString str);
-    static QString conformReleaseDate(QString str);
-    static QString conformTags(const QString str);
-    static QString getVersionHeader();
-    static QString getVersionBanner();
-    static QString stripBrackets(const QString str);
-    static QString stripHtmlTags(QString str);
-    static QString getMd5Sum(const QByteArray &data);
-    static QString tidyText(QString text, bool ignoreBangs);
-    static QString shortenText(QString text, int maxLength);
-};
-
+namespace StrTools {
+    QString xmlUnescape(QString str);
+    QString xmlEscape(QString str);
+    QByteArray magic(const QByteArray str);
+    QByteArray unMagic(const QByteArray str);
+    QString conformPlayers(const QString str);
+    QString conformAges(QString str);
+    QString conformReleaseDate(QString str);
+    QString conformTags(const QString str);
+    QString getVersionHeader();
+    QString getVersionBanner();
+    QString stripBrackets(const QString str);
+    QString stripHtmlTags(QString str);
+    QString getMd5Sum(const QByteArray &data);
+    QString tidyText(QString text, bool ignoreBangs);
+    QString shortenText(QString text, int maxLength);
+    QString wrapText(const QString &inText, int width = 80);
+};     // namespace StrTools
 #endif // STRTOOLS_H
