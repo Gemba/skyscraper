@@ -128,10 +128,10 @@ nix-shell -p \
   qt6.qmake \
   qt6.qtimageformats
 ```
-You may omit `p7zip` if you don't want to enable the [`unpack`](https://gemba.github.io/skyscraper/CLIHELP/?h=unp#unpack) option of Skyscraper. If you want to use the `update_skyscraper.sh` script also install `python3`. Then proceed with this [section](#updating-skyscraper) for release build or this [section](#download-compile-and-install) for a development build of `main/HEAD`.
+You may omit `p7zip` if you do not want to enable the [`unpack`](https://gemba.github.io/skyscraper/CLIHELP/?h=unp#unpack) option of Skyscraper. If you want to use the `update_skyscraper.sh` script also install `python3`. Then proceed with this [section](#updating-skyscraper) for release build or this [section](#download-compile-and-install) for a development build of `main/HEAD`.
 
 #### macOS <img src="docs/resources/os/macOS.svg" width="20px">
-Skyscraper works perfectly on macOS as well but is not officially supported as I don't own a Mac. Here are the commands needed to install the Qt6 and other prerequisites. You can skip the Qt5 _un_install if you don't have it installed:
+Skyscraper works perfectly on macOS as well but is not officially supported as I do not own a Mac. Here are the commands needed to install the Qt6 and other prerequisites. You can skip the Qt5 _un_install if you do not have it installed:
 ```
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 $ brew uninstall qt@5
@@ -227,7 +227,7 @@ If you have your roms in a non-default location (default for RetroPie users is `
 * `-g <PATH>`
 * `-o <PATH>`
 
-For almost any command line option, consider setting them in the `/home/<USER>/.skyscraper/config.ini` file as described in the detailed [config file documentation](https://gemba.github.io/skyscraper/CONFIGINI/). This will make the options permanent so you don't need to type them in all the time.
+For almost any command line option, consider setting them in the `/home/<USER>/.skyscraper/config.ini` file as described in the detailed [config file documentation](https://gemba.github.io/skyscraper/CONFIGINI/). This will make the options permanent so you do not need to type them in all the time.
 
 #### Gathering data for a subset of roms
 Skyscraper offers several ways of gathering data for a subset of roms. If you just want to scrape the roms that have no data in the cache whatsoever, you can do so with the `--onlymissing` command-line option. You can also check out the `--startat FILENAME` and `--endat FILENAME` options. If you just want to gather data for a couple of roms you can simply add the filename(s) to the end of the command-line (eg. `Skyscraper -p amiga -s openretro "/path/to/rom name 1.lha" "/path/to/rom name 2.lha"`). And probably the most advanced (and quite handy) way to gather data for a subset of roms is to make use of the `--cache report:missing=RESOURCE` option. This can generate a report containing the filenames that are missing a certain resource. You can then feed the report back into Skyscraper with the `--includefrom REPORTFILE` afterwards. Skyscraper will then only scrape the files contained in the report.

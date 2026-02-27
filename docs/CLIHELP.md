@@ -52,7 +52,7 @@ Skyscraper -p snes -c "/path/to/config.ini"
 
 ### -d &lt;PATH&gt;
 
-Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.). You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-current-working-directory).
+Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Do not change this unless you have a good reason to. The folder pointed to should be a folder with a Skyscraper `db.xml` file and its required subfolders inside of it (`covers`, `screenshots` etc.). You may provide also a relative path, which is resolved to an absolute path as documented in the [path handling](PATHHANDLING.md#by-using-current-working-directory).
 
 !!! note
 
@@ -193,7 +193,7 @@ Read more about [each scraping module](SCRAPINGMODULES.md).
 
 ### -t &lt;1-...&gt;
 
-Sets the desired number of parallel threads to be run when scraping. By default it is set to 4. You can not set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your system.
+Sets the desired number of parallel threads to be run when scraping. By default it is set to 4. You cannot set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your system.
 
 !!! note
 
@@ -219,7 +219,7 @@ Skyscraper -p snes -s screenscraper -u <userid:password>
 
 ### --addext &lt;EXTENSION&gt;
 
-If you have a rom that Skyscraper doesn't even try to gather data for, it might be because it has a file extension that isn't currently supported. This option allows you to temporarily add support for any file extension. If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper. Consider setting this in [`config.ini`](CONFIGINI.md#addextensions) instead.
+If you have a rom that Skyscraper does not even try to gather data for, it might be because it has a file extension that isn't currently supported. This option allows you to temporarily add support for any file extension. If you feel like you are using a file extension that ought to be supported by default, please report it so it can be added in a later version of Skyscraper. Consider setting this in [`config.ini`](CONFIGINI.md#addextensions) instead.
 
 **Example(s)**
 
@@ -360,7 +360,7 @@ Skyscraper -p snes --cache show
 
 #### --cache vacuum
 
-You can purge all resources that don't have any connection to your current romset for the selected platform by using the `vacuum` command. This is extremely useful if you've removed a bunch of roms from your collection and you wish to purge any cached data you don't need anymore.
+You can purge all resources that do not have any connection to your current romset for the selected platform by using the `vacuum` command. This is extremely useful if you've removed a bunch of roms from your collection and you wish to purge any cached data you do not need anymore.
 
 If no platform is specified, the vacuum operation will apply to all existing platforms stored in the cache. In this scenario, any platform-specific configurations defined in Skyscraper's configfile will be disregarded, especially any settings or commandline parameters for [`addExtensions`](CONFIGINI.md#addextensions) or [`extensions`](CONFIGINI.md#extensions).
 
@@ -383,7 +383,7 @@ If no platform is specified, the validate operation will apply to all existing p
 
 !!! note
 
-    This option doesn't clean up your game list media folders. You will need to do that yourself since Skyscraper has no idea what files you might keep in those folders. This option only relates to the resource cache database and related files.
+    This option does not clean up your game list media folders. You will need to do that yourself since Skyscraper has no idea what files you might keep in those folders. This option only relates to the resource cache database and related files.
 
 **Example(s)**
 
@@ -459,11 +459,11 @@ To enable multiple flags separate them by commas (eg. `--flags FLAG1,FLAG2`) or 
 
 #### backcovers
 
-By default Skyscraper doesn't scrape and cache game backcovers resources because not all scraping sites provide this data and also only some frontends support a boxback display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#backcovers) instead.
+By default Skyscraper does not scrape and cache game backcovers resources because not all scraping sites provide this data and also only some frontends support a boxback display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#backcovers) instead.
 
 #### fanarts
 
-By default Skyscraper doesn't scrape and cache game fanart resources because not all scraping sites provide this data and also only some frontends support fanart display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#fanarts) instead.
+By default Skyscraper does not scrape and cache game fanart resources because not all scraping sites provide this data and also only some frontends support fanart display. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#fanarts) instead.
 
 #### forcefilename
 
@@ -479,7 +479,7 @@ When gathering data from any of the scraping modules many potential entries will
 
 #### manuals
 
-By default Skyscraper doesn't scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#manuals) instead.
+By default Skyscraper does not scrape and cache game manuals resources because not all scraping sites provide this data and also only some frontends support PDF display of these game manuals. You can enable it by using this flag. Consider setting this in [`config.ini`](CONFIGINI.md#manuals) instead.
 
 #### miximages
 
@@ -633,7 +633,7 @@ Some scraping modules use file checksums to identify the game in their databases
 
 #### videos
 
-By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this flag, also explicitly set this flag to output videos for the frontend/gamelist. Consider setting this in [`config.ini`](CONFIGINI.md#videos) instead.
+By default Skyscraper does not scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this flag, also explicitly set this flag to output videos for the frontend/gamelist. Consider setting this in [`config.ini`](CONFIGINI.md#videos) instead.
 
 **Example(s)**
 
@@ -719,7 +719,7 @@ Skyscraper -p c64 --listext
 
 ### --maxfails &lt;1-200&gt;
 
-Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Don't change this unless you have a very good reason to do so.
+Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Do not change this unless you have a very good reason to do so.
 
 **Example(s)**
 
@@ -739,7 +739,7 @@ Remember to also add exactly one filename that you wish to use the override with
 
 If you apply the query option with a game filename, the flag `--refresh` (see below) is automatically set.
 
-Not all of the scraping modules are search name based. For instance, the `screenscraper` module can use a variety of different search methods. So for Screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file doesn't match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.
+Not all of the scraping modules are search name based. For instance, the `screenscraper` module can use a variety of different search methods. So for Screenscraper you also have the option of overriding the checksums it uses to search for a game. This is especially convenient in cases where a filename exists multiple times in their database and your own local file does not match with any of the connected checksums (maybe you've compressed the rom yourself). In this case you can look up one of the working checksums on the Screenscraper website (screenscraper.fr) and override the checksum.
 
 You can use any combination of `crc=<CHECKSUM>`, `md5=<CHECKSUM>`, `sha1=<CHECKSUM>` and `romnom=<FILENAME>` (without the `<` and `>`! Also "romnom" is "rom name" in French - Screenscraper is operated from France). From Skyscraper 3.17 onwards you can also omit the `romnom=` search keyword when using the title search. Most times you only need one of these, but you can combine them by separating them with a `&`.
 

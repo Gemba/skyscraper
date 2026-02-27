@@ -69,7 +69,7 @@ QList<QString> ZxInfoDk::getSearchNames(const QFileInfo &info, QString &debug) {
         }
     }
     QString baseName = info.completeBaseName();
-    // don't use baseName() as it may chop off too much
+    // do not use baseName() as it may chop off too much
     // Fix for #205
     for (auto const &ext : Platform::get()
                                .getFormats(config->platform, config->extensions,
@@ -340,7 +340,7 @@ QString ZxInfoDk::sha512FromFile(const QFileInfo &info) {
         return sha512.result().toHex();
     }
 
-    qWarning() << QString("Couldn't calculate SHA512 of rom file '%1', please "
+    qWarning() << QString("Cannot calculate SHA512 of rom file '%1', please "
                           "check permissions, filesize and try again. Scrape "
                           "result may not be accurate!")
                       .arg(info.fileName());

@@ -23,7 +23,7 @@ Skyscraper will preserve the following metadata when re-generating a game list f
 
 !!! warning "Folder Data is Not Cached"
 
-    Folder data is not cached by Skyscraper, thus if you delete your `gamelist.xml`, Skyscraper can not restore the edited folder elements from cache.
+    Folder data is not cached by Skyscraper, thus if you delete your `gamelist.xml`, Skyscraper cannot restore the edited folder elements from cache.
 
 Automatic addition of folder elements if [`addFolder`](CONFIGINI.md#addfolders) is true:  
 If at least one ROM is within a subfolder and this subfolder is not yet part of the `gamelist.xml` file, it will be added with two mandatory subelements:
@@ -272,7 +272,7 @@ Skyscraper will preserve the following metadata when re-generating a game list f
 -   Default game list location: `/home/<USER>/RetroPie/roms/<PLATFORM>`
 -   Default game list filename: `metadata.pegasus.txt`
 
-Pegasus is easy and simple to generate a game list for. Simply do `Skyscraper -p <PLATFORM> -f pegasus`. If you want to specify a custom launch command (if you are using RetroPie you don't have to, a default one will be used), you can set it on command-line with `-e "<COMMAND>"` or in `config.ini` with:
+Pegasus is easy and simple to generate a game list for. Simply do `Skyscraper -p <PLATFORM> -f pegasus`. If you want to specify a custom launch command (if you are using RetroPie you do not have to, a default one will be used), you can set it on command-line with `-e "<COMMAND>"` or in `config.ini` with:
 
 ```ini
 [pegasus]

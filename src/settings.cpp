@@ -89,7 +89,7 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                                ? "--cache report:missing=help"
                                : "--cache help");
                     emit die(2, "ambigous command --cache " % cacheOpts,
-                             "Cache subcommand can not be applied");
+                             "Cache subcommand cannot be applied");
                 }
                 noPlatformCmd = Cache::isCommandValidOnAllPlatform(cacheOpts);
                 // noPlatformCmd is true for purge:all
@@ -633,14 +633,22 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
 
 void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
                           bool &mediaFolderSet) {
-    if (parser->isSet("l") && parser->value("l").toInt() >= 0 &&
-        parser->value("l").toInt() <= 10000) {
-        config->maxLength = parser->value("l").toInt();
+    if (parser->isSet("l")) {
+        if (parser->value("l").toInt() >= 0 &&
+            parser->value("l").toInt() <= 10000) {
+            config->maxLength = parser->value("l").toInt();
+        } else {
+            outOfRange("-l", parser->value("l").toInt());
+        }
     }
-    if (parser->isSet("t") && parser->value("t").toInt() > 0 &&
-        parser->value("t").toInt() <= QThread::idealThreadCount()) {
-        config->threads = parser->value("t").toInt();
-        config->threadsSet = true;
+    if (parser->isSet("t")) {
+        if (parser->value("t").toInt() > 0 &&
+            parser->value("t").toInt() <= QThread::idealThreadCount()) {
+            config->threads = parser->value("t").toInt();
+            config->threadsSet = true;
+        } else {
+            outOfRange("-t", parser->value("t").toInt());
+        }
     }
     if (parser->isSet("e")) {
         QStringList allowedFe({"attractmode", "pegasus"});
@@ -672,10 +680,14 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->artworkConfig =
             PathTools::concatPath(Config::getSkyFolder(), "artwork.xml");
     }
-    if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m") &&
-        parser->value("m").toInt() >= 0 && parser->value("m").toInt() <= 100) {
-        config->minMatch = parser->value("m").toInt();
-        config->minMatchSet = true;
+    if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m")) {
+        if (parser->value("m").toInt() >= 0 &&
+            parser->value("m").toInt() <= 100) {
+            config->minMatch = parser->value("m").toInt();
+            config->minMatchSet = true;
+        } else {
+            outOfRange("-m", parser->value("m").toInt());
+        }
     }
     if (parser->isSet("u")) {
         config->userCreds = parser->value("u");
@@ -790,9 +802,14 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     if (parser->isSet("excludefrom")) {
         config->excludeFrom = parser->value("excludefrom");
     }
-    if (parser->isSet("maxfails") && parser->value("maxfails").toInt() >= 1 &&
-        parser->value("maxfails").toInt() <= 200) {
-        config->maxFails = parser->value("maxfails").toInt();
+    if (parser->isSet("maxfails")) {
+        if (parser->value("maxfails").toInt() >= 1 &&
+            parser->value("maxfails").toInt() <= 200) {
+            config->maxFails = parser->value("maxfails").toInt();
+
+        } else {
+            outOfRange("--maxfails", parser->value("maxfails").toInt());
+        }
     }
     if (parser->isSet("region")) {
         config->region = parser->value("region");
@@ -801,7 +818,13 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->lang = parser->value("lang");
     }
     if (parser->isSet("verbosity")) {
-        config->verbosity = parser->value("verbosity").toInt();
+        if (parser->value("verbosity").toInt() > 0 &&
+            parser->value("verbosity").toInt() <= 3) {
+            config->verbosity = parser->value("verbosity").toInt();
+
+        } else {
+            outOfRange("--verbosity", parser->value("verbosity").toInt());
+        }
     }
 }
 
@@ -1094,9 +1117,10 @@ QString RuntimeCfg::getAllExtensionsOfPlatform() {
         .remove('*');
 }
 
-void RuntimeCfg::outOfRange(QString &k, int v, const QString &section) {
-    printf("\033[1;33mValue of %d is out of range for option %s in section "
-           "[%s] and is "
+void RuntimeCfg::outOfRange(const QString &k, int v, const QString &section) {
+    QString sectionText =
+        section.isEmpty() ? "" : QString(" in section [%1]").arg(section);
+    printf("\033[1;33mValue of %d is out of range for option %s%s and is "
            "ignored! Consult the documentation.\n\033[0m",
-           v, k.toStdString().c_str(), section.toStdString().c_str());
+           v, k.toStdString().c_str(), sectionText.toStdString().c_str());
 }

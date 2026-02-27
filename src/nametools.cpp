@@ -420,7 +420,7 @@ QString NameTools::getCacheId(const QFileInfo &info) {
             }
             romFile.close();
         } else {
-            printf("Couldn't calculate cache id of rom file '%s', please check "
+            printf("Cannot calculate cache id of rom file '%s', please check "
                    "permissions and try again, now exiting...\n",
                    info.fileName().toStdString().c_str());
             exit(1);

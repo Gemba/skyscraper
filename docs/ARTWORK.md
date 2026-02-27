@@ -81,7 +81,7 @@ editor.
 <?xml version="1.0" encoding="UTF-8"?>
 ```
 
-This is a special node used to describe the XML language used in the document. Don't change it.
+This is a special node used to describe the XML language used in the document. Do not change it.
 
 #### 'artwork' node [m]
 
@@ -91,7 +91,7 @@ This is a special node used to describe the XML language used in the document. D
 </artwork>
 ```
 
-This node is the document base node. It contains all other nodes. Don't change or delete it.
+This node is the document base node. It contains all other nodes. Do not change or delete it.
 
 #### 'output' node(s) [o]
 
@@ -216,7 +216,7 @@ Sets the width and height of the layer. If either is left out it will keep the a
 </figure>
 
 When you have set width _and_ height you can control with this attribute how the image is fit into the defined dimensions. Possible values for the attribute are `aspect="ignore"`, `aspect="keep"` or `aspect="keepexpand"` (see figure). If the attribute is absent the default is `"ignore"`.  
-Setting this a non default value comes in handy if you have for example a more complex artwork definition and you want the available space best used while maintaining the aspect ratio and don't care about possible blank space (e.g., letterboxing, pillarboxing) as you may have put an extra mask layer. For more information see the [Qt documentation on this topic](https://doc.qt.io/qt-6/qt.html#AspectRatioMode-enum).
+Setting this a non default value comes in handy if you have for example a more complex artwork definition and you want the available space best used while maintaining the aspect ratio and do not care about possible blank space (e.g., letterboxing, pillarboxing) as you may have put an extra mask layer. For more information see the [Qt documentation on this topic](https://doc.qt.io/qt-6/qt.html#AspectRatioMode-enum).
 
 This attribute can also be applied on 'mask', 'frame' and 'output' nodes.
 

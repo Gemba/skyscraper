@@ -6,7 +6,7 @@ A quick note before I let you loose on the questions:
 -   For a more thorough description of the command-line options see the [command line options documentation](CLIHELP.md)
 -   You can read all about the available configuration settings in the [`config.ini` documentation](CONFIGINI.md)
 -   If you are using Skyscraper with RetroPie search their [forum](https://retropie.org.uk/forum/) or raise a question there if you are puzzled
--   If still can not wrap your head around something, please file an issue. 
+-   If still cannot wrap your head around something, please file an issue. 
 
 And now for the questions (with answers)...
 
@@ -51,7 +51,7 @@ And now for the questions (with answers)...
     ```
     The above commands _must_ be run with `sudo`, as we need root permission to reset the folders and files (hence the warning). But in general, never run anything with `sudo` unless you are specifically told to do so.
 
-??? Question "I generated a game list for the Pegasus frontend. When I fire up Pegasus the data is there, but it doesn't look very good. Why is that?"
+??? Question "I generated a game list for the Pegasus frontend. When I fire up Pegasus the data is there, but it does not look very good. Why is that?"
 
     Skyscraper contains a powerful artwork compositor that can customize the exported screenshot, boxart etc. any way you like. This is done through the `/home/<USER>/.skyscraper/artwork.xml` file. The default configuration for this file is made to look good when exporting for the default frontend EmulationStation. When you use a different frontend, you need to customize this file a bit to make it look good. For Pegasus I suggest something like this:
     ```xml
@@ -82,7 +82,7 @@ And now for the questions (with answers)...
 
     Yes, from Skyscraper 3.18 onwards. The cause is that Screenscraper is the only scraping module which by default passes the extension to the server during the scraping information along with other information (checksums, filesize).  
     When scraping a set of games use the [`--searchstem`](CLIHELP.md#-searchstem-extension) option, i.e. `--searchstem '*.<customext>'`, that way Skyscraper will explicitly query only for the filename stem (=filename without file extension) of the game file. Example: Let's assume you are using `*.desktop` as custom game file extension, then the command would be `Skyscraper -s screenscraper -p <platform> --searchstem '*.desktop'`. You may also use the config file [counterpart](CONFIGINI.md#searchstem). On top you may add `--verbosity 3` to investigate what search term is presented to the Screenscraper server.  
-    However, when querying for a single game with [`--query`](CLIHELP.md#-query-string) you don't have to specify this custom extension.
+    However, when querying for a single game with [`--query`](CLIHELP.md#-query-string) you do not have to specify this custom extension.
 
 ??? Question "I have been enrolled on IGDB, but whenever I try to scrape I get a HTTP 401 (unauthorized). How to resolve this?"
 

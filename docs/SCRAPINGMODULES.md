@@ -87,7 +87,7 @@ I strongly recommend supporting them by contributing data to the database, or by
 
 !!! note
 
-    _Exact_ file name matching does not work well for the `arcade` derived platforms in cases where a data checksum doesn't match. The reason being that `arcade` and other arcade-like platforms are made up of several subplatforms. Each of those subplatforms have a high chance of containing the same file name entry. In those cases ScreenScraper can't determine a unique game and will return an empty result.
+    _Exact_ file name matching does not work well for the `arcade` derived platforms in cases where a data checksum does not match. The reason being that `arcade` and other arcade-like platforms are made up of several subplatforms. Each of those subplatforms have a high chance of containing the same file name entry. In those cases ScreenScraper cannot determine a unique game and will return an empty result.
 
 ### TheGamesDB (TGDB)
 
