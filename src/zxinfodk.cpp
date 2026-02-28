@@ -109,7 +109,7 @@ void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,
     if (queryUrl.contains("/search?")) {
         // at least one hit
         if (jsonDoc.object()["timed_out"].toBool(true)) {
-            printf("\033[1;31mTimed out on server :(\033[0m\n");
+            ncprintf("\033[1;31mTimed out on server :(\033[0m\n");
             return;
         }
         QJsonArray jsonGamesHits =
@@ -128,7 +128,7 @@ void ZxInfoDk::getSearchResults(QList<GameEntry> &gameEntries,
         QJsonObject jsonResult = jsonDoc.object();
 
         if (queryUrl.contains("/games/") && !jsonResult["found"].toBool()) {
-            printf("\033[1;31mNot existing ID :/\033[0m\n");
+            ncprintf("\033[1;31mNot existing ID :/\033[0m\n");
             return;
         }
 
@@ -293,7 +293,7 @@ QString ZxInfoDk::getQueryUrl(QString searchName) {
         searchName = searchName.toLower().replace("id=", "");
         id = searchName.toInt();
         if (id < 1 || id > 9999999) {
-            printf("\033[1;31mProvided Id out of range.\033[0m\n");
+            ncprintf("\033[1;31mProvided Id out of range.\033[0m\n");
             return queryUrl;
         }
     }

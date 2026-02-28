@@ -87,7 +87,7 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
     // ignore '|' entries, only pick first
     int platformId = getPlatformId(config->platform)[0];
 
-    printf("Waiting as advised by MobyGames api restrictions...");
+    ncprintf("Waiting as advised by MobyGames api restrictions...");
     fflush(stdout);
     QString req =
         QString("%1?api_key=%2").arg(searchUrlPre).arg(config->password);
@@ -151,7 +151,7 @@ QString MobyGames::removeStopwords(QString &searchName) {
 
 void MobyGames::getGameData(GameEntry &game) {
     limiter.exec();
-    printf("Waiting to get game data...");
+    ncprintf("Waiting to get game data...");
     fflush(stdout);
     QStringList includes = {"covers",      "description", "developers",
                             "genres",      "publishers",  "release_date",
@@ -276,7 +276,7 @@ void MobyGames::getRating(GameEntry &game) {
 }
 
 void MobyGames::getCover(GameEntry &game) {
-    printf("Retrieve front cover: ");
+    ncprintf("Retrieve front cover: ");
 
     QJsonArray covers = jsonObj["covers"].toArray();
 
@@ -318,7 +318,7 @@ void MobyGames::getCover(GameEntry &game) {
     }
 
     if (matchIdx.isEmpty()) {
-        printf("No front covers at all for this platform.\n");
+        ncprintf("No front covers at all for this platform.\n");
         return;
     }
 
@@ -359,12 +359,12 @@ void MobyGames::getCover(GameEntry &game) {
     }
 
     if (coverUrl.isEmpty()) {
-        printf("No cover found for platform '%s' and these region prios\n"
-               "  %s\n but for these regions\n  %s.\nYou may adjust your "
-               "region prios to get a match.\n",
-               game.platform.toStdString().c_str(),
-               regionPrios.join(", ").toStdString().c_str(),
-               foundRegions.join(", ").toStdString().c_str());
+        ncprintf("No cover found for platform '%s' and these region prios\n"
+                 "  %s\n but for these regions\n  %s.\nYou may adjust your "
+                 "region prios to get a match.\n",
+                 game.platform.toStdString().c_str(),
+                 regionPrios.join(", ").toStdString().c_str(),
+                 foundRegions.join(", ").toStdString().c_str());
         return;
     }
 
@@ -374,22 +374,22 @@ void MobyGames::getCover(GameEntry &game) {
     qDebug() << coverUrl;
     game.coverData = downloadMedia(coverUrl);
     if (game.coverData.isEmpty()) {
-        printf("Unexpected download or format error.\n");
+        ncprintf("Unexpected download or format error.\n");
         return;
     }
     QImage image;
     image.loadFromData(game.coverData);
     double aspect = image.height() / (double)image.width();
     if (aspect >= 0.8) {
-        printf("OK. Region: '%s'\n", regionMatch.toStdString().c_str());
+        ncprintf("OK. Region: '%s'\n", regionMatch.toStdString().c_str());
     } else {
-        printf("Landscape mode detected. Cover discarded.\n");
+        ncprintf("Landscape mode detected. Cover discarded.\n");
         game.coverData.clear();
     }
 }
 
 void MobyGames::getScreenshot(GameEntry &game) {
-    printf("Retrieve screenshot: ");
+    ncprintf("Retrieve screenshot: ");
     fflush(stdout);
     QJsonArray jsonScreenshots = jsonObj["screenshots"].toArray();
 
@@ -419,15 +419,15 @@ void MobyGames::getScreenshot(GameEntry &game) {
     }
 
     if (dlUrl.isEmpty()) {
-        printf("No screenshots available.\n");
+        ncprintf("No screenshots available.\n");
         return;
     }
     game.screenshotData = downloadMedia(dlUrl.replace("http://", "https://"));
     if (!game.screenshotData.isEmpty()) {
-        printf("OK. Picked screenshot #%d of %d, caption '%s'.\n", pick,
-               imgCount, caption.toStdString().c_str());
+        ncprintf("OK. Picked screenshot #%d of %d, caption '%s'.\n", pick,
+                 imgCount, caption.toStdString().c_str());
     } else {
-        printf("No screenshot available.\n");
+        ncprintf("No screenshot available.\n");
     }
 }
 
@@ -459,7 +459,7 @@ bool MobyGames::apiRequest(const QString &url) {
         }
 
         if (jsonDoc.object()["code"].toInt() == 429) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
             qDebug() << "Got 429, round:" << retry;
             retry++;
@@ -469,10 +469,11 @@ bool MobyGames::apiRequest(const QString &url) {
             break;
         }
     }
-    printf("\n");
+    ncprintf("\n");
     if (jsonDoc.object()["code"].toInt() == 429) {
-        printf("\033[1;31mToo many requests signaled! Please wait a while and "
-               "try again.\nNow quitting...\033[0m\n");
+        ncprintf(
+            "\033[1;31mToo many requests signaled! Please wait a while and "
+            "try again.\nNow quitting...\033[0m\n");
         reqRemaining = 0;
         return false;
     }

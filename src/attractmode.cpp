@@ -82,12 +82,12 @@ void AttractMode::skipExisting(QList<GameEntry> &gameEntries,
                                QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
-    printf("Resolving missing entries...");
+    ncprintf("Resolving missing entries...");
     int dots = 0;
     for (auto const &ge : gameEntries) {
         dots++;
         if (dots % 100 == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
         for (auto qi = queue->begin(), end = queue->end(); qi != end; ++qi) {
@@ -99,7 +99,7 @@ void AttractMode::skipExisting(QList<GameEntry> &gameEntries,
             }
         }
     }
-    printf(" \033[1;32mDone!\033[0m\n");
+    ncprintf(" \033[1;32mDone!\033[0m\n");
 }
 
 void AttractMode::preserveFromOld(GameEntry &entry) {
@@ -161,7 +161,7 @@ void AttractMode::assembleList(QString &finalOutput,
 
     for (auto &entry : gameEntries) {
         if (++dots % dotMod == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
 
@@ -209,8 +209,9 @@ void AttractMode::assembleList(QString &finalOutput,
 
 void AttractMode::checkReqs() {
     if (config->frontendExtra.isEmpty()) {
-        printf("Frontend 'attractmode' requires emulator set with '-e'. Check "
-               "'--help' for more information.\n");
+        ncprintf(
+            "Frontend 'attractmode' requires emulator set with '-e'. Check "
+            "'--help' for more information.\n");
         emit die(
             1, "incomplete configuration",
             "Frontend 'attractmode' requires '-e' or 'emulator=' to be set");
@@ -230,7 +231,7 @@ void AttractMode::checkReqs() {
         }
     }
 
-    printf("Looking for emulator cfg file:\n");
+    ncprintf("Looking for emulator cfg file:\n");
 
     // For RetroPie this is linked directly to
     // /opt/retropie/configs/all/attractmode/emulators/
@@ -241,7 +242,7 @@ void AttractMode::checkReqs() {
         return;
     }
 
-    printf("Cannot locate emulator cfg file, exiting...\n");
+    ncprintf("Cannot locate emulator cfg file, exiting...\n");
     emit die(1,
              QString("can neither access '%1' nor '%2")
                  .arg(config->frontendExtra)
@@ -251,14 +252,14 @@ void AttractMode::checkReqs() {
 
 bool AttractMode::checkEmulatorFile(QString fileName) {
     QFileInfo info(fileName);
-    printf("Trying '%s'... ", info.absoluteFilePath().toStdString().c_str());
+    ncprintf("Trying '%s'... ", info.absoluteFilePath().toStdString().c_str());
 
     if (info.exists() && info.isFile()) {
         config->frontendExtra = info.absoluteFilePath();
-        printf("\033[1;32mFound!\033[0m\n\n");
+        ncprintf("\033[1;32mFound!\033[0m\n\n");
         return true;
     } else {
-        printf("Not found!\n");
+        ncprintf("Not found!\n");
         return false;
     }
 }

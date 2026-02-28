@@ -171,7 +171,7 @@ bool Cache::createFolders(const QString &scraper) {
 bool Cache::read() {
     QFile quickIdFile(quickIdFilePath());
     if (quickIdFile.open(QIODevice::ReadOnly)) {
-        printf("Reading and parsing quick id xml, please wait... ");
+        ncprintf("Reading and parsing quick id xml, please wait... ");
         fflush(stdout);
         QXmlStreamReader xml(&quickIdFile);
         while (!xml.atEnd()) {
@@ -193,12 +193,12 @@ bool Cache::read() {
             pair.second = attribs.value(ATTR_ID).toString();
             quickIds[attribs.value(ATTR_FILEPATH).toString()] = pair;
         }
-        printf("\033[1;32mDone!\033[0m\n");
+        ncprintf("\033[1;32mDone!\033[0m\n");
     }
 
     QFile cacheFile(dbFilePath());
     if (cacheFile.open(QIODevice::ReadOnly)) {
-        printf("Building file lookup cache, please wait... ");
+        ncprintf("Building file lookup cache, please wait... ");
         fflush(stdout);
 
         QSet<QString> fileEntries;
@@ -212,12 +212,12 @@ bool Cache::read() {
                 fileEntries.insert(it.next());
             }
         }
-        printf("\033[1;32mDone!\033[0m\n");
+        ncprintf("\033[1;32mDone!\033[0m\n");
         int count = static_cast<int>(fileEntries.count());
-        printf("Cached %d %s\n\n", count,
-               pluralizeWordStd("file", count != 1).c_str());
+        ncprintf("Cached %d %s\n\n", count,
+                 pluralizeWordStd("file", count != 1).c_str());
 
-        printf("Reading and parsing resource cache, please wait... ");
+        ncprintf("Reading and parsing resource cache, please wait... ");
         fflush(stdout);
         QXmlStreamReader xml(&cacheFile);
         while (!xml.atEnd()) {
@@ -230,7 +230,7 @@ bool Cache::read() {
             QXmlStreamAttributes attribs = xml.attributes();
             if (!attribs.hasAttribute(ATTR_SHA1_LEGACY) &&
                 !attribs.hasAttribute(ATTR_ID)) {
-                printf("Resource is missing unique id, skipping...\n");
+                ncprintf("Resource is missing unique id, skipping...\n");
                 continue;
             }
 
@@ -252,24 +252,24 @@ bool Cache::read() {
                 resource.type = attribs.value(ATTR_TYPE).toString();
                 addToResCounts(resource.source, resource.type);
             } else {
-                printf("Resource with cache id '%s' is missing 'type' "
-                       "attribute, skipping...\n",
-                       resource.cacheId.toStdString().c_str());
+                ncprintf("Resource with cache id '%s' is missing 'type' "
+                         "attribute, skipping...\n",
+                         resource.cacheId.toStdString().c_str());
                 continue;
             }
             if (attribs.hasAttribute(ATTR_TS)) {
                 resource.timestamp = attribs.value(ATTR_TS).toULongLong();
             } else {
-                printf("Resource with cache id '%s' is missing 'timestamp' "
-                       "attribute, skipping...\n",
-                       resource.cacheId.toStdString().c_str());
+                ncprintf("Resource with cache id '%s' is missing 'timestamp' "
+                         "attribute, skipping...\n",
+                         resource.cacheId.toStdString().c_str());
                 continue;
             }
             resource.value = xml.readElementText();
             if (binTypes().contains(resource.type) &&
                 !fileEntries.contains(cacheDir.path() % "/" % resource.value)) {
-                printf("Source file '%s' missing, skipping entry...\n",
-                       resource.value.toStdString().c_str());
+                ncprintf("Source file '%s' missing, skipping entry...\n",
+                         resource.value.toStdString().c_str());
                 continue;
             }
 
@@ -277,9 +277,9 @@ bool Cache::read() {
         }
         cacheFile.close();
         resAtLoad = resources.length();
-        printf("\033[1;32mDone!\033[0m\n");
-        printf("Successfully parsed %d resources!\n\n",
-               static_cast<int>(resources.length()));
+        ncprintf("\033[1;32mDone!\033[0m\n");
+        ncprintf("Successfully parsed %d resources!\n\n",
+                 static_cast<int>(resources.length()));
         return true;
     }
     return false;
@@ -289,7 +289,7 @@ void Cache::printPriorities(QString cacheId) {
     GameEntry game;
     game.cacheId = cacheId;
     fillBlanks(game);
-    printf("\033[1;34mCurrent resource priorities for this rom:\033[0m\n");
+    ncprintf("\033[1;34mCurrent resource priorities for this rom:\033[0m\n");
 
     const QList<QPair<QString /*key*/,
                       QPair<QString /* resVal */, QString /* resSrc */>>>
@@ -313,9 +313,9 @@ void Cache::printPriorities(QString cacheId) {
         if (resSrc.isEmpty()) {
             resSrc = QString("\033[1;31mmissing\033[0m");
         }
-        printf("%s'\033[1;32m%s\033[0m' (%s)\n",
-               keyPadded.toStdString().c_str(), resVal.toStdString().c_str(),
-               resSrc.toStdString().c_str());
+        ncprintf("%s'\033[1;32m%s\033[0m' (%s)\n",
+                 keyPadded.toStdString().c_str(), resVal.toStdString().c_str(),
+                 resSrc.toStdString().c_str());
     }
 
     const QList<QPair<QString, QString>> prioBinRes = {
@@ -329,44 +329,46 @@ void Cache::printPriorities(QString cacheId) {
     for (auto const &e : prioBinRes) {
         QString key = QString("%1:%2").arg(
             e.first, pad.left(pad.length() - e.first.length()));
-        printf("%s'", key.toStdString().c_str());
+        ncprintf("%s'", key.toStdString().c_str());
         if (e.second.isEmpty()) {
-            printf("\033[1;31mNO\033[0m' ()\n");
+            ncprintf("\033[1;31mNO\033[0m' ()\n");
         } else {
-            printf("\033[1;32mYES\033[0m' (%s)\n",
-                   e.second.toStdString().c_str());
+            ncprintf("\033[1;32mYES\033[0m' (%s)\n",
+                     e.second.toStdString().c_str());
         }
     }
-    printf("Description:    (%s)\n'\033[1;32m%s\033[0m'",
-           (game.descriptionSrc.isEmpty() ? QString("\033[1;31mmissing\033[0m")
-                                          : game.descriptionSrc)
-               .toStdString()
-               .c_str(),
-           game.description.toStdString().c_str());
-    printf("\n\n");
+    ncprintf("Description:    (%s)\n'\033[1;32m%s\033[0m'",
+             (game.descriptionSrc.isEmpty()
+                  ? QString("\033[1;31mmissing\033[0m")
+                  : game.descriptionSrc)
+                 .toStdString()
+                 .c_str(),
+             game.description.toStdString().c_str());
+    ncprintf("\n\n");
 }
 
 void Cache::printCacheEditMenu() {
-    printf("\033[1;34mWhat would you like to do?\033[0m\n"
-           "\033[1;33mRET\033[0m) Press Enter to continue to next rom in queue "
-           "and\n     after last rom save changes + quit\n");
-    printf("\033[1;33m  s\033[0m) Show current resource priorities for this "
-           "rom\n");
-    printf("\033[1;33m  S\033[0m) Show all cached resources for this rom\n");
-    printf(
+    ncprintf(
+        "\033[1;34mWhat would you like to do?\033[0m\n"
+        "\033[1;33mRET\033[0m) Press Enter to continue to next rom in queue "
+        "and\n     after last rom save changes + quit\n");
+    ncprintf("\033[1;33m  s\033[0m) Show current resource priorities for this "
+             "rom\n");
+    ncprintf("\033[1;33m  S\033[0m) Show all cached resources for this rom\n");
+    ncprintf(
         "\033[1;33m  n\033[0m) Create new prioritized resource for this rom\n");
-    printf("\033[1;33m  d\033[0m) Remove specific resource connected to this "
-           "rom\n");
-    printf(
+    ncprintf("\033[1;33m  d\033[0m) Remove specific resource connected to this "
+             "rom\n");
+    ncprintf(
         "\033[1;33m  D\033[0m) Remove ALL resources connected to this rom\n");
-    printf("\033[1;33m  m\033[0m) Remove ALL resources connected to this rom "
-           "from a specific module\n");
-    printf("\033[1;33m  t\033[0m) Remove ALL resources connected to this rom "
-           "of a specific type\n");
-    printf("\033[1;33m  q\033[0m) Save all cache changes and quit (or use "
-           "\033[1;33mw\033[0m)\n");
-    printf("\033[1;33m  c\033[0m) Dismiss all cache changes and exit (or use "
-           "\033[1;33mx\033[0m)\n");
+    ncprintf("\033[1;33m  m\033[0m) Remove ALL resources connected to this rom "
+             "from a specific module\n");
+    ncprintf("\033[1;33m  t\033[0m) Remove ALL resources connected to this rom "
+             "of a specific type\n");
+    ncprintf("\033[1;33m  q\033[0m) Save all cache changes and quit (or use "
+             "\033[1;33mw\033[0m)\n");
+    ncprintf("\033[1;33m  c\033[0m) Dismiss all cache changes and exit (or use "
+             "\033[1;33mx\033[0m)\n");
 }
 
 int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
@@ -375,10 +377,10 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
     if (command == "new" && !txtTypes().contains(type)) {
         QStringList sortedTypes = txtTypes();
         sortedTypes.sort();
-        printf("\033[1;31mUnknown resource type '%s', please specify "
-               "one of the following:\033[0m '%s'.\n",
-               type.toStdString().c_str(),
-               sortedTypes.join("', '").toStdString().c_str());
+        ncprintf("\033[1;31mUnknown resource type '%s', please specify "
+                 "one of the following:\033[0m '%s'.\n",
+                 type.toStdString().c_str(),
+                 sortedTypes.join("', '").toStdString().c_str());
         return -1;
     }
 
@@ -393,7 +395,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
         "use the '--startat' and '--endat' command line options to narrow down "
         "the span of the roms you wish to edit. Otherwise Skyscraper will edit "
         "ALL files found in the input folder one by one.\n";
-    printf("%s", StrTools::wrapText(cacheEditHint).toStdString().c_str());
+    ncprintf(StrTools::wrapText(cacheEditHint).toStdString().c_str());
     while (queue->hasEntry()) {
         QFileInfo info = queue->takeEntry();
         QString cacheId = getQuickId(info);
@@ -404,17 +406,17 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
         bool doneEdit = false;
         printPriorities(cacheId);
         while (!doneEdit) {
-            printf("\033[1m#%d of %d: "
-                   "%s\033[0m\n",
-                   queueLength - static_cast<int>(queue->length()), queueLength,
-                   info.fileName().toStdString().c_str());
+            ncprintf("\033[1m#%d of %d: "
+                     "%s\033[0m\n",
+                     queueLength - static_cast<int>(queue->length()),
+                     queueLength, info.fileName().toStdString().c_str());
             std::string userInput = "";
             if (command.isEmpty()) {
                 printCacheEditMenu();
-                printf("> ");
+                ncprintf("> ");
                 getline(std::cin, userInput);
                 userInput = trim(userInput);
-                printf("\n");
+                ncprintf("\n");
             } else {
                 if (command == "new") {
                     userInput = "n";
@@ -427,7 +429,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
             } else if (userInput == "s") {
                 printPriorities(cacheId);
             } else if (userInput == "S") {
-                printf("\033[1;34mResources connected to this rom:\033[0m\n");
+                ncprintf("\033[1;34mResources connected to this rom:\033[0m\n");
                 QMap<QString, QList<QPair<QString, QString>>> connectedRes;
                 int lenType = 0;
                 int lenSrc = 0;
@@ -447,7 +449,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
                 if (connectedRes.isEmpty()) {
-                    printf("None\n");
+                    ncprintf("None\n");
                 } else {
                     for (auto const &t : getKeywordOrder()) {
                         QList<QPair<QString, QString>> l = connectedRes[t];
@@ -468,7 +470,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                           .arg("(" % kv.first % ")", lenSrc + 2)
                                           .arg(t == "description" ? "\n" : " ")
                                           .arg(kv.second);
-                                printf("%s", tpl.toStdString().c_str());
+                                ncprintf("%s", tpl.toStdString().c_str());
                                 k++;
                             }
                         }
@@ -480,8 +482,8 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 fillBlanks(game);
                 std::string typeInput = "";
                 if (type.isEmpty()) {
-                    printf("\033[1;34mWhich resource type would you like to "
-                           "create?\033[0m (Enter to cancel)\n");
+                    ncprintf("\033[1;34mWhich resource type would you like to "
+                             "create?\033[0m (Enter to cancel)\n");
                     const QList<QPair<QString, QString>> newResMenuItems = {
                         {"TItle", game.titleSrc},
                         {"Platform", game.platformSrc},
@@ -499,14 +501,14 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         const QString value =
                             (e.second.isEmpty() ? "(\033[1;31mmissing\033[0m)"
                                                 : "");
-                        printf("\033[1;33m %2d\033[0m) %s %s\n", idx++,
-                               e.first.toStdString().c_str(),
-                               value.toStdString().c_str());
+                        ncprintf("\033[1;33m %2d\033[0m) %s %s\n", idx++,
+                                 e.first.toStdString().c_str(),
+                                 value.toStdString().c_str());
                     }
-                    printf("> ");
+                    ncprintf("> ");
                     getline(std::cin, typeInput);
                     typeInput = trim(typeInput);
-                    printf("\n");
+                    ncprintf("\n");
                 } else {
                     int idx = txtTypes().indexOf(type);
                     if (idx > -1) {
@@ -514,7 +516,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
                 if (typeInput == "") {
-                    printf("Resource creation cancelled...\n\n");
+                    ncprintf("Resource creation cancelled...\n\n");
                     continue;
                 } else {
                     Resource newRes;
@@ -531,68 +533,73 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     int tint = tmpInput.toInt(&ok);
                     if (!ok ||
                         (tint > txtTypes(false).length() - 1 || tint < 0)) {
-                        printf("Invalid input, resource creation "
-                               "cancelled...\n\n");
+                        ncprintf("Invalid input, resource creation "
+                                 "cancelled...\n\n");
                         continue;
                     }
                     newRes.type = txtTypes(false)[tint];
                     if (tint == 0) {
-                        printf("\033[1;34mPlease enter title:\033[0m (Enter to "
-                               "cancel)\n> ");
+                        ncprintf(
+                            "\033[1;34mPlease enter title:\033[0m (Enter to "
+                            "cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else if (tint == 1) {
-                        printf("\033[1;34mPlease enter platform:\033[0m (Enter "
-                               "to cancel)\n> ");
+                        ncprintf(
+                            "\033[1;34mPlease enter platform:\033[0m (Enter "
+                            "to cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else if (tint == 2) {
-                        printf("\033[1;34mPlease enter a release date in the "
-                               "format 'yyyy-MM-dd':\033[0m (Enter to "
-                               "cancel)\n> ");
+                        ncprintf("\033[1;34mPlease enter a release date in the "
+                                 "format 'yyyy-MM-dd':\033[0m (Enter to "
+                                 "cancel)\n> ");
                         getline(std::cin, valueInput);
                         expression = "^[1-2]{1}[0-9]{3}-[0-1]{1}[0-9]{1}-[0-3]{"
                                      "1}[0-9]{1}$";
                     } else if (tint == 3) {
-                        printf("\033[1;34mPlease enter developer:\033[0m "
-                               "(Enter to cancel)\n> ");
+                        ncprintf("\033[1;34mPlease enter developer:\033[0m "
+                                 "(Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else if (tint == 4) {
-                        printf("\033[1;34mPlease enter publisher:\033[0m "
-                               "(Enter to cancel)\n> ");
+                        ncprintf("\033[1;34mPlease enter publisher:\033[0m "
+                                 "(Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else if (tint == 5) {
-                        printf(
+                        ncprintf(
                             "\033[1;34mPlease enter highest number of players "
                             "such as '4':\033[0m (Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                         expression = "^[0-9]{1,2}$";
                     } else if (tint == 6) {
-                        printf("\033[1;34mPlease enter lowest age this should "
-                               "be played at such as '10' which means "
-                               "10+:\033[0m (Enter to cancel)\n> ");
+                        ncprintf(
+                            "\033[1;34mPlease enter lowest age this should "
+                            "be played at such as '10' which means "
+                            "10+:\033[0m (Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                         expression = "^[0-9]{1}[0-9]{0,1}$";
                     } else if (tint == 7) {
-                        printf("\033[1;34mPlease enter comma-separated genres "
-                               "in the format 'Platformer, "
-                               "Sidescrolling':\033[0m (Enter to cancel)\n> ");
+                        ncprintf(
+                            "\033[1;34mPlease enter comma-separated genres "
+                            "in the format 'Platformer, "
+                            "Sidescrolling':\033[0m (Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                     } else if (tint == 8) {
-                        printf("\033[1;34mPlease enter game rating from 0.0 to "
-                               "1.0:\033[0m (Enter to cancel)\n> ");
+                        ncprintf(
+                            "\033[1;34mPlease enter game rating from 0.0 to "
+                            "1.0:\033[0m (Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
-                        expression = "^[0-1]{1}\\.{1}[0-9]{1}[0-9]{0,1}$";
+                        expression = "^(1.0|[0]?\\.[\\d][\\d]?)$";
                     } else if (tint == 9) {
-                        printf(
+                        ncprintf(
                             "\033[1;34mPlease enter game description. Type "
                             "'\\n' for newlines:\033[0m (Enter to cancel)\n> ");
                         getline(std::cin, valueInput);
                     }
                     QString value = valueInput.c_str();
-                    printf("\n");
+                    ncprintf("\n");
                     value.replace("\\n", "\n");
                     value = value.trimmed();
                     if (valueInput == "") {
-                        printf("Resource creation cancelled...\n\n");
+                        ncprintf("Resource creation cancelled...\n\n");
                         continue;
                     } else if (!value.isEmpty() &&
                                QRegularExpression(expression)
@@ -612,23 +619,24 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         }
                         resources.append(newRes);
                         if (updated) {
-                            printf("[\033[1;34m*\033[0m] Updated existing ");
+                            ncprintf("[\033[1;34m*\033[0m] Updated existing ");
                         } else {
-                            printf("[\033[1;32m+\033[0m] Added ");
+                            ncprintf("[\033[1;32m+\033[0m] Added ");
                         }
-                        printf("resource with value '\033[1;32m%s\033[0m'\n\n",
-                               value.toStdString().c_str());
+                        ncprintf(
+                            "resource with value '\033[1;32m%s\033[0m'\n\n",
+                            value.toStdString().c_str());
                         continue;
                     } else {
-                        printf("\033[1;31mWrong format, resource hasn't been "
-                               "added...\033[0m\n\n");
+                        ncprintf("\033[1;31mWrong format, resource hasn't been "
+                                 "added...\033[0m\n\n");
                         continue;
                     }
                 }
             } else if (userInput == "d") {
-                printf("\033[1;34mWhich resource would you like to "
-                       "remove?\033[0m (number or cancel with just Enter or "
-                       "'0')\n");
+                ncprintf("\033[1;34mWhich resource would you like to "
+                         "remove?\033[0m (number or cancel with just Enter or "
+                         "'0')\n");
                 // TODO: almost identical to code at "S" command
                 QMap<QString, QList<QStringList>> connectedRes;
                 QMap<int, QString> idxCacheIdMap;
@@ -652,7 +660,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
                 if (connectedRes.isEmpty()) {
-                    printf("No resources found, cancelling...\n\n");
+                    ncprintf("No resources found, cancelling...\n\n");
                     continue;
                 } else {
                     for (auto const &t : getKeywordOrder()) {
@@ -675,7 +683,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                           .arg("(" % rvals[1] % ")", lenSrc + 2)
                                           .arg(t == "description" ? "\n" : " ")
                                           .arg(rvals[3]);
-                                printf("%s", tpl.toStdString().c_str());
+                                ncprintf("%s", tpl.toStdString().c_str());
                                 k++;
                                 idxCacheIdMap[idx] =
                                     rvals[0] % rvals[1] % rvals[2];
@@ -684,15 +692,15 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         }
                     }
                 }
-                printf("\033[1;34mYour choice?\033[0m (0-%d, 0=cancel)\n",
-                       idx - 1);
-                printf("> ");
+                ncprintf("\033[1;34mYour choice?\033[0m (0-%d, 0=cancel)\n",
+                         idx - 1);
+                ncprintf("> ");
                 std::string typeInput = "";
                 getline(std::cin, typeInput);
                 typeInput = trim(typeInput);
-                printf("\n");
+                ncprintf("\n");
                 if (typeInput == "" || typeInput == "0") {
-                    printf("Resource removal cancelled...\n\n");
+                    ncprintf("Resource removal cancelled...\n\n");
                     continue;
                 } else {
                     int chosen = atoi(typeInput.c_str());
@@ -709,13 +717,13 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         QString delType = resources[idxInResList].type;
                         QString delSource = resources[idxInResList].source;
                         resources.removeAt(idxInResList);
-                        printf("[\033[1;31m-\033[0m] Removed resource: %s "
-                               "(%s)\n\n",
-                               delType.toStdString().c_str(),
-                               delSource.toStdString().c_str());
+                        ncprintf("[\033[1;31m-\033[0m] Removed resource: %s "
+                                 "(%s)\n\n",
+                                 delType.toStdString().c_str(),
+                                 delSource.toStdString().c_str());
 
                     } else {
-                        printf("Invalid input, cancelling...\n\n");
+                        ncprintf("Invalid input, cancelling...\n\n");
                     }
                 }
             } else if (userInput == "D") {
@@ -724,23 +732,23 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 while (it.hasNext()) {
                     Resource res = it.next();
                     if (res.cacheId == cacheId) {
-                        printf("[\033[1;31m-\033[0m] Removed "
-                               "\033[1;33m%s\033[0m (%s) with "
-                               "value '\033[1;32m%s\033[0m'\n",
-                               res.type.toStdString().c_str(),
-                               res.source.toStdString().c_str(),
-                               res.value.toStdString().c_str());
+                        ncprintf("[\033[1;31m-\033[0m] Removed "
+                                 "\033[1;33m%s\033[0m (%s) with "
+                                 "value '\033[1;32m%s\033[0m'\n",
+                                 res.type.toStdString().c_str(),
+                                 res.source.toStdString().c_str(),
+                                 res.value.toStdString().c_str());
                         it.remove();
                         found = true;
                     }
                 }
                 if (!found)
-                    printf("No resources found for this rom...\n");
-                printf("\n");
+                    ncprintf("No resources found for this rom...\n");
+                ncprintf("\n");
             } else if (userInput == "m") {
-                printf("\033[1;34mResources from which module would you like "
-                       "to remove?\033[0m (module name or press Enter to "
-                       "cancel)\n");
+                ncprintf("\033[1;34mResources from which module would you like "
+                         "to remove?\033[0m (module name or press Enter to "
+                         "cancel)\n");
                 QMap<QString, int> modules;
                 int lenSrc = 0;
                 for (const auto &res : resources) {
@@ -758,18 +766,18 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                   -(lenSrc + 13))
                               .arg(it.value(), 2)
                               .arg(pluralizeWord("resource", it.value() != 1));
-                    printf("%s", tpl.toStdString().c_str());
+                    ncprintf("%s", tpl.toStdString().c_str());
                 }
                 if (modules.isEmpty()) {
-                    printf("No resources found, cancelling...\n\n");
+                    ncprintf("No resources found, cancelling...\n\n");
                     continue;
                 }
-                printf("> ");
+                ncprintf("> ");
                 std::string typeInput = "";
                 getline(std::cin, typeInput);
-                printf("\n");
+                ncprintf("\n");
                 if (typeInput == "") {
-                    printf("Resource removal cancelled...\n\n");
+                    ncprintf("Resource removal cancelled...\n\n");
                     continue;
                 } else if (modules.contains(QString(typeInput.c_str()))) {
                     QMutableListIterator<Resource> it(resources);
@@ -782,19 +790,19 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("[\033[1;31m-\033[0m] Removed %d %s connected to "
-                           "rom from "
-                           "module '\033[1;32m%s\033[0m'\n\n",
-                           removed,
-                           pluralizeWordStd("resource", removed != 1).c_str(),
-                           typeInput.c_str());
+                    ncprintf("[\033[1;31m-\033[0m] Removed %d %s connected to "
+                             "rom from "
+                             "module '\033[1;32m%s\033[0m'\n\n",
+                             removed,
+                             pluralizeWordStd("resource", removed != 1).c_str(),
+                             typeInput.c_str());
                 } else {
-                    printf("No resources from module '\033[1;32m%s\033[0m' "
-                           "found, cancelling...\n\n",
-                           typeInput.c_str());
+                    ncprintf("No resources from module '\033[1;32m%s\033[0m' "
+                             "found, cancelling...\n\n",
+                             typeInput.c_str());
                 }
             } else if (userInput == "t") {
-                printf(
+                ncprintf(
                     "\033[1;34mResources of which type would you like to "
                     "remove?\033[0m (enter type or press Enter to cancel)\n");
                 QMap<QString, int> types;
@@ -815,20 +823,20 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                       -(lenType + 13))
                                   .arg(count, 2)
                                   .arg(pluralizeWord("resource", count != 1));
-                        printf("%s", tpl.toStdString().c_str());
+                        ncprintf("%s", tpl.toStdString().c_str());
                     }
                 }
                 if (types.isEmpty()) {
-                    printf("No resources found, cancelling...\n\n");
+                    ncprintf("No resources found, cancelling...\n\n");
                     continue;
                 }
-                printf("> ");
+                ncprintf("> ");
                 std::string typeInput = "";
                 getline(std::cin, typeInput);
                 typeInput = trim(typeInput);
-                printf("\n");
+                ncprintf("\n");
                 if (typeInput == "") {
-                    printf("Resource removal cancelled...\n\n");
+                    ncprintf("Resource removal cancelled...\n\n");
                     continue;
                 } else if (types.contains(QString(typeInput.c_str()))) {
                     QMutableListIterator<Resource> it(resources);
@@ -841,19 +849,20 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                             removed++;
                         }
                     }
-                    printf("[\033[1;31m-\033[0m] Removed %d %s connected to "
-                           "rom of "
-                           "type '\033[1;32m%s\033[0m'\n\n",
-                           removed,
-                           pluralizeWordStd("resource", removed != 1).c_str(),
-                           typeInput.c_str());
+                    ncprintf("[\033[1;31m-\033[0m] Removed %d %s connected to "
+                             "rom of "
+                             "type '\033[1;32m%s\033[0m'\n\n",
+                             removed,
+                             pluralizeWordStd("resource", removed != 1).c_str(),
+                             typeInput.c_str());
                 } else {
-                    printf("No resources of type '\033[1;32m%s\033[0m' found, "
-                           "cancelling...\n\n",
-                           typeInput.c_str());
+                    ncprintf(
+                        "No resources of type '\033[1;32m%s\033[0m' found, "
+                        "cancelling...\n\n",
+                        typeInput.c_str());
                 }
             } else if (userInput == "c" || userInput == "x") {
-                printf(
+                ncprintf(
                     "[\033[1;33m!\033[0m] Exiting without saving changes.\n");
                 queue->clear();
                 doneEdit = true;
@@ -863,8 +872,8 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 doneEdit = true;
                 continue;
             } else {
-                printf("Choice '\033[1;31m%s\033[0m' not recognized!\n\n",
-                       userInput.c_str());
+                ncprintf("Choice '\033[1;31m%s\033[0m' not recognized!\n\n",
+                         userInput.c_str());
             }
         }
     }
@@ -890,7 +899,7 @@ bool Cache::purgeResources(QString purgeStr) {
         "module is '\033[1;33m%1\033[0m' and type is '\033[1;33m%2\033[0m'");
     msg = msg.arg(module.isEmpty() ? "<any>" : module)
               .arg(type.isEmpty() ? "<any>" : type);
-    printf("Purging resources where %s...\n", msg.toStdString().c_str());
+    ncprintf("Purging resources where %s...\n", msg.toStdString().c_str());
 
     int purged = 0;
 
@@ -912,33 +921,34 @@ bool Cache::purgeResources(QString purgeStr) {
         }
     }
     if (purged == 0) {
-        printf("No resources for the current platform found or no match for "
-               "the criteria.\n");
+        ncprintf("No resources for the current platform found or no match for "
+                 "the criteria.\n");
         return false;
     } else {
-        printf("Successfully purged %d %s from the resource cache.\n", purged,
-               pluralizeWordStd("resource", purged != 1).c_str());
+        ncprintf("Successfully purged %d %s from the resource cache.\n", purged,
+                 pluralizeWordStd("resource", purged != 1).c_str());
     }
     return true;
 }
 
 bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
     if (!unattend) {
-        printf("\033[1;31mWARNING! You are about to remove ALL "
-               "resources from the Skyscaper cache connected to the currently "
-               "selected platform. THIS CANNOT BE UNDONE!\033[0m\n\n");
-        printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+        ncprintf(
+            "\033[1;31mWARNING! You are about to remove ALL "
+            "resources from the Skyscaper cache connected to the currently "
+            "selected platform. THIS CANNOT BE UNDONE!\033[0m\n\n");
+        ncprintf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
         std::string userInput = "";
         getline(std::cin, userInput);
         userInput = trim(userInput);
         if (userInput != "y") {
-            printf("User chose not to continue, cancelling purge...\n\n");
+            ncprintf("User chose not to continue, cancelling purge...\n\n");
             return false;
         }
     }
 
-    printf("Purging ALL resources for %s platform, please wait...",
-           cacheDir.dirName().toStdString().c_str());
+    ncprintf("Purging ALL resources for %s platform, please wait...",
+             cacheDir.dirName().toStdString().c_str());
 
     int purged = 0;
     int dots = 0;
@@ -947,7 +957,7 @@ bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
     QMutableListIterator<Resource> it(resources);
     while (it.hasNext()) {
         if (dots % dotMod == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
         dots++;
@@ -959,16 +969,16 @@ bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
         purged++;
     }
     if (purged == 0) {
-        printf("\033[1;32m Foiled!\033[0m\n");
-        printf("No resources for the current platform found in the resource "
-               "cache.\n");
+        ncprintf("\033[1;32m Foiled!\033[0m\n");
+        ncprintf("No resources for the current platform found in the resource "
+                 "cache.\n");
         return false;
     } else {
-        printf("\033[1;32m Done!\033[0m\n");
-        printf("Successfully purged %d %s from the resource cache.\n", purged,
-               pluralizeWordStd("resource", purged != 1).c_str());
+        ncprintf("\033[1;32m Done!\033[0m\n");
+        ncprintf("Successfully purged %d %s from the resource cache.\n", purged,
+                 pluralizeWordStd("resource", purged != 1).c_str());
     }
-    printf("\n");
+    ncprintf("\n");
     return true;
 }
 
@@ -979,16 +989,16 @@ bool Cache::isCommandValidOnAllPlatform(const QString &command) {
 }
 
 void Cache::purgeAllOnAllPlatforms(Settings &config, Skyscraper *app) {
-    printf("\033[1;31mWARNING! You are about to remove ALL "
-           "resources for EVERY platform from the Skyscaper cache. Please "
-           "consider making a backup of your Skyscraper cache before "
-           "performing this action. THIS CANNOT BE UNDONE!\033[0m\n\n");
-    printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+    ncprintf("\033[1;31mWARNING! You are about to remove ALL "
+             "resources for EVERY platform from the Skyscaper cache. Please "
+             "consider making a backup of your Skyscraper cache before "
+             "performing this action. THIS CANNOT BE UNDONE!\033[0m\n\n");
+    ncprintf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
     std::string userInput = "";
     getline(std::cin, userInput);
     userInput = trim(userInput);
     if (userInput != "y") {
-        printf("User chose not to continue, cancelling purge...\n\n");
+        ncprintf("User chose not to continue, cancelling purge...\n\n");
         return;
     }
 
@@ -1027,17 +1037,17 @@ bool Cache::reportAllPlatform(Settings &config, Skyscraper *app) {
 }
 
 void Cache::vacuumAllPlatform(Settings &config, Skyscraper *app) {
-    printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
-           "resources that do not match your current romset. Please consider "
-           "making a backup of your "
-           "Skyscraper cache before performing this action. THIS CANNOT BE "
-           "UNDONE!\033[0m\n\n");
-    printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+    ncprintf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
+             "resources that do not match your current romset. Please consider "
+             "making a backup of your "
+             "Skyscraper cache before performing this action. THIS CANNOT BE "
+             "UNDONE!\033[0m\n\n");
+    ncprintf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
     std::string userInput = "";
     getline(std::cin, userInput);
     userInput = trim(userInput);
     if (userInput != "y") {
-        printf("User chose not to continue, cancelling vacuum...\n\n");
+        ncprintf("User chose not to continue, cancelling vacuum...\n\n");
         return;
     }
 
@@ -1097,10 +1107,10 @@ QList<QFileInfo> Cache::getFileInfos(const QString &inputFolder,
             fileInfos.append(dirIt.fileInfo());
         }
         if (fileInfos.isEmpty()) {
-            printf("Input folder returned no entries...\n");
+            ncprintf("Input folder returned no entries...\n");
         }
     } else {
-        printf("Found less than two suffix filters. Something is wrong...\n");
+        ncprintf("Found less than two suffix filters. Something is wrong...\n");
     }
     return fileInfos;
 }
@@ -1111,7 +1121,7 @@ QList<QString> Cache::getCacheIdList(const QList<QFileInfo> &fileInfos) {
     int dotMod = fileInfos.size() * 0.1 + 1;
     for (const auto &info : fileInfos) {
         if (dots % dotMod == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
         dots++;
@@ -1156,25 +1166,25 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
     for (const auto &resType : resTypeList) {
         if (!binTypes().contains(resType) &&
             !txtTypes(false).contains(resType)) {
-            printf("\033[1;31mUnknown resource type '%s'!\033[0m\n",
-                   resType.toStdString().c_str());
+            ncprintf("\033[1;31mUnknown resource type '%s'!\033[0m\n",
+                     resType.toStdString().c_str());
             Cli::cacheReportMissingUsage();
             return false;
         }
     }
 
-    printf("Creating %s for resource %s:\n",
-           pluralizeWordStd("report", resTypeList.size() != 1).c_str(),
-           pluralizeWordStd("type", resTypeList.size() != 1).c_str());
-    printf("  %s\n", resTypeList.join(", ").toStdString().c_str());
+    ncprintf("Creating %s for resource %s:\n",
+             pluralizeWordStd("report", resTypeList.size() != 1).c_str(),
+             pluralizeWordStd("type", resTypeList.size() != 1).c_str());
+    ncprintf("  %s\n", resTypeList.join(", ").toStdString().c_str());
 
     // Create the reports folder
     QDir reportsDir(Config::getSkyFolder(Config::SkyFolderType::REPORT));
     if (!reportsDir.exists()) {
         if (!reportsDir.mkpath(".")) {
-            printf("Cannot create reports folder '%s'. Please check "
-                   "permissions then try again...\n",
-                   reportsDir.absolutePath().toStdString().c_str());
+            ncprintf("Cannot create reports folder '%s'. Please check "
+                     "permissions then try again...\n",
+                     reportsDir.absolutePath().toStdString().c_str());
             return false;
         }
     }
@@ -1188,15 +1198,15 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
         fileInfos.filterFiles(config.includePattern, true);
     }
     int count = static_cast<int>(fileInfos.length());
-    printf("%d compatible %s found for the '%s' platform!\n", count,
-           pluralizeWordStd("file", count != 1).c_str(),
-           config.platform.toStdString().c_str());
-    printf("Creating file id list for all files, please wait...");
+    ncprintf("%d compatible %s found for the '%s' platform!\n", count,
+             pluralizeWordStd("file", count != 1).c_str(),
+             config.platform.toStdString().c_str());
+    ncprintf("Creating file id list for all files, please wait...");
     QList<QString> cacheIdList = getCacheIdList(fileInfos);
-    printf("\n\n");
+    ncprintf("\n\n");
 
     if (fileInfos.length() != cacheIdList.length()) {
-        printf(
+        ncprintf(
             "Length of cache id list mismatch the number of files, "
             "something is wrong! Please file an issue. Cannot continue...\n");
         return false;
@@ -1211,10 +1221,10 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
                           .arg(resType)
                           .arg(dateTime);
         QFile reportFile(rFn);
-        printf("Assembling report for platform '\033[1;32m%s\033[0m' and "
-               "resource '\033[1;32m%s\033[0m', please wait...",
-               config.platform.toStdString().c_str(),
-               resType.toStdString().c_str());
+        ncprintf("Assembling report for platform '\033[1;32m%s\033[0m' and "
+                 "resource '\033[1;32m%s\033[0m', please wait...",
+                 config.platform.toStdString().c_str(),
+                 resType.toStdString().c_str());
 
         if (fileInfos.length() > 0 && reportFile.open(QIODevice::WriteOnly)) {
             int missing = 0;
@@ -1223,7 +1233,7 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
 
             for (int a = 0; a < fileInfos.length(); ++a) {
                 if (dots % dotMod == 0) {
-                    printf(".");
+                    ncprintf(".");
                     fflush(stdout);
                 }
                 dots++;
@@ -1243,31 +1253,34 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
             }
             hasMissing |= missing > 0;
             reportFile.close();
-            printf("\033[1;32m Done!\033[0m\n\033[1;33m  %d of %d %s "
-                   "miss the '%s' resource.\033[0m\n",
-                   missing, static_cast<int>(fileInfos.length()),
-                   pluralizeWordStd("file", fileInfos.length() != 1).c_str(),
-                   resType.toStdString().c_str());
+            ncprintf("\033[1;32m Done!\033[0m\n\033[1;33m  %d of %d %s "
+                     "miss the '%s' resource.\033[0m\n",
+                     missing, static_cast<int>(fileInfos.length()),
+                     pluralizeWordStd("file", fileInfos.length() != 1).c_str(),
+                     resType.toStdString().c_str());
             if (missing > 0) {
-                printf("  Files in: %s\n", PathTools::pathToCStr(rFn));
+                ncprintf("  Files in: %s\n",
+                         PathTools::pathToStdStr(rFn).c_str());
             }
-            printf("\n");
+            ncprintf("\n");
         } else {
-            printf("Report file could not be opened for writing, please check "
-                   "permissions of folder '%s', then try "
-                   "again...\n",
-                   Config::getSkyFolder(Config::SkyFolderType::REPORT)
-                       .toStdString()
-                       .c_str());
+            ncprintf(
+                "Report file could not be opened for writing, please check "
+                "permissions of folder '%s', then try "
+                "again...\n",
+                Config::getSkyFolder(Config::SkyFolderType::REPORT)
+                    .toStdString()
+                    .c_str());
             return false;
         }
     }
     if (hasMissing) {
-        printf("\033[1;32mAll done!\033[0m\nConsider using the "
-               "'\033[1;33m--cache edit --includefrom <REPORTFILE>\033[0m' or "
-               "the '\033[1;33m-s import\033[0m' module to add the missing "
-               "resources. Check '\033[1;33m--help\033[0m' and "
-               "'\033[1;33m--cache help\033[0m' for more information.\n\n");
+        ncprintf(
+            "\033[1;32mAll done!\033[0m\nConsider using the "
+            "'\033[1;33m--cache edit --includefrom <REPORTFILE>\033[0m' or "
+            "the '\033[1;33m-s import\033[0m' module to add the missing "
+            "resources. Check '\033[1;33m--help\033[0m' and "
+            "'\033[1;33m--cache help\033[0m' for more information.\n\n");
     }
     return true;
 }
@@ -1276,24 +1289,25 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                             const int verbosity, const bool unattend) {
     if (!unattend) {
         std::string userInput = "";
-        printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
-               "resources that do not match your current romset (files located "
-               "at '%s' or any of its subdirectories matching the suffixes "
-               "supported by the platform and any extension(s) you might have "
-               "added manually). Please consider making a backup of your "
-               "Skyscraper cache before performing this action. The cache for "
-               "this platform is listed under 'Cache folder' further up and is "
-               "usually located under '%s' unless you've "
-               "set it manually.\033[0m\n\n",
-               inputFolder.toStdString().c_str(),
-               Config::getSkyFolder(Config::SkyFolderType::CACHE)
-                   .toStdString()
-                   .c_str());
-        printf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
+        ncprintf(
+            "\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
+            "resources that do not match your current romset (files located "
+            "at '%s' or any of its subdirectories matching the suffixes "
+            "supported by the platform and any extension(s) you might have "
+            "added manually). Please consider making a backup of your "
+            "Skyscraper cache before performing this action. The cache for "
+            "this platform is listed under 'Cache folder' further up and is "
+            "usually located under '%s' unless you've "
+            "set it manually.\033[0m\n\n",
+            inputFolder.toStdString().c_str(),
+            Config::getSkyFolder(Config::SkyFolderType::CACHE)
+                .toStdString()
+                .c_str());
+        ncprintf("\033[1;34mDo you wish to continue\033[0m (y/N)? ");
         getline(std::cin, userInput);
         userInput = trim(userInput);
         if (userInput != "y") {
-            printf("User chose not to continue, cancelling vacuum...\n\n");
+            ncprintf("User chose not to continue, cancelling vacuum...\n\n");
             return false;
         }
     }
@@ -1310,12 +1324,12 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
     quickIds = quickIdsCleaned;
     QList<QString> cacheIdList = getCacheIdList(fileInfos);
     if (cacheIdList.isEmpty()) {
-        printf("No cache id's found, something is wrong, cancelling...\n");
+        ncprintf("No cache id's found, something is wrong, cancelling...\n");
         return false;
     }
 
-    printf("Vacuuming cache for %s platform, hang on...\n",
-           cacheDir.dirName().toStdString().c_str());
+    ncprintf("Vacuuming cache for %s platform, hang on...\n",
+             cacheDir.dirName().toStdString().c_str());
 
     int vacuumed = 0;
     {
@@ -1334,35 +1348,36 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                     continue;
                 }
                 if (verbosity > 1)
-                    printf("Purged resource for '%s' with value '%s'...\n",
-                           res.cacheId.toStdString().c_str(),
-                           res.value.toStdString().c_str());
+                    ncprintf("Purged resource for '%s' with value '%s'...\n",
+                             res.cacheId.toStdString().c_str(),
+                             res.value.toStdString().c_str());
                 it.remove();
                 vacuumed++;
             }
         }
     }
-    printf("\033[1;32m Done!\033[0m\n");
+    ncprintf("\033[1;32m Done!\033[0m\n");
     if (vacuumed == 0) {
-        printf("All resources match a file in your romset. Done with "
-               "housekeeping.\n");
+        ncprintf("All resources match a file in your romset. Done with "
+                 "housekeeping.\n");
         return false;
     } else {
-        printf("Successfully vacuumed %d resources from the resource cache.\n",
-               vacuumed);
+        ncprintf(
+            "Successfully vacuumed %d resources from the resource cache.\n",
+            vacuumed);
     }
-    printf("\n");
+    ncprintf("\n");
     return true;
 }
 
 void Cache::showStats(int verbosity) {
-    printf("Resource cache stats for selected platform:\n");
+    ncprintf("Resource cache stats for selected platform:\n");
     if (verbosity == 1) {
         printStats(true); /* totals */
     } else if (verbosity > 1) {
         printStats(false); /* per scrape module */
     }
-    printf("\n");
+    ncprintf("\n");
 }
 
 void Cache::printStats(bool totals) {
@@ -1376,8 +1391,8 @@ void Cache::printStats(bool totals) {
         {"Backcovers", 0}};
     for (auto it = resCountsMap.begin(); it != resCountsMap.end(); ++it) {
         if (!totals) {
-            printf("'\033[1;32m%s\033[0m' module\n",
-                   it.key().toStdString().c_str());
+            ncprintf("'\033[1;32m%s\033[0m' module:\n",
+                     it.key().toStdString().c_str());
         }
         resTotals["Titles"] += it.value().titles;
         resTotals["Platforms"] += it.value().platforms;
@@ -1400,15 +1415,16 @@ void Cache::printStats(bool totals) {
         resTotals["Backcovers"] += it.value().backcovers;
         if (!totals) {
             for (auto it = resTotals.begin(); it != resTotals.end(); ++it) {
-                printf("  %12s : %d\n", it.key().toStdString().c_str(),
-                       it.value());
+                ncprintf("  %12s: %3d\n", it.key().toStdString().c_str(),
+                         it.value());
                 it.value() = 0;
             }
         }
     }
     if (totals) {
         for (auto it = resTotals.cbegin(); it != resTotals.cend(); ++it) {
-            printf("  %12s : %d\n", it.key().toStdString().c_str(), it.value());
+            ncprintf("  %12s: %3d\n", it.key().toStdString().c_str(),
+                     it.value());
         }
     }
 }
@@ -1458,16 +1474,16 @@ void Cache::addToResCounts(const QString source, const QString type) {
 void Cache::readPriorities() {
     QDomDocument prioDoc;
     QFile prioFile(prioFilePath());
-    printf("Looking for optional '\033[1;33mpriorities.xml\033[0m' file in "
-           "cache folder... ");
+    ncprintf("Looking for optional '\033[1;33mpriorities.xml\033[0m' file in "
+             "cache folder... ");
     if (prioFile.open(QIODevice::ReadOnly)) {
-        printf("\033[1;32mFound!\033[0m\n");
+        ncprintf("\033[1;32mFound!\033[0m\n");
         if (!prioDoc.setContent(prioFile.readAll())) {
-            printf("Document is not XML compliant, skipping...\n\n");
+            ncprintf("Document is not XML compliant, skipping...\n\n");
             return;
         }
     } else {
-        printf("Not found, skipping...\n\n");
+        ncprintf("Not found, skipping...\n\n");
         return;
     }
 
@@ -1477,16 +1493,17 @@ void Cache::readPriorities() {
     for (int a = 0; a < orderNodes.length(); ++a) {
         QDomElement orderElem = orderNodes.at(a).toElement();
         if (!orderElem.hasAttribute(ATTR_TYPE)) {
-            printf("  %02d. Priority 'order' node missing 'type' attribute, "
-                   "skipping...\n",
-                   ++errors);
+            ncprintf("  %02d. Priority 'order' node missing 'type' attribute, "
+                     "skipping...\n",
+                     ++errors);
             continue;
         }
         QString type = orderElem.attribute(ATTR_TYPE);
         if (prioMap.contains(type)) {
-            printf("  %02d. another entry for type '%s' found, remove surplus "
-                   "entry to fix. Skipping this one...\n",
-                   ++errors, type.toStdString().c_str());
+            ncprintf(
+                "  %02d. another entry for type '%s' found, remove surplus "
+                "entry to fix. Skipping this one...\n",
+                ++errors, type.toStdString().c_str());
             continue;
         }
         QList<QString> sources;
@@ -1494,9 +1511,9 @@ void Cache::readPriorities() {
         sources.append(SRC_USER);
         QDomNodeList sourceNodes = orderNodes.at(a).childNodes();
         if (sourceNodes.isEmpty()) {
-            printf("  %02d. 'source' node(s) missing for type '%s' in "
-                   "priorities.xml, skipping...\n",
-                   ++errors, type.toStdString().c_str());
+            ncprintf("  %02d. 'source' node(s) missing for type '%s' in "
+                     "priorities.xml, skipping...\n",
+                     ++errors, type.toStdString().c_str());
             continue;
         }
         for (int b = 0; b < sourceNodes.length(); ++b) {
@@ -1504,14 +1521,14 @@ void Cache::readPriorities() {
         }
         prioMap[type] = sources;
     }
-    printf("Priorities loaded successfully");
+    ncprintf("Priorities loaded successfully");
     if (errors > 0) {
-        printf(", but \033[1;33m%d error%s encountered\033[0m in %s, please "
-               "correct this",
-               errors, errors == 1 ? "" : "s",
-               prioFilePath().toStdString().c_str());
+        ncprintf(", but \033[1;33m%d error%s encountered\033[0m in %s, please "
+                 "correct this",
+                 errors, errors == 1 ? "" : "s",
+                 PathTools::pathToStdStr(prioFilePath()).c_str());
     }
-    printf("!\n");
+    ncprintf("!\n");
 }
 
 bool Cache::write(const bool onlyQuickId) {
@@ -1519,7 +1536,7 @@ bool Cache::write(const bool onlyQuickId) {
 
     QFile quickIdFile(quickIdFilePath());
     if (quickIdFile.open(QIODevice::WriteOnly)) {
-        printf("Writing quick id xml, please wait... ");
+        ncprintf("Writing quick id xml, please wait... ");
         fflush(stdout);
         QXmlStreamWriter xml(&quickIdFile);
         xml.setAutoFormatting(true);
@@ -1534,7 +1551,7 @@ bool Cache::write(const bool onlyQuickId) {
         }
         xml.writeEndElement();
         xml.writeEndDocument();
-        printf("\033[1;32mDone!\033[0m\n");
+        ncprintf("\033[1;32mDone!\033[0m\n");
         quickIdFile.close();
         if (onlyQuickId) {
             return true;
@@ -1546,8 +1563,9 @@ bool Cache::write(const bool onlyQuickId) {
     if (cacheFile.open(QIODevice::WriteOnly)) {
         int resCountNew = static_cast<int>(resources.length());
         int delta = resCountNew - resAtLoad;
-        printf("Writing %d (%d%s) resources to cache, please wait... ",
-               resCountNew, delta, delta < 0 ? "" : " new");
+        ncprintf("Writing %d (%d%s) resource%s to cache, please wait... ",
+                 resCountNew, delta, delta < 0 ? "" : " new",
+                 resCountNew == 1 ? "" : "s");
         fflush(stdout);
         QXmlStreamWriter xml(&cacheFile);
         xml.setAutoFormatting(true);
@@ -1565,7 +1583,7 @@ bool Cache::write(const bool onlyQuickId) {
         xml.writeEndElement();
         xml.writeEndDocument();
         result = true;
-        printf("\033[1;32mDone!\033[0m\n\n");
+        ncprintf("\033[1;32mDone!\033[0m\n\n");
         cacheFile.close();
     }
     return result;
@@ -1576,12 +1594,12 @@ bool Cache::write(const bool onlyQuickId) {
 void Cache::validate() {
     // TODO: Add format checks for each resource type, and remove if deemed
     // corrupt
-    printf("Starting resource cache validation run for %s platform, please "
-           "wait...\n",
-           cacheDir.dirName().toStdString().c_str());
+    ncprintf("Starting resource cache validation run for %s platform, please "
+             "wait...\n",
+             cacheDir.dirName().toStdString().c_str());
 
     if (!QFileInfo::exists(dbFilePath())) {
-        printf("'db.xml' not found, cache cleaning cancelled...\n");
+        ncprintf("'db.xml' not found, cache cleaning cancelled...\n");
         return;
     }
 
@@ -1598,18 +1616,18 @@ void Cache::validate() {
     }
 
     if (filesDeleted == 0 && notDeletedCount == 0) {
-        printf("No inconsistencies found in the database. :)\n\n");
+        ncprintf("No inconsistencies found in the database. :)\n\n");
     } else {
-        printf("Successfully deleted %d %s with no resource entry.\n",
-               filesDeleted,
-               pluralizeWordStd("file", filesDeleted != 1).c_str());
+        ncprintf("Successfully deleted %d %s with no resource entry.\n",
+                 filesDeleted,
+                 pluralizeWordStd("file", filesDeleted != 1).c_str());
         if (notDeletedCount != 0) {
-            printf("%d %s cannot be deleted, please check file "
-                   "permissions and re-run with '--cache validate'.\n",
-                   notDeletedCount,
-                   pluralizeWordStd("file", notDeletedCount != 1).c_str());
+            ncprintf("%d %s cannot be deleted, please check file "
+                     "permissions and re-run with '--cache validate'.\n",
+                     notDeletedCount,
+                     pluralizeWordStd("file", notDeletedCount != 1).c_str());
         }
-        printf("\n");
+        ncprintf("\n");
     }
 }
 
@@ -1626,13 +1644,13 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
     while (dirIt.hasNext()) {
         QFileInfo fileInfo(dirIt.next());
         if (!resFileNames.contains(fileInfo.absoluteFilePath())) {
-            printf("No resource entry for file '%s', deleting... ",
-                   fileInfo.absoluteFilePath().toStdString().c_str());
+            ncprintf("No resource entry for file '%s', deleting... ",
+                     fileInfo.absoluteFilePath().toStdString().c_str());
             if (QFile::remove(fileInfo.absoluteFilePath())) {
-                printf("OK!\n");
+                ncprintf("OK!\n");
                 filesDeleted++;
             } else {
-                printf("ERROR! File cannot be deleted :/\n");
+                ncprintf("ERROR! File cannot be deleted :/\n");
                 notDeletedCount++;
             }
         }
@@ -1641,7 +1659,7 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
 
 void Cache::merge(Cache &mergeCache, bool overwrite,
                   const QString &mergeCacheFolder) {
-    printf("Merging databases, please wait...\n");
+    ncprintf("Merging databases, please wait...\n");
     QList<Resource> mergeResources = mergeCache.getResources();
 
     QDir mergeCacheDir(mergeCacheFolder);
@@ -1680,8 +1698,8 @@ void Cache::merge(Cache &mergeCache, bool overwrite,
                 if (!QFile::copy(mergeCacheDir.path() + "/" +
                                      mergeResource.value,
                                  absTgtFile)) {
-                    printf("Cannot copy media file '%s', skipping...\n",
-                           mergeResource.value.toStdString().c_str());
+                    ncprintf("Cannot copy media file '%s', skipping...\n",
+                             mergeResource.value.toStdString().c_str());
                     continue;
                 }
             }
@@ -1693,10 +1711,10 @@ void Cache::merge(Cache &mergeCache, bool overwrite,
             resources.append(mergeResource);
         }
     }
-    printf("Successfully updated %d %s in cache!\n", resUpdated,
-           pluralizeWordStd("resource", resUpdated != 1).c_str());
-    printf("Successfully merged %d new %s into cache!\n\n", resMerged,
-           pluralizeWordStd("resource", resMerged != 1).c_str());
+    ncprintf("Successfully updated %d %s in cache!\n", resUpdated,
+             pluralizeWordStd("resource", resUpdated != 1).c_str());
+    ncprintf("Successfully merged %d new %s into cache!\n\n", resMerged,
+             pluralizeWordStd("resource", resMerged != 1).c_str());
 }
 
 QList<Resource> Cache::getResources() { return resources; }
@@ -1834,11 +1852,11 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                     b.close();
                     if (scaled && imageData->size() > resizedData.size()) {
                         if (config.verbosity >= 3) {
-                            printf("%s: '%d' > '%d', choosing resize for "
-                                   "optimal result!\n",
-                                   resource.type.toStdString().c_str(),
-                                   static_cast<int>(imageData->size()),
-                                   static_cast<int>(resizedData.size()));
+                            ncprintf("%s: '%d' > '%d', choosing resize for "
+                                     "optimal result!\n",
+                                     resource.type.toStdString().c_str(),
+                                     static_cast<int>(imageData->size()),
+                                     static_cast<int>(resizedData.size()));
                         }
                         *imageData = resizedData;
                     }
@@ -1909,8 +1927,8 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
             // add record to cache index
             resources.append(resource);
         } else {
-            printf("\033[1;33mWarning! Cannot add resource to cache. Have "
-                   "you run out of disk space?\n\033[0m");
+            ncprintf("\033[1;33mWarning! Cannot add resource to cache. Have "
+                     "you run out of disk space?\n\033[0m");
         }
     }
 }
@@ -2186,8 +2204,8 @@ bool Cache::fillType(const QString &type, QList<Resource> &matchingResources,
 bool Cache::removeMediaFile(Resource &res, const char *msg) {
     if (binTypes().contains(res.type) &&
         !QFile::remove(cacheDir.path() + "/" + res.value)) {
-        printf(msg, res.value.toStdString().c_str());
-        printf(", skipping...\n");
+        ncprintf(msg, res.value.toStdString().c_str());
+        ncprintf(", skipping...\n");
         return false;
     }
     return true;

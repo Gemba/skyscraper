@@ -64,9 +64,9 @@ void Config::initSkyFolders() {
             xdgEnvs[e] = xdgDir;
             QDir d(xdgDir % "/" % appFolder);
             if (!d.exists() && !d.mkpath(".")) {
-                printf("Cannot create folder '%s'. Please check permissions, "
-                       "now exiting...\n",
-                       d.absolutePath().toStdString().c_str());
+                ncprintf("Cannot create folder '%s'. Please check permissions, "
+                         "now exiting...\n",
+                         d.absolutePath().toStdString().c_str());
                 emit die(1,
                          QString("cannot create directory '%1'")
                              .arg(d.absolutePath()),
@@ -106,9 +106,9 @@ QString Config::getSkyFolder(SkyFolderType type) { return skyFolders[type]; }
 void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
                       FileOp fileOp) {
     if (!QFileInfo::exists(src)) {
-        printf("\033[1;31mSource config file not found '%s'. Please check "
-               "setup, bailing out...\033[0m\n",
-               src.toStdString().c_str());
+        ncprintf("\033[1;31mSource config file not found '%s'. Please check "
+                 "setup, bailing out...\033[0m\n",
+                 src.toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(src),
                  "File does not exist");
     }
@@ -148,9 +148,9 @@ void Config::setupUserConfig() {
     QDir skyDir(getSkyFolder());
     if (!skyDir.exists()) {
         if (!skyDir.mkpath(".")) {
-            printf("Cannot create folder '%s'. Please check permissions, "
-                   "now exiting...\n",
-                   skyDir.absolutePath().toStdString().c_str());
+            ncprintf("Cannot create folder '%s'. Please check permissions, "
+                     "now exiting...\n",
+                     skyDir.absolutePath().toStdString().c_str());
             emit die(1,
                      QString("cannot create directory '%1'")
                          .arg(skyDir.absolutePath()),
@@ -184,10 +184,11 @@ void Config::setupUserConfig() {
         QFileInfo(manualInst).isFile() && !QFileInfo(manualInst).isSymLink();
 
     if (exeIsNotSymlink && isRpInstall) {
-        printf("\033[1;31mDuplicate installation of Skyscraper found:\n%s "
-               "and\n%s\nPlease remove one or the other to avoid "
-               "confusion.\033[0m\n",
-               manualInst.toStdString().c_str(), rpInst.toStdString().c_str());
+        ncprintf("\033[1;31mDuplicate installation of Skyscraper found:\n%s "
+                 "and\n%s\nPlease remove one or the other to avoid "
+                 "confusion.\033[0m\n",
+                 manualInst.toStdString().c_str(),
+                 rpInst.toStdString().c_str());
         emit die(1, "duplicate installation files detected",
                  "Confused Skyscraper problem");
     }
@@ -272,9 +273,10 @@ void Config::setupUserConfig() {
             if (isPristine == 0) {
                 configFiles[src].second = FileOp::OVERWRITE;
             } else if (isPristine < 0) {
-                printf("\033[1;31mFile '%s' does not exist or cannot be read. "
-                       "Please fix. Quitting.\033[0m\n",
-                       (tgtDir % "/" % dest).toUtf8().constData());
+                ncprintf(
+                    "\033[1;31mFile '%s' does not exist or cannot be read. "
+                    "Please fix. Quitting.\033[0m\n",
+                    (tgtDir % "/" % dest).toUtf8().constData());
                 emit die(1,
                          QString("cannot access '%1'").arg(tgtDir % "/" % dest),
                          "File does not exist or permission denied");
@@ -291,11 +293,11 @@ int Config::isPlatformCfgPristine(QString platformCfgFilePath) {
     int isPristine =
         Platform::get().isPlatformCfgfilePristine(platformCfgFilePath);
     if (isPristine == 1) {
-        printf("\033[1;33mLooks like '%s' has local changes.\nPlease "
-               "transfer local changes to another file to mute this "
-               "warning.\nSee topic 'Transferring Local Platform Changes' "
-               "in the PLATFORM.md documentation for guidance.\033[0m\n",
-               platformCfgFilePath.toUtf8().constData());
+        ncprintf("\033[1;33mLooks like '%s' has local changes.\nPlease "
+                 "transfer local changes to another file to mute this "
+                 "warning.\nSee topic 'Transferring Local Platform Changes' "
+                 "in the PLATFORM.md documentation for guidance.\033[0m\n",
+                 platformCfgFilePath.toUtf8().constData());
     }
 
     return isPristine;
@@ -306,7 +308,7 @@ void Config::checkLegacyFiles() {
     for (auto bn : legacyJsons) {
         QString fn = getSkyFolder() % "/" % bn % ".json";
         if (QFileInfo::exists(fn)) {
-            printf(
+            ncprintf(
                 "\033[1;33mFile '%s' found, which is no longer used in this "
                 "version of Skyscraper. Please move file to mute this warning. "
                 "See docs/PLATFORMS.md for additional info.\033[0m\n",

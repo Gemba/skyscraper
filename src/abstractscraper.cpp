@@ -87,8 +87,8 @@ void AbstractScraper::getGameData(GameEntry &game) {
     netComm->request(game.url);
     q.exec();
     data = netComm->getData();
-    // printf("URL IS: '%s'\n", game.url.toStdString().c_str());
-    // printf("DATA IS:\n'%s'\n", data.data());
+    // ncprintf("URL IS: '%s'\n", game.url.toStdString().c_str());
+    // ncprintf("DATA IS:\n'%s'\n", data.data());
     populateGameEntry(game);
 }
 
@@ -743,13 +743,14 @@ QVariantMap AbstractScraper::readJson(const QString &filename) {
         }
     }
     if (!canRead) {
-        printf("\033[1;31mFile '%s' not found or not readable. Please "
-               "fix.\nNot scraping...\n\033[0m",
-               filename.toUtf8().constData());
+        ncprintf("\033[1;31mFile '%s' not found or not readable. Please "
+                 "fix.\nNot scraping...\n\033[0m",
+                 filename.toUtf8().constData());
     } else if (jsonObj.isEmpty()) {
-        printf("\033[1;31mFile '%s' has invalid JSON format. Please fix.\nNot "
-               "scraping...\n\033[0m",
-               filename.toUtf8().constData());
+        ncprintf(
+            "\033[1;31mFile '%s' has invalid JSON format. Please fix.\nNot "
+            "scraping...\n\033[0m",
+            filename.toUtf8().constData());
     }
     return m;
 }
