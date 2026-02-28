@@ -1,13 +1,13 @@
 # Programmable completion for Skyscraper: https://gemba.github.io/skyscraper/
 #
-# This file is part of skyscraper. Copyright (c) 2024 Gemba @ GitHub
+# This file is part of Skyscraper. Copyright (c) 2024 Gemba @ GitHub
 #
-# skyscraper is free software; you can redistribute it and/or modify
+# Skyscraper is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# skyscraper is distributed in the hope that it will be useful,
+# Skyscraper is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -73,7 +73,7 @@ _skyscraper() {
 		;;
 	'-s')
 		# scrape modules
-		mapfile -t COMPREPLY < <(compgen -W "arcadedb igdb mobygames openretro screenscraper thegamesdb worldofspectrum esgamelist import" -- "$cur")
+		mapfile -t COMPREPLY < <(compgen -W "arcadedb igdb mobygames openretro screenscraper thegamesdb zxinfo esgamelist import gamebase" -- "$cur")
 		return 0
 		;;
 	'-f')
@@ -95,14 +95,14 @@ _skyscraper() {
 		_filedir
 		return 0
 		;;
-	'-h' | '--help' | '--help-all' | '-v' | '--version')
+	'-h' | '--help' | '--help-all' | '-v' | '--version' | '--buildinfo' | '--listext' | '--searchstem-all')
 		return 0
 		;;
 	'--verbosity')
 		mapfile -t COMPREPLY < <(compgen -W "0 1 2 3" -- "$cur")
 		return 0
 		;;
-	'-e' | '-l' | '-m' | '-u' | '--addext' | '--query' | '--maxfails' | '--lang' | '--region' | '--includepattern' | '--exludepattern')
+	'-e' | '-l' | '-m' | '-u' | '--addext' | '--query' | '--maxfails' | '--lang' | '--region' | '--includepattern' | '--exludepattern' | '--searchstem')
 		# expect specific values
 		return 0
 		;;
