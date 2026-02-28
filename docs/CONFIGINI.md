@@ -248,7 +248,7 @@ Allowed in sections: Only for frontends `[emulationstation]` or `[retrobat]`
 
 #### cacheFolder
 
-Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Don't change this unless you have a good reason to (for instance if you want your cache to reside on a USB drive).
+Sets a non-default location for the storing and loading of cached game resources. This is what is referred to in the docs as the _resource cache_. By default this folder is set to `/home/<USER>/.skyscraper/cache/<PLATFORM>`. Do not change this unless you have a good reason to (for instance if you want your cache to reside on a USB drive).
 
 !!! note
 
@@ -462,7 +462,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### videos
 
-By default Skyscraper doesn't scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this option. If your frontend supports video display also explicitly set this option to true. See also the option to [symlink video files](#symlink) instead of copying, if space is a premium.
+By default Skyscraper does not scrape and cache video resources because of the significant disk space required to save them. You can enable videos using this option. If your frontend supports video display also explicitly set this option to true. See also the option to [symlink video files](#symlink) instead of copying, if space is a premium.
 
 Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`, `[<SCRAPER>]`
@@ -480,7 +480,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 #### videoConvertCommand
 
-Some scraping modules deliver videos that use a codec or color format that some frontends don't support. In those cases it can be useful to convert the videos before saving them in the Skyscraper resource cache.
+Some scraping modules deliver videos that use a codec or color format that some frontends do not support. In those cases it can be useful to convert the videos before saving them in the Skyscraper resource cache.
 
 This setting allows you to set a command that will be run on each video after it has been downloaded from the selected scraping module. See the examples below for inspiration.
 
@@ -656,7 +656,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 #### threads
 
-Sets the desired number of parallel threads to be run when scraping or creating the gamelist. Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. By default it is set to 4. You can not set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your Linux system.
+Sets the desired number of parallel threads to be run when scraping or creating the gamelist. Some modules have maximum allowed threads. If you set this higher than the allowed value, it will be auto-adjusted. By default it is set to 4. You cannot set this higher than the [ideal thread count](https://doc.qt.io/qt-6/qthread.html#idealThreadCount), which is usually the output of `nproc` on your Linux system.
 
 Default value: `4`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
@@ -757,7 +757,7 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
 
 #### maxFails
 
-Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Don't change this unless you have a very good reason to do so.
+Not all scraping modules support all platforms. This means that you can potentially start a scraping run with a module and a platform that is incompatible. This will hammer the servers for potentially hundreds of roms but provide 0 results for any of them. To avoid this Skyscraper has a builtin limit for initially allowed failed rom lookups. If this is reached it will quit. Setting this option allows you to set this limit yourself, but not above a maximum of 200. The default limit is 42. Do not change this unless you have a very good reason to do so.
 
 Default value: `42`  
 Allowed in sections: `[main]`
@@ -1070,7 +1070,7 @@ Allowed in sections: `[<SCRAPER>]`
 
 #### spaceCheck
 
-Skyscraper will continuously check if you are running low on disk space. If you go below 200 MB in either the game list export folder or the resource cache folder, it will quit to make sure your system doesn't become unstable. Some types of file systems provide a faulty result to Skyscraper when it comes to these checks and thus it can be necessary to disable it altogether. You can use this option to do just that.
+Skyscraper will continuously check if you are running low on disk space. If you go below 200 MB in either the game list export folder or the resource cache folder, it will quit to make sure your system does not become unstable. Some types of file systems provide a faulty result to Skyscraper when it comes to these checks and thus it can be necessary to disable it altogether. You can use this option to do just that.
 
 Default value: `true`  
 Allowed in sections: `[main]`
@@ -1116,7 +1116,7 @@ folder elements will be created for the directories with ROM(s) ([example](FRONT
 
 In both cases the existing `<folder/>` elements of a gamelist will be preserved.
 However, folder data is not cached by Skyscraper, which means if you delete your
-`gamelist.xml` Skyscraper can not restore the edited folder elements.
+`gamelist.xml` Skyscraper cannot restore the edited folder elements.
 
 !!! bug "EmulationStation 2.11.2rp and earlier"
 
@@ -1129,7 +1129,7 @@ Allowed in sections: Only for frontends `[emulationstation]`, `[esde]` or `[retr
 
 #### backcovers
 
-By default Skyscraper doesn't scrape and cache game backcover resources because
+By default Skyscraper does not scrape and cache game backcover resources because
 not all scraping sites provide this data and also only some frontends support
 the display of the cover backside. If enabled Skyscraper will collect game
 manuals for the scraping modules that provide this data. For the frontends ES-DE
@@ -1146,7 +1146,7 @@ Allowed in sections: `[main]`
 
 #### fanarts
 
-By default Skyscraper doesn't scrape and cache game fanart resources because not
+By default Skyscraper does not scrape and cache game fanart resources because not
 all scraping sites provide this data and also only some frontends support fanart
 display. If enabled Skyscraper will collect game manuals for the scraping
 modules that provide this data. For the frontends ES-DE and Batocera no further
@@ -1165,7 +1165,7 @@ Allowed in sections: `[main]`
 
 #### manuals
 
-By default Skyscraper doesn't scrape and cache game manuals resources because
+By default Skyscraper does not scrape and cache game manuals resources because
 not all scraping sites provide this data and also only some frontends support
 PDF display of these game manuals. If enabled Skyscraper will collect game
 manuals for the scraping modules that provide this data. For the frontends ES-DE

@@ -447,13 +447,13 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "When generating gamelists, skip processing covers that already "
              "exist in the media output folder."},
             {"skipexistingmanuals",
-             "When generating gamelists, don't copy manuals that already "
+             "When generating gamelists, do not copy manuals that already "
              "exist in the media output folder."},
             {"skipexistingbackcovers",
-             "When generating gamelists, don't copy backcovers that already "
+             "When generating gamelists, do not copy backcovers that already "
              "exist in the media output folder."},
             {"skipexistingfanarts",
-             "When generating gamelists, don't copy fanart that "
+             "When generating gamelists, do not copy fanart that "
              "already exist in the media output folder."},
             {"skipexistingmarquees",
              "When generating gamelists, skip processing marquees that already "
@@ -465,7 +465,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "When generating gamelists, skip processing textures, covers, "
              "disc art that already exist in the media output folder."},
             {"skipexistingvideos",
-             "When generating gamelists, don't copy videos that already "
+             "When generating gamelists, do not copy videos that already "
              "exist in the media output folder."},
             {"skipexistingwheels",
              "When generating gamelists, skip processing wheels that already "

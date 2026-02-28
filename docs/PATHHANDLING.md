@@ -74,7 +74,7 @@ error message.
 If you define a relative path Gamelist folder either via `-g` or via
 `gameListFolder=` (INI-file) and are using a frontend for EmulationStation (or
 any other frontend, which is _neither_ Pegasus _nor_ Batocera) then the
-configuration for input folder _must_ be provided absolute and can not be
+configuration for input folder _must_ be provided absolute and cannot be
 relative. In turn, the media folder, if it is a relative path, is then assumed
 to be relative to the input folder.
 

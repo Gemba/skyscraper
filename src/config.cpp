@@ -64,7 +64,7 @@ void Config::initSkyFolders() {
             xdgEnvs[e] = xdgDir;
             QDir d(xdgDir % "/" % appFolder);
             if (!d.exists() && !d.mkpath(".")) {
-                printf("Couldn't create folder '%s'. Please check permissions, "
+                printf("Cannot create folder '%s'. Please check permissions, "
                        "now exiting...\n",
                        d.absolutePath().toStdString().c_str());
                 emit die(1,
@@ -148,7 +148,7 @@ void Config::setupUserConfig() {
     QDir skyDir(getSkyFolder());
     if (!skyDir.exists()) {
         if (!skyDir.mkpath(".")) {
-            printf("Couldn't create folder '%s'. Please check permissions, "
+            printf("Cannot create folder '%s'. Please check permissions, "
                    "now exiting...\n",
                    skyDir.absolutePath().toStdString().c_str());
             emit die(1,
@@ -277,7 +277,7 @@ void Config::setupUserConfig() {
                        (tgtDir % "/" % dest).toUtf8().constData());
                 emit die(1,
                          QString("cannot access '%1'").arg(tgtDir % "/" % dest),
-                         "File does not exist or no permission");
+                         "File does not exist or permission denied");
             }
         }
         QString tgt = tgtDir % "/" % dest;

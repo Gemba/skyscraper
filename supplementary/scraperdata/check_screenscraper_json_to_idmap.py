@@ -46,7 +46,7 @@ def locate_file(f):
         return Path("/usr/local/etc/skyscraper") / f
     else:
         print(
-            f"[!] can not locate {f}. Please add full path as parameter to this script."
+            f"[!] cannot locate {f}. Please add full path as parameter to this script."
         )
         sys.exit(1)
 

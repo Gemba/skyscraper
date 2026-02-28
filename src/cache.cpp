@@ -904,7 +904,7 @@ bool Cache::purgeResources(QString purgeStr) {
             remove = true;
         }
         if (remove) {
-            if (!removeMediaFile(res, "Couldn't purge media file '%s'")) {
+            if (!removeMediaFile(res, "Cannot purge media file '%s'")) {
                 continue;
             }
             it.remove();
@@ -952,7 +952,7 @@ bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
         }
         dots++;
         Resource res = it.next();
-        if (!removeMediaFile(res, "Couldn't purge media file '%s'")) {
+        if (!removeMediaFile(res, "Cannot purge media file '%s'")) {
             continue;
         }
         it.remove();
@@ -1028,7 +1028,7 @@ bool Cache::reportAllPlatform(Settings &config, Skyscraper *app) {
 
 void Cache::vacuumAllPlatform(Settings &config, Skyscraper *app) {
     printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
-           "resources that don't match your current romset. Please consider "
+           "resources that do not match your current romset. Please consider "
            "making a backup of your "
            "Skyscraper cache before performing this action. THIS CANNOT BE "
            "UNDONE!\033[0m\n\n");
@@ -1172,7 +1172,7 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
     QDir reportsDir(Config::getSkyFolder(Config::SkyFolderType::REPORT));
     if (!reportsDir.exists()) {
         if (!reportsDir.mkpath(".")) {
-            printf("Couldn't create reports folder '%s'. Please check "
+            printf("Cannot create reports folder '%s'. Please check "
                    "permissions then try again...\n",
                    reportsDir.absolutePath().toStdString().c_str());
             return false;
@@ -1196,8 +1196,9 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
     printf("\n\n");
 
     if (fileInfos.length() != cacheIdList.length()) {
-        printf("Length of cache id list mismatch the number of files, "
-               "something is wrong! Please file an issue. Can't continue...\n");
+        printf(
+            "Length of cache id list mismatch the number of files, "
+            "something is wrong! Please file an issue. Cannot continue...\n");
         return false;
     }
 
@@ -1276,7 +1277,7 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
     if (!unattend) {
         std::string userInput = "";
         printf("\033[1;33mWARNING! Vacuuming your Skyscraper cache removes all "
-               "resources that don't match your current romset (files located "
+               "resources that do not match your current romset (files located "
                "at '%s' or any of its subdirectories matching the suffixes "
                "supported by the platform and any extension(s) you might have "
                "added manually). Please consider making a backup of your "
@@ -1329,7 +1330,7 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                 }
             }
             if (remove) {
-                if (!removeMediaFile(res, "Couldn't remove media file '%s'")) {
+                if (!removeMediaFile(res, "Cannot remove media file '%s'")) {
                     continue;
                 }
                 if (verbosity > 1)
@@ -1603,7 +1604,7 @@ void Cache::validate() {
                filesDeleted,
                pluralizeWordStd("file", filesDeleted != 1).c_str());
         if (notDeletedCount != 0) {
-            printf("%d %s couldn't be deleted, please check file "
+            printf("%d %s cannot be deleted, please check file "
                    "permissions and re-run with '--cache validate'.\n",
                    notDeletedCount,
                    pluralizeWordStd("file", notDeletedCount != 1).c_str());
@@ -1631,7 +1632,7 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
                 printf("OK!\n");
                 filesDeleted++;
             } else {
-                printf("ERROR! File couldn't be deleted :/\n");
+                printf("ERROR! File cannot be deleted :/\n");
                 notDeletedCount++;
             }
         }
@@ -1660,7 +1661,7 @@ void Cache::merge(Cache &mergeCache, bool overwrite,
                 res.source == mergeResource.source) {
                 if (overwrite) {
                     if (!removeMediaFile(res,
-                                         "Couldn't remove media file '%s' for "
+                                         "Cannot remove media file '%s' for "
                                          "updating")) {
                         continue;
                     }
@@ -1679,7 +1680,7 @@ void Cache::merge(Cache &mergeCache, bool overwrite,
                 if (!QFile::copy(mergeCacheDir.path() + "/" +
                                      mergeResource.value,
                                  absTgtFile)) {
-                    printf("Couldn't copy media file '%s', skipping...\n",
+                    printf("Cannot copy media file '%s', skipping...\n",
                            mergeResource.value.toStdString().c_str());
                     continue;
                 }
@@ -1908,7 +1909,7 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
             // add record to cache index
             resources.append(resource);
         } else {
-            printf("\033[1;33mWarning! Couldn't add resource to cache. Have "
+            printf("\033[1;33mWarning! Cannot add resource to cache. Have "
                    "you run out of disk space?\n\033[0m");
         }
     }
@@ -1942,7 +1943,7 @@ bool Cache::doVideoConvert(Resource &resource, QString &cacheFile,
     if (QFile::exists(tmpCacheFile)) {
         if (!QFile::remove(tmpCacheFile)) {
             output.append("'" + tmpCacheFile +
-                          "' already exists and can't be removed.\n");
+                          "' already exists and cannot be removed.\n");
             return false;
         }
     }
@@ -1967,7 +1968,7 @@ bool Cache::doVideoConvert(Resource &resource, QString &cacheFile,
         QFile::exists(tmpCacheFile)) {
         if (!QFile::remove(cacheFile)) {
             output.append("Original '" + cacheFile +
-                          "' file couldn't be removed.\n");
+                          "' file cannot be removed.\n");
             return false;
         }
         cacheFile = tmpCacheFile;
@@ -1975,14 +1976,14 @@ bool Cache::doVideoConvert(Resource &resource, QString &cacheFile,
         if (QFile::exists(cacheFile)) {
             if (!QFile::remove(cacheFile)) {
                 output.append("'" + cacheFile +
-                              "' already exists and can't be removed.\n");
+                              "' already exists and cannot be removed.\n");
                 return false;
             }
         }
         if (QFile::rename(tmpCacheFile, cacheFile)) {
             resource.value = cacheFile.replace(cacheAbsolutePath + "/", "");
         } else {
-            output.append("Couldn't rename file '" + tmpCacheFile + "' to '" +
+            output.append("Cannot rename file '" + tmpCacheFile + "' to '" +
                           cacheFile + "', please check permissions!\n");
             return false;
         }

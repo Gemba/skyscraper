@@ -241,7 +241,7 @@ void AttractMode::checkReqs() {
         return;
     }
 
-    printf("Couldn't locate emulator cfg file, exiting...\n");
+    printf("Cannot locate emulator cfg file, exiting...\n");
     emit die(1,
              QString("can neither access '%1' nor '%2")
                  .arg(config->frontendExtra)

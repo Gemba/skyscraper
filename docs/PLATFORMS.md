@@ -114,7 +114,7 @@ After the platform id is the textual representation the scraper source uses.
 Follow instructions in this section if you only want to overwrite platform alias
 names or gamefile extensions.
 
-1. If you don't have a `peas_local.json` file: Create the file `peas_local.json`
+1. If you do not have a `peas_local.json` file: Create the file `peas_local.json`
    sibling to `peas.json`. Enter in this file an empty JSON object `{}` (=just
    curly braces).
 2. Create a new platform block in `peas_local.json` inside these curly braces
@@ -230,7 +230,7 @@ your changes to the corresponding `*_local.*` files.
 To find the platform ids for Screenscraper, Mobygames and The Games DB, please
 consult the files `screenscraper_platforms.json`, `mobygames_platforms.json` and
 `tgdb_platforms.json` which are located sibling to your `config.ini` of the
-Skyscraper installation. If you can not identify an ID in these files use `-1`
+Skyscraper installation. If you cannot identify an ID in these files use `-1`
 as value in the CSV. If you add `-1` to CSV, the `aliases` from peas are tried
 to find a match upon scraping. Edits in `screenscraper_platforms.json`,
 `mobygames_platforms.json` and `tgdb_platforms.json` are not needed. Moreover,
@@ -343,7 +343,7 @@ for additional information on this.
   case insensitive file extension mapping (lowercase only). The extensions `.7z`
   and `.zip` are added automagically by Skyscraper, thus the `"formats":` list
   is usually shorter than the EmulationStation `<extension/>` list.
-- Line 9: If your theme doesn't support Satellaview, you can also use `snes` as
+- Line 9: If your theme does not support Satellaview, you can also use `snes` as
   <theme> value.
 
 !!! note

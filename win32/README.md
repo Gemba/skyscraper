@@ -14,11 +14,11 @@ The following instructions are provided as-is by Gemba @ GitHub.
 >
 > If you prefer, you can also run it under ye olde Windows command prompt or
 > maybe even Powershell. Note that the output will look odd if you use either
-> of these, as they don't support the color escape sequences.
+> of these, as they do not support the color escape sequences.
 >
 > Good luck!
 
-Nothing I (Gemba) have to add here, except this: With a recent Windows you don't
+Nothing I (Gemba) have to add here, except this: With a recent Windows you do not
 need Cygwin for colorized/ANSI output any longer as Windows eventually does
 support this and Skyscraper will be build to use the colored terminal
 capabilities. :)

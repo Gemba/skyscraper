@@ -63,7 +63,7 @@ article a:hover {
   text-decoration: underline;
 }
 
-/* workaround: svg fill color can not be set dynamically */
+/* workaround: svg fill color cannot be set dynamically */
 /* mark external links with icon */
 [data-md-color-scheme="slate"] .md-typeset a:not([href^="https://github.com/Gemba"]):not([href^="#"]):not([href^="/"]):not([href^=".."]):not([href^="./#"]):not([href^="CHANGELOG"]):not([href^="USECASE"]):after
 {

@@ -691,7 +691,7 @@ The ARTWORK release. Check artwork documentation [here](ARTWORK.md)
 * Now always accepts 'screenscraper' results no matter if platform matches or not
 * Now sets 'minMatch' to 0 by default for 'localdb' , 'arcadedb' and 'screenscraper' scraping modules. Can be overruled on command line and in config file
 * Made localdb more thread safe, might've fixed rare issues of resources being mixed up internally
-* Now works with filenames provided on command line even if they don't include full path
+* Now works with filenames provided on command line even if they do not include full path
 * Added resource sources to output
 * Added 'wonderswan' and 'wonderswancolor' platforms
 
@@ -783,7 +783,7 @@ The ARTWORK release. Check artwork documentation [here](ARTWORK.md)
 * Added scraping module info to output per result but only when using '--verbose'
 * Added check for unreasonably bad scraping runs, making Skyscraper exit if 30 of 30 files miss from the get-go
 
-### Older unsupported releases (no longer available and don't ask for them)
+### Older unsupported releases (no longer available and do not ask for them)
 
 ### Version 1.8.2 (27th August 2017)
 * Added support for 'coleco' platform

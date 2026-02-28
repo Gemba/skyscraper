@@ -185,7 +185,7 @@ void Skyscraper::run() {
         decProc.start("which", QStringList({"7z"}));
         decProc.waitForFinished(10000);
         if (!decProc.readAllStandardOutput().contains("7z")) {
-            printf("Couldn't find '7z' command. 7z is required by the "
+            printf("Cannot find '7z' command. 7z is required by the "
                    "'--flags unpack' flag. On Debian derivatives such as "
                    "RetroPie you can install it with 'sudo apt install "
                    "p7zip-full'.\n\nNow quitting...\n");
@@ -208,7 +208,7 @@ void Skyscraper::run() {
                          .arg(config.cacheFolder));
         }
     } else {
-        printf("Couldn't create cache folders, please check folder "
+        printf("Cannot create cache folders, please check folder "
                "permissions and try again...\n");
         emit die(1, "cannot create cache folders", "Permission denied");
     }
@@ -268,7 +268,7 @@ void Skyscraper::run() {
             state = SINGLE;
         } else {
             printf("Path to merge from '%s' does not exist or is not a path, "
-                   "can't continue...\n",
+                   "cannot continue...\n",
                    absMergeCacheFilePath.toStdString().c_str());
             emit die(1,
                      QString("cannot access '%1'").arg(absMergeCacheFilePath),
@@ -352,7 +352,7 @@ void Skyscraper::run() {
             emit die(
                 1,
                 QString("cannot append to '%1'").arg(gameListFile.fileName()),
-                "No permission");
+                "Permission denied");
         }
         printf("\n");
     }
@@ -452,7 +452,7 @@ void Skyscraper::run() {
     }
     if (config.scraper == "gamebase" && config.gameBaseFile.isEmpty()) {
         printf("\033[0;31mBummer! No value for gameBaseFile parameter "
-               "provided for [%s] in config.ini. Can't "
+               "provided for [%s] in config.ini. Cannot "
                "continue...\033[0m\n\n",
                config.platform.toStdString().c_str());
         emit die(
@@ -513,11 +513,11 @@ void Skyscraper::prepareFileQueue() {
     QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
-        printf("Input folder '\033[1;31m%s\033[0m' doesn't exist or can't be "
+        printf("Input folder '\033[1;31m%s\033[0m' does not exist or cannot be "
                "accessed by current user. Please check path and permissions.\n",
                inputDir.absolutePath().toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(config.inputFolder),
-                 "No such directory or no permission");
+                 "No such directory or permission denied");
     }
 
     // always create gamelist folder
@@ -675,10 +675,10 @@ void Skyscraper::checkForFolder(QDir &folder, bool create) {
                 emit die(1,
                          QString("cannot create directory '%1'")
                              .arg(folder.absolutePath()),
-                         "No permission");
+                         "Permission denied");
             }
         } else {
-            printf("Folder '%s' doesn't exist, can't continue...\n",
+            printf("Folder '%s' does not exist, cannot continue...\n",
                    folder.absolutePath().toStdString().c_str());
             emit die(1,
                      QString("cannot access '%1'").arg(folder.absolutePath()),
@@ -753,7 +753,7 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
         printf("\033[1;31mThis is NOT going well! I guit! *slams the "
                "door*\nNo, seriously, out of %d files we had %d misses. So "
                "either the scraping source is down or you are using a scraping "
-               "source that doesn't support this platform. Please try another "
+               "source that does not support this platform. Please try another "
                "scraping module (check '--help').\n\nNow exiting...\033[0m\n",
                config.maxFails, config.maxFails);
         emit die(1, "recurring scraper failure",
@@ -819,7 +819,7 @@ void Skyscraper::checkThreads() {
             gameListFile.close();
             printf("\033[1;32mSuccess!\033[0m\n\n");
         } else {
-            printf("\033[1;31mCouldn't open file for writing!\nAll that work "
+            printf("\033[1;31mCannot open file for writing!\nAll that work "
                    "for nothing... :(\033[0m\n");
         }
     } else {
@@ -876,12 +876,12 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
             }
             f.close();
         } else {
-            printf("File '\033[1;32m%s\033[0m' can not be read.\n\nPlease "
+            printf("File '\033[1;32m%s\033[0m' cannot be read.\n\nPlease "
                    "verify the file permissions and try again...\n",
                    fnInfo.absoluteFilePath().toStdString().c_str());
             emit die(
                 1, QString("cannot access '%1'").arg(fnInfo.absoluteFilePath()),
-                "No permission");
+                "Permission denied");
         }
     } else {
         printf("File '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
@@ -1184,7 +1184,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (parser.isSet("query")) {
         if (QStringList({"esgamelist", "import", "cache"})
                 .contains(config.scraper)) {
-            printf("'--query' can not be applied for gamelist creation or for "
+            printf("'--query' cannot be applied for gamelist creation or for "
                    "this scraper. Now quitting...\n");
             exit(0);
         }
@@ -1235,7 +1235,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.artworkXml = artworkFile.readAll();
         artworkFile.close();
     } else {
-        printf("Couldn't read artwork xml file '\033[1;32m%s\033[0m'. Please "
+        printf("Cannot read artwork xml file '\033[1;32m%s\033[0m'. Please "
                "check file and permissions. Now exiting...\n",
                config.artworkConfig.toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(config.artworkConfig),
