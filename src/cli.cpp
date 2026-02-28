@@ -557,27 +557,10 @@ void Cli::showHint() {
 #ifdef Q_OS_LINUX
     hint = hint.replace(QDir::homePath(), "~");
 #endif
-    hint = "\033[1;33mDID YOU KNOW\033[0m: " + hint;
-
-    // TODO: put into StrTools
-    QStringList hintWrapped;
-    int ptr = 0;
-    QString line;
-    for (auto const &w : hint.split(' ')) {
-        if (ptr + w.length() >= 80) {
-            ptr = 0;
-            line.chop(1);
-            hintWrapped.append(line);
-            line = "";
-        }
-        ptr += w.length() + 1;
-        line.append(w);
-        line.append(' ');
-    }
-    line.chop(1);
-    hintWrapped.append(line);
-
-    printf("%s\n\n", hintWrapped.join("\n").toStdString().c_str());
+    hint = "DID YOU KNOW: " + hint;
+    QString hintWrapped = StrTools::wrapText(hint);
+    hintWrapped = hintWrapped.replace(" KNOW: "," KNOW\033[0m: ");
+    printf("\033[1;33m%s\n\n", hintWrapped.toStdString().c_str());
 }
 
 void Cli::showBuildinfo() {
