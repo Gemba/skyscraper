@@ -559,7 +559,7 @@ void Cli::showHint() {
 #endif
     hint = "DID YOU KNOW: " + hint;
     QString hintWrapped = StrTools::wrapText(hint);
-    hintWrapped = hintWrapped.replace(" KNOW: "," KNOW\033[0m: ");
+    hintWrapped = hintWrapped.replace(" KNOW: ", " KNOW\033[0m: ");
     printf("\033[1;33m%s\n\n", hintWrapped.toStdString().c_str());
 }
 
