@@ -52,9 +52,17 @@ bool XmlReader::setFile(QString filename) {
 #endif
             result = true;
         } else {
+#ifdef QT_NO_DEBUG_OUTPUT
             qWarning() << "XML error:" << eMsg << "at line" << eLine;
         }
         f.close();
+#else
+            qCritical() << "File" << filename << " has an XML error:" << eMsg
+                        << "at line" << eLine;
+            f.close();
+            exit(1);
+        }
+#endif
     }
     return result;
 }
