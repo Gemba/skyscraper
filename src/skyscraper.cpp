@@ -35,6 +35,7 @@
 #include "esde.h"
 #include "pathtools.h"
 #include "pegasus.h"
+#include "retroarch.h"
 #include "settings.h"
 #include "strtools.h"
 
@@ -997,6 +998,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         fePtr = new Esde();
     } else if (config.frontend == "batocera") {
         fePtr = new Batocera();
+    } else if (config.frontend == "retroarch") {
+        fePtr = new RetroArch();
     }
     if (fePtr != nullptr) {
         frontend = QSharedPointer<AbstractFrontend>(fePtr);
@@ -1025,7 +1028,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             config.inputFolder = frontend->getInputFolder();
     }
     if (!mediaFolderSet) {
-        if (config.frontend == "esde" || config.frontend == "batocera") {
+        if (config.frontend == "esde" || config.frontend == "batocera" ||
+            config.frontend == "retroarch") {
             config.mediaFolder = frontend->getMediaFolder();
         } else {
             // defaults to <gamelistfolder>/[.]media/
@@ -1088,6 +1092,22 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
         return; // cache option to be applied to all platform
+    }
+
+    // RetroArch has a different platform output name than the generic lowercase
+    // types
+    if (config.frontend == "retroarch") {
+        const QString oldSubPath = "/" % config.platform;
+        const QString newSubPath = "/" % frontend->getPlatformOutputName();
+
+        // Also, the playlist doesn't even get a platform folder, since
+        // getGameListFileName uses its output name in the filename.
+        if (config.gameListFolder.endsWith(oldSubPath))
+            config.gameListFolder =
+                config.gameListFolder.replace(oldSubPath, "");
+        if (config.mediaFolder.endsWith(oldSubPath))
+            config.mediaFolder =
+                config.mediaFolder.replace(oldSubPath, newSubPath);
     }
 
     if (!QFile::exists(config.inputFolder)) {

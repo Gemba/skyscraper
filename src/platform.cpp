@@ -216,9 +216,9 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
             continue;
         }
         QStringList parts = line.split(',');
-        if (parts.length() != 4) {
-            printf("\033[1;31mFile '%s', line '%s' has not four columns, but "
-                   "%d. Please fix. Now quitting...\033[0m\n",
+        if (parts.length() < 4) {
+            printf("\033[1;31mFile '%s', line '%s' has less than four columns, "
+                   "but %d. Please fix. Now quitting...\033[0m\n",
                    fn, parts.join(',').toUtf8().constData(),
                    static_cast<int>(parts.length()));
             configFile.close();
@@ -235,12 +235,18 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         parts.removeFirst();
         QVector<QVector<int>> ids(QVector<QVector<int>>(3));
         int col = 0;
-        for (QString id : parts) {
-            id = id.trimmed();
+        for (int i = 0; i < parts.length(); ++i) {
+            if (i >= 3) {
+                // Handle retroarch_dbname (string column, not numeric)
+                QString retroarchName = parts[i].trimmed();
+                platformNamesMap.insert(pkey, retroarchName);
+                break;
+            }
+            QString id = parts[i].trimmed();
             if (!id.isEmpty()) {
-                for (const auto &i : splitPlatformIds(id)) {
+                for (const auto &j : splitPlatformIds(id)) {
                     bool ok = false;
-                    int tmp = i.toInt(&ok);
+                    int tmp = j.toInt(&ok);
                     if (ok && tmp >= -1) {
                         ids[col].append((tmp == 0) ? -1 : tmp);
                     } else {
@@ -251,7 +257,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
                                "now, please fix to mute this warning.\033[0m\n",
                                fn, pkey.toUtf8().constData(),
                                parts.join(',').toUtf8().constData(),
-                               i.toUtf8().constData());
+                               j.toUtf8().constData());
                     }
                 }
             }
@@ -342,4 +348,8 @@ QVector<int> Platform::getPlatformIdOnScraper(const QString platform,
     qDebug() << "Got platform id(s)" << id << "for platform" << platform
              << "and scraper" << scraper;
     return id;
+}
+
+QString Platform::getRetroArchDbName(const QString platform) const {
+    return platformNamesMap.value(platform, platform);
 }

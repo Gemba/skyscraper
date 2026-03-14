@@ -108,6 +108,7 @@ HEADERS += src/skyscraper.h \
            src/batocera.h \
            src/attractmode.h \
            src/pegasus.h \
+           src/retroarch.h \
            src/openretro.h \
            src/thegamesdb.h \
            src/zxinfodk.h \
@@ -163,6 +164,7 @@ SOURCES += src/main.cpp \
            src/batocera.cpp \
            src/attractmode.cpp \
            src/pegasus.cpp \
+           src/retroarch.cpp \
            src/openretro.cpp \
            src/thegamesdb.cpp \
            src/zxinfodk.cpp \
