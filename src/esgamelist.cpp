@@ -45,7 +45,7 @@ void ESGameList::getSearchResults(QList<GameEntry> &gameEntries,
                                   QString searchName, QString platform) {
     if (games.isEmpty()) {
         if (!gameListFile.exists()) {
-            printf(
+            ncprintf(
                 "\033[1;31mGamelist file '%s' not found for platform '%s'. Now "
                 "quitting...\033[0m\n",
                 config->gameListFilename.toStdString().c_str(),
@@ -56,9 +56,9 @@ void ESGameList::getSearchResults(QList<GameEntry> &gameEntries,
                          .arg(config->platform),
                      "File does not exist");
         }
-        printf("\033[1;33mGamelist file is empty '%s'. Continuing "
-               "anyway.\033[0m\n",
-               gameListFile.fileName().toStdString().c_str());
+        ncprintf("\033[1;33mGamelist file is empty '%s'. Continuing "
+                 "anyway.\033[0m\n",
+                 gameListFile.fileName().toStdString().c_str());
         return;
     }
 

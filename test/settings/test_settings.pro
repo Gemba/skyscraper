@@ -15,28 +15,31 @@ DEFINES+=SYSCONFDIR=\\\"$$SYSCONFDIR\\\"
 include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
-QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../peas.json)) .; 
+QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../peas.json)) .;
 QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../platforms_idmap.csv)) .;
 
 # Input
-HEADERS += ../../src/cache.h \
-           ../../src/cli.h \
-           ../../src/config.h \
-           ../../src/gameentry.h \
-           ../../src/nametools.h \
-           ../../src/platform.h \
-           ../../src/pathtools.h \
-           ../../src/queue.h \
-           ../../src/settings.h \
-           ../../src/strtools.h
+HEADERS += \
+            ../../src/cache.h \
+            ../../src/cli.h \
+            ../../src/config.h \
+            ../../src/gameentry.h \
+            ../../src/nametools.h \
+            ../../src/nocolor.h \
+            ../../src/platform.h \
+            ../../src/pathtools.h \
+            ../../src/queue.h \
+            ../../src/settings.h \
+            ../../src/strtools.h
 SOURCES += test_settings.cpp \
-           ../../src/cache.cpp \
-           ../../src/cli.cpp \
-           ../../src/config.cpp \
-           ../../src/gameentry.cpp \
-           ../../src/nametools.cpp \
-           ../../src/platform.cpp \
-           ../../src/pathtools.cpp \
-           ../../src/queue.cpp \           
-           ../../src/settings.cpp \
-           ../../src/strtools.cpp
+            ../../src/cache.cpp \
+            ../../src/cli.cpp \
+            ../../src/config.cpp \
+            ../../src/gameentry.cpp \
+            ../../src/nametools.cpp \
+            ../../src/nocolor.cpp \
+            ../../src/platform.cpp \
+            ../../src/pathtools.cpp \
+            ../../src/queue.cpp \
+            ../../src/settings.cpp \
+            ../../src/strtools.cpp

@@ -304,14 +304,14 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
 void Cli::subCommandUsage(const QString subCmd) {
 
     if (subCmd == "flags") {
-        printf("Use comma-separated flags (eg. '--flags FLAG1,FLAG2') or use "
-               "--flags option\nmultiple times to enable multiple flags. The "
-               "following is a list of valid flags\nand what they do.\n");
+        ncprintf("Use comma-separated flags (eg. '--flags FLAG1,FLAG2') or use "
+                 "--flags option\nmultiple times to enable multiple flags. The "
+                 "following is a list of valid flags\nand what they do.\n");
     }
 
-    printf("\nShowing '\033[1;33m--%s%s...\033[0m' help:\n\n",
-           subCmd.toUtf8().constData(),
-           subCmd == "cache report:missing=" ? "" : " ");
+    ncprintf("\nShowing '\033[1;33m--%s%s...\033[0m' help:\n\n",
+             subCmd.toStdString().c_str(),
+             subCmd == "cache report:missing=" ? "" : " ");
 
     QMap<QString, QString> subOptions;
     subOptions = getSubCommandOpts(subCmd);
@@ -341,10 +341,10 @@ void Cli::subCommandUsage(const QString subCmd) {
             v.append(' ');
         }
         v.chop(1);
-        printf("\033[1;33m  %s\033[0m  %s\n", k.toUtf8().constData(),
-               v.toUtf8().constData());
+        ncprintf("\033[1;33m  %s\033[0m  %s\n", k.toUtf8().constData(),
+                 v.toUtf8().constData());
     }
-    printf("\n");
+    ncprintf("\n");
 }
 
 QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
@@ -560,7 +560,7 @@ void Cli::showHint() {
     hint = "DID YOU KNOW: " + hint;
     QString hintWrapped = StrTools::wrapText(hint);
     hintWrapped = hintWrapped.replace(" KNOW: ", " KNOW\033[0m: ");
-    printf("\033[1;33m%s\n\n", hintWrapped.toStdString().c_str());
+    ncprintf("\033[1;33m%s\n\n", hintWrapped.toStdString().c_str());
 }
 
 void Cli::showBuildinfo() {
@@ -581,5 +581,5 @@ void Cli::showBuildinfo() {
     if (!rpVer.isEmpty()) {
         info.append("RetroPie:         " % rpVer);
     }
-    printf("%s\n", info.join("\n").toStdString().c_str());
+    ncprintf("%s\n", info.join("\n").toStdString().c_str());
 }

@@ -82,15 +82,15 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
     QString apiStatus = jsonDoc.object()["status"].toString();
 
     if (httpStatus >= 400) {
-        printf(
+        ncprintf(
             "\033[1;31mServer response status %d\033[0m: Cannot continue! See "
             "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/"
             "Status/%d\n",
             httpStatus, httpStatus);
         reqRemaining = 0;
         if (!apiStatus.isEmpty()) {
-            printf("\033[1;31mAPI status message\033[0m: %s\n",
-                   apiStatus.toStdString().c_str());
+            ncprintf("\033[1;31mAPI status message\033[0m: %s\n",
+                     apiStatus.toStdString().c_str());
         }
         return;
     }
@@ -100,8 +100,9 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
     }
 
     if (!apiStatus.isEmpty() && apiStatus != "Success") {
-        printf("\033[1;31mAPI status message\033[0m: %s. Cannot continue...\n",
-               apiStatus.toStdString().c_str());
+        ncprintf(
+            "\033[1;31mAPI status message\033[0m: %s. Cannot continue...\n",
+            apiStatus.toStdString().c_str());
         reqRemaining = 0;
         return;
     }
@@ -113,9 +114,10 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
     }
 
     if (reqRemaining <= 0)
-        printf("\033[1;31mYou've reached TheGamesdDb's request limit for this "
-               "month with %s API key.\033[0m\n",
-               config->userCreds.isEmpty() ? "the public" : "your private");
+        ncprintf(
+            "\033[1;31mYou've reached TheGamesdDb's request limit for this "
+            "month with %s API key.\033[0m\n",
+            config->userCreds.isEmpty() ? "the public" : "your private");
 
     if (jsonDoc.object()["data"].toObject()["count"].toInt() < 1) {
         return;
@@ -173,14 +175,14 @@ void TheGamesDb::getGameData(GameEntry &game) {
     data = netComm->getData();
     jsonDoc = QJsonDocument::fromJson(data);
     if (jsonDoc.isEmpty()) {
-        printf("No returned json data, is 'thegamesdb' down?\n");
+        ncprintf("No returned json data, is 'thegamesdb' down?\n");
         reqRemaining = 0;
     }
 
     reqRemaining = jsonDoc.object()["remaining_monthly_allowance"].toInt();
 
     if (jsonDoc.object()["data"].toObject()["count"].toInt() < 1) {
-        printf("No returned json game document, is 'thegamesdb' down?\n");
+        ncprintf("No returned json game document, is 'thegamesdb' down?\n");
         reqRemaining = 0;
     }
 

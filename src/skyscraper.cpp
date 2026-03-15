@@ -33,6 +33,7 @@
 #include "config.h"
 #include "emulationstation.h"
 #include "esde.h"
+#include "nocolor.h"
 #include "pathtools.h"
 #include "pegasus.h"
 #include "settings.h"
@@ -65,12 +66,13 @@ void Skyscraper::run() {
     // called after loadConfig()
     if (config.platform.isEmpty()) {
         if (config.inputFolderNotMain || config.cacheFolderNotMain) {
-            printf("\033[1;33m'The hat trick never works!'\033[0m You have set "
-                   "either the input folder or cache folder outside the [main] "
-                   "configuration section. Paired with the ALL cache command "
-                   "this may produce inconsistent results. Use the command "
-                   "with a explicit platform (-p) or remove the setting(s). "
-                   "Quitting...\n");
+            ncprintf(
+                "\033[1;33m'The hat trick never works!'\033[0m You have set "
+                "either the input folder or cache folder outside the [main] "
+                "configuration section. Paired with the ALL cache command "
+                "this may produce inconsistent results. Use the command "
+                "with a explicit platform (-p) or remove the setting(s). "
+                "Quitting...\n");
             emit die(
                 1, "ambigous folder configuration for cache command",
                 "The input folder or cache folder cannot be set outside [main] "
@@ -84,7 +86,7 @@ void Skyscraper::run() {
             if (ok) {
                 exit(0);
             } else {
-                printf("Premature end of Skyscraper run.\n");
+                ncprintf("Premature end of Skyscraper run.\n");
                 emit die(1,
                          "error when running --cache report:missing= for all "
                          "platforms",
@@ -101,71 +103,72 @@ void Skyscraper::run() {
 
     cacheScrapeMode = config.scraper == "cache";
     generateGamelist = cacheScrapeMode && !config.pretend;
-    printf("Platform:         '\033[1;32m%s\033[0m'\n",
-           config.platform.toStdString().c_str());
-    printf("Scraping module:  '\033[1;32m%s\033[0m'\n",
-           config.scraper.toStdString().c_str());
+    ncprintf("Platform:         '\033[1;32m%s\033[0m'\n",
+             config.platform.toStdString().c_str());
+    ncprintf("Scraping module:  '\033[1;32m%s\033[0m'\n",
+             config.scraper.toStdString().c_str());
     if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
-        printf("Frontend:         '\033[1;32m%s\033[0m'\n",
-               config.frontend.toStdString().c_str());
+        ncprintf("Frontend:         '\033[1;32m%s\033[0m'\n",
+                 config.frontend.toStdString().c_str());
         if (!config.frontendExtra.isEmpty()) {
-            printf("Extra:            '\033[1;32m%s\033[0m'\n",
-                   config.frontendExtra.toStdString().c_str());
+            ncprintf("Extra:            '\033[1;32m%s\033[0m'\n",
+                     config.frontendExtra.toStdString().c_str());
         }
     }
-    printf("Input folder:     '\033[1;32m%s\033[0m'\n",
-           PathTools::pathToCStr(config.inputFolder));
-    printf("Game list folder: '\033[1;32m%s\033[0m'\n",
-           PathTools::pathToCStr(config.gameListFolder));
+    ncprintf("Input folder:     '\033[1;32m%s\033[0m'\n",
+             PathTools::pathToStdStr(config.inputFolder).c_str());
+    ncprintf("Game list folder: '\033[1;32m%s\033[0m'\n",
+             PathTools::pathToStdStr(config.gameListFolder).c_str());
     if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
-        printf("Media folder:     '\033[1;32m%s\033[0m'\n",
-               PathTools::pathToCStr(config.mediaFolder));
-        printf("  Covers folder:  '├── \033[1;32m%s\033[0m'\n",
-               mediaSubFolderCStr(config.coversFolder));
-        printf("  Screenshots:    '├── \033[1;32m%s\033[0m'\n",
-               mediaSubFolderCStr(config.screenshotsFolder));
-        printf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
-               mediaSubFolderCStr(config.wheelsFolder));
-        printf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
-               mediaSubFolderCStr(config.marqueesFolder));
+        ncprintf("Media folder:     '\033[1;32m%s\033[0m'\n",
+                 PathTools::pathToStdStr(config.mediaFolder).c_str());
+        ncprintf("  Covers folder:  '├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.coversFolder).c_str());
+        ncprintf("  Screenshots:    '├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.screenshotsFolder).c_str());
+        ncprintf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.wheelsFolder).c_str());
+        ncprintf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
                        config.fanart;
-        printf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
-               notLast ? "├" : "└", mediaSubFolderCStr(config.texturesFolder));
+        ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+                 notLast ? "├" : "└",
+                 mediaSubFolderStdStr(config.texturesFolder).c_str());
         if (config.videos) {
             notLast = config.manuals || config.backcovers || config.fanart;
-            printf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
-                   notLast ? "├" : "└",
-                   mediaSubFolderCStr(config.videosFolder));
+            ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.videosFolder).c_str());
         }
         // config.*Folder are not empty on frontends supporting that media
         if (config.manuals && !config.manualsFolder.isEmpty()) {
             notLast = config.backcovers || config.fanart;
-            printf("  Manuals:        '%s── \033[1;32m%s\033[0m'\n",
-                   notLast ? "├" : "└",
-                   mediaSubFolderCStr(config.manualsFolder));
+            ncprintf("  Manuals:        '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.manualsFolder).c_str());
         }
         if (config.fanart && !config.fanartsFolder.isEmpty()) {
             notLast = config.backcovers;
-            printf("  Fanarts:        '%s── \033[1;32m%s\033[0m'\n",
-                   notLast ? "├" : "└",
-                   mediaSubFolderCStr(config.fanartsFolder));
+            ncprintf("  Fanarts:        '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.fanartsFolder).c_str());
         }
         if (config.backcovers && !config.backcoversFolder.isEmpty()) {
             notLast = false;
-            printf("  Backcovers:     '%s── \033[1;32m%s\033[0m'\n",
-                   notLast ? "├" : "└",
-                   mediaSubFolderCStr(config.backcoversFolder));
+            ncprintf("  Backcovers:     '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.backcoversFolder).c_str());
         }
     }
-    printf("Cache folder:     '\033[1;32m%s\033[0m'\n",
-           PathTools::pathToCStr(config.cacheFolder));
+    ncprintf("Cache folder:     '\033[1;32m%s\033[0m'\n",
+             PathTools::pathToStdStr(config.cacheFolder).c_str());
     if (config.scraper == "import") {
-        printf("Import folder:    '\033[1;32m%s\033[0m'\n",
-               PathTools::pathToCStr(config.importFolder));
+        ncprintf("Import folder:    '\033[1;32m%s\033[0m'\n",
+                 PathTools::pathToStdStr(config.importFolder).c_str());
     }
 
-    printf("\n");
+    ncprintf("\n");
 
     if (config.hints) {
         showHint();
@@ -185,10 +188,10 @@ void Skyscraper::run() {
         decProc.start("which", QStringList({"7z"}));
         decProc.waitForFinished(10000);
         if (!decProc.readAllStandardOutput().contains("7z")) {
-            printf("Cannot find '7z' command. 7z is required by the "
-                   "'--flags unpack' flag. On Debian derivatives such as "
-                   "RetroPie you can install it with 'sudo apt install "
-                   "p7zip-full'.\n\nNow quitting...\n");
+            ncprintf("Cannot find '7z' command. 7z is required by the "
+                     "'--flags unpack' flag. On Debian derivatives such as "
+                     "RetroPie you can install it with 'sudo apt install "
+                     "p7zip-full'.\n\nNow quitting...\n");
             emit die(1, "cannot find 7z executable",
                      "The --flags unpack option cannot be used");
         }
@@ -197,19 +200,19 @@ void Skyscraper::run() {
     cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
     if (cacheScrapeMode || cache->createFolders(config.scraper)) {
         if (!cache->read() && cacheScrapeMode) {
-            printf("No resources for this platform found in the resource "
-                   "cache ('%s'). Please verify the path of the cache or "
-                   "specify a scraping module with '-s' to gather some "
-                   "resources before trying to generate a game list. Check "
-                   "all available modules with '--help'.\n",
-                   config.cacheFolder.toStdString().c_str());
+            ncprintf("No resources for this platform found in the resource "
+                     "cache ('%s'). Please verify the path of the cache or "
+                     "specify a scraping module with '-s' to gather some "
+                     "resources before trying to generate a game list. Check "
+                     "all available modules with '--help'.\n",
+                     config.cacheFolder.toStdString().c_str());
             emit die(1, "empty cache",
                      QString("No cached data in cache at '%1'")
                          .arg(config.cacheFolder));
         }
     } else {
-        printf("Cannot create cache folders, please check folder "
-               "permissions and try again...\n");
+        ncprintf("Cannot create cache folders, please check folder "
+                 "permissions and try again...\n");
         emit die(1, "cannot create cache folders", "Permission denied");
     }
 
@@ -267,9 +270,9 @@ void Skyscraper::run() {
             cache->write();
             state = SINGLE;
         } else {
-            printf("Path to merge from '%s' does not exist or is not a path, "
-                   "cannot continue...\n",
-                   absMergeCacheFilePath.toStdString().c_str());
+            ncprintf("Path to merge from '%s' does not exist or is not a path, "
+                     "cannot continue...\n",
+                     absMergeCacheFilePath.toStdString().c_str());
             emit die(1,
                      QString("cannot access '%1'").arg(absMergeCacheFilePath),
                      "No such directory");
@@ -303,12 +306,12 @@ void Skyscraper::run() {
                      "Invalid resourcetype for --cache edit:new=" % editType);
         } else if (state == CACHE_EDIT) {
             if (ret == 0) {
-                printf("Done editing resources.\n");
+                ncprintf("Done editing resources.\n");
                 state = NO_INTR;
                 cache->write();
             }
         } else {
-            printf("Catched Ctrl-C: No changes persisted!\n");
+            ncprintf("Catched Ctrl-C: No changes persisted!\n");
         }
         state = SINGLE;
         exit(0);
@@ -324,65 +327,67 @@ void Skyscraper::run() {
         QString gameListBackup =
             gameListFile.fileName() + "-" +
             QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
-        printf("Game list backup saved to '\033[1;33m%s\033[0m'\n",
-               gameListBackup.toStdString().c_str());
+        ncprintf("Game list backup saved to '\033[1;33m%s\033[0m'\n",
+                 gameListBackup.toStdString().c_str());
         gameListFile.copy(gameListBackup);
     }
 
     if (generateGamelist && !config.unattend && !config.unattendSkip &&
         gameListFile.exists()) {
         std::string userInput = "";
-        printf("\033[1;34m'\033[0m\033[1;33m%s\033[0m\033[1;34m' already "
-               "exists, do you want to overwrite it\033[0m (y/N)? ",
-               config.gameListFilename.toStdString().c_str());
+        ncprintf("\033[1;34m'\033[0m\033[1;33m%s\033[0m\033[1;34m' already "
+                 "exists, do you want to overwrite it\033[0m (y/N)? ",
+                 config.gameListFilename.toStdString().c_str());
         getline(std::cin, userInput);
         if (userInput != "y" && userInput != "Y") {
-            printf("User chose not to overwrite, now exiting...\n");
+            ncprintf("User chose not to overwrite, now exiting...\n");
             exit(0);
         }
-        printf("Checking if '\033[1;33m%s\033[0m' is writable?... ",
-               config.gameListFilename.toStdString().c_str());
+        ncprintf("Checking if '\033[1;33m%s\033[0m' is writable?... ",
+                 config.gameListFilename.toStdString().c_str());
 
         if (gameListFile.open(QIODevice::Append)) {
-            printf("\033[1;32mIt is! :)\033[0m\n");
+            ncprintf("\033[1;32mIt is! :)\033[0m\n");
             gameListFile.close();
         } else {
-            printf("\033[1;31mIt isn't! :(\nPlease check path and permissions "
-                   "and try again.\033[0m\n");
+            ncprintf(
+                "\033[1;31mIt isn't! :(\nPlease check path and permissions "
+                "and try again.\033[0m\n");
             emit die(
                 1,
                 QString("cannot append to '%1'").arg(gameListFile.fileName()),
                 "Permission denied");
         }
-        printf("\n");
+        ncprintf("\n");
     }
     if (config.pretend && cacheScrapeMode) {
-        printf("Pretend set! Not changing any files, just showing output.\n\n");
+        ncprintf(
+            "Pretend set! Not changing any files, just showing output.\n\n");
     }
 
     QFile::remove(skippedFileString);
 
     if (gameListFile.exists()) {
-        printf("Trying to parse and load existing game list metadata... ");
+        ncprintf("Trying to parse and load existing game list metadata... ");
         fflush(stdout);
         if (frontend->loadOldGameList(gameListFileString)) {
-            printf("\033[1;32mSuccess!\033[0m\n");
+            ncprintf("\033[1;32mSuccess!\033[0m\n");
             if (!config.unattend && cliFiles.isEmpty() && frontend->canSkip()) {
                 std::string userInput = "";
                 if (config.unattendSkip) {
                     userInput = "y";
                 } else {
-                    printf("\033[1;34mDo you want to skip already existing "
-                           "game list entries\033[0m (y/N)? ");
+                    ncprintf("\033[1;34mDo you want to skip already existing "
+                             "game list entries\033[0m (y/N)? ");
                     getline(std::cin, userInput);
                 }
                 if ((userInput == "y" || userInput == "Y")) {
                     frontend->skipExisting(gameEntries, queue);
                 }
             }
-            printf("\n");
+            ncprintf("\n");
         } else {
-            printf("\033[1;33mNot found or unsupported!\033[0m\n\n");
+            ncprintf("\033[1;33mNot found or unsupported!\033[0m\n\n");
         }
     }
 
@@ -404,13 +409,14 @@ void Skyscraper::run() {
                                        ? "generate a gamelist entry for."
                                        : "scrape.");
         }
-        printf("\nNo files to process %s for platform "
-               "'%s'.\nCheck configured and existing file extensions and cache "
-               "content.%s\n\n\033[1;33mSkyscraper came to an untimely "
-               "end.\033[0m\n\n",
-               extraInfo.toStdString().c_str(),
-               config.platform.toStdString().c_str(),
-               unattendSkipStr.toStdString().c_str());
+        ncprintf(
+            "\nNo files to process %s for platform "
+            "'%s'.\nCheck configured and existing file extensions and cache "
+            "content.%s\n\n\033[1;33mSkyscraper came to an untimely "
+            "end.\033[0m\n\n",
+            extraInfo.toStdString().c_str(),
+            config.platform.toStdString().c_str(),
+            unattendSkipStr.toStdString().c_str());
         exit(0);
     }
 
@@ -430,7 +436,7 @@ void Skyscraper::run() {
                      << "existing game entries";
         }
         if (totalFiles - inCache > config.romLimit) {
-            printf(
+            ncprintf(
                 "\n\033[1;33mRestriction overrun!\033[0m This scraping module "
                 "only allows for scraping up to %d roms at a time. You can "
                 "either supply a few rom filenames on command line, apply the "
@@ -443,18 +449,18 @@ void Skyscraper::run() {
     }
 
     if (!Compositor::preCheckArtworkXml(config.artworkXml)) {
-        printf("Parsing artwork XML from '%s', failed, see above."
-               "Check the file for errors. Now exiting...\n",
-               config.artworkConfig.toStdString().c_str());
+        ncprintf("Parsing artwork XML from '%s', failed, see above."
+                 "Check the file for errors. Now exiting...\n",
+                 config.artworkConfig.toStdString().c_str());
         emit die(1, "XML error",
                  QString("Artwork file '%1' cannot be parsed")
                      .arg(config.artworkConfig));
     }
     if (config.scraper == "gamebase" && config.gameBaseFile.isEmpty()) {
-        printf("\033[0;31mBummer! No value for gameBaseFile parameter "
-               "provided for [%s] in config.ini. Cannot "
-               "continue...\033[0m\n\n",
-               config.platform.toStdString().c_str());
+        ncprintf("\033[0;31mBummer! No value for gameBaseFile parameter "
+                 "provided for [%s] in config.ini. Cannot "
+                 "continue...\033[0m\n\n",
+                 config.platform.toStdString().c_str());
         emit die(
             1, "invalid configuration for gamebase scraper",
             QString(
@@ -463,10 +469,10 @@ void Skyscraper::run() {
     }
 
     if (!generateGamelist) {
-        printf("Starting scraping run on \033[1;32m%d\033[0m files using "
-               "\033[1;32m%d\033[0m thread%s.\nSit back, relax and let me do "
-               "the work! :)\n\n",
-               totalFiles, config.threads, config.threads == 1 ? "" : "s");
+        ncprintf("Starting scraping run on \033[1;32m%d\033[0m files using "
+                 "\033[1;32m%d\033[0m thread%s.\nSit back, relax and let me do "
+                 "the work! :)\n\n",
+                 totalFiles, config.threads, config.threads == 1 ? "" : "s");
     }
 
     createMediaOutFolders();
@@ -513,9 +519,10 @@ void Skyscraper::prepareFileQueue() {
     QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
-        printf("Input folder '\033[1;31m%s\033[0m' does not exist or cannot be "
-               "accessed by current user. Please check path and permissions.\n",
-               inputDir.absolutePath().toStdString().c_str());
+        ncprintf(
+            "Input folder '\033[1;31m%s\033[0m' does not exist or cannot be "
+            "accessed by current user. Please check path and permissions.\n",
+            inputDir.absolutePath().toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(config.inputFolder),
                  "No such directory or permission denied");
     }
@@ -605,12 +612,12 @@ void Skyscraper::prepareFileQueue() {
             }
             queue->append(subFiles);
             if (config.verbosity > 0 && subFiles.size() > 0) {
-                printf("Adding matching files from subdir: '%s'\n",
-                       subdir.toStdString().c_str());
+                ncprintf("Adding matching files from subdir: '%s'\n",
+                         subdir.toStdString().c_str());
             }
         }
         if (config.verbosity > 0)
-            printf("\n");
+            ncprintf("\n");
     }
     if (!config.excludePattern.isEmpty()) {
         queue->filterFiles(config.excludePattern);
@@ -668,7 +675,7 @@ void Skyscraper::checkForFolder(QDir &folder, bool create) {
     if (!folder.exists()) {
         if (create) {
             if (!folder.mkpath(folder.absolutePath())) {
-                printf(
+                ncprintf(
                     "Create folder '\033[1;31m%s\033[0m' failed! Please "
                     "check path and filesystem permissions, now exiting...\n",
                     folder.absolutePath().toStdString().c_str());
@@ -678,8 +685,8 @@ void Skyscraper::checkForFolder(QDir &folder, bool create) {
                          "Permission denied");
             }
         } else {
-            printf("Folder '%s' does not exist, cannot continue...\n",
-                   folder.absolutePath().toStdString().c_str());
+            ncprintf("Folder '%s' does not exist, cannot continue...\n",
+                     folder.absolutePath().toStdString().c_str());
             emit die(1,
                      QString("cannot access '%1'").arg(folder.absolutePath()),
                      "No such directory");
@@ -708,12 +715,12 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
                             const QString &debug) {
     QMutexLocker locker(&entryMutex);
 
-    printf("\033[0;32m#%d/%d\033[0m %s\n", currentFile, totalFiles,
-           output.toStdString().c_str());
+    ncprintf("\033[0;32m#%d/%d\033[0m %s\n", currentFile, totalFiles,
+             output.toStdString().c_str());
 
     if (config.verbosity >= 3) {
-        printf("\033[1;33mDebug output:\033[0m\n%s\n",
-               debug.toStdString().c_str());
+        ncprintf("\033[1;33mDebug output:\033[0m\n%s\n",
+                 debug.toStdString().c_str());
     }
 
     if (entry.found) {
@@ -735,27 +742,28 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
         }
     }
 
-    printf(
+    ncprintf(
         "\033[1;34m#%d/%d\033[0m, (\033[1;32m%d\033[0m/\033[1;33m%d\033[0m)\n",
         currentFile, totalFiles, found, notFound);
     int elapsed = timer.elapsed();
     int estTime = (elapsed / currentFile * totalFiles) - elapsed;
     if (estTime < 0)
         estTime = 0;
-    printf("Elapsed time   : \033[1;33m%s\033[0m\n",
-           secsToString(elapsed).toStdString().c_str());
-    printf("Est. time left : \033[1;33m%s\033[0m\n\n",
-           secsToString(estTime).toStdString().c_str());
+    ncprintf("Elapsed time   : \033[1;33m%s\033[0m\n",
+             secsToString(elapsed).toStdString().c_str());
+    ncprintf("Est. time left : \033[1;33m%s\033[0m\n\n",
+             secsToString(estTime).toStdString().c_str());
 
     if (!config.onlyMissing && currentFile == config.maxFails &&
         notFound == config.maxFails && config.scraper != "import" &&
         config.scraper != "cache") {
-        printf("\033[1;31mThis is NOT going well! I guit! *slams the "
-               "door*\nNo, seriously, out of %d files we had %d misses. So "
-               "either the scraping source is down or you are using a scraping "
-               "source that does not support this platform. Please try another "
-               "scraping module (check '--help').\n\nNow exiting...\033[0m\n",
-               config.maxFails, config.maxFails);
+        ncprintf(
+            "\033[1;31mThis is NOT going well! I guit! *slams the "
+            "door*\nNo, seriously, out of %d files we had %d misses. So "
+            "either the scraping source is down or you are using a scraping "
+            "source that does not support this platform. Please try another "
+            "scraping module (check '--help').\n\nNow exiting...\033[0m\n",
+            config.maxFails, config.maxFails);
         emit die(1, "recurring scraper failure",
                  QString("Too many failed scrape attempts (%1 in a row)")
                      .arg(config.maxFails));
@@ -775,13 +783,13 @@ void Skyscraper::entryReady(const GameEntry &entry, const QString &output,
         }
         if (!storage.isEmpty()) {
 
-            printf("\033[1;31mYou have very little disk space left on the "
-                   "Skyscraper %s storage, please free up some space "
-                   "and try again. Now aborting...\033[0m\n\n",
-                   storage.toStdString().c_str());
-            printf("Note! You can disable this check by setting "
-                   "'spaceCheck=\"false\"' in the '[main]' section of "
-                   "config.ini.\n\n");
+            ncprintf("\033[1;31mYou have very little disk space left on the "
+                     "Skyscraper %s storage, please free up some space "
+                     "and try again. Now aborting...\033[0m\n\n",
+                     storage.toStdString().c_str());
+            ncprintf("Note! You can disable this check by setting "
+                     "'spaceCheck=\"false\"' in the '[main]' section of "
+                     "config.ini.\n\n");
             // By clearing the queue here we basically tell Skyscraper to stop
             // and quit nicely
             config.pretend = true;
@@ -798,63 +806,64 @@ void Skyscraper::checkThreads() {
         return;
 
     if (!config.pretend && config.scraper == "cache") {
-        printf("\033[1;34m---- Game list generation run completed! YAY! "
-               "----\033[0m\n");
+        ncprintf("\033[1;34m---- Game list generation run completed! YAY! "
+                 "----\033[0m\n");
         state = NO_INTR;
         cache->write(true);
         state = SINGLE;
         frontend->sortEntries(gameEntries);
-        printf("Assembling game list...");
+        ncprintf("Assembling game list...");
         QString finalOutput;
         frontend->assembleList(finalOutput, gameEntries);
-        printf(" \033[1;32mDone!\033[0m\n");
+        ncprintf(" \033[1;32mDone!\033[0m\n");
         QFile gameListFile(gameListFileString);
-        printf("Now writing '\033[1;33m%s\033[0m'... ",
-               gameListFileString.toStdString().c_str());
+        ncprintf("Now writing '\033[1;33m%s\033[0m'... ",
+                 gameListFileString.toStdString().c_str());
         fflush(stdout);
         if (gameListFile.open(QIODevice::WriteOnly)) {
             state = NO_INTR;
             gameListFile.write(finalOutput.toUtf8());
             state = SINGLE;
             gameListFile.close();
-            printf("\033[1;32mSuccess!\033[0m\n\n");
+            ncprintf("\033[1;32mSuccess!\033[0m\n\n");
         } else {
-            printf("\033[1;31mCannot open file for writing!\nAll that work "
-                   "for nothing... :(\033[0m\n");
+            ncprintf("\033[1;31mCannot open file for writing!\nAll that work "
+                     "for nothing... :(\033[0m\n");
         }
     } else {
-        printf("\033[1;34m---- Resource gathering run completed! YAY! "
-               "----\033[0m\n");
+        ncprintf("\033[1;34m---- Resource gathering run completed! YAY! "
+                 "----\033[0m\n");
         state = NO_INTR;
         cache->write();
         state = SINGLE;
     }
 
     if (!generateGamelist || totalFiles > 0) {
-        printf("\033[1;34m---- And here are some neat stats :) ----\033[0m\n");
+        ncprintf(
+            "\033[1;34m---- And here are some neat stats :) ----\033[0m\n");
     }
     if (!generateGamelist) {
-        printf("Total completion time: \033[1;33m%s\033[0m\n\n",
-               secsToString(timer.elapsed()).toStdString().c_str());
+        ncprintf("Total completion time: \033[1;33m%s\033[0m\n\n",
+                 secsToString(timer.elapsed()).toStdString().c_str());
     }
     if (totalFiles > 0) {
         if (found > 0) {
-            printf("Average search match: \033[1;33m%d%%\033[0m\n",
-                   (int)((double)avgSearchMatch / (double)found));
-            printf("Average entry completeness: \033[1;33m%d%%\033[0m\n\n",
-                   (int)((double)avgCompleteness / (double)found));
+            ncprintf("Average search match: \033[1;33m%d%%\033[0m\n",
+                     (int)((double)avgSearchMatch / (double)found));
+            ncprintf("Average entry completeness: \033[1;33m%d%%\033[0m\n\n",
+                     (int)((double)avgCompleteness / (double)found));
         }
-        printf("\033[1;34mTotal number of games: %d\033[0m\n", totalFiles);
-        printf("\033[1;32mSuccessfully processed games: %d\033[0m\n", found);
-        printf("\033[1;33mSkipped games: %d\033[0m", notFound);
+        ncprintf("\033[1;34mTotal number of games: %d\033[0m\n", totalFiles);
+        ncprintf("\033[1;32mSuccessfully processed games: %d\033[0m\n", found);
+        ncprintf("\033[1;33mSkipped games: %d\033[0m", notFound);
         if (notFound > 0) {
             QString skippedFn = PathTools::concatPath(
                 Config::getSkyFolder(Config::SkyFolderType::LOG),
                 skippedFileString);
-            printf(" (Filenames saved to '\033[1;33m%s\033[0m')",
-                   PathTools::pathToCStr(skippedFn));
+            ncprintf(" (Filenames saved to '\033[1;33m%s\033[0m')",
+                     PathTools::pathToStdStr(skippedFn).c_str());
         }
-        printf("\n\n");
+        ncprintf("\n\n");
     }
 
     // All done, now clean up and exit to terminal
@@ -876,17 +885,17 @@ QList<QString> Skyscraper::readFileListFrom(const QString &filename) {
             }
             f.close();
         } else {
-            printf("File '\033[1;32m%s\033[0m' cannot be read.\n\nPlease "
-                   "verify the file permissions and try again...\n",
-                   fnInfo.absoluteFilePath().toStdString().c_str());
+            ncprintf("File '\033[1;32m%s\033[0m' cannot be read.\n\nPlease "
+                     "verify the file permissions and try again...\n",
+                     fnInfo.absoluteFilePath().toStdString().c_str());
             emit die(
                 1, QString("cannot access '%1'").arg(fnInfo.absoluteFilePath()),
                 "Permission denied");
         }
     } else {
-        printf("File '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
-               "verify the filename and try again...\n",
-               fnInfo.absoluteFilePath().toStdString().c_str());
+        ncprintf("File '\033[1;32m%s\033[0m' does not exist.\n\nPlease "
+                 "verify the filename and try again...\n",
+                 fnInfo.absoluteFilePath().toStdString().c_str());
         emit die(1,
                  QString("cannot access '%1'").arg(fnInfo.absoluteFilePath()),
                  "No such file");
@@ -902,7 +911,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         iniFile);
     absIniFile = PathTools::lexicallyNormalPath(absIniFile);
     if (!QFileInfo(absIniFile).exists()) {
-        printf(
+        ncprintf(
             "\nWARNING! Provided config file '\033[1;33m%s\033[0m' does not "
             "exist.\nSkyscraper will use default configuration values...\n\n",
             iniFile.toStdString().c_str());
@@ -958,11 +967,12 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         if (scrapers.contains(_scraper)) {
             config.scraper = _scraper;
         } else {
-            printf("\033[1;31mBummer!\033[0m Unknown scrapingmodule "
-                   "'\033[1;31m%s\033[0m'. Known scrapers are: %s.\nHint: Try "
-                   "TAB-completion to avoid mistyping.\n",
-                   _scraper.toStdString().c_str(),
-                   scrapers.join(", ").toStdString().c_str());
+            ncprintf(
+                "\033[1;31mBummer!\033[0m Unknown scrapingmodule "
+                "'\033[1;31m%s\033[0m'. Known scrapers are: %s.\nHint: Try "
+                "TAB-completion to avoid mistyping.\n",
+                _scraper.toStdString().c_str(),
+                scrapers.join(", ").toStdString().c_str());
             emit die(2, QString("unknown scrape module -s '%1'").arg(_scraper),
                      "Scraping module cannot be applied");
         }
@@ -1057,10 +1067,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     } else {
         QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
         if (inputDirFileInfo.isRelative()) {
-            printf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
-                   "provided as relative path which is not valid for this "
-                   "frontend. Provide the input folder as absolute path to "
-                   "remediate. Now quitting...\n");
+            ncprintf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
+                     "provided as relative path which is not valid for this "
+                     "frontend. Provide the input folder as absolute path to "
+                     "remediate. Now quitting...\n");
             emit die(
                 1, "invalid frontend and input folder combination",
                 QString(
@@ -1091,10 +1101,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     if (!QFile::exists(config.inputFolder)) {
-        printf("\033[1;31mBummer!\033[0m The provided input folder "
-               "'\033[1;31m%s\033[0m' does not exist.\nFix your setup. Now "
-               "quitting...\n",
-               config.inputFolder.toStdString().c_str());
+        ncprintf("\033[1;31mBummer!\033[0m The provided input folder "
+                 "'\033[1;31m%s\033[0m' does not exist.\nFix your setup. Now "
+                 "quitting...\n",
+                 config.inputFolder.toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(config.inputFolder),
                  "No such directory");
     }
@@ -1167,12 +1177,13 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                 continue;
             }
         }
-        printf("Filename: '\033[1;33m%s\033[0m' requested either on command "
-               "line or with '--includefrom' not found in(side) the input "
-               "directory '\033[1;33m%s\033[0m'!\n\nPlease verify the filename "
-               "and try again...\n",
-               requestedFileInfo.fileName().toStdString().c_str(),
-               config.inputFolder.toStdString().c_str());
+        ncprintf(
+            "Filename: '\033[1;33m%s\033[0m' requested either on command "
+            "line or with '--includefrom' not found in(side) the input "
+            "directory '\033[1;33m%s\033[0m'!\n\nPlease verify the filename "
+            "and try again...\n",
+            requestedFileInfo.fileName().toStdString().c_str(),
+            config.inputFolder.toStdString().c_str());
         emit die(1, "cannot access file",
                  QString("File '%1' does neither exist in current directory "
                          "nor in directory '%2")
@@ -1184,17 +1195,18 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (parser.isSet("query")) {
         if (QStringList({"esgamelist", "import", "cache"})
                 .contains(config.scraper)) {
-            printf("'--query' cannot be applied for gamelist creation or for "
-                   "this scraper. Now quitting...\n");
+            ncprintf("'--query' cannot be applied for gamelist creation or for "
+                     "this scraper. Now quitting...\n");
             exit(0);
         }
         if (cliFiles.length() == 1) {
             config.searchName = parser.value("query");
             config.threads = 1;
         } else {
-            printf("'--query' requires a single rom filename to be added at "
-                   "the end of the command-line. You either forgot to set one, "
-                   "or more than one was provided. Now quitting...\n");
+            ncprintf(
+                "'--query' requires a single rom filename to be added at "
+                "the end of the command-line. You either forgot to set one, "
+                "or more than one was provided. Now quitting...\n");
             emit die(2, "incomplete arguments for --query",
                      "The --query option requires also a single rom file as "
                      "command line argument");
@@ -1235,9 +1247,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.artworkXml = artworkFile.readAll();
         artworkFile.close();
     } else {
-        printf("Cannot read artwork xml file '\033[1;32m%s\033[0m'. Please "
-               "check file and permissions. Now exiting...\n",
-               config.artworkConfig.toStdString().c_str());
+        ncprintf("Cannot read artwork xml file '\033[1;32m%s\033[0m'. Please "
+                 "check file and permissions. Now exiting...\n",
+                 config.artworkConfig.toStdString().c_str());
         emit die(1, QString("cannot access '%1'").arg(config.artworkConfig),
                  "No such file");
     }
@@ -1301,29 +1313,30 @@ void Skyscraper::prepareScraping() {
     loadWhdLoadMap();
 
     if (config.scraper == "arcadedb" && config.threads != 1) {
-        printf("\033[1;33mForcing 1 thread to accomodate limits in the "
-               "ArcadeDB API\033[0m\n\n");
+        ncprintf("\033[1;33mForcing 1 thread to accomodate limits in the "
+                 "ArcadeDB API\033[0m\n\n");
         // Don't change! This limit was set by request from ArcadeDB
         config.threads = 1;
     } else if (config.scraper == "openretro" && config.threads != 1) {
-        printf("\033[1;33mForcing 1 thread to accomodate limits in the "
-               "OpenRetro API\033[0m\n\n");
+        ncprintf("\033[1;33mForcing 1 thread to accomodate limits in the "
+                 "OpenRetro API\033[0m\n\n");
         // Don't change! This limit was set by request from OpenRetro
         config.threads = 1;
     } else if (config.scraper == "igdb") {
         prepareIgdb(netComm, q);
     } else if (config.scraper == "mobygames") {
         if (config.threads != 1) {
-            printf("\033[1;33mForcing one thread to accomodate limits in "
-                   "MobyGames scraping module. Also be aware that MobyGames "
-                   "has a request limit of 720 requests per hour, 12 per "
-                   "minute, for a Hobbyist subscription.\033[0m\n\n");
+            ncprintf("\033[1;33mForcing one thread to accomodate limits in "
+                     "MobyGames scraping module. Also be aware that MobyGames "
+                     "has a request limit of 720 requests per hour, 12 per "
+                     "minute, for a Hobbyist subscription.\033[0m\n\n");
             config.threads = 1;
         }
         if (config.password.isEmpty()) {
-            printf("The MobyGames scraping module requires an API key to work. "
-                   "More info: 'https://gemba.github.io/skyscraper/"
-                   "SCRAPINGMODULES#mobygames'\n");
+            ncprintf(
+                "The MobyGames scraping module requires an API key to work. "
+                "More info: 'https://gemba.github.io/skyscraper/"
+                "SCRAPINGMODULES#mobygames'\n");
             emit die(1, "authentication required",
                      "Scraping at MobyGames requires an API key in "
                      "userCreds=\"...\" configuration");
@@ -1359,7 +1372,7 @@ void Skyscraper::updateWhdloadDb(NetComm &netComm, QEventLoop &q) {
         whdlEtagFile.close();
     }
 
-    printf("Fetching 'whdload_db.xml', just a sec...");
+    ncprintf("Fetching 'whdload_db.xml', just a sec...");
     netComm.request(url);
     q.exec();
     QByteArray data = netComm.getData();
@@ -1369,9 +1382,9 @@ void Skyscraper::updateWhdloadDb(NetComm &netComm, QEventLoop &q) {
         whdLoadFile.open(QIODevice::WriteOnly)) {
         whdLoadFile.write(data);
         whdLoadFile.close();
-        printf("\033[1;32m Success!\033[0m\n\n");
+        ncprintf("\033[1;32m Success!\033[0m\n\n");
     } else {
-        printf("\033[1;31m Failed!\033[0m\n\n");
+        ncprintf("\033[1;31m Failed!\033[0m\n\n");
     }
 }
 
@@ -1380,19 +1393,19 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
         // Don't change! This limit was set by request from IGDB
         config.threads = 4;
         // max. 4 request per sec
-        printf("\033[1;33mAdjusting to %d threads to accomodate limits in "
-               "the IGDB API\033[0m\n\n",
-               config.threads);
+        ncprintf("\033[1;33mAdjusting to %d threads to accomodate limits in "
+                 "the IGDB API\033[0m\n\n",
+                 config.threads);
     }
     if (config.user.isEmpty() || config.password.isEmpty()) {
-        printf("The IGDB scraping module requires free user credentials to "
-               "work. Read more about that here: "
-               "'https://gemba.github.io/skyscraper/SCRAPINGMODULES#igdb'\n");
+        ncprintf("The IGDB scraping module requires free user credentials to "
+                 "work. Read more about that here: "
+                 "'https://gemba.github.io/skyscraper/SCRAPINGMODULES#igdb'\n");
         emit die(1, "authentication required",
                  "Scraping at IGDB requires an API key in userCreds=\"...\" "
                  "configuration");
     }
-    printf("Fetching IGDB authentication token status, just a sec...\n");
+    ncprintf("Fetching IGDB authentication token status, just a sec...\n");
     QFile tokenFile("igdbToken.dat");
     QByteArray tokenData = "";
     if (tokenFile.exists() && tokenFile.open(QIODevice::ReadOnly)) {
@@ -1434,7 +1447,7 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
         if (jsonObj.contains("access_token") &&
             jsonObj.contains("expires_in") && jsonObj.contains("token_type")) {
             config.igdbToken = jsonObj["access_token"].toString();
-            printf("...token acquired, ready to scrape!\n");
+            ncprintf("...token acquired, ready to scrape!\n");
             qlonglong tokenEol = QDateTime::currentSecsSinceEpoch() +
                                  jsonObj["expires_in"].toInt();
             if (tokenFile.open(QIODevice::WriteOnly)) {
@@ -1444,21 +1457,21 @@ void Skyscraper::prepareIgdb(NetComm &netComm, QEventLoop &q) {
                 tokenFile.close();
             }
         } else {
-            printf("\033[1;33mReceived invalid IGDB server response. This "
-                   "can be caused by server issues or maybe you entered "
-                   "your credentials incorrectly in the Skyscraper "
-                   "configuration. Read more about that here: "
-                   "'https://gemba.github.io/skyscraper/"
-                   "SCRAPINGMODULES#igdb'\033[0m\n");
+            ncprintf("\033[1;33mReceived invalid IGDB server response. This "
+                     "can be caused by server issues or maybe you entered "
+                     "your credentials incorrectly in the Skyscraper "
+                     "configuration. Read more about that here: "
+                     "'https://gemba.github.io/skyscraper/"
+                     "SCRAPINGMODULES#igdb'\033[0m\n");
             emit die(1,
                      QString("no IGDB scrape token received (HTTP %1)")
                          .arg(netComm.getHttpStatus()),
                      "Invalid IGDB configuration or server error");
         }
     } else {
-        printf("...cached token still valid, ready to scrape!\n");
+        ncprintf("...cached token still valid, ready to scrape!\n");
     }
-    printf("\n");
+    ncprintf("\n");
 }
 
 void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
@@ -1467,20 +1480,20 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
     if (config.user.isEmpty() || config.password.isEmpty()) {
         if (config.threads > 1) {
             config.threads = threadsFailsafe;
-            printf("\033[1;33mForcing %d thread as this is the anonymous "
-                   "limit in the ScreenScraper scraping module. Sign up for "
-                   "an account at https://www.screenscraper.fr and support "
-                   "them to gain more threads. Then use the credentials with "
-                   "Skyscraper using the '-u user:password' command line "
-                   "option or by setting 'userCreds=\"user:password\"' in "
-                   "'%s/config.ini'.\033[0m\n\n",
-                   config.threads,
-                   Config::getSkyFolder().toStdString().c_str());
+            ncprintf("\033[1;33mForcing %d thread as this is the anonymous "
+                     "limit in the ScreenScraper scraping module. Sign up for "
+                     "an account at https://www.screenscraper.fr and support "
+                     "them to gain more threads. Then use the credentials with "
+                     "Skyscraper using the '-u user:password' command line "
+                     "option or by setting 'userCreds=\"user:password\"' in "
+                     "'%s/config.ini'.\033[0m\n\n",
+                     config.threads,
+                     Config::getSkyFolder().toStdString().c_str());
         }
     } else {
-        printf("Fetching limits for user '\033[1;33m%s\033[0m', just a "
-               "sec...\n",
-               config.user.toStdString().c_str());
+        ncprintf("Fetching limits for user '\033[1;33m%s\033[0m', just a "
+                 "sec...\n",
+                 config.user.toStdString().c_str());
         netComm.request(
             "https://www.screenscraper.fr/api2/"
             "ssuserInfos.php?devid=muldjord&devpassword=" +
@@ -1494,19 +1507,19 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
         if (jsonObj.isEmpty()) {
             config.threads = threadsFailsafe;
             if (netComm.getData().contains("Erreur de login")) {
-                printf("\033[0;31mScreenScraper login error! Please verify "
-                       "that you've entered your credentials correctly in "
-                       "'%s/config.ini'. It needs to "
-                       "look EXACTLY like this, but with your USER and "
-                       "PASS:\033[0m\n\033[1;33m[screenscraper]\nuserCreds="
-                       "\"USER:PASS\"\033[0m\033[0;31m\nContinuing with "
-                       "unregistered user, forcing %d thread...\033[0m\n\n",
-                       Config::getSkyFolder().toStdString().c_str(),
-                       config.threads);
+                ncprintf("\033[0;31mScreenScraper login error! Please verify "
+                         "that you've entered your credentials correctly in "
+                         "'%s/config.ini'. It needs to "
+                         "look EXACTLY like this, but with your USER and "
+                         "PASS:\033[0m\n\033[1;33m[screenscraper]\nuserCreds="
+                         "\"USER:PASS\"\033[0m\033[0;31m\nContinuing with "
+                         "unregistered user, forcing %d thread...\033[0m\n\n",
+                         Config::getSkyFolder().toStdString().c_str(),
+                         config.threads);
             } else {
-                printf("\033[1;33mReceived invalid / empty ScreenScraper "
-                       "server response, maybe their server is busy / "
-                       "overloaded. Forcing 1 thread...\033[0m\n\n");
+                ncprintf("\033[1;33mReceived invalid / empty ScreenScraper "
+                         "server response, maybe their server is busy / "
+                         "overloaded. Forcing 1 thread...\033[0m\n\n");
             }
         } else {
             int allowedThreads = jsonObj["response"]
@@ -1516,16 +1529,16 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
                                      .toInt();
             if (allowedThreads > 0) {
                 if (config.threadsSet && config.threads < allowedThreads) {
-                    printf(
+                    ncprintf(
                         "User is allowed %d thread%s, but user has set thread "
                         "value manually to %d: Using the lower value.\n\n",
                         allowedThreads, allowedThreads > 1 ? "s" : "",
                         config.threads);
                 } else {
                     config.threads = allowedThreads;
-                    printf("Setting threads to \033[1;32m%d\033[0m as "
-                           "allowed for your Screenscraper account.\n\n",
-                           config.threads);
+                    ncprintf("Setting threads to \033[1;32m%d\033[0m as "
+                             "allowed for your Screenscraper account.\n\n",
+                             config.threads);
                 }
             }
         }
@@ -1686,9 +1699,9 @@ void Skyscraper::cleanUp() {
     }
 }
 
-const char *Skyscraper::mediaSubFolderCStr(QString &in) {
+const std::string Skyscraper::mediaSubFolderStdStr(QString &in) {
     QString ret = PathTools::lexicallyRelativePath(config.mediaFolder, in);
-    return ret.toUtf8().constData();
+    return ret.toStdString();
 }
 
 void Skyscraper::bury(const int &returnCode, const QString &effect,

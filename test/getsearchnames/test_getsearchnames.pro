@@ -32,6 +32,7 @@ HEADERS += \
             ../../src/nametools.h \
             ../../src/netcomm.h \
             ../../src/netmanager.h \
+            ../../src/nocolor.h \
             ../../src/openretro.h \
             ../../src/pathtools.h \
             ../../src/platform.h \
@@ -40,24 +41,25 @@ HEADERS += \
             ../../src/settings.h \
             ../../src/strtools.h
 
-SOURCES +=  test_getsearchnames.cpp \
-             ../../src/abstractscraper.cpp \
-             ../../src/arcadedb.cpp \
-             ../../src/cache.cpp \
-             ../../src/cli.cpp \
-             ../../src/config.cpp \
-             ../../src/crc32.cpp \
-             ../../src/esgamelist.cpp \
-             ../../src/gameentry.cpp \
-             ../../src/igdb.cpp \
-             ../../src/mobygames.cpp \
-             ../../src/nametools.cpp \
-             ../../src/netcomm.cpp \
-             ../../src/netmanager.cpp \
-             ../../src/openretro.cpp \
-             ../../src/pathtools.cpp \
-             ../../src/platform.cpp \
-             ../../src/queue.cpp \
-             ../../src/screenscraper.cpp \
-             ../../src/settings.cpp \
-             ../../src/strtools.cpp
+SOURCES += test_getsearchnames.cpp \
+            ../../src/abstractscraper.cpp \
+            ../../src/arcadedb.cpp \
+            ../../src/cache.cpp \
+            ../../src/cli.cpp \
+            ../../src/config.cpp \
+            ../../src/crc32.cpp \
+            ../../src/esgamelist.cpp \
+            ../../src/gameentry.cpp \
+            ../../src/igdb.cpp \
+            ../../src/mobygames.cpp \
+            ../../src/nametools.cpp \
+            ../../src/netcomm.cpp \
+            ../../src/netmanager.cpp \
+            ../../src/nocolor.cpp \
+            ../../src/openretro.cpp \
+            ../../src/pathtools.cpp \
+            ../../src/platform.cpp \
+            ../../src/queue.cpp \
+            ../../src/screenscraper.cpp \
+            ../../src/settings.cpp \
+            ../../src/strtools.cpp

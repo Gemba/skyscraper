@@ -25,6 +25,8 @@
 
 #include "netcomm.h"
 
+#include "settings.h"
+
 #include <QDebug>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -100,53 +102,53 @@ QString NetComm::getHeaderValue(const QString headerKey) {
 
 QNetworkReply::NetworkError NetComm::getError(const int &verbosity) {
     if (!ok() && verbosity >= 1) {
-        printf("\033[1;31mNetwork error: ");
+        ncprintf("\033[1;31mNetwork error: ");
         switch (error) {
         case QNetworkReply::RemoteHostClosedError:
             // 'screenscraper' will often give this error when it's overloaded.
             // But since we retry a couple of times, it's rarely a problem.
-            printf("'QNetworkReply::RemoteHostClosedError', scraping module "
-                   "service might be overloaded.");
+            ncprintf("'QNetworkReply::RemoteHostClosedError', scraping module "
+                     "service might be overloaded.");
             break;
         case QNetworkReply::TimeoutError:
-            printf("'QNetworkReply::TimeoutError'");
+            ncprintf("'QNetworkReply::TimeoutError'");
             break;
         case QNetworkReply::NetworkSessionFailedError:
-            printf("'QNetworkReply::NetworkSessionFailedError'");
+            ncprintf("'QNetworkReply::NetworkSessionFailedError'");
             break;
         case QNetworkReply::ContentNotFoundError:
             // Don't show an error on these. For some modules I am guessing for
             // urls and sometimes they simply don't exist. It's not an error in
             // those cases.
-            // printf("Network error:
+            // ncprintf("Network error:
             // 'QNetworkReply::ContentNotFoundError'");
             break;
         case QNetworkReply::ContentReSendError:
-            printf("'QNetworkReply::ContentReSendError'");
+            ncprintf("'QNetworkReply::ContentReSendError'");
             break;
         case QNetworkReply::ContentGoneError:
-            printf("'QNetworkReply::ContentGoneError'");
+            ncprintf("'QNetworkReply::ContentGoneError'");
             break;
         case QNetworkReply::InternalServerError:
-            printf("'QNetworkReply::InternalServerError'");
+            ncprintf("'QNetworkReply::InternalServerError'");
             break;
         case QNetworkReply::UnknownNetworkError:
-            printf("'QNetworkReply::UnknownNetworkError'");
+            ncprintf("'QNetworkReply::UnknownNetworkError'");
             break;
         case QNetworkReply::UnknownContentError:
-            printf("'QNetworkReply::UnknownContentError'");
+            ncprintf("'QNetworkReply::UnknownContentError'");
             break;
         case QNetworkReply::UnknownServerError:
-            printf("'QNetworkReply::UnknownServerError'");
+            ncprintf("'QNetworkReply::UnknownServerError'");
             break;
         case QNetworkReply::AuthenticationRequiredError:
-            printf("'QNetworkReply::AuthenticationRequiredError'");
+            ncprintf("'QNetworkReply::AuthenticationRequiredError'");
             break;
         default:
-            printf("'%d' (QNetworkReply::NetworkError)", error);
+            ncprintf("'%d' (QNetworkReply::NetworkError)", error);
             break;
         }
-        printf(" (HTTP status: %d)\033[0m\n", getHttpStatus());
+        ncprintf(" (HTTP status: %d)\033[0m\n", getHttpStatus());
     }
     return error;
 }
@@ -157,18 +159,19 @@ QByteArray NetComm::getRedirUrl() { return redirUrl; }
 
 void NetComm::dataDownloaded(qint64 bytesReceived, qint64 /* bytesTotal */) {
     if (bytesReceived > DL_MAXSIZE) {
-        printf("Retrieved data size (%d MB) exceeded maximum of %d MB, "
-               "cancelling network request...\n",
-               static_cast<int>(bytesReceived / (1000 * 1000)),
-               DL_MAXSIZE / (1000 * 1000));
+        ncprintf("Retrieved data size (%d MB) exceeded maximum of %d MB, "
+                 "cancelling network request...\n",
+                 static_cast<int>(bytesReceived / (1000 * 1000)),
+                 DL_MAXSIZE / (1000 * 1000));
         reply->abort();
     }
 }
 
 void NetComm::requestTimeout() {
-    printf("\033[1;33mRequest timed out after %d secs, server might be busy / "
-           "overloaded...\033[0m\n",
-           timeout);
+    ncprintf(
+        "\033[1;33mRequest timed out after %d secs, server might be busy / "
+        "overloaded...\033[0m\n",
+        timeout);
     reply->abort();
 }
 
