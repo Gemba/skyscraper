@@ -29,6 +29,7 @@
 #include <QStringBuilder>
 #include <QStringList>
 #include <QTemporaryFile>
+#include <QTextStream>
 
 static const QRegularExpression RE_ALT_EMU =
     QRegularExpression("(<alternativeEmulator>)(.*?)(</"
@@ -84,26 +85,31 @@ bool Esde::loadOldGameList(const QString &gameListFileString) {
             }
             QFile invalidXmlFile = QFile(tmpFn);
             if (invalidXmlFile.open(QIODevice::ReadOnly) &&
-                esDeGamelist.open(QIODevice::ReadWrite | QIODevice::Text)) {
+                esDeGamelist.open(QIODevice::WriteOnly)) {
                 // create a standard compliant XML
                 QString part;
+                QTextStream esDeOut(&esDeGamelist);
                 bool replaced = false;
                 while (!invalidXmlFile.atEnd()) {
                     part = invalidXmlFile.read(4096);
                     if (QString tmpPart = part.remove(RE_ALT_EMU);
                         !replaced && tmpPart.length() != part.length()) {
                         replaced = true;
-                        part = tmpPart;
-                    };
-                    esDeGamelist.write(part.toStdString().c_str(),
-                                       part.length());
+                        esDeOut << tmpPart;
+                    } else {
+                        esDeOut << part;
+                    }
                 }
                 esDeGamelist.close();
                 invalidXmlFile.close();
                 qDebug() << "Gamelist now XML compliant, removed temporarily:"
                          << altEmu;
             }
+#ifdef QT_NO_DEBUG_OUTPUT
             invalidXmlFile.remove();
+#else
+            qDebug() << "Original ES-DE Gamelist retained in file" << tmpFn;
+#endif
         }
     }
     if (gameListReader.setFile(gameListFileString)) {
