@@ -33,14 +33,17 @@
   <hint>Skyscraper supports the ES-DE frontend gamelist format.</hint>
   <hint>You can add new platforms (i.e., systems to scrape) by editing configuration files. See https://gemba.github.io/skyscraper/PLATFORMS</hint>
   <hint>You can scrape data from GameBase DB files with Skyscraper. GameBase DBs are a well of information especially for indie or homebrew games for retro systems.</hint>
-  <hint>Skyscraper supports ten scraping modules: 7 for online sources and 3 for local sources.</hint>
+  <hint>Skyscraper supports ten scraping modules: Seven for online sources and three for local sources.</hint>
   <hint>Pizza and beer go well together.</hint>
   <hint>Skyscraper debuted at June, 11th 2017.</hint>
   <hint>Skyscraper runs on Linux, macOS and Windows.</hint>
   <hint>You can use relative paths for almost every path related option. See https://gemba.github.io/skyscraper/PATHHANDLING</hint>
   <hint>For a file extension/suffix option value like '*.ext', you can use the shorter forms '.ext' or even only 'ext'.</hint>
-  <hint>The supplementary/ folder contains helper scripts to support you in the advanced Skyscraper configuration.</hint>
+  <hint>The supplementary/scraperdata folder contains helper scripts to support you in the advanced Skyscraper configuration.</hint>
   <hint>You can scrape fanart and backcovers with Skyscraper, check the respective options.</hint>
   <hint>The flag --buildinfo provides useful information when reporting an issue.</hint>
   <hint>Default built-in extensions for game files are: *.m3u, *.ml, *.zip and *.7z</hint>
+  <hint>You can disable the colored terminal output by setting NO_COLOR=1 as environment variable.</hint>
+  <hint>You can validate your platforms definition file (peas_local.json) with the script peas_validate_with_json_schema.py of Skyscraper.</hint>
+  <hint>Albet Einstein's birthdate was on the pi day (3/14/1879), Karl Marx died on the pi day of 1883.</hint>
 </hints>
