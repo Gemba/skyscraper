@@ -3,16 +3,73 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
-### Version 3.19.0 (2026-TBA)
+### Version 3.19.0 (2026-03-16)
 
+- Added: BBC Micro is now supported out-of-the-box as
+  [platform](https://github.com/Gemba/skyscraper/blob/23ca6fda9402513df45febe0e21e6041b116b067/peas.json#L369).
+  Spin up your BBC emulator, like
+  [b-em](https://github.com/FollyMaddy/RetroPie-Share/blob/main/00-scriptmodules-00/emulators/b-em-a5.sh)
+  or [libretro
+  b2](https://github.com/Gemba/RetroPie-BSides/blob/main/docs/Libretro_bbcmicro.md)
+  (since 3.18.4)
+- Added: Ability to [disable colored terminal
+  output](CLIHELP.md#disable-terminal-colors) by setting the environment
+  variable `NO_COLOR=1`. Coloring will now automagically disabled when using
+  file redirection of stdout or running Skyscraper via a serial link.
+- Added: [JSON
+  Schema](https://github.com/Gemba/skyscraper/blob/master/supplementary/scraperdata/peas-schema.json)
+  file for platform definition file of Skyscraper and a [Python
+  script](https://github.com/Gemba/skyscraper/blob/master/supplementary/scraperdata/peas_validate_with_json_schema.py)
+  to validate your `peas_local.json` file against it. _RetroPie users_: Please
+  update the skyscraper scriptmodule in the RetroPie-Setup first before updating
+  Skyscraper.
+- Added: Workaround for ES-DE's potential invalid gamelist: ES-DE places in some
+  conditions an `<alternativeEmulator/>` as second root element to a
+  `gamelist.xml` file. Any serious XML parser will refuse this file as non
+  standard-conformant XML, so did Skyscraper/Qt. Thanks for reporting in the
+  first place and testing on macOS @DFelten
+- Added: Mitigation of Screenscraper.fr long running responses on some games
+  causing games not to be scraped (since 3.18.4), thanks for reporting
+  @saitamasahil, @ZacharyFoxx and @therealpxc
+- Added: CLI option [`--stderr`](CLIHELP.md#--stderr) which explicitly prints a
+  one liner to stderr when Skyscraper runs into an error condition in addition
+  to the stdout output. Parsing this single line makes integrations into other
+  programs more convenient (leaning towards
+  [Scappy](https://github.com/gabrielfvale/scrappy)).
+- Added: Build evaluates
+  [`SYSCONFDIR`](https://github.com/Gemba/skyscraper/blob/23ca6fda9402513df45febe0e21e6041b116b067/skyscraper.pro#L33)
+  environment variable to allow [filesystem hierarchy
+  standard](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard)
+  compliant builds and packaging (since 3.18.3). Thanks @Newchair2644.
+- Changed: Add ellipsis (...) on truncated text description, when
+  [`maxlength`](CONFIGINI.md#maxlength) is reached.
+- Changed: Initially implemented logic from 2019 which removes cache files when
+either parameter (m _or_ t) of `--cache purge:m=...,t=...` are matched. Updated
+implementation removes resource if and only if both parameters (m _and_ t) are
+matched, cf. thread in [RetroPie Forum](https://retropie.org.uk/forum/post/306255) (since 3.18.3)
+- Changed: More pleasant replacement for colons (:) in texts for Pegasus frontend.
+  Now uses the Unicode counterpart (Modifier Letter Colon, 0xa789) (since 3.18.3). Thanks
+  @LeeBigelow
+- Changed: Changes in The GamesDB API implied some re-write of Skyscraper's TGDB
+  scraper module. See paragraphs on changed [API limits and private key
+  usage](https://gemba.github.io/skyscraper/SCRAPINGMODULES/#thegamesdb-tgdb)
+  (since 3.18.5), thanks to the reporters @rudism, @saitamasahil and
+  @BrandonShega!
+- Updated: Docker container can now digest a host provided `config.ini` and
+  [several improvements](https://github.com/Gemba/skyscraper/pull/221). Kudos to
+  @rudism
+- Updated: Stricter `--cache` command validation to avoid invalid combinations.
 - Updated: ZXInfo scraper now checks first for file hash match, allow overriding
   with query parameter or hinting with release year in parenthesis in filename or
   via `aliasMap.csv` (since 3.18.2)
-- Changed: More pleasant replacement for colons in texts for Pegasus frontend.
-  Now uses the Unicode counterpart (Modifier Letter Colon, 0xa789). Thanks
-  @LeeBigelow. 
-- Fixed: Filename output name of cache operations, thanks @SineSwiper (since
-  3.18.2)
+- Fixed: Some glitches by cache commands which can operate without a platform
+  given (since 3.18.4). These cache features were added in 3.15.0.
+- Fixed: Reverted logic to ignore media during esgamelist ingest, unless they
+are explicitly set (e.g., `--flags video`) (since 3.18.3); regression from
+3.18.0, cf. thread in [RetroPie Forum](https://retropie.org.uk/forum/post/306218), thanks for reporting
+@s1eve-mcdichae1
+- Fixed: Filename output name of cache operations (since
+  3.18.2), thanks @SineSwiper
 - Fixed: A set of edgecase bugs, thanks to all reporters.
 
 ### Version 3.18.1 (2025-12-23)
@@ -153,8 +210,7 @@ the place to put ideas or to table Skyscraper puzzles.
   report:missing](CLIHELP.md#-cache-reportmissingall-textual-artwork-media-or-resource1resource2),
   [cache validate](CLIHELP.md#-cache-validate), [cache
   vacuum](CLIHELP.md#-cache-vacuum) and [cache
-  purge](CLIHELP.md#-cache-purgekeywordmodule-andor-type). Thanks #2, @Leukhos
-  the addition is very appreciated.
+  purge](CLIHELP.md#-cache-purgekeywordmodule-andor-type). Thanks #2, @Leukhos.
 - Fixed: Improvements to the Pegasus frontend, to avoid inconsistency with
   existing aliases in the frontend output for the keywords `command/launch` and
   `workdir/cwd`. Thanks, @Leukhos for your third submission.
