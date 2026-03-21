@@ -162,16 +162,13 @@ void RetroArch::assembleList(QString &finalOutput,
 
     if (!config->frontendExtra.isEmpty()) {
         // frontendExtra is used for default_core_path and default_core_name
-        // when it contains a path separator (/). Format:
-        // "<CORE_PATH>;<CORE_NAME>"
-        if (config->frontendExtra.contains("/")) {
-            QStringList parts = config->frontendExtra.split(";");
-            if (parts.length() >= 1) {
-                corePathStr = parts[0];
-            }
-            if (parts.length() >= 2) {
-                coreNameStr = parts[1];
-            }
+        // Format: "<CORE_PATH>;<CORE_NAME>"
+        QStringList parts = config->frontendExtra.split(";");
+        if (parts.length() >= 1) {
+            corePathStr = parts[0];
+        }
+        if (parts.length() >= 2) {
+            coreNameStr = parts[1];
         }
     }
 

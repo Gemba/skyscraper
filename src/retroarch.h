@@ -46,7 +46,7 @@ public:
 
     GameEntry::Types supportedMedia() override {
         return GameEntry::Types(GameEntry::COVER | GameEntry::SCREENSHOT |
-                                GameEntry::WHEEL);
+                                GameEntry::MARQUEE | GameEntry::WHEEL);
     }
 
 protected:

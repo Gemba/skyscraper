@@ -246,6 +246,9 @@ private slots:
 
         // Should NOT support MANUAL, TEXTURE, FANART, BACKCOVER
         QVERIFY(!(supported & GameEntry::MANUAL));
+        QVERIFY(!(supported & GameEntry::TEXTURE));
+        QVERIFY(!(supported & GameEntry::FANART));
+        QVERIFY(!(supported & GameEntry::BACKCOVER));
     }
 
     // Test frontend capabilities flags through public interface
