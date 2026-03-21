@@ -25,6 +25,8 @@
 
 #include "strtools.h"
 
+#include "nocolor.h"
+
 #include <QCryptographicHash>
 #include <QDate>
 #include <QDebug>
@@ -327,7 +329,12 @@ QString StrTools::getVersionBanner() {
          colors[idx++] % "m`-------' by Lars Muldjord and contributors                  " % pad % "\"\"''''\"",
         // clang-format on
     };
-    return "\r\033[38;5;" % banner.join("\n\033[38;5;") % "\033[0m \n";
+    QString _b = "\r\033[38;5;" % banner.join("\n\033[38;5;") % "\033[0m \n";
+    if (noColor) {
+        QRegularExpression RE_ANSI_CODE = QRegularExpression("\\033[[\\d;]+m");
+        _b.remove(RE_ANSI_CODE);
+    }
+    return _b;
 }
 
 QString StrTools::stripBrackets(const QString str) {

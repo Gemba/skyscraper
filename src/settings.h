@@ -26,6 +26,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "nocolor.h"
+
 #include <QCommandLineParser>
 #include <QImage>
 #include <QMap>

@@ -145,7 +145,7 @@ QString NameTools::getNameWithSpaces(const QString baseName) {
         withSpaces.append(current);
         previous = current;
     }
-    // printf("withSpaces: '%s'\n", withSpaces.toStdString().c_str());
+    // ncprintf("withSpaces: '%s'\n", withSpaces.toStdString().c_str());
     return withSpaces;
 }
 
@@ -420,9 +420,9 @@ QString NameTools::getCacheId(const QFileInfo &info) {
             }
             romFile.close();
         } else {
-            printf("Cannot calculate cache id of rom file '%s', please check "
-                   "permissions and try again, now exiting...\n",
-                   info.fileName().toStdString().c_str());
+            ncprintf("Cannot calculate cache id of rom file '%s', please check "
+                     "permissions and try again, now exiting...\n",
+                     info.fileName().toStdString().c_str());
             exit(1);
         }
     } else {

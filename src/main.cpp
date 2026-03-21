@@ -25,6 +25,7 @@
 
 #include "cli.h"
 #include "config.h"
+#include "nocolor.h"
 #include "skyscraper.h"
 #include "strtools.h"
 
@@ -83,7 +84,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &,
         txt += QString("FATAL: %1").arg(msg);
         abort();
     }
-    printf("%s\n", txt.toStdString().c_str());
+    ncprintf("%s\n", txt.toStdString().c_str());
     fflush(stdout);
 }
 
@@ -111,7 +112,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
                     skyscraper->state = Skyscraper::OpMode::CACHE_EDIT_DISMISS;
                 } else if (skyscraper->state == Skyscraper::OpMode::THREADED) {
                     // Threads are running, clear queue for a nice exit
-                    printf(
+                    ncprintf(
                         "\033[1;33mUser wants to quit, trying to exit "
                         "nicely. This can take a few seconds depending "
                         "on how many threads are running...\033[0m\n");
@@ -121,7 +122,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
                 exit(1);
             }
         } else {
-            printf("\033[1;31mUser REALLY wants to quit NOW, forcing "
+            ncprintf("\033[1;31mUser REALLY wants to quit NOW, forcing "
                     "unclean exit...\033[0m\n");
             exit(1);
         }
@@ -171,7 +172,6 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-
     Config configCls;
     configCls.initSkyFolders();
     configCls.setupUserConfig();
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
         parser.showHelp();
     } else {
         if (!parser.isSet("buildinfo")) {
-            printf("%s", StrTools::getVersionHeader().toStdString().c_str());
+            ncprintf(StrTools::getVersionHeader().toStdString().c_str());
         }
         QObject::connect(skyscraper, &Skyscraper::finished, &app,
                             &QCoreApplication::quit);

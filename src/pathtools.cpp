@@ -88,10 +88,9 @@ QString &PathTools::expandHomePath(QString &path) {
     return path;
 }
 
-const char *PathTools::pathToCStr(QString &in) {
-    QString ret = in;
+const std::string PathTools::pathToStdStr(QString in) {
 #ifndef Q_OS_WIN
-    ret = ret.replace(QDir::homePath(), "~");
+    in = in.replace(QDir::homePath(), "~");
 #endif
-    return ret.toUtf8().constData();
+    return in.toStdString();
 }

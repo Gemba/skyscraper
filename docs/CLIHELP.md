@@ -23,6 +23,20 @@ On _non_ RaspiOS-based RetroPie-Installments put the file from
   
 In either case: Open a new bash and press ++tab++ key twice to see it in action.
 
+### Disable Terminal Colors
+
+By default Skyscraper will use ANSI terminal colors. However, colors will be not
+be used in the output when you run Skyscraper via a serial console or you apply
+file redirection e.g., `Skyscraper ... > out.log`. In any case you can manually
+enforce no color output by setting the environment variable `NO_COLOR` to a
+non-zero value (a value of zero will show colors). For example:
+
+```bash
+NO_COLOR=1 Skyscraper ...
+```
+
+The [no-color.org](https://no-color.org) website has additional information.
+
 ## Short Options
 
 The most prevalent short options you will use are most likely [`-s`](#-s-module)

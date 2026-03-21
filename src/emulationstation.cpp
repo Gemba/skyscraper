@@ -74,12 +74,12 @@ void EmulationStation::skipExisting(QList<GameEntry> &gameEntries,
                                     QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
-    printf("Resolving missing entries...");
+    ncprintf("Resolving missing entries...");
     int dots = 0;
     for (auto const &ge : gameEntries) {
         dots++;
         if (dots % 100 == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
         if (ge.isFolder) {
@@ -246,7 +246,7 @@ void EmulationStation::assembleList(QString &finalOutput,
 
     for (auto &entry : gameEntries) {
         if (++dots % dotMod == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
 

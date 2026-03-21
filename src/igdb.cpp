@@ -111,9 +111,9 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
     if (!netComm->ok()) {
         const QString httpStatusStr =
             " (HTTP status " % QString::number(netComm->getHttpStatus()) % ")";
-        printf("\033[1;31mThe IGDB request failed%s, cannot proceed!\033[0m\n",
-               config->verbosity > 1 ? httpStatusStr.toStdString().c_str()
-                                     : "");
+        ncprintf(
+            "\033[1;31mThe IGDB request failed%s, cannot proceed!\033[0m\n",
+            config->verbosity > 1 ? httpStatusStr.toStdString().c_str() : "");
         reqRemaining = 0;
         return;
     }
@@ -124,8 +124,8 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
     }
 
     if (jsonDoc.object()["message"].toString() == "Too Many Requests") {
-        printf("\033[1;31mThe IGDB requests per second limit has been "
-               "exceeded, cannot continue!\033[0m\n");
+        ncprintf("\033[1;31mThe IGDB requests per second limit has been "
+                 "exceeded, cannot continue!\033[0m\n");
         reqRemaining = 0;
         return;
     }

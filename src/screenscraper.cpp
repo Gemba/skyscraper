@@ -56,9 +56,9 @@ ScreenScraper::ScreenScraper(Settings *config,
     connect(&statusTimer, &QTimer::timeout, this, [=]() {
         tctr = tctr + 1;
         if (tctr >= DELAY_NOTE_AFTER_SEC) {
-            printf(" \033[1;32m%2s\033[0mResponse delayed for "
-                   "%ds\r",
-                   tctr % 2 ? " •" : "• ", 5 * ((int)(tctr / 5)));
+            ncprintf(" \033[1;32m%2s\033[0mResponse delayed for "
+                     "%ds\r",
+                     tctr % 2 ? " •" : "• ", 5 * ((int)(tctr / 5)));
             fflush(stdout);
         }
     });
@@ -89,7 +89,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     // ignore any | entries, only pick first
     int platformId = getPlatformId(config->platform)[0];
     if (platformId == -1) {
-        printf(
+        ncprintf(
             "\033[0;31mPlatform '\033[0;31m%s\033[0m' has not platform id "
             "match. Review PLATFORMS.md to remediate this warning. Skyscraper "
             "is proceeding without platform id, result may be inaccurate.\n",
@@ -122,7 +122,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         // potentially faulty JSON
         if (headerData.isEmpty()) {
             int timeout = TIMEOUT_SEC << (1 + retries);
-            printf(
+            ncprintf(
                 "\033[1;33mRetrying request with timeout of %ds...\033[0m\n\n",
                 timeout);
             netComm->setTimeout(timeout);
@@ -132,21 +132,22 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
             statusTimer.stop();
             return;
         } else if (headerData.contains("API totalement fermé")) {
-            printf("\033[1;31mThe ScreenScraper API is currently closed, "
-                   "exiting nicely...\033[0m\n\n");
+            ncprintf("\033[1;31mThe ScreenScraper API is currently closed, "
+                     "exiting nicely...\033[0m\n\n");
             statusTimer.stop();
             reqRemaining = 0;
             return;
         } else if (headerData.contains(
                        "Le logiciel de scrape utilisé a été blacklisté")) {
-            printf("\033[1;31mSkyscraper has apparently been blacklisted at "
-                   "ScreenScraper, exiting nicely...\033[0m\n\n");
+            ncprintf("\033[1;31mSkyscraper has apparently been blacklisted at "
+                     "ScreenScraper, exiting nicely...\033[0m\n\n");
             statusTimer.stop();
             reqRemaining = 0;
             return;
         } else if (headerData.contains("Votre quota de scrape est")) {
-            printf("\033[1;31mYour daily ScreenScraper request limit has been "
-                   "reached, exiting nicely...\033[0m\n\n");
+            ncprintf(
+                "\033[1;31mYour daily ScreenScraper request limit has been "
+                "reached, exiting nicely...\033[0m\n\n");
             reqRemaining = 0;
             statusTimer.stop();
             return;
@@ -161,7 +162,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                 "****u****s****e****r****s**** ****i****s**** "
                 "****a****l****r****e****a****d****y**** "
                 "****u****s****e****d****")) {
-            printf(
+            ncprintf(
                 "\033[1;31mThe screenscraper service is currently closed or "
                 "too busy to handle requests from unregistered and inactive "
                 "users. Sign up for an account at https://www.screenscraper.fr "
@@ -180,7 +181,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         }
 
         if (tctr >= DELAY_NOTE_AFTER_SEC) {
-            printf("Response after %ds           \n", tctr);
+            ncprintf("Response after %ds           \n", tctr);
         }
         statusTimer.stop();
 
@@ -192,10 +193,11 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 
         // Check if we got a valid JSON document back
         if (jsonObj.isEmpty()) {
-            printf("\033[1;31mScreenScraper APIv2 returned invalid / empty "
-                   "Json. Their servers are probably down. Please try again "
-                   "later or use a different scraping module with '-s MODULE'. "
-                   "Check 'Skyscraper --help' for more information.\033[0m\n");
+            ncprintf(
+                "\033[1;31mScreenScraper APIv2 returned invalid / empty "
+                "Json. Their servers are probably down. Please try again "
+                "later or use a different scraping module with '-s MODULE'. "
+                "Check 'Skyscraper --help' for more information.\033[0m\n");
             data.replace(StrTools::unMagic("204;198;236;130;203;181;203;126;"
                                            "191;167;200;198;192;228;169;156"),
                          "****");
@@ -213,12 +215,12 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                             "\nEN: Mandatory fields are missing in the URL.\n");
                     }
                     errorResponse.write(data);
-                    printf("The erroneous answer was written to '%s'. If you "
-                           "expected to scrape game data and this error "
-                           "persists, please consider filing a bug report at "
-                           "'https://github.com/Gemba/skyscraper/issues' and "
-                           "attach that file.\n",
-                           PathTools::pathToCStr(errFile));
+                    ncprintf("The erroneous answer was written to '%s'. If you "
+                             "expected to scrape game data and this error "
+                             "persists, please consider filing a bug report at "
+                             "'https://github.com/Gemba/skyscraper/issues' and "
+                             "attach that file.\n",
+                             PathTools::pathToStdStr(errFile).c_str());
                 }
                 errorResponse.close();
             }
@@ -228,17 +230,18 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 
         // Check if the request was successful
         if (jsonObj["header"].toObject()["success"].toString() != "true") {
-            printf("Request returned a success state of '%s'. Error was:\n%s\n",
-                   jsonObj["header"]
-                       .toObject()["success"]
-                       .toString()
-                       .toStdString()
-                       .c_str(),
-                   jsonObj["header"]
-                       .toObject()["error"]
-                       .toString()
-                       .toStdString()
-                       .c_str());
+            ncprintf(
+                "Request returned a success state of '%s'. Error was:\n%s\n",
+                jsonObj["header"]
+                    .toObject()["success"]
+                    .toString()
+                    .toStdString()
+                    .c_str(),
+                jsonObj["header"]
+                    .toObject()["error"]
+                    .toString()
+                    .toStdString()
+                    .c_str());
             // Try again. We handle important errors above, so something weird
             // is going on here
             continue;
@@ -266,8 +269,8 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                .toString()
                                .toInt();
             if (reqRemaining <= 0) {
-                printf("\033[1;31mYour daily ScreenScraper request limit has "
-                       "been reached, exiting nicely...\033[0m\n\n");
+                ncprintf("\033[1;31mYour daily ScreenScraper request limit has "
+                         "been reached, exiting nicely...\033[0m\n\n");
             }
         }
 
@@ -541,18 +544,19 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
                     "7z", QStringList({"l", "-so", info.absoluteFilePath()}));
                 if (decProc.waitForFinished(30000)) {
                     if (decProc.exitStatus() != QProcess::NormalExit) {
-                        printf("Getting file list from compressed file failed, "
-                               "falling back...\n");
+                        ncprintf(
+                            "Getting file list from compressed file failed, "
+                            "falling back...\n");
                         unpack = false;
                     } else if (!decProc.readAllStandardOutput().contains(
                                    " 1 files")) {
-                        printf("Compressed file contains more than 1 file, "
-                               "falling back...\n");
+                        ncprintf("Compressed file contains more than 1 file, "
+                                 "falling back...\n");
                         unpack = false;
                     }
                 } else {
-                    printf("Getting file list from compressed file timed out "
-                           "or failed, falling back...\n");
+                    ncprintf("Getting file list from compressed file timed out "
+                             "or failed, falling back...\n");
                     unpack = false;
                 }
             }
@@ -570,19 +574,20 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
                         sha1.addData(allData);
                         crc.pushData(1, allData.data(), allData.length());
                     } else {
-                        printf("Something went wrong when decompressing file "
-                               "to stdout, falling back...\n");
+                        ncprintf("Something went wrong when decompressing file "
+                                 "to stdout, falling back...\n");
                         unpack = false;
                     }
                 } else {
-                    printf("Decompression process timed out or failed, falling "
-                           "back...\n");
+                    ncprintf(
+                        "Decompression process timed out or failed, falling "
+                        "back...\n");
                     unpack = false;
                 }
             }
         } else {
-            printf("File either not a compressed file or exceeds 8 meg size "
-                   "limit, falling back...\n");
+            ncprintf("File either not a compressed file or exceeds 8 meg size "
+                     "limit, falling back...\n");
             unpack = false;
         }
     }

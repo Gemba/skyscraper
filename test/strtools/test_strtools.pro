@@ -11,8 +11,11 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
-HEADERS += ../../src/strtools.h 
+HEADERS += \
+            ../../src/nocolor.h \
+            ../../src/strtools.h
 
 SOURCES += test_strtools.cpp \
-           ../../src/strtools.cpp 
+            ../../src/nocolor.cpp \
+            ../../src/strtools.cpp
 

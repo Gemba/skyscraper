@@ -24,15 +24,17 @@ include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \
-           ../../src/config.h \
-           ../../src/pathtools.h \
-           ../../src/platform.h \
-           ../../src/strtools.h
+            ../../src/config.h \
+            ../../src/nocolor.h \
+            ../../src/pathtools.h \
+            ../../src/platform.h \
+            ../../src/strtools.h
 
 SOURCES += test_pathtools.cpp \
-           ../../src/config.cpp \
-           ../../src/pathtools.cpp \
-           ../../src/platform.cpp \
-           ../../src/strtools.cpp
+            ../../src/config.cpp \
+            ../../src/nocolor.cpp \
+            ../../src/pathtools.cpp \
+            ../../src/platform.cpp \
+            ../../src/strtools.cpp
 
 

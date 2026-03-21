@@ -85,116 +85,119 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 include(win32/skyscraper.pro)
 
-HEADERS += src/skyscraper.h \
-           src/netmanager.h \
-           src/netcomm.h \
-           src/xmlreader.h \
-           src/settings.h \
+HEADERS += \
+           src/abstractfrontend.h \
+           src/abstractscraper.h \
+           src/arcadedb.h \
+           src/attractmode.h \
+           src/batocera.h \
+           src/cache.h \
            src/cli.h \
            src/compositor.h \
            src/config.h \
-           src/strtools.h \
-           src/imgtools.h \
-           src/esgamelist.h \
-           src/scraperworker.h \
-           src/cache.h \
-           src/localscraper.h \
-           src/importscraper.h \
-           src/gameentry.h \
-           src/abstractscraper.h \
-           src/abstractfrontend.h \
+           src/crc32.h \
            src/emulationstation.h \
            src/esde.h \
-           src/batocera.h \
-           src/attractmode.h \
-           src/pegasus.h \
-           src/retroarch.h \
-           src/openretro.h \
-           src/thegamesdb.h \
-           src/zxinfodk.h \
-           src/screenscraper.h \
-           src/crc32.h \
-           src/mobygames.h \
-           src/gamebase.h \
-           src/igdb.h \
-           src/arcadedb.h \
-           src/platform.h \
-           src/layer.h \
-           src/fxshadow.h \
-           src/fxblur.h \
-           src/fxmask.h \
-           src/fxframe.h \
-           src/fxrounded.h \
-           src/fxstroke.h \
-           src/fxbrightness.h \
-           src/fxcontrast.h \
+           src/esgamelist.h \
            src/fxbalance.h \
-           src/fxopacity.h \
+           src/fxblur.h \
+           src/fxbrightness.h \
+           src/fxcolorize.h \
+           src/fxcontrast.h \
+           src/fxframe.h \
            src/fxgamebox.h \
            src/fxhue.h \
-           src/fxsaturation.h \
-           src/fxcolorize.h \
+           src/fxmask.h \
+           src/fxopacity.h \
            src/fxrotate.h \
+           src/fxrounded.h \
+           src/fxsaturation.h \
            src/fxscanlines.h \
+           src/fxshadow.h \
+           src/fxstroke.h \
+           src/gamebase.h \
+           src/gameentry.h \
+           src/igdb.h \
+           src/imgtools.h \
+           src/importscraper.h \
+           src/layer.h \
+           src/localscraper.h \
+           src/mobygames.h \
            src/nametools.h \
+           src/netcomm.h \
+           src/netmanager.h \
+           src/nocolor.h \
+           src/openretro.h \
            src/pathtools.h \
-           src/queue.h
+           src/pegasus.h \
+           src/platform.h \
+           src/queue.h \
+           src/retroarch.h \
+           src/scraperworker.h \
+           src/screenscraper.h \
+           src/settings.h \
+           src/skyscraper.h \
+           src/strtools.h \
+           src/thegamesdb.h \
+           src/xmlreader.h \
+           src/zxinfodk.h
 
 SOURCES += src/main.cpp \
-           src/skyscraper.cpp \
-           src/netmanager.cpp \
-           src/netcomm.cpp \
-           src/xmlreader.cpp \
-           src/settings.cpp \
+           src/abstractfrontend.cpp \
+           src/abstractscraper.cpp \
+           src/arcadedb.cpp \
+           src/attractmode.cpp \
+           src/batocera.cpp \
+           src/cache.cpp \
            src/cli.cpp \
            src/compositor.cpp \
            src/config.cpp \
-           src/strtools.cpp \
-           src/imgtools.cpp \
-           src/esgamelist.cpp \
-           src/scraperworker.cpp \
-           src/cache.cpp \
-           src/localscraper.cpp \
-           src/importscraper.cpp \
-           src/gameentry.cpp \
-           src/abstractscraper.cpp \
-           src/abstractfrontend.cpp \
+           src/crc32.cpp \
            src/emulationstation.cpp \
            src/esde.cpp \
-           src/batocera.cpp \
-           src/attractmode.cpp \
-           src/pegasus.cpp \
-           src/retroarch.cpp \
-           src/openretro.cpp \
-           src/thegamesdb.cpp \
-           src/zxinfodk.cpp \
-           src/screenscraper.cpp \
-           src/crc32.cpp \
-           src/mobygames.cpp \
-           src/gamebase.cpp \
-           src/igdb.cpp \
-           src/arcadedb.cpp \
-           src/platform.cpp \
-           src/layer.cpp \
-           src/fxshadow.cpp \
-           src/fxblur.cpp \
-           src/fxmask.cpp \
-           src/fxframe.cpp \
-           src/fxrounded.cpp \
-           src/fxstroke.cpp \
-           src/fxbrightness.cpp \
-           src/fxcontrast.cpp \
+           src/esgamelist.cpp \
            src/fxbalance.cpp \
-           src/fxopacity.cpp \
+           src/fxblur.cpp \
+           src/fxbrightness.cpp \
+           src/fxcolorize.cpp \
+           src/fxcontrast.cpp \
+           src/fxframe.cpp \
            src/fxgamebox.cpp \
            src/fxhue.cpp \
-           src/fxsaturation.cpp \
-           src/fxcolorize.cpp \
+           src/fxmask.cpp \
+           src/fxopacity.cpp \
            src/fxrotate.cpp \
+           src/fxrounded.cpp \
+           src/fxsaturation.cpp \
            src/fxscanlines.cpp \
+           src/fxshadow.cpp \
+           src/fxstroke.cpp \
+           src/gamebase.cpp \
+           src/gameentry.cpp \
+           src/igdb.cpp \
+           src/imgtools.cpp \
+           src/importscraper.cpp \
+           src/layer.cpp \
+           src/localscraper.cpp \
+           src/mobygames.cpp \
            src/nametools.cpp \
+           src/netcomm.cpp \
+           src/netmanager.cpp \
+           src/nocolor.cpp \
+           src/openretro.cpp \
            src/pathtools.cpp \
-           src/queue.cpp
+           src/pegasus.cpp \
+           src/platform.cpp \
+           src/queue.cpp \
+           src/retroarch.cpp \
+           src/scraperworker.cpp \
+           src/screenscraper.cpp \
+           src/settings.cpp \
+           src/skyscraper.cpp \
+           src/strtools.cpp \
+           src/thegamesdb.cpp \
+           src/xmlreader.cpp \
+           src/zxinfodk.cpp
 
 SUBDIRS += \
     win32/skyscraper.pro

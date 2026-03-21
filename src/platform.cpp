@@ -26,6 +26,7 @@
 #include "platform.h"
 
 #include "config.h"
+#include "settings.h"
 
 #include <QByteArray>
 #include <QCryptographicHash>
@@ -79,8 +80,8 @@ bool Platform::loadConfig() {
                         .arg(reqVer.toString());
             }
         }
-        printf("\033[1;31mFile not found '%s'.%s Now quitting...\033[0m\n",
-               fnPeas.toUtf8().constData(), extraInfo.toUtf8().constData());
+        ncprintf("\033[1;31mFile not found '%s'.%s Now quitting...\033[0m\n",
+                 fnPeas.toUtf8().constData(), extraInfo.toUtf8().constData());
         return false;
     }
 
@@ -88,18 +89,18 @@ bool Platform::loadConfig() {
     QJsonDocument json(QJsonDocument::fromJson(jsonData));
 
     if (json.isNull() || json.isEmpty()) {
-        printf("\033[1;31mFile '%s' empty or invalid JSON format. Now "
-               "quitting...\033[0m\n",
-               fnPeas.toUtf8().constData());
+        ncprintf("\033[1;31mFile '%s' empty or invalid JSON format. Now "
+                 "quitting...\033[0m\n",
+                 fnPeas.toUtf8().constData());
         return false;
     }
 
     bool ok = true;
     QJsonObject jObjLocal = loadLocalConfig(ok);
     if (!ok) {
-        printf("\033[1;31mFile '%s' has invalid JSON format. Now "
-               "quitting...\033[0m\n",
-               fnPeasLocal.toUtf8().constData());
+        ncprintf("\033[1;31mFile '%s' has invalid JSON format. Now "
+                 "quitting...\033[0m\n",
+                 fnPeasLocal.toUtf8().constData());
         return false;
     }
     QJsonObject jObj = json.object();
@@ -206,7 +207,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         if (platformsIdCsvFn == fnPlatformsIdMapLocal) {
             return true; // no platforms_idmap_local.csv, no worries
         }
-        printf("\033[1;31mFile not found '%s'. Now quitting...\033[0m\n", fn);
+        ncprintf("\033[1;31mFile not found '%s'. Now quitting...\033[0m\n", fn);
         return false;
     }
     while (!configFile.atEnd()) {
@@ -217,7 +218,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         }
         QStringList parts = line.split(',');
         if (parts.length() < 4) {
-            printf("\033[1;31mFile '%s', line '%s' has less than four columns, "
+            ncprintf("\033[1;31mFile '%s', line '%s' has less than four columns, "
                    "but %d. Please fix. Now quitting...\033[0m\n",
                    fn, parts.join(',').toUtf8().constData(),
                    static_cast<int>(parts.length()));
@@ -226,7 +227,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         }
         QString pkey = parts[0].trimmed();
         if (pkey.isEmpty()) {
-            printf(
+            ncprintf(
                 "\033[1;33mFile '%s', line '%s' has empty folder/platform. "
                 "Ignoring this line. Please fix to mute this warning.\033[0m\n",
                 fn, parts.join(',').toUtf8().constData());
@@ -251,7 +252,7 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
                         ids[col].append((tmp == 0) ? -1 : tmp);
                     } else {
                         ids[col].append(-1);
-                        printf("\033[1;33mFile '%s', line '%s,%s' has "
+                        ncprintf("\033[1;33mFile '%s', line '%s,%s' has "
                                "unparsable or too negative number '%s' (use "
                                "-1 for unknown platform id). Assumming -1 for "
                                "now, please fix to mute this warning.\033[0m\n",

@@ -28,6 +28,6 @@ namespace PathTools {
     QString lexicallyRelativePath(const QString &base, const QString &other);
     QString lexicallyNormalPath(const QString &pathWithDots);
     QString &expandHomePath(QString &path);
-    const char *pathToCStr(QString &in);
+    const std::string pathToStdStr(const QString in);
 } // namespace PathTools
 #endif // PATHTOOLS_H
