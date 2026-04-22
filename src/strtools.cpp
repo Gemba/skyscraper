@@ -270,7 +270,7 @@ QString StrTools::conformReleaseDate(QString str) {
 
 QString StrTools::conformTags(const QString str) {
     QString tags = "";
-#if QT_VERSION >= 0x050e00
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QList<QString> tagList = str.split(',', Qt::SkipEmptyParts);
 #else
     // RP on Buster
@@ -419,7 +419,13 @@ QString StrTools::wrapText(const QString &inText, int width) {
     QStringList wrappedLines;
     int ptr = 0;
     QString line;
-    for (auto const &ws : inText.split(' ', Qt::SkipEmptyParts)) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    auto text = inText.split(' ', Qt::SkipEmptyParts);
+#else
+    // RP on Buster
+    auto text = inText.split(' ', QString::SkipEmptyParts);
+#endif
+    for (auto const &ws : text) {
         for (auto const &wn : ws.split('\n')) {
             bool nl = wn.isEmpty() || (wn != ws && !ws.endsWith(wn));
             if (nl || ptr + wn.length() >= width) {
