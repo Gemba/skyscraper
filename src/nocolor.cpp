@@ -84,7 +84,7 @@ void printVA(int nvargs, const char *fmt, ...) {
                 }
             }
         }
-        printf(fmtPlain.toStdString().c_str());
+        printf("%s", fmtPlain.toStdString().c_str());
     } else {
         va_start(args, fmt);
         vprintf(fmt, args);
