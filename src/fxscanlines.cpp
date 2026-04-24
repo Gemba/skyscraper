@@ -26,49 +26,34 @@
 #include "fxscanlines.h"
 
 #include <QPainter>
-#include <cmath>
 
 FxScanlines::FxScanlines() {}
 
 QImage FxScanlines::applyEffect(const QImage &src, const Layer &layer,
                                 Settings *config) {
     QImage canvas = src;
-    QString resource = layer.resource;
     double scaling = 1.0;
-    int opacity = layer.opacity;
     if (!layer.scaling.isEmpty()) {
         bool isDouble = false;
         layer.scaling.toDouble(&isDouble);
-        if (isDouble)
+        if (isDouble) {
             scaling = layer.scaling.toDouble();
+            if (scaling < 0.1)
+                scaling = 0.1;
+            else if (scaling > 2.0)
+                scaling = 2.0;
+        }
     }
 
-    if (resource.isEmpty() || !config->resources.contains("resource"))
+    QString resource = layer.resource;
+    if (!config->resources.contains(resource))
         resource = "scanlines1.png";
-    if (opacity == -1)
-        opacity = 100;
 
-    if (scaling < 0.1)
-        scaling = 0.1;
-    if (scaling > 2.0)
-        scaling = 2.0;
-
-    if (opacity > 100)
+    int opacity = layer.opacity;
+    if (opacity == -1 || opacity > 100)
         opacity = 100;
-    if (opacity < 0)
+    else if (opacity < -1)
         opacity = 0;
-
-    /*
-    if(!layer.scaling.isEmpty()) {
-      if(layer.scaling == "auto") {
-      } else {
-        bool isDouble = false;
-        layer.scaling.toDouble(&isDouble);
-        if(isDouble)
-          scaling = layer.scaling.toDouble();
-      }
-    }
-    */
 
     QPainter painter;
     painter.begin(&canvas);
