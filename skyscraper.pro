@@ -16,6 +16,10 @@ unix {
   }
 }
 
+*-g++* {
+    QMAKE_CXXFLAGS += -Werror=format-security
+}
+
 # Installation prefix path for bin/Skyscraper and etc/skyscraper/*
 PREFIX=$$(PREFIX)
 # One time set with "PREFIX=/path/to qmake"?
