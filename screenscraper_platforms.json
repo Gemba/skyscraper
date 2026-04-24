@@ -231,6 +231,7 @@
     },
     "37": {
         "nom_eu": "BBC Micro",
+        "nom_recalbox": "bbcmicro",
         "nom_retropie": "bbcmicro",
         "nom_launchbox": "BBC Microcomputer System",
         "nom_hyperspin": "Acorn BBC Micro",
@@ -238,6 +239,7 @@
     },
     "93": {
         "nom_eu": "BK",
+        "nom_recalbox": "bk",
         "nom_launchbox": "Elektronika BK",
         "nom_hyperspin": "Elektronika BK",
         "noms_commun": "Electonika BK,Electonika BK-0010,Electonika BK-0010.01,Electonika BK-0010Sh,Electonika BK-0011,Electonika BK-0011M,BK-0010,BK-0010.01,BK-0010Sh,BK-0011,BK-0011M"
@@ -280,6 +282,13 @@
         "nom_hyperspin": "Capcom Play System III",
         "noms_commun": "Capcom Play System 3,Capcom Play System III,CPS 3,CPS III"
     },
+    "300": {
+        "nom_eu": "Cassette Vision",
+        "nom_recalbox": "cassettevision",
+        "nom_launchbox": "Epoch Cassette Vision",
+        "nom_hyperspin": "Epoch Cassette Vision",
+        "noms_commun": "Yeno Cassette Vision,Epoch Cassette Vision,Cassette Vision"
+    },
     "47": {
         "nom_eu": "Cave",
         "nom_recalbox": "arcade,mame,fba,fba_libretro",
@@ -290,6 +299,7 @@
     },
     "133": {
         "nom_eu": "CD-i",
+        "nom_recalbox": "cdi",
         "nom_launchbox": "Philips CD-i",
         "nom_hyperspin": "Philips CD-i",
         "noms_commun": "Philips CD-I,CD-I"
@@ -439,6 +449,7 @@
     },
     "96": {
         "nom_eu": "EXL 100",
+        "nom_recalbox": "exl100",
         "nom_launchbox": "Exelvision EXL 100",
         "nom_hyperspin": "Exelvision EXL 100",
         "noms_commun": "Exelvision EXL 100,EXL 100"
@@ -601,6 +612,11 @@
         "nom_hyperspin": "Irem Classics",
         "noms_commun": "Irem Classics"
     },
+    "302": {
+        "nom_eu": "J2ME",
+        "nom_retropie": "j2me",
+        "noms_commun": "Java 2 MicroEdition"
+    },
     "27": {
         "nom_eu": "Jaguar",
         "nom_recalbox": "jaguar",
@@ -697,6 +713,7 @@
     "90": {
         "nom_eu": "Mega Duck",
         "nom_us": "Cougar Boy",
+        "nom_recalbox": "megaduck",
         "nom_launchbox": "Mega Duck",
         "nom_hyperspin": "Creatronic Mega Duck",
         "noms_commun": "Mega Duck,Cougar Boy"
@@ -794,6 +811,9 @@
         "nom_hyperspin": "Sega Model 3",
         "noms_commun": "Sega Model 3,Sega Model III,Model 3,Model III"
     },
+    "301": {
+        "nom_eu": "MSU-MD"
+    },
     "113": {
         "nom_eu": "MSX",
         "nom_recalbox": "msx1",
@@ -826,6 +846,10 @@
         "nom_launchbox": "Microsoft MSX2+",
         "nom_hyperspin": "Microsoft MSX2+",
         "noms_commun": "Microsoft MSX2Plus,Microsoft MSX2+,MSX2Plus,MSX2+"
+    },
+    "305": {
+        "nom_eu": "My Vision",
+        "nom_recalbox": "myvision"
     },
     "30": {
         "nom_eu": "N-Gage",
@@ -1086,7 +1110,8 @@
         "nom_eu": "PET"
     },
     "261": {
-        "nom_eu": "Philips VG 5000"
+        "nom_eu": "Philips VG 5000",
+        "nom_recalbox": "vg5000"
     },
     "234": {
         "nom_eu": "Pico-8",
@@ -1153,7 +1178,8 @@
         "noms_commun": "Commodore Plus/4,Plus/4,Commodore 16,Commodore Minus/60,Minus/60"
     },
     "237": {
-        "nom_eu": "Pocket Challenge V2"
+        "nom_eu": "Pocket Challenge V2",
+        "nom_recalbox": "pcv2"
     },
     "211": {
         "nom_eu": "Pokémon mini",
@@ -1231,7 +1257,8 @@
     },
     "250": {
         "nom_eu": "Sega Pico",
-        "nom_jp": "Kids Computer Pico"
+        "nom_jp": "Kids Computer Pico",
+        "nom_recalbox": "pico"
     },
     "69": {
         "nom_eu": "Sega ST-V",
@@ -1327,6 +1354,7 @@
     },
     "67": {
         "nom_eu": "Super Cassette Vision",
+        "nom_recalbox": "scv",
         "nom_launchbox": "Epoch Super Cassette Vision",
         "nom_hyperspin": "Epoch Super Cassette Vision",
         "noms_commun": "Yeno Super Cassette Vision,Epoch Super Cassette Vision,Super Cassette Vision"
@@ -1375,6 +1403,14 @@
         "nom_hyperspin": "Taito Classics",
         "noms_commun": "Taito Classics"
     },
+    "299": {
+        "nom_eu": "Taito G-Net",
+        "nom_recalbox": "arcade,mame,fba,fba_libretro",
+        "nom_retropie": "arcade,fba,mame-advmame,mame-libretro,mame-mame4all,mame,mess",
+        "nom_launchbox": "arcade",
+        "nom_hyperspin": "Taito G-Net",
+        "noms_commun": "Taito G-Net"
+    },
     "293": {
         "nom_eu": "Tamagotchi",
         "nom_recalbox": "b"
@@ -1409,6 +1445,7 @@
     },
     "205": {
         "nom_eu": "TI-99/4A",
+        "nom_recalbox": "ti994a",
         "nom_retropie": "ti99",
         "nom_launchbox": "Texas Instruments TI 99/4A",
         "noms_commun": "Texas Instruments TI 99/4A,TI-99/4A,TI-99"
@@ -1426,6 +1463,7 @@
     },
     "144": {
         "nom_eu": "TRS-80 Color Computer",
+        "nom_recalbox": "trs80coco",
         "nom_retropie": "coco",
         "nom_launchbox": "TRS-80 Color Computer",
         "nom_hyperspin": "Tandy TRS-80 Color Computer",
@@ -1456,7 +1494,12 @@
     },
     "120": {
         "nom_eu": "V.Smile",
+        "nom_recalbox": "vsmile",
         "noms_commun": "VTech V.Smile,V.Smile"
+    },
+    "308": {
+        "nom_eu": "V.Smile Pro",
+        "nom_jp": "V.Flash"
     },
     "281": {
         "nom_eu": "VC 4000",
@@ -1472,6 +1515,7 @@
     },
     "73": {
         "nom_eu": "Vic-20",
+        "nom_recalbox": "vic20",
         "nom_retropie": "c64",
         "nom_launchbox": "Commodore VIC-20",
         "nom_hyperspin": "Commodore VIC-20",
@@ -1522,12 +1566,14 @@
     },
     "262": {
         "nom_eu": "WASM-4",
+        "nom_recalbox": "wasm4",
         "noms_commun": "wasm"
     },
     "207": {
         "nom_eu": "Watara Supervision",
         "nom_us": "Watara Supervision",
         "nom_jp": "Watara Supervision",
+        "nom_recalbox": "supervision",
         "nom_launchbox": "Watara Supervision",
         "noms_commun": "Watara Supervision"
     },
@@ -1564,6 +1610,7 @@
     },
     "32": {
         "nom_eu": "Xbox",
+        "nom_recalbox": "xbox",
         "nom_launchbox": "Microsoft Xbox",
         "noms_commun": "Microsoft XBOX,XBOX"
     },
@@ -1578,7 +1625,8 @@
         "noms_commun": "Microsoft XBOX One,XBOX One"
     },
     "215": {
-        "nom_eu": "Z-Machine"
+        "nom_eu": "Z-Machine",
+        "nom_recalbox": "zmachine"
     },
     "76": {
         "nom_eu": "ZX Spectrum",

@@ -1571,7 +1571,7 @@ void Skyscraper::loadMameMap() {
     if (config.arcadePlatform && mameMapFile.open(QIODevice::ReadOnly)) {
         while (!mameMapFile.atEnd()) {
             QList<QByteArray> pair = mameMapFile.readLine().split(';');
-            if (pair.size() != 2)
+            if (pair.size() != 2 || !pair.at(0).startsWith('"'))
                 continue;
             QString mameName = pair.at(0);
             QString realName = pair.at(1);

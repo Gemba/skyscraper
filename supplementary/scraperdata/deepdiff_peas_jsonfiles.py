@@ -1,21 +1,11 @@
 #! /usr/bin/env python3
 
 # Compares platform definition files of Skyscraper and prints differences as new
-# JSON object: Fo example, it identifies changes of your local platforms
+# JSON object: For example, it identifies changes of your local platforms
 # peas.json in comparison to the maintainer's peas.json.rp-dist.
 #
-# See docs/PLATFORMS.md for details.
-#
-# Your local changes will be printed and can also be stored in a local platform
-# peas_local.json, this will not be altered by any upstream changes to
-# peas.json.
-#
-# Once you have saved your local changes move the peas.json.rp-dist to
-# peas.json.
-#
-# For the platform_idmap.csv changes to the maintainer's file run:
-
-# You will need Deepdiff to run this script: sudo apt install python3-deepdiff
+# See docs/PLATFORMS.md, section "Transferring Local Platform Changes" for
+# details _before_ running this script.
 
 # (c) 2025 Gemba @ GitHub
 # SPDX-License-Identifier: GPL-3.0-or-later

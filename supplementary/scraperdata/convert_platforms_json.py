@@ -2,6 +2,8 @@
 
 # convert platforms.json from detain/torresflo to Skyscraper 3.9.0+ format
 #
+# You do not have to use this script on your Skyscraper installation.
+#
 # Provide path/to/platforms.json as parameter. Output will be
 # path/to/peas_mine.json which your then can compare with peas.json. You will
 # only need this script if you made local changes to platforms.json.

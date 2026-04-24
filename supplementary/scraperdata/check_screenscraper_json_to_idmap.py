@@ -3,6 +3,8 @@
 # Check screenscraper.json from detain/torresflo to platforms_idmap.csv for
 # differences. You will only need this script if you made local changes to
 # screenscraper.json.
+#
+# You do not have to use this script on your Skyscraper installation.
 
 # (c) 2023 Gemba @ GitHub
 # SPDX-License-Identifier: GPL-3.0-or-later

@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-# Use this script to print textual representations of  the IDs in
-# platforms_idmap.csv: Translate the IDs from platforms_map.csv to human
-# readably and check for differences between
+# Use this script to print textual representations of the IDs in
+# platforms_idmap.csv. It resolves the IDs from platforms_map.csv to the
+# platform name and check for differences between
 #
 # peas.json (platform handles and extensions (formats), aliases and scrapers)
 #
@@ -36,7 +36,7 @@ def print_platform_tree():
 
     df = pd.read_csv(pid_map_fn)
     df = df[~df.folder.str.contains("#")]
-    df = df.astype({col: int for col in df.columns[1:-1]})
+    df = df.astype({col: int for col in df.columns[1:-2]})
     df = df.sort_values("folder")
     last_folder = df["folder"].values[-1]
 
@@ -70,23 +70,26 @@ def print_data(r, last_folder):
         else:
             scrs_name = "[!] no match"
 
-    mobs_name = mobs[moby_id] if moby_id in mobs else "N/A"
+    moby_strs = []
+    for moby_id in [int(mi) for mi in moby_id.split("|")]:
+        mobs_name = mobs[moby_id] if moby_id in mobs else "N/A"
+        moby_strs.append(f"{moby_id:>4d}: {mobs_name}")
     tgdb_strs = []
     for tgdb_id in [int(tt) for tt in tgdb_id.split("|")]:
         tgdb_name = tgdb_plafs[tgdb_id] if tgdb_id in tgdb_plafs else "N/A"
         tgdb_strs.append(f"{tgdb_id:>4d}: {tgdb_name}")
 
     print(f"    {' ' if last else '│'}   ├── ScrS {scrs_id:>4d}: {scrs_name}")
-    print(f"    {' ' if last else '│'}   ├── Moby {moby_id:>4d}: {mobs_name}")
+    print(f"    {' ' if last else '│'}   ├── Moby {', '.join(moby_strs)}")
     print(f"    {' ' if last else '│'}   └── TGDB {', '.join(tgdb_strs)}")
 
 
 def print_coverage(df):
 
     total = df.shape[0]
-    scrs_count = len(df[(df["screenscraper_id"] != -1)])
-    moby_count = len(df[(df["mobygames_id"] != -1)])
-    tgdb_count = len(df[(df["tgdb_id"] != -1)])
+    scrs_count = len(df[(df["screenscraper_id"].astype(str) != "-1")])
+    moby_count = len(df[(df["mobygames_id"].astype(str) != "-1")])
+    tgdb_count = len(df[(df["tgdb_id"].astype(str) != "-1")])
 
     print("[*] Coverage")
     print(

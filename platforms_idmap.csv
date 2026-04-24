@@ -53,7 +53,7 @@ mame-libretro,75,143,23
 mame-mame4all,75,143,23
 mastersystem,2,26,35
 megadrive,1,16,36|18
-moto,141,147,-1
+moto,141,130|147,5022|5023
 msx,113,57,4929
 n64,14,9,3
 nds,15,44,8
@@ -103,7 +103,7 @@ zxspectrum,76,41,4913
 
 3ds,17,101,4912
 actionmax,81,-1,4976
-apple2gs,217,-1,-1
+apple2gs,217,51,-1
 arduboy,263,215,-1
 astrocade,44,160,4968
 atarijaguarcd,171,-1,29
@@ -127,6 +127,7 @@ pcenginecd,114,45,4955
 plus4,99,115,5007|5006
 ps3,59,81,12
 ps4,60,141,4919
+ps5,284,288,4980
 psvita,62,105,39
 pv1000,74,125,4964
 scv,67,138,4966

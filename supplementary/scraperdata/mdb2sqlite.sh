@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+# Converts a MDB (Microsoft Access DB) to SQLite format.
+#
 # Derived from
 # https://gist.github.com/ghodsizadeh/5e586c55add1f01cc48c8bd6acb57c16
 #
@@ -9,9 +11,11 @@
 # SPDX-License-Identifier: MIT
 
 # USAGE:
+# You only need this if you want to use the gamebase local scraper. 
+# Output will be in a *.sqlite3 file. The input MDB is not altered.
 #
 # sudo apt install mdb-tools sqlite3
-# run: ./mdb2sqlite.sh <path/to/mdb-file.mdb>
+# run: ./mdb2sqlite.sh <path/to/gamebasefile.mdb>
 
 input="$1"
 [[ -z "$input" ]] && echo "[!] Provide MDB file as parameter." && exit 1

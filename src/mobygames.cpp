@@ -32,6 +32,7 @@
 #include <QJsonArray>
 #include <QRandomGenerator>
 #include <QStringBuilder>
+#include <QVector>
 #include <cstdio>
 
 static inline QMap<QString, QString> mobyRegionMap() {
@@ -73,9 +74,9 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
     fetchOrder.append(GameEntry::Elem::RELEASEDATE);
     fetchOrder.append(GameEntry::Elem::TAGS);
     // disabled: not in API v2
-    // fetchOrder.append(GameEntry::Elem::P_LAYERS);
-    // fetchOrder.append(GameEntry::Elem::A_GES);
-    // fetchOrder.append(GameEntry::Elem::R_ATING);
+    // fetchOrder.append(GameEntry::Elem::PLAYERS);
+    // fetchOrder.append(GameEntry::Elem::AGES);
+    // fetchOrder.append(GameEntry::Elem::RATING);
     fetchOrder.append(GameEntry::Elem::DESCRIPTION);
     fetchOrder.append(GameEntry::Elem::COVER);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
@@ -84,8 +85,7 @@ MobyGames::MobyGames(Settings *config, QSharedPointer<NetManager> manager)
 void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
                                  QString searchName, QString platform) {
     limiter.exec();
-    // ignore '|' entries, only pick first
-    int platformId = getPlatformId(config->platform)[0];
+    QVector<int> platformIds = getPlatformId(config->platform);
 
     ncprintf("Waiting as advised by MobyGames api restrictions...");
     fflush(stdout);
@@ -95,48 +95,56 @@ void MobyGames::getSearchResults(QList<GameEntry> &gameEntries,
     int queryGameId = searchName.toInt(&isMobyGameId);
     if (isMobyGameId) {
         req = req % "&id=" % QString::number(queryGameId);
-    } else {
-        QString platformParam;
-        if (platformId > 0)
-            platformParam = "&platform=" % QString::number(platformId);
-        req = req %
-              QString("&title=%1%2&fuzzy=true&include=platforms,release_date")
-                  .arg(searchName)
-                  .arg(platformParam);
-        queryGameId = 0;
     }
 
-    if (!apiRequest(req)) {
-        return;
-    }
-
-    QJsonArray jsonGames = jsonDoc.object()["games"].toArray();
-
-    while (!jsonGames.isEmpty()) {
-        GameEntry game;
-
-        QJsonObject jsonGame = jsonGames.first().toObject();
-
-        game.id = QString::number(jsonGame["game_id"].toInt());
-        game.title = jsonGame["title"].toString();
-
-        QJsonArray jsonPlatforms = jsonGame["platforms"].toArray();
-        while (!jsonPlatforms.isEmpty()) {
-            QJsonObject jsonPlatform = jsonPlatforms.first().toObject();
-            gamePlatformId = jsonPlatform["platform_id"].toInt();
-            bool matchPlafId = gamePlatformId == platformId;
-            if (matchPlafId || platformMatch(game.platform, platform)) {
-                game.url = searchUrlPre % "?id=" % game.id;
-                game.releaseDate = jsonPlatform["release_date"].toString();
-                game.platform = jsonPlatform["name"].toString();
-                gameEntries.append(game);
-                // assume only one platform match per game
-                break;
+    int k = 0;
+    do {
+        if (!isMobyGameId) {
+            QString platformParam;
+            if (platformIds[k] > 0) {
+                platformParam = "&platform=" % QString::number(platformIds[k]);
             }
-            jsonPlatforms.removeFirst();
+            req =
+                req %
+                QString("&title=%1%2&fuzzy=true&include=platforms,release_date")
+                    .arg(searchName)
+                    .arg(platformParam);
+            queryGameId = 0;
         }
-        jsonGames.removeFirst();
-    }
+
+        if (!apiRequest(req)) {
+            return;
+        }
+
+        QJsonArray jsonGames = jsonDoc.object()["games"].toArray();
+
+        while (!jsonGames.isEmpty()) {
+            GameEntry game;
+
+            QJsonObject jsonGame = jsonGames.first().toObject();
+
+            game.id = QString::number(jsonGame["game_id"].toInt());
+            game.title = jsonGame["title"].toString();
+
+            QJsonArray jsonPlatforms = jsonGame["platforms"].toArray();
+            while (!jsonPlatforms.isEmpty()) {
+                QJsonObject jsonPlatform = jsonPlatforms.first().toObject();
+                gamePlatformId = jsonPlatform["platform_id"].toInt();
+                bool matchPlafId = gamePlatformId == platformIds[k];
+                if (matchPlafId || platformMatch(game.platform, platform)) {
+                    game.url = searchUrlPre % "?id=" % game.id;
+                    game.releaseDate = jsonPlatform["release_date"].toString();
+                    game.platform = jsonPlatform["name"].toString();
+                    gameEntries.append(game);
+                    // assume only one platform match per game
+                    break;
+                }
+                jsonPlatforms.removeFirst();
+            }
+            jsonGames.removeFirst();
+        }
+        k++;
+    } while (!isMobyGameId && k < platformIds.length());
 }
 
 QString MobyGames::removeStopwords(QString &searchName) {

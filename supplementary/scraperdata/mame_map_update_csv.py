@@ -1,12 +1,15 @@
 #! /usr/bin/env python3
 
-# Generate a Skyscraper compatible mame ROM filename to ROM full name CSV.
-# You usually do not need to run this script.
+# Generate a Skyscraper compatible mame ROM filename to ROM full title name CSV
+# in mameMap.csv.
+#
+# You usually do not need to run this script on your Skyscraper installation.
 
 # (c) 2023 Gemba @ GitHub
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pathlib import Path
+from io import StringIO
 import csv
 import pandas as pd
 import requests
@@ -37,7 +40,7 @@ if (hdr == prev_hdr):
 
 lines[0] = "<root>"
 lines.append("</root>")
-df = pd.read_xml("".join(lines), xpath="//root/*")
+df = pd.read_xml(StringIO("".join(lines)), xpath="//root/*")
 
 if len(df):
     print(f"[+] Found {len(df)} ROM names")
@@ -45,7 +48,7 @@ if len(df):
     with open(OUTFILE, "w") as csvoutfile:
         csvoutfile.write(f"# {hdr}\n")
         csvoutfile.write(f"# yarked from: {URL}\n")
-
+        csvoutfile.write(f"rom_filename_stem;rom_title\n")
     df.to_csv(
         OUTFILE, index=False, header=False, sep=";", quoting=csv.QUOTE_ALL, mode="a"
     )
