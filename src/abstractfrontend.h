@@ -60,7 +60,6 @@ public:
     virtual bool canSkip() { return false; };
     virtual bool loadOldGameList(const QString &) { return false; };
     virtual void preserveFromOld(GameEntry &){};
-    virtual const QString getPlatformOutputName() { return config->platform; };
     virtual QString getGameListFileName() { return QString(); };
     virtual QString getInputFolder() { return QString(); };
     virtual QString getGameListFolder() { return QString(); };

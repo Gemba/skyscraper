@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Skyscraper's Platform, Extensions, Aliases and Scraper definition format (PEAS)",
+  "title": "Skyscraper's Platform, Extensions, Aliases and Scraper definition format (PEAS), extended with RetroArch information",
   "type": "object",
   "additionalProperties": {
     "type": "object",
@@ -19,6 +19,10 @@
           "type": "string",
           "pattern": "^\\*.[a-z0-9\\.]+$"
         }
+      },
+      "retroarch_dbname": {
+        "type": "string",
+        "description": "Hint for RetroArch frontend which database to lookup for metadata."
       }
     },
     "required": ["aliases", "formats"]

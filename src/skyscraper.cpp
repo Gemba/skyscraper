@@ -129,13 +129,16 @@ void Skyscraper::run() {
                  mediaSubFolderStdStr(config.screenshotsFolder).c_str());
         ncprintf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
-        ncprintf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
-                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
                        config.fanart;
-        ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
-                 notLast ? "├" : "└",
-                 mediaSubFolderStdStr(config.texturesFolder).c_str());
+        ncprintf("  Marquees:       '%s── \033[1;32m%s\033[0m'\n",
+                 notLast || !config.texturesFolder.isEmpty() ? "├" : "└",
+                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
+        if (!config.texturesFolder.isEmpty()) {
+            ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.texturesFolder).c_str());
+        }
         if (config.videos) {
             notLast = config.manuals || config.backcovers || config.fanart;
             ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
@@ -1108,7 +1111,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // types
     if (config.frontend == "retroarch") {
         const QString oldSubPath = "/" % config.platform;
-        const QString newSubPath = "/" % frontend->getPlatformOutputName();
+        const QString newSubPath =
+            "/" % ((RetroArch *)fePtr)->getPlatformOutputName();
 
         // Also, the playlist doesn't even get a platform folder, since
         // getGameListFileName uses its output name in the filename.

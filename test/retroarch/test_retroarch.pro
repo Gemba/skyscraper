@@ -21,6 +21,7 @@ HEADERS += \
             ../../src/abstractfrontend.h \
             ../../src/config.h \
             ../../src/gameentry.h \
+            ../../src/nocolor.h \
             ../../src/pathtools.h \
             ../../src/platform.h \
             ../../src/strtools.h
@@ -30,10 +31,10 @@ SOURCES += test_retroarch.cpp \
            ../../src/abstractfrontend.cpp \
            ../../src/config.cpp \
            ../../src/gameentry.cpp \
+           ../../src/nocolor.cpp \
            ../../src/pathtools.cpp \
            ../../src/platform.cpp \
            ../../src/strtools.cpp \
-           ../../src/queue.cpp
 
 # Test data directory
 DISTFILES += playlists/test.lpl

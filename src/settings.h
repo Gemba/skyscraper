@@ -264,6 +264,7 @@ private:
         {"onlyMissing",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"platform",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"pretend",                 QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
+        {"raExtra",                 QPair<QString, int>("str",                  CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"region",                  QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"regionPrios",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"relativePaths",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},

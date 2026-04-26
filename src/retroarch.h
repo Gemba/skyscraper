@@ -34,7 +34,6 @@ public:
     bool canSkip() override;
     bool loadOldGameList(const QString &gameListFileString) override;
     void preserveFromOld(GameEntry &entry) override;
-    const QString getPlatformOutputName() override;
     QString getGameListFileName() override;
     QString getInputFolder() override;
     QString getGameListFolder() override;
@@ -48,6 +47,7 @@ public:
         return GameEntry::Types(GameEntry::COVER | GameEntry::SCREENSHOT |
                                 GameEntry::MARQUEE | GameEntry::WHEEL);
     }
+    const QString getPlatformOutputName();
 
 protected:
     // Override to use game title (sanitized) instead of ROM baseName for

@@ -229,6 +229,7 @@ void Config::setupUserConfig() {
         {"aliasMap.csv",                    QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"artwork.xml",                     QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"batocera-artwork.xml",            QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
+        {"retroarch-artwork.xml",           QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"peas.json",                       QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
         {"platforms_idmap.csv",             QPair<QString, FileOp>("", FileOp::CREATE_DIST)}
         // clang-format on

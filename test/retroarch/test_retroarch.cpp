@@ -1,3 +1,4 @@
+#include "platform.h"
 #include "retroarch.h"
 
 #include <QDebug>
@@ -18,6 +19,10 @@ private slots:
     void initTestCase() {
         frontend = new RetroArch();
         frontend->setConfig(&settings);
+        if (!Platform::get().loadConfig()) {
+            qWarning() << "*** AIEEE !!!\n";
+            exit(1);
+        }
     }
 
     void cleanupTestCase() { delete frontend; }
@@ -29,10 +34,10 @@ private slots:
         QString result = frontend->getPlatformOutputName();
         QCOMPARE(result, "UnknownPlatform12345"); // Falls back to platform name
 
-        // Test with known platform (depends on platforms_idmap.csv)
+        // Test with known platform (depends on peas.json)
         settings.platform = "snes";
         result = frontend->getPlatformOutputName();
-        QVERIFY(!result.isEmpty()); // Should resolve to something from CSV
+        QCOMPARE(result, "Nintendo - Super Nintendo Entertainment System");
     }
 
     // Test loading existing playlist files for incremental updates
@@ -308,8 +313,8 @@ private slots:
         // db_name is determined by platform mapping, not frontendExtra
         QJsonArray items = root.value("items").toArray();
         QVERIFY(items.size() > 0);
-        QVERIFY(items.at(0).toObject().value("db_name").toString().endsWith(
-            ".lpl"));
+        QCOMPARE(items.at(0).toObject().value("db_name").toString(),
+                 "testplatform.lpl");
     }
 
     // Test that JSON output is valid with various game title formats

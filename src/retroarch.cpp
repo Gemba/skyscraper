@@ -35,6 +35,9 @@
 #include <QStringBuilder>
 #include <QTextStream>
 
+static const QString RA_LPL_VERSION = "1.5";
+static const QString RA_DETECT = "DETECT";
+
 RetroArch::RetroArch() {}
 
 QString RetroArch::sanitizeForFilename(const QString &name) {
@@ -55,7 +58,7 @@ QString RetroArch::jsonEscape(const QString &str) {
 }
 
 const QString RetroArch::getPlatformOutputName() {
-    // Look up the RetroArch db_name from platforms_idmap.csv.
+    // Look up the RetroArch db_name from peas.json
     QString dbName = Platform::get().getRetroArchDbName(config->platform);
 
     if (dbName.isEmpty()) {
@@ -94,8 +97,21 @@ bool RetroArch::loadOldGameList(const QString &gameListFileString) {
         GameEntry newEntry;
         newEntry.path = itemObj.value("path").toString();
         newEntry.title = itemObj.value("label").toString();
+        // FIXME: preserve also db_name if present for game and core_name,
+        // core_path if not "DETECT"
         oldEntries.append(newEntry);
     }
+
+    // FIXME: preserve also "preamble" (=everything, except version sibling to
+    // items) e.g.:
+    //  "default_core_path": "", # overwrite only iff -e / raExtra is provided
+    //  "default_core_name": "", # overwrite only iff -e / raExtra is provided
+    //  "base_content_directory": "yadda_yadda",
+    //  "label_display_mode": 2,
+    //  "right_thumbnail_mode": 0,
+    //  "left_thumbnail_mode": 0,
+    //  "thumbnail_match_mode": 0,
+    //  "sort_mode": 2,
 
     return true;
 }
@@ -136,6 +152,7 @@ void RetroArch::preserveFromOld(GameEntry &entry) {
             if (entry.title.isEmpty()) {
                 entry.title = oldEntry.title;
             }
+            // FIXME: restore also other values (see FIXME in loadOldGameList())
             break;
         }
     }
@@ -153,25 +170,23 @@ void RetroArch::assembleList(QString &finalOutput,
     }
 
     QJsonObject root;
-    root.insert("version", "1.5");
+    root.insert("version", RA_LPL_VERSION);
 
     // Parse default_core_path and default_core_name from frontendExtra
     // Format: "<CORE_PATH>;<CORE_NAME>" or leave as DETECT
-    QString corePathStr = "DETECT";
-    QString coreNameStr = "DETECT";
+    QString corePathStr = RA_DETECT;
+    QString coreNameStr = RA_DETECT;
 
     if (!config->frontendExtra.isEmpty()) {
         // frontendExtra is used for default_core_path and default_core_name
         // Format: "<CORE_PATH>;<CORE_NAME>"
         QStringList parts = config->frontendExtra.split(";");
-        if (parts.length() >= 1) {
-            corePathStr = parts[0];
-        }
-        if (parts.length() >= 2) {
-            coreNameStr = parts[1];
-        }
+        corePathStr = parts[0];
+        coreNameStr = parts[1];
     }
 
+    // FIXME: if values from preamble exist from existing playlist use these
+    // instead of the defaults
     root.insert("default_core_path", corePathStr);
     root.insert("default_core_name", coreNameStr);
     root.insert("label_display_mode", "0");   // show full labels
@@ -196,12 +211,16 @@ void RetroArch::assembleList(QString &finalOutput,
         //     "crc32": "133E9372|crc",
 
         QJsonObject itemObj;
-        itemObj.insert("path", entry.absoluteFilePath);
+        QString absPath = entry.absoluteFilePath;
+#ifdef Q_OS_WIN
+        absPath = absPath.replace("/", "\\\\");
+#endif
+        itemObj.insert("path", absPath);
         itemObj.insert("label", entry.title);
-        itemObj.insert("core_path", "DETECT");
-        itemObj.insert("core_name", "DETECT");
-        itemObj.insert("crc32", "DETECT");
-        itemObj.insert("db_name", QString(getPlatformOutputName() + ".lpl"));
+        itemObj.insert("core_path", RA_DETECT);
+        itemObj.insert("core_name", RA_DETECT);
+        itemObj.insert("crc32", RA_DETECT);
+        itemObj.insert("db_name", QString(getPlatformOutputName() % ".lpl"));
 
         items.append(itemObj);
     }
@@ -215,11 +234,7 @@ void RetroArch::assembleList(QString &finalOutput,
 QString RetroArch::getTargetFileName(GameEntry::Types t,
                                      const QString &baseName) {
     (void)t; // Suppress unused parameter warning
-
-    // Look up the game title from our map
     QString title = baseNameToTitle.value(baseName, baseName);
-
-    // Sanitize the title for use as a filename
     return sanitizeForFilename(title);
 }
 
@@ -236,11 +251,11 @@ QString RetroArch::getInputFolder() {
 }
 
 QString RetroArch::getGameListFolder() {
-    return "/opt/retropie/configs/all/retroarch/playlists";
+    return QDir::homePath() % "/.config/retroarch/playlists";
 }
 
 QString RetroArch::getMediaFolder() {
-    return "/opt/retropie/configs/all/retroarch/thumbnails";
+    return QDir::homePath() % "/.config/retroarch/thumbnails";
 }
 
 QString RetroArch::getCoversFolder() {
@@ -259,7 +274,7 @@ QString RetroArch::getWheelsFolder() {
     return config->mediaFolder % "/Named_Logos";
 }
 
-// XXX: This media type does exist yet...
+// PENDING: This media type does exist yet...
 
 /*
 QString RetroArch::getTitleScreenshotsFolder() {

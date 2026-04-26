@@ -58,7 +58,6 @@ private:
     QStringList platforms;
     QVariantMap peas;
     QMap<QString, QVector<QVector<int>>> platformIdsMap;
-    QMap<QString, QString> platformNamesMap;
 };
 
 #endif // PLATFORM_H

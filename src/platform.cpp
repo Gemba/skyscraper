@@ -217,11 +217,11 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
             continue;
         }
         QStringList parts = line.split(',');
-        if (parts.length() < 4) {
-            ncprintf("\033[1;31mFile '%s', line '%s' has less than four columns, "
-                   "but %d. Please fix. Now quitting...\033[0m\n",
-                   fn, parts.join(',').toUtf8().constData(),
-                   static_cast<int>(parts.length()));
+        if (parts.length() != 4) {
+            ncprintf("\033[1;31mFile '%s', line '%s' has not four columns, "
+                     "but %d. Please fix. Now quitting...\033[0m\n",
+                     fn, parts.join(',').toUtf8().constData(),
+                     static_cast<int>(parts.length()));
             configFile.close();
             return false;
         }
@@ -236,29 +236,24 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         parts.removeFirst();
         QVector<QVector<int>> ids(QVector<QVector<int>>(3));
         int col = 0;
-        for (int i = 0; i < parts.length(); ++i) {
-            if (i >= 3) {
-                // Handle retroarch_dbname (string column, not numeric)
-                QString retroarchName = parts[i].trimmed();
-                platformNamesMap.insert(pkey, retroarchName);
-                break;
-            }
-            QString id = parts[i].trimmed();
+        for (QString id : parts) {
+            id = id.trimmed();
             if (!id.isEmpty()) {
-                for (const auto &j : splitPlatformIds(id)) {
+                for (const auto &i : splitPlatformIds(id)) {
                     bool ok = false;
-                    int tmp = j.toInt(&ok);
+                    int tmp = i.toInt(&ok);
                     if (ok && tmp >= -1) {
                         ids[col].append((tmp == 0) ? -1 : tmp);
                     } else {
                         ids[col].append(-1);
-                        ncprintf("\033[1;33mFile '%s', line '%s,%s' has "
-                               "unparsable or too negative number '%s' (use "
-                               "-1 for unknown platform id). Assumming -1 for "
-                               "now, please fix to mute this warning.\033[0m\n",
-                               fn, pkey.toUtf8().constData(),
-                               parts.join(',').toUtf8().constData(),
-                               j.toUtf8().constData());
+                        ncprintf(
+                            "\033[1;33mFile '%s', line '%s,%s' has "
+                            "unparsable or too negative number '%s' (use "
+                            "-1 for unknown platform id). Assumming -1 for "
+                            "now, please fix to mute this warning.\033[0m\n",
+                            fn, pkey.toUtf8().constData(),
+                            parts.join(',').toUtf8().constData(),
+                            i.toUtf8().constData());
                     }
                 }
             }
@@ -297,7 +292,8 @@ int Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d",
                  "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1",
                  "fcb923fa1b38441a462511b5b842705c284d91f560d5f30c0a45e68d2444facf",
-                 "fceca636224ec01e50e4d2ce47f43e2ab1d603c008f8292bf50808fcf7f708a3"}
+                 "fceca636224ec01e50e4d2ce47f43e2ab1d603c008f8292bf50808fcf7f708a3",
+                 "c658d5f998b600e81a2e2adc1d216bf00868329ae533a7800c681fe5a421cd6e"}
             )
         },
         {"platforms_idmap.csv", QStringList(
@@ -352,5 +348,6 @@ QVector<int> Platform::getPlatformIdOnScraper(const QString platform,
 }
 
 QString Platform::getRetroArchDbName(const QString platform) const {
-    return platformNamesMap.value(platform, platform);
+    QString ra_dbname = peas[platform].toHash()["retroarch_dbname"].toString();
+    return ra_dbname;
 }
