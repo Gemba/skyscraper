@@ -36,6 +36,7 @@
 #include "nocolor.h"
 #include "pathtools.h"
 #include "pegasus.h"
+#include "retroarch.h"
 #include "settings.h"
 #include "strtools.h"
 
@@ -128,13 +129,16 @@ void Skyscraper::run() {
                  mediaSubFolderStdStr(config.screenshotsFolder).c_str());
         ncprintf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
-        ncprintf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
-                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
                        config.fanart;
-        ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
-                 notLast ? "├" : "└",
-                 mediaSubFolderStdStr(config.texturesFolder).c_str());
+        ncprintf("  Marquees:       '%s── \033[1;32m%s\033[0m'\n",
+                 notLast || !config.texturesFolder.isEmpty() ? "├" : "└",
+                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
+        if (!config.texturesFolder.isEmpty()) {
+            ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.texturesFolder).c_str());
+        }
         if (config.videos) {
             notLast = config.manuals || config.backcovers || config.fanart;
             ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
@@ -1007,6 +1011,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         fePtr = new Esde();
     } else if (config.frontend == "batocera") {
         fePtr = new Batocera();
+    } else if (config.frontend == "retroarch") {
+        fePtr = new RetroArch();
     }
     if (fePtr != nullptr) {
         frontend = QSharedPointer<AbstractFrontend>(fePtr);
@@ -1035,7 +1041,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             config.inputFolder = frontend->getInputFolder();
     }
     if (!mediaFolderSet) {
-        if (config.frontend == "esde" || config.frontend == "batocera") {
+        if (config.frontend == "esde" || config.frontend == "batocera" ||
+            config.frontend == "retroarch") {
             config.mediaFolder = frontend->getMediaFolder();
         } else {
             // defaults to <gamelistfolder>/[.]media/
@@ -1098,6 +1105,23 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
         return; // cache option to be applied to all platform
+    }
+
+    // RetroArch has a different platform output name than the generic lowercase
+    // types
+    if (config.frontend == "retroarch") {
+        const QString oldSubPath = "/" % config.platform;
+        const QString newSubPath =
+            "/" % ((RetroArch *)fePtr)->getPlatformOutputName();
+
+        // Also, the playlist doesn't even get a platform folder, since
+        // getGameListFileName uses its output name in the filename.
+        if (config.gameListFolder.endsWith(oldSubPath))
+            config.gameListFolder =
+                config.gameListFolder.replace(oldSubPath, "");
+        if (config.mediaFolder.endsWith(oldSubPath))
+            config.mediaFolder =
+                config.mediaFolder.replace(oldSubPath, newSubPath);
     }
 
     if (!QFile::exists(config.inputFolder)) {

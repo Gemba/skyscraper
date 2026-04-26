@@ -78,7 +78,7 @@ _skyscraper() {
 		;;
 	'-f')
 		# frontends
-		mapfile -t COMPREPLY < <(compgen -W "emulationstation esde pegasus retrobat attractmode batocera" -- "$cur")
+		mapfile -t COMPREPLY < <(compgen -W "emulationstation esde pegasus retrobat attractmode batocera retroarch" -- "$cur")
 		return 0
 		;;
 	'-t')

@@ -136,6 +136,7 @@ HEADERS += \
            src/pegasus.h \
            src/platform.h \
            src/queue.h \
+           src/retroarch.h \
            src/scraperworker.h \
            src/screenscraper.h \
            src/settings.h \
@@ -192,6 +193,7 @@ SOURCES += src/main.cpp \
            src/pegasus.cpp \
            src/platform.cpp \
            src/queue.cpp \
+           src/retroarch.cpp \
            src/scraperworker.cpp \
            src/screenscraper.cpp \
            src/settings.cpp \

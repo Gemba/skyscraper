@@ -84,11 +84,13 @@ This sets the extra command (or emulator command) for some frontends.
 
 !!! info
 
-    This option is applicable _only_ when using the `-f attractmode` or the `-f pegasus` option.
+    This option is applicable _only_ when using the `-f attractmode`, the `-f pegasus` or the `-f retroarch` option.
 
 When using `-f attractmode` it is **required** to set the _emulator_ to be used when generating the `attractmode` game list. On RetroPie the emulator name is mostly the same as the platform. Consider setting this in [`config.ini`](CONFIGINI.md#emulator) instead.
 
 The extra command can **optionally** be used with `-f pegasus` to set the launch command used by the Pegasus game list. On RetroPie this defaults to the RetroPie launch command which works with RetroPie, if this parameter is unset. Consider setting this in [`config.ini`](CONFIGINI.md#launch) instead.
+
+The extra command can **optionally** be used with `-f retroarch` with `-e "<CORE_PATH>;<CORE_NAME>"` to set a default core (path,name) pair for the playlist. Consider setting this in [`config.ini`](CONFIGINI.md#emulator) instead.
 
 **Example(s)**
 

@@ -28,7 +28,7 @@ Skyscraper will preserve the following metadata when re-generating a game list f
 Automatic addition of folder elements if [`addFolder`](CONFIGINI.md#addfolders) is true:  
 If at least one ROM is within a subfolder and this subfolder is not yet part of the `gamelist.xml` file, it will be added with two mandatory subelements:
 
--  `<path/>` reflects the relative subpath from the system folder and 
+-  `<path/>` reflects the relative subpath from the system folder and
 -  `<name/>`, which represents the direct parent folder of a ROM by default. However, you may edit this to any name which should be shown in EmulationStation.
 
 !!! example
@@ -289,3 +289,69 @@ You need to add the individual platform rom directories to Pegasus (if they are 
 #### Metadata preservation
 
 Skyscraper will preserve any metadata key-value pairs added to the header and / or individual game list entries.
+
+### RetroArch
+
+-   Default game list location: `~/.config/retroarch/playlists`
+-   Default game list filename: `<DB_NAME>.lpl` (using its own platform name format, defined in Skyscraper's `peas.json`)
+-   Default media dir location: `~/.config/retroarch/thumbnails/<DB_NAME>/Named_*` (see table below)
+
+RetroArch structuring element on the GUI is build around playlists. Each
+playlist contains each platform's game list, and the playlist viewer suports
+covers, screenshots, and logos for each game.
+
+#### Configuration
+
+When generating for RetroArch, Skyscraper uses a configurable mapping of
+platform names to RetroArch database names (e.g., `nes` (folder) → `Nintendo -
+Nintendo Entertainment System` (core name), see file `~/.skyscraper/peas.json`).
+If you want to add a platform to RetroArch DB-Name mapping, please file an
+issue. That way it will be of use for every Skyscraper user. Any setting
+specific to your setup you can define in `~/.skyscraper/peas_local.json`. This
+file uses the same format as the `peas.json`.
+
+You can optionally use the `-e` parameter with `"<CORE_PATH>;<CORE_NAME>"` to
+set a default core path/name for the playlist. Or set it in `config.ini` like:
+
+```ini
+[retroarch]
+raExtra="<CORE_PATH>;<CORE_NAME>"
+```
+
+You will most likely have to adjust the game list folder (`gameListFolder=`) and
+the media files folder (`mediaFolder=`) by persisting them in your `config.ini`
+in the `[retroarch]` section. Also you may want to set the
+`artworkXml=retroarch-artwork.xml` in your configuration to assure every media
+file is in PNG format.
+
+#### Media Support
+
+RetroArch supports the following media types:
+
+| Media Type              | RetroArch Directory |
+| :---------------------- | :------------------ |
+| Covers (Box Art)        | `Named_Boxarts`     |
+| Screenshots             | `Named_Snaps`       |
+| Marquees/Wheels (Logos) | `Named_Logos`       |
+
+Title screenshots (`Named_Titles`) are not currently supported.  
+All media files are matched to games by their [sanitized game
+title](https://docs.libretro.com/guides/roms-playlists-thumbnails/#custom-thumbnails),
+not by ROM filename.
+
+#### Metadata preservation
+
+Skyscraper will preserve existing game titles and paths when re-generating a
+game list for RetroArch. If an existing playlist file is found and you choose to
+skip existing entries, Skyscraper will use the old game list as a reference.
+
+#### Known Limitations
+
+1. Initial generation of a RetroArch playlist does not work for folders resp.
+   platforms which may require a different RetroArch core per game (for example
+   `arcade/` on RetroPie). However, updating an existing playlist file for such
+   folder works, as the existing entry of `"db_name"` per each game is
+   preserved.
+2. Any RetroArch configuration is not evaluated, thus if you changed your
+   RetroArch configuration (e.g., by using non-default file paths) the produced
+   JSON/lpl file might not display correctly in RetroArch frontend.

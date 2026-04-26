@@ -121,6 +121,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [onlyMissing](CONFIGINI.md#onlymissing)                     | Advanced       |    Y     |       Y        |                |       Y       |
 | [platform](CONFIGINI.md#platform)                           | Basic          |    Y     |                |                |               |
 | [pretend](CONFIGINI.md#pretend)                             | Basic          |    Y     |       Y        |                |               |
+| [raExtra](CONFIGINI.md#raextra)                             | Advanced       |          |       Y        |       Y        |               |
 | [region](CONFIGINI.md#region)                               | Basic          |    Y     |       Y        |                |               |
 | [regionPrios](CONFIGINI.md#regionprios)                     | Expert         |    Y     |       Y        |                |               |
 | [relativePaths](CONFIGINI.md#relativepaths)                 | Basic          |    Y     |       Y        |                |               |
@@ -457,6 +458,15 @@ This option is _only_ applicable when also setting the `frontend="pegasus"` opti
 
 Default value: unset  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]`
+
+---
+
+#### raExtra
+
+This option is _only_ applicable when also setting the `frontend="retroarch"` option. With this setting you can define a default core (path,name) pair for the playlist.
+
+Default value: unset  
+Allowed in sections: `[<PLATFORM>]`, `[retroarch]`
 
 ---
 

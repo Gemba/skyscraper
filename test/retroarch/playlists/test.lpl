@@ -1,0 +1,36 @@
+{
+  "version": "1.5",
+  "default_core_path": "/opt/retropie/configs/all/retroarch/libretro/snes9x_libretro.so",
+  "default_core_name": "snes9x",
+  "label_display_mode": "0",
+  "left_display_mode": "0",
+  "right_display_mode": "0",
+  "thumbnail_match_mode": "0",
+  "sort_mode": "0",
+  "items": [
+    {
+      "path": "/home/pi/RetroPie/roms/snes/Game One.sfc",
+      "label": "Game One Title",
+      "core_path": "/opt/retropie/configs/all/retroarch/libretro/snes9x_libretro.so",
+      "core_name": "snes9x",
+      "crc32": "DETECT",
+      "db_name": "Nintendo - Super Nintendo Entertainment System.lpl"
+    },
+    {
+      "path": "/home/pi/RetroPie/roms/snes/Game Two.zip",
+      "label": "Super Game Two",
+      "core_path": "/opt/retropie/configs/all/retroarch/libretro/bsnes_libretro.so",
+      "core_name": "bsnes",
+      "crc32": "DETECT",
+      "db_name": "Nintendo - Super Nintendo Entertainment System.lpl"
+    },
+    {
+      "path": "/home/pi/RetroPie/roms/snes/Mega Man.sfc",
+      "label": "Mega Man",
+      "core_path": "DETECT",
+      "core_name": "DETECT",
+      "crc32": "DETECT",
+      "db_name": "Nintendo - Super Nintendo Entertainment System.lpl"
+    }
+  ]
+}

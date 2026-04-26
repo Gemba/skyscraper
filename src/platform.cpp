@@ -218,8 +218,8 @@ bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
         }
         QStringList parts = line.split(',');
         if (parts.length() != 4) {
-            ncprintf("\033[1;31mFile '%s', line '%s' has not four columns, but "
-                     "%d. Please fix. Now quitting...\033[0m\n",
+            ncprintf("\033[1;31mFile '%s', line '%s' has not four columns, "
+                     "but %d. Please fix. Now quitting...\033[0m\n",
                      fn, parts.join(',').toUtf8().constData(),
                      static_cast<int>(parts.length()));
             configFile.close();
@@ -292,7 +292,8 @@ int Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "f0dff220a6a07cf1272f00f94d5c55f69353cdce786f8dbfef029dbf30a48a7d",
                  "6c648e3577992caef99c73a6e325a7e9580babf7eafc7ecf35eb349f9da594a1",
                  "fcb923fa1b38441a462511b5b842705c284d91f560d5f30c0a45e68d2444facf",
-                 "fceca636224ec01e50e4d2ce47f43e2ab1d603c008f8292bf50808fcf7f708a3"}
+                 "fceca636224ec01e50e4d2ce47f43e2ab1d603c008f8292bf50808fcf7f708a3",
+                 "c658d5f998b600e81a2e2adc1d216bf00868329ae533a7800c681fe5a421cd6e"}
             )
         },
         {"platforms_idmap.csv", QStringList(
@@ -345,4 +346,9 @@ QVector<int> Platform::getPlatformIdOnScraper(const QString platform,
     qDebug() << "Got platform id(s)" << id << "for platform" << platform
              << "and scraper" << scraper;
     return id;
+}
+
+QString Platform::getRetroArchDbName(const QString platform) const {
+    QString ra_dbname = peas[platform].toHash()["retroarch_dbname"].toString();
+    return ra_dbname;
 }

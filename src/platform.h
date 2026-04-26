@@ -48,6 +48,7 @@ public:
     QStringList getAliases(QString platform) const;
     QVector<int> getPlatformIdOnScraper(const QString platform,
                                         const QString scraper) const;
+    QString getRetroArchDbName(const QString platform) const;
 
 private:
     bool loadPlatformsIdMap();
