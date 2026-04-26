@@ -165,10 +165,11 @@ void GamebaseScraper::getSearchResults(QList<GameEntry> &gameEntries,
             break;
     }
     if (rowCtr == limit) {
-        printf("\033[1;33mSearch with '%s' reached limit of %d:\033[0m\nNarrow "
-               "down the query parameter, scraping will most likely be not "
-               "accurate!\n\n",
-               origSearch.toStdString().c_str(), limit);
+        ncprintf(
+            "\033[1;33mSearch with '%s' reached limit of %d:\033[0m\nNarrow "
+            "down the query parameter, scraping will most likely be not "
+            "accurate!\n\n",
+            origSearch.toStdString().c_str(), limit);
     }
 }
 

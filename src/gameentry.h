@@ -60,7 +60,7 @@ public:
     };
     Q_DECLARE_FLAGS(Types, Elem)
 
-    enum Format { RETROPIE, ESDE, BATOCERA, ATTRACT, PEGASUS };
+    enum Format { RETROPIE, ESDE, BATOCERA, ATTRACT, PEGASUS, RETROARCH };
 
     static constexpr GameEntry::Types MEDIA =
         GameEntry::Types(BACKCOVER | COVER | FANART | MANUAL | MARQUEE |

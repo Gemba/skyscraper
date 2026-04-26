@@ -40,12 +40,12 @@ AbstractFrontend::~AbstractFrontend() {}
 void AbstractFrontend::setConfig(Settings *config) { this->config = config; }
 
 void AbstractFrontend::sortEntries(QList<GameEntry> &gameEntries) {
-    printf("Sorting entries...");
+    ncprintf("Sorting entries...");
     int dots = 0;
     std::sort(gameEntries.begin(), gameEntries.end(),
               [&dots](const GameEntry a, const GameEntry b) -> bool {
                   if (dots % 1000 == 0) {
-                      printf(".");
+                      ncprintf(".");
                       fflush(stdout);
                   }
                   dots++;
@@ -60,7 +60,7 @@ void AbstractFrontend::sortEntries(QList<GameEntry> &gameEntries) {
 
                   return firstTitle < secondTitle;
               });
-    printf(" \033[1;32mDone!\033[0m\n");
+    ncprintf(" \033[1;32mDone!\033[0m\n");
 }
 
 QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,

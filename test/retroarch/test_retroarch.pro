@@ -1,10 +1,9 @@
-QT += core network testlib
+QT += core network xml testlib
 TEMPLATE = app
-TARGET = test_pegasus
+TARGET = test_retroarch
 DEPENDPATH += .
 INCLUDEPATH += ../../src
 CONFIG += debug
-QT += core network xml
 QMAKE_CXXFLAGS += -std=c++17
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
@@ -18,22 +17,23 @@ DEFINES+=TESTING
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \
-            ../../src/pegasus.h \
+            ../../src/retroarch.h \
             ../../src/abstractfrontend.h \
             ../../src/config.h \
             ../../src/gameentry.h \
-            ../../src/nocolor.h \
             ../../src/pathtools.h \
             ../../src/platform.h \
             ../../src/strtools.h
 
-SOURCES += test_pegasus.cpp \
-            ../../src/pegasus.cpp \
-            ../../src/abstractfrontend.cpp \
-            ../../src/config.cpp \
-            ../../src/gameentry.cpp \
-            ../../src/nocolor.cpp \
-            ../../src/pathtools.cpp \
-            ../../src/platform.cpp \
-            ../../src/strtools.cpp
+SOURCES += test_retroarch.cpp \
+           ../../src/retroarch.cpp \
+           ../../src/abstractfrontend.cpp \
+           ../../src/config.cpp \
+           ../../src/gameentry.cpp \
+           ../../src/pathtools.cpp \
+           ../../src/platform.cpp \
+           ../../src/strtools.cpp \
+           ../../src/queue.cpp
 
+# Test data directory
+DISTFILES += playlists/test.lpl

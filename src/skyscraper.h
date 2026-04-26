@@ -46,6 +46,7 @@ class Skyscraper : public QObject {
 public:
     Skyscraper(const QString &currentDir);
     ~Skyscraper();
+
     QSharedPointer<Queue> queue;
     QSharedPointer<NetManager> manager;
     enum OpMode { SINGLE, NO_INTR, CACHE_EDIT, CACHE_EDIT_DISMISS, THREADED };
@@ -102,14 +103,12 @@ private:
     void setFolder(const bool generateGamelist, QString &outFolder,
                    const bool createMissingFolder = true);
     void createMediaOutFolders();
-    const char *mediaSubFolderCStr(QString &in);
+    const std::string mediaSubFolderStdStr(QString &in);
 
     QList<QString> readFileListFrom(const QString &filename);
 
     QSharedPointer<AbstractFrontend> frontend;
-
     QSharedPointer<Cache> cache;
-
     QList<GameEntry> gameEntries;
     QList<QString> cliFiles;
     QMutex entryMutex;

@@ -139,12 +139,12 @@ void Pegasus::skipExisting(QList<GameEntry> &gameEntries,
                            QSharedPointer<Queue> queue) {
     gameEntries = oldEntries;
 
-    printf("Resolving missing entries...");
+    ncprintf("Resolving missing entries...");
     int dots = 0;
     for (auto const &ge : gameEntries) {
         dots++;
         if (dots % 100 == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
         QFileInfo current(ge.path);
@@ -262,7 +262,7 @@ void Pegasus::assembleList(QString &finalOutput,
 
     for (auto &entry : gameEntries) {
         if (++dots % dotMod == 0) {
-            printf(".");
+            ncprintf(".");
             fflush(stdout);
         }
 

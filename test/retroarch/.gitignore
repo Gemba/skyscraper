@@ -1,0 +1,5 @@
+*~
+*.o
+*.moc
+Makefile
+test_retroarch

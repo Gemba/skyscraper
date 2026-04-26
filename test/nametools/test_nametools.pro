@@ -11,11 +11,14 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 include(../../VERSION.ini)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
-HEADERS += ../../src/nametools.h \
-            ../../src/strtools.h 
+HEADERS += \
+            ../../src/nametools.h \
+            ../../src/nocolor.h \
+            ../../src/strtools.h
 
 SOURCES += test_nametools.cpp \
-           ../../src/nametools.cpp \
-           ../../src/strtools.cpp 
+            ../../src/nametools.cpp \
+            ../../src/nocolor.cpp \
+            ../../src/strtools.cpp
 
 

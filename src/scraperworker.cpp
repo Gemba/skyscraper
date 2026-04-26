@@ -867,8 +867,8 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
     GameEntry game;
 
     std::string entryStr = "";
-    printf("Potential entries for '\033[1;32m%s\033[0m':\n",
-           compareTitle.toStdString().c_str());
+    ncprintf("Potential entries for '\033[1;32m%s\033[0m':\n",
+             compareTitle.toStdString().c_str());
     bool suggestedShown = false;
     for (int a = 1; a <= gameEntries.length(); ++a) {
         QString suggested = "";
@@ -876,26 +876,28 @@ GameEntry ScraperWorker::getEntryFromUser(const QList<GameEntry> &gameEntries,
             suggested = " <-- Skyscraper's choice";
             suggestedShown = true;
         }
-        printf("\033[1;32m%d%s\033[0m: Title:    '\033[1;32m%s\033[0m'%s\n    "
-               "Platform: '\033[1;33m%s\033[0m'\n    "
-               "Release date: '\033[1;33m%s\033[0m'%s\n",
-               a, QString((a <= 9 ? " " : "")).toStdString().c_str(),
-               gameEntries.at(a - 1).title.toStdString().c_str(),
-               suggested.toStdString().c_str(),
-               gameEntries.at(a - 1).platform.toStdString().c_str(),
-               gameEntries.at(a - 1).releaseDate.toStdString().c_str(),
-               gameEntries.at(a - 1).publisher.isEmpty()
-                   ? ""
-                   : QString(", Publisher: '\033[1;33m%1\033[0m'")
-                         .arg(gameEntries.at(a - 1).publisher)
-                         .toStdString()
-                         .c_str());
+        ncprintf(
+            "\033[1;32m%d%s\033[0m: Title:    '\033[1;32m%s\033[0m'%s\n    "
+            "Platform: '\033[1;33m%s\033[0m'\n    "
+            "Release date: '\033[1;33m%s\033[0m'%s\n",
+            a, QString((a <= 9 ? " " : "")).toStdString().c_str(),
+            gameEntries.at(a - 1).title.toStdString().c_str(),
+            suggested.toStdString().c_str(),
+            gameEntries.at(a - 1).platform.toStdString().c_str(),
+            gameEntries.at(a - 1).releaseDate.toStdString().c_str(),
+            gameEntries.at(a - 1).publisher.isEmpty()
+                ? ""
+                : QString(", Publisher: '\033[1;33m%1\033[0m'")
+                      .arg(gameEntries.at(a - 1).publisher)
+                      .toStdString()
+                      .c_str());
     }
-    printf("\033[1;32m-1\033[0m: \033[1;33mNONE OF THE ABOVE!\033[0m\n");
-    printf("\033[1;34mPlease choose the preferred entry\033[0m (Or press enter "
-           "to pick Skyscraper's choice):\033[0m ");
+    ncprintf("\033[1;32m-1\033[0m: \033[1;33mNONE OF THE ABOVE!\033[0m\n");
+    ncprintf(
+        "\033[1;34mPlease choose the preferred entry\033[0m (Or press enter "
+        "to pick Skyscraper's choice):\033[0m ");
     getline(std::cin, entryStr);
-    printf("\n");
+    ncprintf("\n");
     // Becomes 0 if input is not a number
     int chosenEntry = QString(entryStr.c_str()).toInt();
 
