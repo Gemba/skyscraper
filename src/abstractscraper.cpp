@@ -620,6 +620,8 @@ QString AbstractScraper::getCompareTitle(const QFileInfo &info) {
 }
 
 void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
+    // the next statement redundant, but leave it here for the unit tests
+    regionPrios = config->regionPrios;
     const QString fn = info.fileName();
     if (int leftParPos = fn.indexOf("("); leftParPos != -1) {
         // Autodetect region and append to region priorities
@@ -632,6 +634,9 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
                 if (regionString.contains(k, Qt::CaseInsensitive)) {
                     // regionMap is sorted from bigger regions to smaller
                     // prepend() assures smaller regions get higher priority
+                    if (int idx = regionPrios.lastIndexOf(e.second); idx > -1) {
+                        regionPrios.removeAt(idx);
+                    }
                     regionPrios.prepend(e.second);
                     if (keys.size() > 1) {
                         // append only one: "europe" or "(e)"
