@@ -22,6 +22,8 @@
 
 #include "abstractfrontend.h"
 
+#include <QJsonObject>
+
 class RetroArch : public AbstractFrontend {
     Q_OBJECT
 
@@ -33,7 +35,6 @@ public:
                       QSharedPointer<Queue> queue) override;
     bool canSkip() override;
     bool loadOldGameList(const QString &gameListFileString) override;
-    void preserveFromOld(GameEntry &entry) override;
     QString getGameListFileName() override;
     QString getInputFolder() override;
     QString getGameListFolder() override;
@@ -51,20 +52,16 @@ public:
 
 protected:
     // Override to use game title (sanitized) instead of ROM baseName for
-    // thumbnail filenames
+    // media filenames
     QString getTargetFileName(GameEntry::Types t,
                               const QString &baseName) override;
-
-    // RetroArch playlists do NOT embed media paths
     bool gamelistHasMediaPaths() override { return false; }
 
 private:
-    static QString sanitizeForFilename(const QString &name);
-    static QString jsonEscape(const QString &str);
-
+    QString sanitizeForFilename(const QString &name);
+    QJsonObject createMetaProps();
     QMap<QString, QString> baseNameToTitle;
-    QMap<QString, QString> platformToDbName;
-    static const QMap<QString, QString> platformToDbNameFallback;
+    QJsonObject existingPlaylist;
 };
 
 #endif // RETROARCH_H

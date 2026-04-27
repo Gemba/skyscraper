@@ -3,3 +3,5 @@
 *.moc
 Makefile
 test_retroarch
+platforms_idmap.csv
+peas.json

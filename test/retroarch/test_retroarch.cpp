@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStringBuilder>
 #include <QTest>
 
 class TestRetroArch : public QObject {
@@ -211,30 +212,35 @@ private slots:
         localFrontend.setConfig(&localSettings);
 
         localSettings.platform = "snes";
-        localSettings.mediaFolder = "/opt/retropie/configs/all/assets";
+        QString ra_db_name = localFrontend.getPlatformOutputName();
 
-        // Test media folder - this returns the hardcoded thumbnail path
-        QCOMPARE(localFrontend.getMediaFolder(),
-                 "/opt/retropie/configs/all/retroarch/thumbnails");
+        QString expMediaFolder =
+            QDir::homePath() % "/.config/retroarch/thumbnails/" % ra_db_name;
+        // Expect default if no mediaFolder= was set
+        localSettings.mediaFolder = localFrontend.getMediaFolder();
+        QCOMPARE(localFrontend.getMediaFolder(), expMediaFolder);
 
         // Test covers folder (Named_Boxarts subfolder of config->mediaFolder)
         QCOMPARE(localFrontend.getCoversFolder(),
-                 "/opt/retropie/configs/all/assets/Named_Boxarts");
+                 expMediaFolder % "/Named_Boxarts");
 
         // Test screenshots folder (Named_Snaps subfolder)
         QCOMPARE(localFrontend.getScreenshotsFolder(),
-                 "/opt/retropie/configs/all/assets/Named_Snaps");
+                 expMediaFolder % "/Named_Snaps");
 
         // Test marquees/wheels folder (Named_Logos subfolder)
         QCOMPARE(localFrontend.getMarqueesFolder(),
-                 "/opt/retropie/configs/all/assets/Named_Logos");
+                 expMediaFolder % "/Named_Logos");
         QCOMPARE(localFrontend.getWheelsFolder(),
-                 "/opt/retropie/configs/all/assets/Named_Logos");
+                 expMediaFolder % "/Named_Logos");
 
         // Test with different media folder
-        localSettings.mediaFolder = "/home/pi/RetroPie/downloaded_media";
+        localSettings.mediaFolder = "/yadda/yadda/downloaded_media/snes";
+        // replace "/snes"
+        localSettings.mediaFolder = localFrontend.getMediaFolder();
         QCOMPARE(localFrontend.getCoversFolder(),
-                 "/home/pi/RetroPie/downloaded_media/Named_Boxarts");
+                 "/yadda/yadda/downloaded_media/" % ra_db_name %
+                     "/Named_Boxarts");
     }
 
     // Test that the correct media types are supported through public interface
@@ -391,7 +397,7 @@ private slots:
 
         // Game list folder should be the standard RetroArch playlist location
         QCOMPARE(localFrontend.getGameListFolder(),
-                 "/opt/retropie/configs/all/retroarch/playlists");
+                 QDir::homePath() % "/.config/retroarch/playlists");
     }
 };
 

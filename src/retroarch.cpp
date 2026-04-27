@@ -20,11 +20,8 @@
 #include "retroarch.h"
 
 #include "gameentry.h"
-#include "pathtools.h"
 #include "platform.h"
-#include "strtools.h"
 
-#include <QDate>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -33,10 +30,27 @@
 #include <QJsonObject>
 #include <QRegularExpression>
 #include <QStringBuilder>
-#include <QTextStream>
 
-static const QString RA_LPL_VERSION = "1.5";
-static const QString RA_DETECT = "DETECT";
+static const QString LPL_VERSION_VAL = "1.5";
+static const QString DETECT_VAL = "DETECT";
+
+const QString META_VERSION = "version";
+const QString META_DFLT_CORE_PATH = "default_core_path";
+const QString META_DFLT_CORE_NAME = "default_core_name";
+
+const QStringList LPL_META_PROPS = {
+    META_DFLT_CORE_PATH,    META_DFLT_CORE_NAME, META_VERSION,
+    "label_display_mode",   "left_display_mode", "right_display_mode",
+    "thumbnail_match_mode", "sort_mode",         "base_content_directory"};
+
+const QString ITEMS_ARRAY = "items";
+
+const QString ITEM_CORE_NAME = "core_name";
+const QString ITEM_CORE_PATH = "core_path";
+const QString ITEM_CRC = "crc32";
+const QString ITEM_DB_NAME = "db_name";
+const QString ITEM_LABEL = "label";
+const QString ITEM_PATH = "path";
 
 RetroArch::RetroArch() {}
 
@@ -45,16 +59,6 @@ QString RetroArch::sanitizeForFilename(const QString &name) {
     // Replace forbidden characters with underscore
     sanitized.replace(QRegularExpression("[&*/:\\\\\"<>?|]"), "_");
     return sanitized;
-}
-
-QString RetroArch::jsonEscape(const QString &str) {
-    QString escaped = str;
-    escaped.replace("\\", "\\\\");
-    escaped.replace("\"", "\\\"");
-    escaped.replace("\n", "\\n");
-    escaped.replace("\r", "\\r");
-    escaped.replace("\t", "\\t");
-    return escaped;
 }
 
 const QString RetroArch::getPlatformOutputName() {
@@ -72,46 +76,34 @@ const QString RetroArch::getPlatformOutputName() {
 }
 
 bool RetroArch::loadOldGameList(const QString &gameListFileString) {
-    QFile gameListFile(gameListFileString);
-    if (!gameListFile.exists() || !gameListFile.open(QIODevice::ReadOnly)) {
+    QJsonDocument doc;
+    if (QFile gameListFile(gameListFileString);
+        !gameListFile.open(QIODevice::ReadOnly)) {
         return false;
+    } else {
+        QByteArray jsonData = gameListFile.readAll();
+        gameListFile.close();
+        doc = QJsonDocument::fromJson(jsonData);
+        if (!doc.isObject()) {
+            return false;
+        }
     }
 
-    QByteArray jsonData = gameListFile.readAll();
-    gameListFile.close();
-
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-    if (!doc.isObject()) {
-        return false;
-    }
-
-    QJsonObject root = doc.object();
-    QJsonArray items = root.value("items").toArray();
+    existingPlaylist = doc.object();
+    QJsonArray items = existingPlaylist.value(ITEMS_ARRAY).toArray();
 
     for (const QJsonValue &item : items) {
-        if (!item.isObject()) {
-            continue;
+        if (item.isObject()) {
+            QJsonObject itemObj = item.toObject();
+            GameEntry oldEntry;
+            // always absolute path with Retroarch
+            // path might be contain backslashes on Windows
+            oldEntry.path = itemObj.value(ITEM_PATH).toString();
+            oldEntry.title = itemObj.value(ITEM_LABEL).toString();
+            // remaining properties of an item are held in existingPlaylist
+            oldEntries.append(oldEntry);
         }
-
-        QJsonObject itemObj = item.toObject();
-        GameEntry newEntry;
-        newEntry.path = itemObj.value("path").toString();
-        newEntry.title = itemObj.value("label").toString();
-        // FIXME: preserve also db_name if present for game and core_name,
-        // core_path if not "DETECT"
-        oldEntries.append(newEntry);
     }
-
-    // FIXME: preserve also "preamble" (=everything, except version sibling to
-    // items) e.g.:
-    //  "default_core_path": "", # overwrite only iff -e / raExtra is provided
-    //  "default_core_name": "", # overwrite only iff -e / raExtra is provided
-    //  "base_content_directory": "yadda_yadda",
-    //  "label_display_mode": 2,
-    //  "right_thumbnail_mode": 0,
-    //  "left_thumbnail_mode": 0,
-    //  "thumbnail_match_mode": 0,
-    //  "sort_mode": 2,
 
     return true;
 }
@@ -145,19 +137,6 @@ void RetroArch::skipExisting(QList<GameEntry> &gameEntries,
     }
 }
 
-void RetroArch::preserveFromOld(GameEntry &entry) {
-    QString fn = entry.baseName;
-    for (const auto &oldEntry : oldEntries) {
-        if (QFileInfo(oldEntry.path).fileName() == fn) {
-            if (entry.title.isEmpty()) {
-                entry.title = oldEntry.title;
-            }
-            // FIXME: restore also other values (see FIXME in loadOldGameList())
-            break;
-        }
-    }
-}
-
 void RetroArch::assembleList(QString &finalOutput,
                              QList<GameEntry> &gameEntries) {
     if (gameEntries.isEmpty())
@@ -169,71 +148,101 @@ void RetroArch::assembleList(QString &finalOutput,
         baseNameToTitle[entry.baseName] = entry.title;
     }
 
-    QJsonObject root;
-    root.insert("version", RA_LPL_VERSION);
+    QJsonObject newPlaylist = createMetaProps();
+
+    QJsonArray exitsingItems = existingPlaylist.value(ITEMS_ARRAY).toArray();
+    QJsonObject eitemObj;
+
+    QJsonArray items;
+    QString gameFn;
+
+    int dots = -1;
+    int dotMod = gameEntries.length() * 0.1 + 1;
+    for (auto const &entry : gameEntries) {
+        if (++dots % dotMod == 0) {
+            printf(".");
+            fflush(stdout);
+        }
+        gameFn = QFileInfo(entry.path).fileName();
+        // TODO: unpack support for CRC and inter-zip reference
+        //     "path": "/storage/emulated/0/ROMs/virtualboy/Game.zip#Game.vb",
+        //     "crc32": "133E9372|crc",
+        QString absPath = entry.absoluteFilePath;
+#ifdef Q_OS_WIN
+        absPath = absPath.replace("/", "\\\\");
+#endif
+        bool hasExisting = false;
+        QJsonObject itemObj;
+        for (const QJsonValue &eit : exitsingItems) {
+            if (eit.isObject()) {
+                eitemObj = eit.toObject();
+                if (eitemObj[ITEM_PATH].toString().endsWith(gameFn)) {
+                    hasExisting = true;
+                    itemObj = eitemObj;
+                    break;
+                }
+            }
+        }
+
+        if (!hasExisting) {
+            itemObj.insert(ITEM_CORE_PATH, DETECT_VAL);
+            itemObj.insert(ITEM_CORE_NAME, DETECT_VAL);
+            itemObj.insert(ITEM_CRC, DETECT_VAL);
+            itemObj.insert(ITEM_DB_NAME, getGameListFileName());
+        }
+
+        itemObj.insert(ITEM_PATH, absPath);
+        itemObj.insert(ITEM_LABEL, entry.title);
+
+        items.append(itemObj);
+    }
+
+    newPlaylist.insert(ITEMS_ARRAY, items);
+
+    QJsonDocument doc(newPlaylist);
+    finalOutput = doc.toJson(QJsonDocument::Indented);
+}
+
+QJsonObject RetroArch::createMetaProps() {
+    QJsonObject newPlaylist;
+    newPlaylist.insert(META_VERSION, LPL_VERSION_VAL);
+
+    QString corePathStr = DETECT_VAL;
+    QString coreNameStr = DETECT_VAL;
 
     // Parse default_core_path and default_core_name from frontendExtra
-    // Format: "<CORE_PATH>;<CORE_NAME>" or leave as DETECT
-    QString corePathStr = RA_DETECT;
-    QString coreNameStr = RA_DETECT;
-
+    // (raExtra= or -e)
     if (!config->frontendExtra.isEmpty()) {
-        // frontendExtra is used for default_core_path and default_core_name
-        // Format: "<CORE_PATH>;<CORE_NAME>"
         QStringList parts = config->frontendExtra.split(";");
         corePathStr = parts[0];
         coreNameStr = parts[1];
     }
 
-    // FIXME: if values from preamble exist from existing playlist use these
-    // instead of the defaults
-    root.insert("default_core_path", corePathStr);
-    root.insert("default_core_name", coreNameStr);
-    root.insert("label_display_mode", "0");   // show full labels
-    root.insert("left_display_mode", "0");    // system default
-    root.insert("right_display_mode", "0");   // system default
-    root.insert("thumbnail_match_mode", "0"); // system default
-    root.insert("sort_mode", "0");            // system default
-
-    QJsonArray items;
-
-    int dots = -1;
-    int dotMod = gameEntries.length() * 0.1 + 1;
-
-    for (const auto &entry : gameEntries) {
-        if (++dots % dotMod == 0) {
-            printf(".");
-            fflush(stdout);
+    // create or restore meta properties
+    for (const auto &k : LPL_META_PROPS) {
+        QString v = existingPlaylist[k].toString();
+        if (v.isEmpty()) {
+            if (k == META_VERSION)
+                newPlaylist.insert(k, LPL_VERSION_VAL);
+            else if (k == META_DFLT_CORE_NAME)
+                newPlaylist.insert(k, coreNameStr);
+            else if (k == META_DFLT_CORE_PATH)
+                newPlaylist.insert(k, corePathStr);
+            else if (k == "base_content_directory")
+                ; // don't set default "base_content_directory"
+            else
+                newPlaylist.insert(k, "0");
+        } else {
+            newPlaylist.insert(k, v);
         }
-
-        // TODO: unpack support for CRC and inter-zip reference
-        //     "path": "/storage/emulated/0/ROMs/virtualboy/Game.zip#Game.vb",
-        //     "crc32": "133E9372|crc",
-
-        QJsonObject itemObj;
-        QString absPath = entry.absoluteFilePath;
-#ifdef Q_OS_WIN
-        absPath = absPath.replace("/", "\\\\");
-#endif
-        itemObj.insert("path", absPath);
-        itemObj.insert("label", entry.title);
-        itemObj.insert("core_path", RA_DETECT);
-        itemObj.insert("core_name", RA_DETECT);
-        itemObj.insert("crc32", RA_DETECT);
-        itemObj.insert("db_name", QString(getPlatformOutputName() % ".lpl"));
-
-        items.append(itemObj);
     }
-
-    root.insert("items", items);
-
-    QJsonDocument doc(root);
-    finalOutput = doc.toJson(QJsonDocument::Indented);
+    return newPlaylist;
 }
 
 QString RetroArch::getTargetFileName(GameEntry::Types t,
                                      const QString &baseName) {
-    (void)t; // Suppress unused parameter warning
+    (void)t;
+    // for media files use sanitized title as filename stem
     QString title = baseNameToTitle.value(baseName, baseName);
     return sanitizeForFilename(title);
 }
@@ -242,7 +251,7 @@ bool RetroArch::canSkip() { return true; }
 
 QString RetroArch::getGameListFileName() {
     return config->gameListFilename.isEmpty()
-               ? (getPlatformOutputName() + ".lpl")
+               ? (getPlatformOutputName() % ".lpl")
                : config->gameListFilename;
 }
 
@@ -251,11 +260,27 @@ QString RetroArch::getInputFolder() {
 }
 
 QString RetroArch::getGameListFolder() {
-    return QDir::homePath() % "/.config/retroarch/playlists";
+    if (config->gameListFolder.isEmpty()) {
+        return QDir::homePath() % "/.config/retroarch/playlists";
+    } else {
+        if (config->gameListFolder.endsWith("/" % config->platform)) {
+            return config->gameListFolder.replace("/" % config->platform, "");
+        }
+        return config->gameListFolder;
+    }
 }
 
 QString RetroArch::getMediaFolder() {
-    return QDir::homePath() % "/.config/retroarch/thumbnails";
+    if (config->mediaFolder.isEmpty()) {
+        return QDir::homePath() % "/.config/retroarch/thumbnails/" %
+               getPlatformOutputName();
+    } else {
+        if (config->mediaFolder.endsWith("/" % config->platform)) {
+            return config->mediaFolder.replace("/" % config->platform,
+                                               "/" % getPlatformOutputName());
+        }
+        return config->mediaFolder;
+    }
 }
 
 QString RetroArch::getCoversFolder() {

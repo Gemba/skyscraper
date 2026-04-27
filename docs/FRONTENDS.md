@@ -347,11 +347,21 @@ skip existing entries, Skyscraper will use the old game list as a reference.
 
 #### Known Limitations
 
-1. Initial generation of a RetroArch playlist does not work for folders resp.
+1. RetroArch's [deprecated playlist
+   format](https://docs.libretro.com/guides/roms-playlists-thumbnails/#6-line-playlist-format-deprecated)
+   with plain six lines per game is not supported.
+2. Initial generation of a RetroArch playlist does not work for folders resp.
    platforms which may require a different RetroArch core per game (for example
    `arcade/` on RetroPie). However, updating an existing playlist file for such
    folder works, as the existing entry of `"db_name"` per each game is
    preserved.
-2. Any RetroArch configuration is not evaluated, thus if you changed your
+3. Any RetroArch configuration is not evaluated, thus if you changed your
    RetroArch configuration (e.g., by using non-default file paths) the produced
    JSON/lpl file might not display correctly in RetroArch frontend.
+4. Existing compressed playlists are not supported yet and will not be read by
+   Skyscraper to preserver any data, thus you may lose previous changes. Before
+   you start using Skyscraper's RetroArch playlist output you should disable the
+   playlist compression in RetroArch and save the playlist from RetroArch as
+   plain JSON.
+5. The settings of "scan_content_dir" in an existing playlist are not yet
+   preserved. 

@@ -54,7 +54,8 @@ unix:config.files=aliasMap.csv hints.xml mameMap.csv \
 unix:examples.path=$${SYSCONFDIR}/skyscraper
 unix:examples.files=config.ini.example README.md artwork.xml \
   artwork.xml.example1 artwork.xml.example2 artwork.xml.example3 \
-  artwork.xml.example4 batocera-artwork.xml docs/ARTWORK.md docs/CACHE.md
+  artwork.xml.example4 batocera-artwork.xml retroarch-artwork.xml \
+  docs/ARTWORK.md docs/CACHE.md
 
 unix:cacheexamples.path=$${SYSCONFDIR}/skyscraper/cache
 unix:cacheexamples.files=cache/priorities.xml.example docs/CACHE.md

@@ -1027,41 +1027,52 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     frontend->setConfig(&config);
     frontend->checkReqs();
 
-    // Fallback to defaults if they aren't already set, find the rest in
-    // settings.h
-    if (config.frontend != "batocera") {
-        if (!inputFolderSet)
+    if (config.frontend == "retroarch") {
+        if (!inputFolderSet) {
             config.inputFolder = frontend->getInputFolder();
-        if (!gameListFolderSet)
-            config.gameListFolder = frontend->getGameListFolder();
+        }
+        // do call these ignoring gameListFolderSet and mediaFolderSet
+        // as they will adjust the path to retroarch specs
+        config.gameListFolder = frontend->getGameListFolder();
+        config.mediaFolder = frontend->getMediaFolder();
     } else {
-        if (!gameListFolderSet)
-            config.gameListFolder = frontend->getGameListFolder();
-        if (!inputFolderSet)
-            config.inputFolder = frontend->getInputFolder();
-    }
-    if (!mediaFolderSet) {
-        if (config.frontend == "esde" || config.frontend == "batocera" ||
-            config.frontend == "retroarch") {
-            config.mediaFolder = frontend->getMediaFolder();
+        // Fallback to defaults if they aren't already set, find the rest in
+        // settings.h
+        if (config.frontend != "batocera") {
+            if (!inputFolderSet)
+                config.inputFolder = frontend->getInputFolder();
+            if (!gameListFolderSet)
+                config.gameListFolder = frontend->getGameListFolder();
         } else {
-            // defaults to <gamelistfolder>/[.]media/
-            QString mf = "media";
-            if (config.mediaFolderHidden) {
-                mf = "." + mf;
+            // batocera (note the order)
+            if (!gameListFolderSet)
+                config.gameListFolder = frontend->getGameListFolder();
+            if (!inputFolderSet)
+                config.inputFolder = frontend->getInputFolder();
+        }
+        if (!mediaFolderSet) {
+            if (config.frontend == "esde" || config.frontend == "batocera") {
+                config.mediaFolder = frontend->getMediaFolder();
+            } else {
+                // defaults to <gamelistfolder>/[.]media/
+                QString mf = "media";
+                if (config.mediaFolderHidden) {
+                    mf = "." + mf;
+                }
+                config.mediaFolder =
+                    PathTools::concatPath(config.gameListFolder, mf);
             }
-            config.mediaFolder =
-                PathTools::concatPath(config.gameListFolder, mf);
         }
     }
     PathTools::expandHomePath(config.inputFolder);
     PathTools::expandHomePath(config.mediaFolder);
 
-    // defaults are always absolute, thus input- and mediafolder will be
-    // unchanged by these calls.
-    // gamelistfolder is absolute by now.
-    // the other two may be relative or absolute.
+    const QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
     if (config.frontend == "pegasus" || config.frontend == "batocera") {
+        // defaults are always absolute, thus input- and mediafolder will be
+        // unchanged by these calls.
+        // gamelistfolder is absolute by now.
+        // the other two may be relative or absolute.
         QString last = config.gameListFolder.split("/").last();
         config.inputFolder = removeSurplusPlatformPath(config.platform, last,
                                                        config.inputFolder);
@@ -1071,19 +1082,11 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                                                          config.inputFolder);
         config.mediaFolder = PathTools::makeAbsolutePath(config.gameListFolder,
                                                          config.mediaFolder);
+    } else if (config.frontend == "retroarch") {
+        checkForAbsoluteInputFolder(inputDirFileInfo);
+        // media and gamelist folder already in proper format (see above)
     } else {
-        QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
-        if (inputDirFileInfo.isRelative()) {
-            ncprintf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
-                     "provided as relative path which is not valid for this "
-                     "frontend. Provide the input folder as absolute path to "
-                     "remediate. Now quitting...\n");
-            emit die(
-                1, "invalid frontend and input folder combination",
-                QString(
-                    "Input folder may not be a relative path for frontend '%1'")
-                    .arg(config.frontend));
-        }
+        checkForAbsoluteInputFolder(inputDirFileInfo);
         QString last = config.inputFolder.split("/").last();
         config.gameListFolder = removeSurplusPlatformPath(
             config.platform, last, config.gameListFolder);
@@ -1105,23 +1108,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
 
     if (config.platform.isEmpty() && !config.cacheOptions.isEmpty()) {
         return; // cache option to be applied to all platform
-    }
-
-    // RetroArch has a different platform output name than the generic lowercase
-    // types
-    if (config.frontend == "retroarch") {
-        const QString oldSubPath = "/" % config.platform;
-        const QString newSubPath =
-            "/" % ((RetroArch *)fePtr)->getPlatformOutputName();
-
-        // Also, the playlist doesn't even get a platform folder, since
-        // getGameListFileName uses its output name in the filename.
-        if (config.gameListFolder.endsWith(oldSubPath))
-            config.gameListFolder =
-                config.gameListFolder.replace(oldSubPath, "");
-        if (config.mediaFolder.endsWith(oldSubPath))
-            config.mediaFolder =
-                config.mediaFolder.replace(oldSubPath, newSubPath);
     }
 
     if (!QFile::exists(config.inputFolder)) {
@@ -1289,6 +1275,20 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         resFile =
             resFile.remove(0, resFile.indexOf(resFolder) + resFolder.length());
         config.resources[resFile] = QImage(resFolder % resFile);
+    }
+}
+
+void Skyscraper::checkForAbsoluteInputFolder(
+    const QFileInfo &inputDirFileInfo) {
+    if (inputDirFileInfo.isRelative()) {
+        ncprintf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
+                 "provided as relative path which is not valid for this "
+                 "frontend. Provide the input folder as absolute path to "
+                 "remediate. Now quitting...\n");
+        emit die(
+            1, "invalid frontend and input folder combination",
+            QString("Input folder may not be a relative path for frontend '%1'")
+                .arg(config.frontend));
     }
 }
 

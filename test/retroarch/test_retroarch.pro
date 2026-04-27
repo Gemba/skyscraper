@@ -12,6 +12,9 @@ SYSCONFDIR = $${PREFIX}/etc
 DEFINES+=PREFIX=\\\"$$PREFIX\\\"
 DEFINES+=SYSCONFDIR=\\\"$$SYSCONFDIR\\\"
 
+QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../peas.json)) .;
+QMAKE_POST_LINK += cp -f $$shell_quote($$shell_path($${PWD}/../../platforms_idmap.csv)) .;
+
 include(../../VERSION.ini)
 DEFINES+=TESTING
 DEFINES+=VERSION=\\\"$$VERSION\\\"
