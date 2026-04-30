@@ -626,7 +626,9 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
     if (int leftParPos = fn.indexOf("("); leftParPos != -1) {
         // Autodetect region and append to region priorities
         QString regionString = fn.mid(leftParPos, fn.length());
-        QListIterator<QPair<QString, QString>> iter(regionMap());
+	// Appending regionMap to regionPrios will prioritise searching the config regionPrios first, and then if not found, move on to regionMap
+        QListIterator<QPair<QString, QString>> iter(regionPrios.append(regionMap()));
+	// May need to add a line here to remove duplicates from this list as regions in regionPrios and regionMap may appear twice (removing the second occurrence should remove the regionMap appearence and leave the first one added via regionPrios)
         while (iter.hasNext()) {
             QPair<QString, QString> e = iter.next();
             QStringList keys = e.first.split("|");
