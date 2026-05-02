@@ -626,15 +626,30 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
     if (int leftParPos = fn.indexOf("("); leftParPos != -1) {
         // Autodetect region and append to region priorities
         QString regionString = fn.mid(leftParPos, fn.length());
-	// Appending regionMap to regionPrios will prioritise searching the config regionPrios first, and then if not found, move on to regionMap
-        QListIterator<QPair<QString, QString>> iter(regionPrios.append(regionMap()));
-	// May need to add a line here to remove duplicates from this list as regions in regionPrios and regionMap may appear twice (removing the second occurrence should remove the regionMap appearence and leave the first one added via regionPrios)
+        // create a new version of regionMap to use for this run of the function
+        QList<QPair<QString, QString>> sortedMap = regionMap();
+        // iterate backwards through regionPrios (e.g., "jp", then "us", then "eu", for a regionPrios such as {"eu","us","jp"})
+        for (int i = regionPrios.size() - 1; i >= 0; --i) {
+            const QString &targetCode = regionPrios.at(i);
+            // run through each pair in sortedMap and find if it is matched by the regionPrios entry (to the second entry of the pair)
+            // if so, move it to the end of the list so that it is prioritised as I believe the logic below preprends anything closer to the end on a later iteration meaning it move closer to the start of sortedList after all iterations
+            for (int j = 0; j < sortedMap.size(); ++j) {
+                if (sortedMap.at(j).second == targetCode) {
+                    // move the match to the very last position
+                    sortedMap.move(j, sortedMap.size() - 1);
+                    // break the inner loop to move to the next priority item
+                    break;
+                }
+            }
+        }
+        // change the iteration here to sortedMap for the rest of the function
+        QListIterator<QPair<QString, QString>> iter(sortedMap());
         while (iter.hasNext()) {
             QPair<QString, QString> e = iter.next();
             QStringList keys = e.first.split("|");
             for (const auto &k : keys) {
                 if (regionString.contains(k, Qt::CaseInsensitive)) {
-                    // regionMap is sorted from bigger regions to smaller
+                    // regionMap is sorted from bigger regions to smaller (with regionPrios taken into account above and hence using sortedMap)
                     // prepend() assures smaller regions get higher priority
                     if (int idx = regionPrios.lastIndexOf(e.second); idx > -1) {
                         regionPrios.removeAt(idx);
