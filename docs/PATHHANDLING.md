@@ -12,7 +12,11 @@ how the absolute path is calculated when a you provide a relative path.
 
 Do not get confused by the lenghty flow diagram below. It covers game list folder,
 input folder and media folder handling. You wiil notice that input folder and
-media folder are processed in the same manner.
+media folder are almost processed in the same manner.
+
+If you use generate output with Skyscraper for RetroArch as frontend you can
+stop reading as Skyscraper expects any of the three parameters input, gamelist
+and media folder to be absolute.
 
 <figure markdown style="width:100%">
   <img style="width:100%" src="../resources/path_handling_flow.svg"/>

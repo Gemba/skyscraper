@@ -106,7 +106,7 @@ private:
     const std::string mediaSubFolderStdStr(QString &in);
 
     QList<QString> readFileListFrom(const QString &filename);
-    void checkForAbsoluteInputFolder(const QFileInfo &inputDirFileInfo);
+    void validateAbsolutePath(const QString &param, const QString &path);
 
     QSharedPointer<AbstractFrontend> frontend;
     QSharedPointer<Cache> cache;

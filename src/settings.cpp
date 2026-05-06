@@ -247,7 +247,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                      type == CfgType::FRONTEND /* #68 */)
                         ? PathTools::concatPath(v, config->platform)
                         : v;
-                config->gameListFolder = toAbsolutePath(false, v);
+                // do not elaborate abs path for retroarch
+                config->gameListFolder = config->frontend == "retroarch"
+                                             ? config->gameListFolder
+                                             : toAbsolutePath(false, v);
                 gameListFolderSet = true;
                 continue;
             }
@@ -678,7 +681,10 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->inputFolderNotMain = true;
     }
     if (parser->isSet("g")) {
-        config->gameListFolder = toAbsolutePath(true, parser->value("g"));
+        // do not elaborate abs path for retroarch
+        config->gameListFolder = config->frontend == "retroarch"
+                                     ? config->gameListFolder
+                                     : toAbsolutePath(true, parser->value("g"));
         gameListFolderSet = true;
     }
     if (parser->isSet("o")) {

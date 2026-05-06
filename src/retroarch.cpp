@@ -299,8 +299,7 @@ QString RetroArch::getWheelsFolder() {
     return config->mediaFolder % "/Named_Logos";
 }
 
-// PENDING: This media type does exist yet...
-
+// PENDING: This media type is supported by RA but not yet by Skyscraper
 /*
 QString RetroArch::getTitleScreenshotsFolder() {
     return config->mediaFolder % "/Named_Titles";

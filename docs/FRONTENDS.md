@@ -311,9 +311,11 @@ specific to your setup you can define in `~/.skyscraper/peas_local.json`. This
 file uses the same format as the `peas.json`.
 
 You can optionally use the `-e` parameter with `"<CORE_PATH>;<CORE_NAME>"` to
-set a default core path/name for the playlist. Or set it in `config.ini` like:
+set a default core path/name for the playlist. Or set
+[`raExtra`](CONFIGINI.md#raextra) it in `config.ini` like:
 
 ```ini
+; also allowed in [<platform>]
 [retroarch]
 raExtra="<CORE_PATH>;<CORE_NAME>"
 ```

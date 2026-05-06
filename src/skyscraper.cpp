@@ -1030,6 +1030,14 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (config.frontend == "retroarch") {
         if (!inputFolderSet) {
             config.inputFolder = frontend->getInputFolder();
+        } else {
+            validateAbsolutePath("inputFolder", config.inputFolder);
+        }
+        if (gameListFolderSet) {
+            validateAbsolutePath("gameListFolder", config.gameListFolder);
+        }
+        if (mediaFolderSet) {
+            validateAbsolutePath("mediaFolder", config.mediaFolder);
         }
         // do call these ignoring gameListFolderSet and mediaFolderSet
         // as they will adjust the path to retroarch specs
@@ -1067,7 +1075,6 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     PathTools::expandHomePath(config.inputFolder);
     PathTools::expandHomePath(config.mediaFolder);
 
-    const QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
     if (config.frontend == "pegasus" || config.frontend == "batocera") {
         // defaults are always absolute, thus input- and mediafolder will be
         // unchanged by these calls.
@@ -1083,10 +1090,10 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         config.mediaFolder = PathTools::makeAbsolutePath(config.gameListFolder,
                                                          config.mediaFolder);
     } else if (config.frontend == "retroarch") {
-        checkForAbsoluteInputFolder(inputDirFileInfo);
-        // media and gamelist folder already in proper format (see above)
+        ; // pass through, checks made above
     } else {
-        checkForAbsoluteInputFolder(inputDirFileInfo);
+        validateAbsolutePath("inputFolder", config.inputFolder);
+        const QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
         QString last = config.inputFolder.split("/").last();
         config.gameListFolder = removeSurplusPlatformPath(
             config.platform, last, config.gameListFolder);
@@ -1278,16 +1285,20 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 }
 
-void Skyscraper::checkForAbsoluteInputFolder(
-    const QFileInfo &inputDirFileInfo) {
-    if (inputDirFileInfo.isRelative()) {
-        ncprintf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
-                 "provided as relative path which is not valid for this "
-                 "frontend. Provide the input folder as absolute path to "
-                 "remediate. Now quitting...\n");
+void Skyscraper::validateAbsolutePath(const QString &param,
+                                      const QString &path) {
+    if (QFileInfo(path).isRelative()) {
+        ncprintf("\033[1;31mBummer!\033[0m The value of '%s' is "
+                 "provided as relative path which is not valid for the "
+                 "frontend '%s'. Provide '%s' as absolute path to "
+                 "remediate. Now quitting...\n",
+                 param.toStdString().c_str(),
+                 config.frontend.toStdString().c_str(),
+                 param.toStdString().c_str());
         emit die(
-            1, "invalid frontend and input folder combination",
-            QString("Input folder may not be a relative path for frontend '%1'")
+            1, "invalid frontend and path combination",
+            QString("path of '%1' may not be a relative path for frontend '%2'")
+                .arg(param)
                 .arg(config.frontend));
     }
 }
