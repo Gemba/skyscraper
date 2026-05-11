@@ -122,6 +122,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [platform](CONFIGINI.md#platform)                           | Basic          |    Y     |                |                |               |
 | [pretend](CONFIGINI.md#pretend)                             | Basic          |    Y     |       Y        |                |               |
 | [region](CONFIGINI.md#region)                               | Basic          |    Y     |       Y        |                |               |
+| [regionFromFilename](CONFIGINI.md#regionfromfilename)       | Advanced       |    Y     |       Y        |                |               |
 | [regionPrios](CONFIGINI.md#regionprios)                     | Expert         |    Y     |       Y        |                |               |
 | [relativePaths](CONFIGINI.md#relativepaths)                 | Basic          |    Y     |       Y        |                |               |
 | [scummIni](CONFIGINI.md#scummini)                           | Advanced       |    Y     |                |                |               |
@@ -791,13 +792,62 @@ region="de"
 
 ---
 
+#### regionFromFilename
+
+With this parameter (introduced with Skyscraper 3.20) you can control at which position detected regions from a game filename will be put. `first` means all detected region will be put first as in the order they are within the filename (this is the pre Skyscraper 3.20 behaviour). `insert` will pigeon-hole a detected region at the position at the region prios list, and will put any additionally detected region which is not on the region prios list at the end of the region prios list. The region prio list is calculated for each game file before performing the scraping.  
+You can also disable the filename detection of regions by setting this to `off`.
+
+Accepted values: `first`, `inline`, `off`  
+Default value: `inline`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+**Example(s)**
+
+Set to `inline` mode:
+
+```ini
+[snes]
+regionFromFilename="inline"
+regionPrios="eu, br, us, jp"
+```
+... with game filename 'Game A (Japan, USA).zip'  
+will result in the region prio list  
+"eu, br, us, jp". Note the different order between filename region and position in list.
+
+... with game filename 'Game B (USA, Europe).zip'  
+will result in the region prio list  
+"eu, br, us, jp". Note the different order between filename region and position in list.
+
+... with game filename 'Game C (USA, World, Europe).zip'  
+will result in the region prio list  
+"eu, br, us, jp, wor". Note the world at end of list as it was not on the configured `regionPrios`.
+
+When set to `first` mode:
+
+```ini
+[snes]
+regionFromFilename="first"
+regionPrios="eu, br, us, jp"
+```
+... with game filename 'Game A (Japan, USA).zip'  
+will result in the region prio list  
+"jp, us, eu, br". Note the regions in the order of the filename put first.
+
+... with game filename 'Game B (USA, Europe).zip'  
+will result in the region prio list  
+"us, eu, br, jp". Same here, but compare this to the inline example above.
+
+... with game filename 'Game C (USA, World, Europe).zip'  
+will result in the region prio list  
+"us, wor, eu, br, jp". Note "World" at the beginning and in order of the position in the filename.
+
+
+---
+
 #### regionPrios
 
-Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how [regions are handled in general](REGIONS.md).
-
-!!! info
-
-    Any region [auto-detected](REGIONS.md#region-auto-detection) from the file name will still be added to the top of this list.
+Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how [regions are handled in general](REGIONS.md). Do not configure the region prios too narrow, as you might not find a match for every game in your collection then, always put one or some fail-safe(s) at the end of the list.  
+Any region [auto-detected](REGIONS.md#region-auto-detection) from the file name will still be added to the end or the beginning of the region prios list unless it is in the region prios list already (see also [regionsFromFile](#regionsfromfile)). If a region from the filename is already in the region prios list, then the order is kept as defined.
 
 Default value: `eu, us, ss, uk, wor, jp, au, ame, de, cus, cn, kr, asi, br, sp, fr, gr, it, no, dk, nz, nl, pl, ru, se, tw, ca`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`

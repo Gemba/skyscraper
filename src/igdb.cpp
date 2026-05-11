@@ -213,18 +213,20 @@ void Igdb::getGameData(GameEntry &game) {
 void Igdb::getReleaseDate(GameEntry &game) {
     QJsonArray jsonDates = jsonObj["release_dates"].toArray();
     bool regionMatch = false;
-    QStringList skyscraperRegions = {"eu", "us",  "au",  "nz", "jp",
-                                     "cn", "asi", "wor", "kr", "br"};
+    /* http --print bH https://api.igdb.com/v4/release_date_regions
+     * "Client-ID:<id>" "Authorization: Bearer <auth>" --raw='fields region;'
+     */
+    // regions as Skyscraper keywords
+    QStringList igdbRegions = {"eu", "us",  "au",  "nz", "jp",
+                               "cn", "asi", "wor", "kr", "br"};
     for (const auto &region : regionPrios) {
         for (const auto &jsonDate : jsonDates) {
-            /* http --print bH https://api.igdb.com/v4/release_date_regions
-             * "Client-ID:<>" "Authorization: Bearer <>" --raw='fields region;'
-             */
+
             int regionEnum = jsonDate.toObject()["region"].toInt();
             QString curRegion = "";
-            if (regionEnum > 0 && regionEnum < skyscraperRegions.length()) {
+            if (regionEnum > 0 && regionEnum < igdbRegions.length()) {
                 // resolve to skyscraper region identifier
-                curRegion = skyscraperRegions.at(regionEnum);
+                curRegion = igdbRegions.at(regionEnum);
             }
             if (QString::number(jsonDate.toObject()["platform"].toInt()) ==
                     game.id.split(";").last() &&

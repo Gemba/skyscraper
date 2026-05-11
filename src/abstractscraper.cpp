@@ -37,6 +37,10 @@
 #include <QStringBuilder>
 
 static const QRegularExpression RE_THE = QRegularExpression(", [Tt]he");
+static const QRegularExpression RE_VERSION = QRegularExpression(
+    " v[.]{0,1}([0-9]{1}[0-9]{0,2}[.]{0,1}[0-9]{1,4}|[IVX]{1,5})$");
+static const QRegularExpression RE_REGIONS = QRegularExpression(
+    "\\((\\D+?)\\)", QRegularExpression::CaseInsensitiveOption);
 
 AbstractScraper::AbstractScraper(Settings *config,
                                  QSharedPointer<NetManager> manager,
@@ -609,9 +613,7 @@ QString AbstractScraper::getCompareTitle(const QFileInfo &info) {
     }
 
     // Remove "vX.XXX" versioning string if one is found
-    match = QRegularExpression(
-                " v[.]{0,1}([0-9]{1}[0-9]{0,2}[.]{0,1}[0-9]{1,4}|[IVX]{1,5})$")
-                .match(compareTitle);
+    match = RE_VERSION.match(compareTitle);
     if (match.hasMatch() && match.capturedStart(0) != -1) {
         compareTitle = compareTitle.left(match.capturedStart(0)).simplified();
     }
@@ -622,30 +624,71 @@ QString AbstractScraper::getCompareTitle(const QFileInfo &info) {
 void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
     // the next statement redundant, but leave it here for the unit tests
     regionPrios = config->regionPrios;
+
     const QString fn = info.fileName();
-    if (int leftParPos = fn.indexOf("("); leftParPos != -1) {
-        // Autodetect region and append to region priorities
-        QString regionString = fn.mid(leftParPos, fn.length());
-        QListIterator<QPair<QString, QString>> iter(regionMap());
-        while (iter.hasNext()) {
-            QPair<QString, QString> e = iter.next();
-            QStringList keys = e.first.split("|");
-            for (const auto &k : keys) {
-                if (regionString.contains(k, Qt::CaseInsensitive)) {
-                    // regionMap is sorted from bigger regions to smaller
-                    // prepend() assures smaller regions get higher priority
-                    if (int idx = regionPrios.lastIndexOf(e.second); idx > -1) {
-                        regionPrios.removeAt(idx);
+    QRegularExpressionMatchIterator matchIter = RE_REGIONS.globalMatch(fn);
+    QStringList addRegionPrios;
+    const bool regionsInline = config->regionFromFilename == "inline";
+
+    // loop over region infos from filename
+    while (matchIter.hasNext()) {
+        QString regionString = matchIter.next().captured().toLower();
+        // keep (e), (u), (j) due to startsWith(fn_regio) later, else remove
+        // parenthesis
+        if (regionString != "(e)" && regionString != "(j)" &&
+            regionString != "(u)") {
+            // remove parenthesis
+            regionString = regionString.mid(1, regionString.length() - 2);
+        }
+        while (!regionString.isEmpty()) {
+            QListIterator<QPair<QString, QString>> iter(regionMap());
+            while (iter.hasNext()) {
+                QPair<QString, QString> e = iter.next();
+                QString fn_regio = e.first;
+                QString sky_regio_key = e.second;
+                if (regionString.startsWith(fn_regio)) {
+                    // map to Skyscraper's short-names (sky_regio_key)
+                    if (regionsInline) {
+                        if (!regionPrios.contains(sky_regio_key) &&
+                            !addRegionPrios.contains(sky_regio_key)) {
+                            addRegionPrios.append(sky_regio_key);
+                        }
+                    } else {
+                        // regionFromFilename == "first"
+                        if (!addRegionPrios.contains(sky_regio_key)) {
+                            addRegionPrios.append(sky_regio_key);
+                        }
                     }
-                    regionPrios.prepend(e.second);
-                    if (keys.size() > 1) {
-                        // append only one: "europe" or "(e)"
-                        break;
+                    regionString = regionString.replace(fn_regio, "");
+                    if (!regionString.isEmpty()) {
+                        // remove possible separators (comma et al.) if
+                        // regionString was "Europe, Japan" -> retain "Japan"
+                        regionString = regionString.replace(
+                            QRegularExpression("^([^a-z]+)?"), "");
                     }
+                    break;
                 }
             }
         }
     }
+
+    QStringList rankedRegionPrios;
+    QStringList retainedRegionPrios = regionPrios;
+    for (int i = regionPrios.size() - 1; i >= 0; i--) {
+        const QString prioRegion = regionPrios.at(i);
+        if (addRegionPrios.contains(prioRegion)) {
+            if (regionsInline) {
+                rankedRegionPrios.prepend(prioRegion);
+                addRegionPrios.removeAt(addRegionPrios.indexOf(prioRegion));
+            }
+            retainedRegionPrios.removeAt(
+                retainedRegionPrios.indexOf(prioRegion));
+        }
+    }
+    if (regionsInline)
+        regionPrios = rankedRegionPrios + retainedRegionPrios + addRegionPrios;
+    else
+        regionPrios = addRegionPrios + retainedRegionPrios;
 }
 
 void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
@@ -653,7 +696,7 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
                                 QString &debug) {
     // Reset region priorities to original list from Settings
     regionPrios = config->regionPrios;
-    if (config->region.isEmpty()) {
+    if (config->region.isEmpty() && config->regionFromFilename != "off") {
         detectRegionFromFilename(info);
     }
 
@@ -753,7 +796,7 @@ QVariantMap AbstractScraper::readJson(const QString &filename) {
                  filename.toUtf8().constData());
     } else if (jsonObj.isEmpty()) {
         ncprintf(
-            "\033[1;31mFile '%s' has invalid JSON format. Please fix.\nNot "
+            "\033[1;31mFile '%s' has insky_regio_keyid JSON format. Please fix.\nNot "
             "scraping...\n\033[0m",
             filename.toUtf8().constData());
     }
