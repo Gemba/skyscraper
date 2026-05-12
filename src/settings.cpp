@@ -357,6 +357,18 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->region = v;
                 continue;
             }
+            if (k == "regionFromFilename") {
+                QStringList allowed = QStringList({"first", "inline", "off"});
+                if (allowed.contains(v)) {
+                    config->regionFromFilename = v;
+                } else {
+                    ncprintf("\033[1;33mValue '%s' of parameter %s is ignored. "
+                             "Valid values are: %s.\n\033[0m",
+                             v.toUtf8().constData(), k.toUtf8().constData(),
+                             allowed.join(", ").toUtf8().constData());
+                }
+                continue;
+            }
             if (k == "regionPrios") {
                 config->regionPriosStr = v;
                 continue;

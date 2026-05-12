@@ -172,10 +172,17 @@ private:
     const inline QList<QPair<QString, QString>> regionMap() {
         // use list of pairs to maintain order
         return QList<QPair<QString, QString>>{
-            QPair<QString, QString>("europe|(e)", "eu"),
-            QPair<QString, QString>("usa|(u)", "us"),
+            QPair<QString, QString>("europe", "eu"),
+            QPair<QString, QString>("(e)", "eu"),
+            QPair<QString, QString>("eu", "eu"),
+            QPair<QString, QString>("usa", "us"),
+            QPair<QString, QString>("(u)", "us"),
+            QPair<QString, QString>("us", "us"),
             QPair<QString, QString>("world", "wor"),
-            QPair<QString, QString>("japan|(j)", "jp"),
+            QPair<QString, QString>("wor", "wor"),
+            QPair<QString, QString>("japan", "jp"),
+            QPair<QString, QString>("(j)", "jp"),
+            QPair<QString, QString>("jp", "jp"),
             QPair<QString, QString>("brazil", "br"),
             QPair<QString, QString>("korea", "kr"),
             QPair<QString, QString>("taiwan", "tw"),
@@ -185,6 +192,7 @@ private:
             QPair<QString, QString>("spain", "sp"),
             QPair<QString, QString>("china", "cn"),
             QPair<QString, QString>("australia", "au"),
+            QPair<QString, QString>("aus", "au"),
             QPair<QString, QString>("sweden", "se"),
             QPair<QString, QString>("canada", "ca"),
             QPair<QString, QString>("netherlands", "nl"),

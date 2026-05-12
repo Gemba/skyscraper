@@ -161,6 +161,7 @@ struct Settings {
     QString region = "";
     QString langPriosStr = "";
     QString regionPriosStr = "";
+    QString regionFromFilename = "inline";
 
     QString searchName = "";
 
@@ -265,6 +266,7 @@ private:
         {"platform",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"pretend",                 QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"region",                  QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
+        {"regionFromFilename",      QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"regionPrios",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"relativePaths",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"scummIni",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
