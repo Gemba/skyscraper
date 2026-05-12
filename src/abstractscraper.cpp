@@ -633,20 +633,24 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
     // loop over region infos from filename
     while (matchIter.hasNext()) {
         QString regionString = matchIter.next().captured().toLower();
-        // keep (e), (u), (j) due to startsWith(fn_regio) later, else remove
-        // parenthesis
-        if (regionString != "(e)" && regionString != "(j)" &&
-            regionString != "(u)") {
+        if (regionString == "(jue)") {
+            regionString = "japan|usa|europe";
+        } else if (regionString == "(ue)") {
+            regionString = "usa|europe";
+        } else if (regionString != "(e)" && regionString != "(j)" &&
+                   regionString != "(u)") {
             // remove parenthesis
             regionString = regionString.mid(1, regionString.length() - 2);
         }
         while (!regionString.isEmpty()) {
+            bool detectedRegion = false;
             QListIterator<QPair<QString, QString>> iter(regionMap());
             while (iter.hasNext()) {
                 QPair<QString, QString> e = iter.next();
                 QString fn_regio = e.first;
                 QString sky_regio_key = e.second;
                 if (regionString.startsWith(fn_regio)) {
+                    qDebug() << "matched" << fn_regio;
                     // map to Skyscraper's short-names (sky_regio_key)
                     if (regionsInline) {
                         if (!regionPrios.contains(sky_regio_key) &&
@@ -662,12 +666,17 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
                     regionString = regionString.replace(fn_regio, "");
                     if (!regionString.isEmpty()) {
                         // remove possible separators (comma et al.) if
-                        // regionString was "Europe, Japan" -> retain "Japan"
+                        // regionString was "europe, japan" -> retain "japan"
                         regionString = regionString.replace(
                             QRegularExpression("^([^a-z]+)?"), "");
                     }
+                    detectedRegion = true;
                     break;
                 }
+            }
+            if (!detectedRegion) {
+                // no match was found in regionMap()
+                break;
             }
         }
     }
@@ -795,10 +804,10 @@ QVariantMap AbstractScraper::readJson(const QString &filename) {
                  "fix.\nNot scraping...\n\033[0m",
                  filename.toUtf8().constData());
     } else if (jsonObj.isEmpty()) {
-        ncprintf(
-            "\033[1;31mFile '%s' has insky_regio_keyid JSON format. Please fix.\nNot "
-            "scraping...\n\033[0m",
-            filename.toUtf8().constData());
+        ncprintf("\033[1;31mFile '%s' has insky_regio_keyid JSON format. "
+                 "Please fix.\nNot "
+                 "scraping...\n\033[0m",
+                 filename.toUtf8().constData());
     }
     return m;
 }

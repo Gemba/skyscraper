@@ -104,6 +104,17 @@ private slots:
         // "wor" should be last as there is no match in regionPrios
         regionPriosExp = settings.regionPrios + QStringList({"wor"});
         matchRegion("Game C (USA, World, Europe).zip", regionPriosExp);
+
+        settings.regionPrios = QStringList({"jp", "eu"});
+        regionPriosExp = QStringList({"jp", "eu", "us"});
+        matchRegion("Game D (UE).zip", regionPriosExp);
+        settings.regionPrios = QStringList({"eu"});
+        regionPriosExp = QStringList({"eu", "jp", "us"});
+        matchRegion("Game D' (JUE).zip", regionPriosExp);
+
+        settings.regionPrios = QStringList({"eu"});
+        regionPriosExp = QStringList({"eu", "us"});
+        matchRegion("Game X (USA, xyz).zip", regionPriosExp);
     }
 
     void testDetectRegionsFromFilenameIssue242OptionFirst() {
