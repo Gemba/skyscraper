@@ -1,4 +1,4 @@
-folder,screenscraper_id,mobygames_id,tgdb_id
+folder,screenscraper_id,mobygames_id,tgdb_id,retroarch_dbname
 
 # Mapping between platform folder and
 # - screenscraper system id
@@ -8,11 +8,11 @@ folder,screenscraper_id,mobygames_id,tgdb_id
 # If you need more than one match use the alias property in platforms.json.
 #
 # Use supplementary/scraperdata/peas_and_idmap_verify.py to view platform names
-# of the ids below. 
+# of the ids below.
 
 ### Begin RetroPie OOTB supported systems
 
-# platform/folder,screenscraper_id,moby_id,tgdb_id
+# platform_folder,screenscraper_id,moby_id,tgdb_id
 3do,29,35,25
 ags,138,3,1
 amiga,64,19,4911

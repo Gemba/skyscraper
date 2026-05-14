@@ -247,7 +247,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                      type == CfgType::FRONTEND /* #68 */)
                         ? PathTools::concatPath(v, config->platform)
                         : v;
-                config->gameListFolder = toAbsolutePath(false, v);
+                // do not elaborate abs path for retroarch
+                config->gameListFolder = config->frontend == "retroarch"
+                                             ? config->gameListFolder
+                                             : toAbsolutePath(false, v);
                 gameListFolderSet = true;
                 continue;
             }
@@ -351,6 +354,15 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "platform") {
                 config->platform = v;
+                continue;
+            }
+            if (k == "raExtra") {
+                if (config->frontend == "retroarch") {
+                    config->frontendExtra = v.trimmed();
+                } else {
+                    ncprintf("\033[1;33mParameter raExtra is ignored. Only "
+                             "applicable with frontend=retroarch.\n\033[0m");
+                }
                 continue;
             }
             if (k == "region") {
@@ -654,7 +666,7 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         }
     }
     if (parser->isSet("e")) {
-        QStringList allowedFe({"attractmode", "pegasus"});
+        QStringList allowedFe({"attractmode", "pegasus", "retroarch"});
         if (allowedFe.contains(config->frontend)) {
             config->frontendExtra = parser->value("e");
         } else {
@@ -669,7 +681,10 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->inputFolderNotMain = true;
     }
     if (parser->isSet("g")) {
-        config->gameListFolder = toAbsolutePath(true, parser->value("g"));
+        // do not elaborate abs path for retroarch
+        config->gameListFolder = config->frontend == "retroarch"
+                                     ? config->gameListFolder
+                                     : toAbsolutePath(true, parser->value("g"));
         gameListFolderSet = true;
     }
     if (parser->isSet("o")) {
@@ -829,6 +844,14 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
             outOfRange("--verbosity", parser->value("verbosity").toInt());
         }
     }
+    if (config->frontend == "retroarch" && !config->frontendExtra.isEmpty() &&
+        (config->frontendExtra.split(";")).length() != 2) {
+        ncprintf(
+            "\033[1;33mValue of -e ... or raExtra=\"...\" has invalid "
+            "format '%s' and is ignored! Consult the documentation.\n\033[0m",
+            config->frontendExtra.toStdString().c_str());
+        config->frontendExtra = "";
+    }
 }
 
 void RuntimeCfg::setFlag(const QString flag) {
@@ -961,7 +984,8 @@ QStringList RuntimeCfg::parseFlags() {
 
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
     QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus",          "esde",     "batocera"};
+                             "pegasus",          "esde",     "batocera",
+                             "retroarch"};
     frontends.sort();
     if (!frontends.contains(providedFrontend)) {
         ncprintf(

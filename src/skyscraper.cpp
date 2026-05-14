@@ -36,6 +36,7 @@
 #include "nocolor.h"
 #include "pathtools.h"
 #include "pegasus.h"
+#include "retroarch.h"
 #include "settings.h"
 #include "strtools.h"
 
@@ -128,13 +129,16 @@ void Skyscraper::run() {
                  mediaSubFolderStdStr(config.screenshotsFolder).c_str());
         ncprintf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
-        ncprintf("  Marquees:       '├── \033[1;32m%s\033[0m'\n",
-                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
                        config.fanart;
-        ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
-                 notLast ? "├" : "└",
-                 mediaSubFolderStdStr(config.texturesFolder).c_str());
+        ncprintf("  Marquees:       '%s── \033[1;32m%s\033[0m'\n",
+                 notLast || !config.texturesFolder.isEmpty() ? "├" : "└",
+                 mediaSubFolderStdStr(config.marqueesFolder).c_str());
+        if (!config.texturesFolder.isEmpty()) {
+            ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+                     notLast ? "├" : "└",
+                     mediaSubFolderStdStr(config.texturesFolder).c_str());
+        }
         if (config.videos) {
             notLast = config.manuals || config.backcovers || config.fanart;
             ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
@@ -1007,6 +1011,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         fePtr = new Esde();
     } else if (config.frontend == "batocera") {
         fePtr = new Batocera();
+    } else if (config.frontend == "retroarch") {
+        fePtr = new RetroArch();
     }
     if (fePtr != nullptr) {
         frontend = QSharedPointer<AbstractFrontend>(fePtr);
@@ -1021,40 +1027,59 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     frontend->setConfig(&config);
     frontend->checkReqs();
 
-    // Fallback to defaults if they aren't already set, find the rest in
-    // settings.h
-    if (config.frontend != "batocera") {
-        if (!inputFolderSet)
+    if (config.frontend == "retroarch") {
+        if (!inputFolderSet) {
             config.inputFolder = frontend->getInputFolder();
-        if (!gameListFolderSet)
-            config.gameListFolder = frontend->getGameListFolder();
-    } else {
-        if (!gameListFolderSet)
-            config.gameListFolder = frontend->getGameListFolder();
-        if (!inputFolderSet)
-            config.inputFolder = frontend->getInputFolder();
-    }
-    if (!mediaFolderSet) {
-        if (config.frontend == "esde" || config.frontend == "batocera") {
-            config.mediaFolder = frontend->getMediaFolder();
         } else {
-            // defaults to <gamelistfolder>/[.]media/
-            QString mf = "media";
-            if (config.mediaFolderHidden) {
-                mf = "." + mf;
+            validateAbsolutePath("inputFolder", config.inputFolder);
+        }
+        if (gameListFolderSet) {
+            validateAbsolutePath("gameListFolder", config.gameListFolder);
+        }
+        if (mediaFolderSet) {
+            validateAbsolutePath("mediaFolder", config.mediaFolder);
+        }
+        // do call these ignoring gameListFolderSet and mediaFolderSet
+        // as they will adjust the path to retroarch specs
+        config.gameListFolder = frontend->getGameListFolder();
+        config.mediaFolder = frontend->getMediaFolder();
+    } else {
+        // Fallback to defaults if they aren't already set, find the rest in
+        // settings.h
+        if (config.frontend != "batocera") {
+            if (!inputFolderSet)
+                config.inputFolder = frontend->getInputFolder();
+            if (!gameListFolderSet)
+                config.gameListFolder = frontend->getGameListFolder();
+        } else {
+            // batocera (note the order)
+            if (!gameListFolderSet)
+                config.gameListFolder = frontend->getGameListFolder();
+            if (!inputFolderSet)
+                config.inputFolder = frontend->getInputFolder();
+        }
+        if (!mediaFolderSet) {
+            if (config.frontend == "esde" || config.frontend == "batocera") {
+                config.mediaFolder = frontend->getMediaFolder();
+            } else {
+                // defaults to <gamelistfolder>/[.]media/
+                QString mf = "media";
+                if (config.mediaFolderHidden) {
+                    mf = "." + mf;
+                }
+                config.mediaFolder =
+                    PathTools::concatPath(config.gameListFolder, mf);
             }
-            config.mediaFolder =
-                PathTools::concatPath(config.gameListFolder, mf);
         }
     }
     PathTools::expandHomePath(config.inputFolder);
     PathTools::expandHomePath(config.mediaFolder);
 
-    // defaults are always absolute, thus input- and mediafolder will be
-    // unchanged by these calls.
-    // gamelistfolder is absolute by now.
-    // the other two may be relative or absolute.
     if (config.frontend == "pegasus" || config.frontend == "batocera") {
+        // defaults are always absolute, thus input- and mediafolder will be
+        // unchanged by these calls.
+        // gamelistfolder is absolute by now.
+        // the other two may be relative or absolute.
         QString last = config.gameListFolder.split("/").last();
         config.inputFolder = removeSurplusPlatformPath(config.platform, last,
                                                        config.inputFolder);
@@ -1064,19 +1089,11 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
                                                          config.inputFolder);
         config.mediaFolder = PathTools::makeAbsolutePath(config.gameListFolder,
                                                          config.mediaFolder);
+    } else if (config.frontend == "retroarch") {
+        ; // pass through, checks made above
     } else {
-        QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
-        if (inputDirFileInfo.isRelative()) {
-            ncprintf("\033[1;31mBummer!\033[0m The parameter 'inputFolder' is "
-                     "provided as relative path which is not valid for this "
-                     "frontend. Provide the input folder as absolute path to "
-                     "remediate. Now quitting...\n");
-            emit die(
-                1, "invalid frontend and input folder combination",
-                QString(
-                    "Input folder may not be a relative path for frontend '%1'")
-                    .arg(config.frontend));
-        }
+        validateAbsolutePath("inputFolder", config.inputFolder);
+        const QFileInfo inputDirFileInfo = QFileInfo(config.inputFolder);
         QString last = config.inputFolder.split("/").last();
         config.gameListFolder = removeSurplusPlatformPath(
             config.platform, last, config.gameListFolder);
@@ -1265,6 +1282,24 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         resFile =
             resFile.remove(0, resFile.indexOf(resFolder) + resFolder.length());
         config.resources[resFile] = QImage(resFolder % resFile);
+    }
+}
+
+void Skyscraper::validateAbsolutePath(const QString &param,
+                                      const QString &path) {
+    if (QFileInfo(path).isRelative()) {
+        ncprintf("\033[1;31mBummer!\033[0m The value of '%s' is "
+                 "provided as relative path which is not valid for the "
+                 "frontend '%s'. Provide '%s' as absolute path to "
+                 "remediate. Now quitting...\n",
+                 param.toStdString().c_str(),
+                 config.frontend.toStdString().c_str(),
+                 param.toStdString().c_str());
+        emit die(
+            1, "invalid frontend and path combination",
+            QString("path of '%1' may not be a relative path for frontend '%2'")
+                .arg(param)
+                .arg(config.frontend));
     }
 }
 

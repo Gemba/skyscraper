@@ -5,7 +5,8 @@
             "*.chd",
             "*.cue",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "The 3DO Company - 3DO"
     },
     "3ds": {
         "aliases": [
@@ -15,7 +16,8 @@
         "formats": [
             "*.3ds",
             "*.cci"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Nintendo 3DS"
     },
     "actionmax": {
         "aliases": [
@@ -61,7 +63,8 @@
             "*.lha",
             "*.rp9",
             "*.uae"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - Amiga"
     },
     "amstradcpc": {
         "aliases": [
@@ -74,7 +77,8 @@
             "*.cpr",
             "*.dsk",
             "*.tap"
-        ]
+        ],
+        "retroarch_dbname": "Amstrad - CPC"
     },
     "apple2": {
         "aliases": [
@@ -169,7 +173,8 @@
             "*.dat",
             "*.fba",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "FBNeo - Arcade Games"
     },
     "arcadia": {
         "aliases": [
@@ -178,7 +183,8 @@
         ],
         "formats": [
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Emerson - Arcadia 2001"
     },
     "arduboy": {
         "aliases": [
@@ -186,7 +192,8 @@
         ],
         "formats": [
             "*.hex"
-        ]
+        ],
+        "retroarch_dbname": "Arduboy Inc - Arduboy"
     },
     "astrocade": {
         "aliases": [
@@ -204,7 +211,8 @@
             "*.bin",
             "*.gz",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Atari - 2600"
     },
     "atari5200": {
         "aliases": [
@@ -221,7 +229,8 @@
             "*.xex",
             "*.xfd",
             "*.xfd.gz"
-        ]
+        ],
+        "retroarch_dbname": "Atari - 5200"
     },
     "atari7800": {
         "aliases": [
@@ -230,7 +239,8 @@
         "formats": [
             "*.a78",
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Atari - 7800"
     },
     "atari800": {
         "aliases": [
@@ -253,7 +263,8 @@
             "*.xex",
             "*.xfd",
             "*.xfd.gz"
-        ]
+        ],
+        "retroarch_dbname": "Atari - 8-bit"
     },
     "atarijaguar": {
         "aliases": [
@@ -263,7 +274,8 @@
         "formats": [
             "*.j64",
             "*.jag"
-        ]
+        ],
+        "retroarch_dbname": "Atari - Jaguar"
     },
     "atarijaguarcd": {
         "aliases": [
@@ -286,7 +298,8 @@
         ],
         "formats": [
             "*.lnx"
-        ]
+        ],
+        "retroarch_dbname": "Atari - Lynx"
     },
     "atarist": {
         "aliases": [
@@ -301,7 +314,8 @@
             "*.rom",
             "*.st",
             "*.stx"
-        ]
+        ],
+        "retroarch_dbname": "Atari - ST"
     },
     "atomiswave": {
         "aliases": [
@@ -364,7 +378,8 @@
             "*.bin",
             "*.chd",
             "*.dat"
-        ]
+        ],
+        "retroarch_dbname": "Atomiswave"
     },
     "bbcmicro": {
         "aliases": [
@@ -419,7 +434,8 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - 64"
     },
     "cd32": {
         "aliases": [
@@ -438,7 +454,8 @@
             "*.lha",
             "*.rp9",
             "*.uae"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - CD32"
     },
     "cdi": {
         "aliases": [
@@ -448,7 +465,8 @@
         ],
         "formats": [
             "*.chd"
-        ]
+        ],
+        "retroarch_dbname": "Philips - CD-i"
     },
     "cdtv": {
         "aliases": [
@@ -466,7 +484,8 @@
             "*.lha",
             "*.rp9",
             "*.uae"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - CDTV"
     },
     "channelf": {
         "aliases": [
@@ -476,7 +495,8 @@
         "formats": [
             "*.bin",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Fairchild - Channel F"
     },
     "coco": {
         "aliases": [
@@ -507,7 +527,8 @@
             "*.bin",
             "*.col",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Coleco - ColecoVision"
     },
     "crvision": {
         "aliases": [
@@ -515,7 +536,8 @@
         ],
         "formats": [
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "VTech - CreatiVision"
     },
     "daphne": {
         "aliases": [
@@ -558,7 +580,8 @@
             "*.cue",
             "*.gdi",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Dreamcast"
     },
     "easyrpg": {
         "aliases": [],
@@ -640,7 +663,8 @@
             "*.cue",
             "*.fba",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "FBNeo - Arcade Games"
     },
     "fds": {
         "aliases": [
@@ -653,7 +677,8 @@
         "formats": [
             "*.fds",
             "*.nes"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Family Computer Disk System"
     },
     "fm7": {
         "aliases": [
@@ -708,7 +733,8 @@
         ],
         "formats": [
             "*.tgc"
-        ]
+        ],
+        "retroarch_dbname": "Tiger - Game.com"
     },
     "gamegear": {
         "aliases": [
@@ -719,7 +745,8 @@
             "*.bin",
             "*.gg",
             "*.sms"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Game Gear"
     },
     "gb": {
         "aliases": [
@@ -728,7 +755,8 @@
         ],
         "formats": [
             "*.gb"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Game Boy"
     },
     "gba": {
         "aliases": [
@@ -737,7 +765,8 @@
         ],
         "formats": [
             "*.gba"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Game Boy Advance"
     },
     "gbc": {
         "aliases": [
@@ -747,7 +776,8 @@
         ],
         "formats": [
             "*.gbc"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Game Boy Color"
     },
     "gc": {
         "aliases": [
@@ -761,7 +791,8 @@
             "*.gcz",
             "*.iso",
             "*.rvz"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - GameCube"
     },
     "gmaster": {
         "aliases": [
@@ -770,7 +801,8 @@
         ],
         "formats": [
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Hartung - Game Master"
     },
     "intellivision": {
         "aliases": [],
@@ -779,7 +811,8 @@
             "*.int",
             "*.itv",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Mattel - Intellivision"
     },
     "j2me": {
         "aliases": [
@@ -876,7 +909,8 @@
             "video system co.",
             "visco"
         ],
-        "formats": []
+        "formats": [],
+        "retroarch_dbname": "MAME"
     },
     "mame-advmame": {
         "aliases": [
@@ -948,7 +982,8 @@
             "video system co.",
             "visco"
         ],
-        "formats": []
+        "formats": [],
+        "retroarch_dbname": "MAME"
     },
     "mame-libretro": {
         "aliases": [
@@ -1020,7 +1055,8 @@
             "video system co.",
             "visco"
         ],
-        "formats": []
+        "formats": [],
+        "retroarch_dbname": "MAME"
     },
     "mame-mame4all": {
         "aliases": [
@@ -1092,7 +1128,8 @@
             "video system co.",
             "visco"
         ],
-        "formats": []
+        "formats": [],
+        "retroarch_dbname": "MAME"
     },
     "mastersystem": {
         "aliases": [
@@ -1102,7 +1139,8 @@
         "formats": [
             "*.bin",
             "*.sms"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Master System - Mark III"
     },
     "megadrive": {
         "aliases": [
@@ -1118,7 +1156,8 @@
             "*.md",
             "*.sg",
             "*.smd"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Mega Drive - Genesis"
     },
     "megaduck": {
         "aliases": [
@@ -1144,7 +1183,8 @@
             "*.m7",
             "*.rom",
             "*.sap"
-        ]
+        ],
+        "retroarch_dbname": "Thomson - MOTO"
     },
     "msx": {
         "aliases": [
@@ -1159,7 +1199,8 @@
             "*.mx1",
             "*.mx2",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Microsoft - MSX"
     },
     "msx2": {
         "aliases": [
@@ -1174,7 +1215,8 @@
             "*.mx1",
             "*.mx2",
             "*.rom"
-        ]
+        ],
+        "retroarch_dbname": "Microsoft - MSX2"
     },
     "n64": {
         "aliases": [
@@ -1184,7 +1226,8 @@
             "*.n64",
             "*.v64",
             "*.z64"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Nintendo 64"
     },
     "n64dd": {
         "aliases": [
@@ -1195,7 +1238,8 @@
             "*.ndd",
             "*.v64",
             "*.z64"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Nintendo 64DD"
     },
     "naomi": {
         "aliases": [
@@ -1269,7 +1313,8 @@
             "*.bin",
             "*.chd",
             "*.dat"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Naomi"
     },
     "naomi2": {
         "aliases": [
@@ -1289,7 +1334,8 @@
         ],
         "formats": [
             "*.nds"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Nintendo DS"
     },
     "neogeo": {
         "aliases": [
@@ -1306,7 +1352,8 @@
             "*.cue",
             "*.fba",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "SNK - Neo Geo"
     },
     "neogeocd": {
         "aliases": [
@@ -1322,7 +1369,8 @@
             "*.chd",
             "*.cue",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "SNK - Neo Geo CD"
     },
     "nes": {
         "aliases": [
@@ -1337,7 +1385,8 @@
             "*.sfc",
             "*.smc",
             "*.swc"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Nintendo Entertainment System"
     },
     "ngp": {
         "aliases": [
@@ -1346,7 +1395,8 @@
         ],
         "formats": [
             "*.ngp"
-        ]
+        ],
+        "retroarch_dbname": "SNK - Neo Geo Pocket"
     },
     "ngpc": {
         "aliases": [
@@ -1355,7 +1405,8 @@
         ],
         "formats": [
             "*.ngc"
-        ]
+        ],
+        "retroarch_dbname": "SNK - Neo Geo Pocket Color"
     },
     "openbor": {
         "aliases": [],
@@ -1409,7 +1460,8 @@
             "*.m3u8",
             "*.sh",
             "*.vhd"
-        ]
+        ],
+        "retroarch_dbname": "DOS"
     },
     "pc88": {
         "aliases": [
@@ -1421,7 +1473,8 @@
             "*.cmt",
             "*.d88",
             "*.t88"
-        ]
+        ],
+        "retroarch_dbname": "NEC - PC-8001 - PC-8801"
     },
     "pc98": {
         "aliases": [
@@ -1446,7 +1499,8 @@
             "*.tfd",
             "*.thd",
             "*.xdf"
-        ]
+        ],
+        "retroarch_dbname": "NEC - PC-98"
     },
     "pcengine": {
         "aliases": [
@@ -1464,7 +1518,8 @@
             "*.chd",
             "*.cue",
             "*.pce"
-        ]
+        ],
+        "retroarch_dbname": "NEC - PC Engine - TurboGrafx 16"
     },
     "pcenginecd": {
         "aliases": [
@@ -1482,7 +1537,8 @@
             "*.chd",
             "*.cue",
             "*.pce"
-        ]
+        ],
+        "retroarch_dbname": "NEC - PC Engine CD - TurboGrafx-CD"
     },
     "pcfx": {
         "aliases": [
@@ -1495,7 +1551,8 @@
             "*.img",
             "*.iso",
             "*.pce"
-        ]
+        ],
+        "retroarch_dbname": "NEC - PC-FX"
     },
     "pico8": {
         "aliases": [
@@ -1523,7 +1580,8 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - Plus-4"
     },
     "pokemini": {
         "aliases": [
@@ -1532,7 +1590,8 @@
         ],
         "formats": [
             "*.min"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Pokemon Mini"
     },
     "ports": {
         "aliases": [
@@ -1570,7 +1629,8 @@
             "*.mdf",
             "*.z",
             "*.z2"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation 2"
     },
     "ps3": {
         "aliases": [
@@ -1581,7 +1641,8 @@
             "*.bin",
             "*.iso",
             "*.pkg"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation 3"
     },
     "ps4": {
         "aliases": [
@@ -1591,7 +1652,8 @@
         "formats": [
             "*.bin",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation 4"
     },
     "ps5": {
         "aliases": [
@@ -1613,7 +1675,8 @@
             "*.cso",
             "*.iso",
             "*.pbp"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation Portable"
     },
     "psvita": {
         "aliases": [
@@ -1622,7 +1685,8 @@
         ],
         "formats": [
             "*.psvita"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation Vita"
     },
     "psx": {
         "aliases": [
@@ -1640,7 +1704,8 @@
             "*.toc",
             "*.z",
             "*.znx"
-        ]
+        ],
+        "retroarch_dbname": "Sony - PlayStation"
     },
     "pv1000": {
         "aliases": [
@@ -1649,7 +1714,8 @@
         ],
         "formats": [
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Casio - PV-1000"
     },
     "samcoupe": {
         "aliases": [
@@ -1672,7 +1738,8 @@
             "*.cue",
             "*.iso",
             "*.mdf"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Saturn"
     },
     "scummvm": {
         "aliases": [
@@ -1690,7 +1757,8 @@
         "formats": [
             "*.scummvm",
             "*.svm"
-        ]
+        ],
+        "retroarch_dbname": "ScummVM"
     },
     "scv": {
         "aliases": [
@@ -1699,7 +1767,8 @@
         "formats": [
             "*.0",
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Epoch - Super Cassette Vision"
     },
     "sega32x": {
         "aliases": [
@@ -1711,7 +1780,8 @@
             "*.bin",
             "*.md",
             "*.smd"
-        ]
+        ],
+        "retroarch_dbname": "Sega - 32X"
     },
     "segacd": {
         "aliases": [
@@ -1723,7 +1793,8 @@
             "*.chd",
             "*.cue",
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "Sega - Mega-CD - Sega CD"
     },
     "sg-1000": {
         "aliases": [
@@ -1732,7 +1803,8 @@
         "formats": [
             "*.bin",
             "*.sg"
-        ]
+        ],
+        "retroarch_dbname": "Sega - SG-1000"
     },
     "snes": {
         "aliases": [
@@ -1754,7 +1826,8 @@
             "*.sfc",
             "*.smc",
             "*.swc"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Super Nintendo Entertainment System"
     },
     "solarus": {
         "aliases": [],
@@ -1790,7 +1863,8 @@
         "formats": [
             "*.bin",
             "*.sv"
-        ]
+        ],
+        "retroarch_dbname": "Watara - Supervision"
     },
     "switch": {
         "aliases": [
@@ -1828,7 +1902,8 @@
         ],
         "formats": [
             "*.tic"
-        ]
+        ],
+        "retroarch_dbname": "TIC-80"
     },
     "trs-80": {
         "aliases": [
@@ -1844,7 +1919,8 @@
             "*.bin",
             "*.gam",
             "*.vec"
-        ]
+        ],
+        "retroarch_dbname": "GCE - Vectrex"
     },
     "vic20": {
         "aliases": [
@@ -1860,7 +1936,8 @@
             "*.tap",
             "*.vsf",
             "*.x64"
-        ]
+        ],
+        "retroarch_dbname": "Commodore - VIC-20"
     },
     "videopac": {
         "aliases": [
@@ -1873,13 +1950,15 @@
         ],
         "formats": [
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "Magnavox - Odyssey2"
     },
     "vircon32": {
         "aliases": [],
         "formats": [
             "*.v32"
-        ]
+        ],
+        "retroarch_dbname": "Vircon32"
     },
     "virtualboy": {
         "aliases": [
@@ -1888,7 +1967,8 @@
         ],
         "formats": [
             "*.vb"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Virtual Boy"
     },
     "vsmile": {
         "aliases": [
@@ -1896,7 +1976,8 @@
         ],
         "formats": [
             "*.bin"
-        ]
+        ],
+        "retroarch_dbname": "VTech - V.Smile"
     },
     "wii": {
         "aliases": [
@@ -1912,7 +1993,8 @@
             "*.rvz",
             "*.wad",
             "*.wbfs"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Wii"
     },
     "wiiu": {
         "aliases": [
@@ -1930,13 +2012,15 @@
             "*.wua",
             "*.wud",
             "*.wux"
-        ]
+        ],
+        "retroarch_dbname": "Nintendo - Wii U"
     },
     "wonderswan": {
         "aliases": [],
         "formats": [
             "*.ws"
-        ]
+        ],
+        "retroarch_dbname": "Bandai - WonderSwan"
     },
     "wonderswancolor": {
         "aliases": [
@@ -1944,7 +2028,8 @@
         ],
         "formats": [
             "*.wsc"
-        ]
+        ],
+        "retroarch_dbname": "Bandai - WonderSwan Color"
     },
     "x1": {
         "aliases": [],
@@ -1959,7 +2044,8 @@
             "*.hdm",
             "*.tfd",
             "*.xdf"
-        ]
+        ],
+        "retroarch_dbname": "Sharp - X1"
     },
     "x68000": {
         "aliases": [
@@ -1972,7 +2058,8 @@
             "*.hdf",
             "*.hdm",
             "*.xdf"
-        ]
+        ],
+        "retroarch_dbname": "Sharp - X68000"
     },
     "xbox": {
         "aliases": [
@@ -1981,13 +2068,15 @@
         "formats": [
             "*.iso",
             "*.xbe"
-        ]
+        ],
+        "retroarch_dbname": "Microsoft - Xbox"
     },
     "xbox360": {
         "aliases": [],
         "formats": [
             "*.iso"
-        ]
+        ],
+        "retroarch_dbname": "Microsoft - Xbox 360"
     },
     "zmachine": {
         "aliases": [
@@ -2012,7 +2101,8 @@
             "*.p",
             "*.t81",
             "*.tzx"
-        ]
+        ],
+        "retroarch_dbname": "Sinclair - ZX 81"
     },
     "zxspectrum": {
         "aliases": [
@@ -2033,6 +2123,7 @@
             "*.tzx",
             "*.udi",
             "*.z80"
-        ]
+        ],
+        "retroarch_dbname": "Sinclair - ZX Spectrum"
     }
 }

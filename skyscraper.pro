@@ -58,7 +58,8 @@ unix:config.files=aliasMap.csv hints.xml mameMap.csv \
 unix:examples.path=$${SYSCONFDIR}/skyscraper
 unix:examples.files=config.ini.example README.md artwork.xml \
   artwork.xml.example1 artwork.xml.example2 artwork.xml.example3 \
-  artwork.xml.example4 batocera-artwork.xml docs/ARTWORK.md docs/CACHE.md
+  artwork.xml.example4 batocera-artwork.xml retroarch-artwork.xml \
+  docs/ARTWORK.md docs/CACHE.md
 
 unix:cacheexamples.path=$${SYSCONFDIR}/skyscraper/cache
 unix:cacheexamples.files=cache/priorities.xml.example docs/CACHE.md
@@ -136,6 +137,7 @@ HEADERS += \
            src/pegasus.h \
            src/platform.h \
            src/queue.h \
+           src/retroarch.h \
            src/scraperworker.h \
            src/screenscraper.h \
            src/settings.h \
@@ -192,6 +194,7 @@ SOURCES += src/main.cpp \
            src/pegasus.cpp \
            src/platform.cpp \
            src/queue.cpp \
+           src/retroarch.cpp \
            src/scraperworker.cpp \
            src/screenscraper.cpp \
            src/settings.cpp \
