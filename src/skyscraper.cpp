@@ -841,31 +841,33 @@ void Skyscraper::checkThreads() {
     if (!generateGamelist || totalFiles > 0) {
         ncprintf(
             "\033[1;34m---- And here are some neat stats :) ----\033[0m\n");
-    }
-    if (!generateGamelist) {
-        ncprintf("Total completion time: \033[1;33m%s\033[0m\n\n",
-                 secsToString(timer.elapsed()).toStdString().c_str());
-    }
-    if (totalFiles > 0) {
-        if (found > 0) {
-            ncprintf("Average search match: \033[1;33m%d%%\033[0m\n",
-                     (int)((double)avgSearchMatch / (double)found));
-            ncprintf("Average entry completeness: \033[1;33m%d%%\033[0m\n\n",
-                     (int)((double)avgCompleteness / (double)found));
+        if (!generateGamelist) {
+            ncprintf("Total completion time: \033[1;33m%s\033[0m\n\n",
+                     secsToString(timer.elapsed()).toStdString().c_str());
         }
-        ncprintf("\033[1;34mTotal number of games: %d\033[0m\n", totalFiles);
-        ncprintf("\033[1;32mSuccessfully processed games: %d\033[0m\n", found);
-        ncprintf("\033[1;33mSkipped games: %d\033[0m", notFound);
-        if (notFound > 0) {
-            QString skippedFn = PathTools::concatPath(
-                Config::getSkyFolder(Config::SkyFolderType::LOG),
-                skippedFileString);
-            ncprintf(" (Filenames saved to '\033[1;33m%s\033[0m')",
-                     PathTools::pathToStdStr(skippedFn).c_str());
+        if (totalFiles > 0) {
+            if (found > 0) {
+                ncprintf("Average search match: \033[1;33m%d%%\033[0m\n",
+                         (int)((double)avgSearchMatch / (double)found));
+                ncprintf(
+                    "Average entry completeness: \033[1;33m%d%%\033[0m\n\n",
+                    (int)((double)avgCompleteness / (double)found));
+            }
+            ncprintf("\033[1;34mTotal number of games: %d\033[0m\n",
+                     totalFiles);
+            ncprintf("\033[1;32mSuccessfully processed games: %d\033[0m\n",
+                     found);
+            ncprintf("\033[1;33mSkipped games: %d\033[0m", notFound);
+            if (notFound > 0) {
+                QString skippedFn = PathTools::concatPath(
+                    Config::getSkyFolder(Config::SkyFolderType::LOG),
+                    skippedFileString);
+                ncprintf(" (Filenames saved to '\033[1;33m%s\033[0m')",
+                         PathTools::pathToStdStr(skippedFn).c_str());
+            }
+            ncprintf("\n\n");
         }
-        ncprintf("\n\n");
     }
-
     // All done, now clean up and exit to terminal
     cleanUp();
     emit finished();
