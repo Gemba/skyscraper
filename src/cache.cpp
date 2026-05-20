@@ -278,8 +278,7 @@ bool Cache::read() {
         cacheFile.close();
         resAtLoad = resources.length();
         ncprintf("\033[1;32mDone!\033[0m\n");
-        ncprintf("Successfully parsed %d resources!\n\n",
-                 static_cast<int>(resources.length()));
+        ncprintf("Successfully parsed %d resources!\n\n", resAtLoad);
         return true;
     }
     return false;
@@ -1553,38 +1552,38 @@ bool Cache::write(const bool onlyQuickId) {
         xml.writeEndDocument();
         ncprintf("\033[1;32mDone!\033[0m\n");
         quickIdFile.close();
-        if (onlyQuickId) {
-            return true;
-        }
     }
 
-    bool result = false;
-    QFile cacheFile(dbFilePath());
-    if (cacheFile.open(QIODevice::WriteOnly)) {
-        int resCountNew = static_cast<int>(resources.length());
-        int delta = resCountNew - resAtLoad;
-        ncprintf("Writing %d (%d%s) resource%s to cache, please wait... ",
-                 resCountNew, delta, delta < 0 ? "" : " new",
-                 resCountNew == 1 ? "" : "s");
-        fflush(stdout);
-        QXmlStreamWriter xml(&cacheFile);
-        xml.setAutoFormatting(true);
-        xml.writeStartDocument();
-        xml.writeStartElement("resources");
-        for (const auto &resource : resources) {
-            xml.writeStartElement(R_ELEM);
-            xml.writeAttribute(ATTR_ID, resource.cacheId);
-            xml.writeAttribute(ATTR_TYPE, resource.type);
-            xml.writeAttribute(ATTR_SRC, resource.source);
-            xml.writeAttribute(ATTR_TS, QString::number(resource.timestamp));
-            xml.writeCharacters(resource.value);
+    bool result = onlyQuickId || false;
+    if (!onlyQuickId) {
+        QFile cacheFile(dbFilePath());
+        if (cacheFile.open(QIODevice::WriteOnly)) {
+            int resCountNew = static_cast<int>(resources.length());
+            int delta = resCountNew - resAtLoad;
+            ncprintf("Writing %d (%d%s) resource%s to cache, please wait... ",
+                     resCountNew, delta, delta < 0 ? "" : " new",
+                     resCountNew == 1 ? "" : "s");
+            fflush(stdout);
+            QXmlStreamWriter xml(&cacheFile);
+            xml.setAutoFormatting(true);
+            xml.writeStartDocument();
+            xml.writeStartElement("resources");
+            for (const auto &resource : resources) {
+                xml.writeStartElement(R_ELEM);
+                xml.writeAttribute(ATTR_ID, resource.cacheId);
+                xml.writeAttribute(ATTR_TYPE, resource.type);
+                xml.writeAttribute(ATTR_SRC, resource.source);
+                xml.writeAttribute(ATTR_TS,
+                                   QString::number(resource.timestamp));
+                xml.writeCharacters(resource.value);
+                xml.writeEndElement();
+            }
             xml.writeEndElement();
+            xml.writeEndDocument();
+            result = true;
+            ncprintf("\033[1;32mDone!\033[0m\n\n");
+            cacheFile.close();
         }
-        xml.writeEndElement();
-        xml.writeEndDocument();
-        result = true;
-        ncprintf("\033[1;32mDone!\033[0m\n\n");
-        cacheFile.close();
     }
     return result;
 }
@@ -1657,12 +1656,13 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
     }
 }
 
-void Cache::merge(Cache &mergeCache, bool overwrite,
-                  const QString &mergeCacheFolder) {
+void Cache::merge(bool overwrite, const QString &otherCacheFolder) {
+    Cache mergeCache(otherCacheFolder);
+    mergeCache.read();
     ncprintf("Merging databases, please wait...\n");
     QList<Resource> mergeResources = mergeCache.getResources();
 
-    QDir mergeCacheDir(mergeCacheFolder);
+    QDir mergeCacheDir(otherCacheFolder);
     mergeCacheDir.makeAbsolute();
 
     int resUpdated = 0;

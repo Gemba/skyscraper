@@ -104,8 +104,9 @@ public:
     bool hasEntries(const QString &cacheId, const QString scraper = "");
     void addQuickId(const QFileInfo &info, const QString &cacheId);
     QString getQuickId(const QFileInfo &info);
-    void merge(Cache &mergeCache, bool overwrite,
-               const QString &mergeCacheFolder);
+    void merge(bool overwrite, const QString &otherCacheFolder);
+
+private:
     QList<Resource> getResources();
 
 private:

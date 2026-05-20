@@ -263,9 +263,7 @@ void Skyscraper::run() {
 
         const QString absMergeCacheFilePath = mergeCacheInfo.absoluteFilePath();
         if (mergeCacheInfo.isDir()) {
-            Cache mergeCache(absMergeCacheFilePath);
-            mergeCache.read();
-            cache->merge(mergeCache, config.refresh, absMergeCacheFilePath);
+            cache->merge(config.refresh, absMergeCacheFilePath);
             state = NO_INTR;
             cache->write();
             state = SINGLE;
