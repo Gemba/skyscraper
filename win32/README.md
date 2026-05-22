@@ -18,10 +18,11 @@ The following instructions are provided as-is by Gemba @ GitHub.
 >
 > Good luck!
 
-Nothing I (Gemba) have to add here, except this: With a recent Windows you do not
-need Cygwin for colorized/ANSI output any longer as Windows eventually does
-support this and Skyscraper will be build to use the colored terminal
-capabilities. :)
+Nothing I (Gemba) have to add here, except this:
+
+With a recent Windows you do not need Cygwin for colorized/ANSI output any
+longer as Windows eventually does support this and Skyscraper will be build to
+use the colored terminal capabilities. :)
 
 ## Install Software
 
@@ -50,15 +51,16 @@ capabilities. :)
 
 ## Running
 
-1. Open a command prompt (cmd.exe or powershell.exe)
+1. Open a command prompt (`cmd.exe` or `powershell.exe`)
 2. Add LLVM MinGW to the path, for example `set
    PATH=<qt6-installfolder>\<qt-version>\llvm-mingw_64\bin;%PATH%`. If unsure
    what to add to the `PATH` run e.g., `c:\qt6\6.8.2\llvm-mingw_64\bin\qmake
-   -query "QT_INSTALL_PREFIX"` and add `\bin` to the output. Consider persisting
+   -query "QT_INSTALL_PREFIX"` and add `\bin` to the qmake output. Consider persisting
    this environment setting.
 3. Change to `<skyscraper_git>\build\release`
 4. Run `.\Skyscraper.exe --help`
-5. Check that the supported platforms (`-p`) are listed and are not empty
+5. Check in the help output, that the supported platforms (`-p`) are listed and
+   are not empty
 6. Run `.\Skyscraper.exe --version`: You should get colored output (ANSI
    Terminal Control)
 7. Smile :)
@@ -71,5 +73,5 @@ capabilities. :)
 
 ## Refs
 
-[1] https://github.com/Gemba/skyscraper.git
+[1] https://github.com/Gemba/skyscraper.git  
 [2] https://www.qt.io/download-open-source

@@ -21,6 +21,9 @@ $folders = @(
   'import/textures'
   'import/videos'
   'import/wheels'
+  'import/backcovers'
+  'import/fanarts'
+  'import/manuals'
   'resources'
 )
 
