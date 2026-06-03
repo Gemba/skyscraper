@@ -794,7 +794,7 @@ region="de"
 
 #### regionFromFilename
 
-With this parameter (introduced with Skyscraper 3.20) you can control at which position detected regions from a game filename will be put. `first` means all detected region will be put first as in the order they are within the filename (this is the pre Skyscraper 3.20 behaviour). `insert` will pigeon-hole a detected region at the position at the region prios list, and will put any additionally detected region which is not on the region prios list at the end of the region prios list. The region prio list is calculated for each game file before performing the scraping.  
+With this parameter (introduced with Skyscraper 3.20) you can control at which position detected regions from a game filename will be put. `first` means all detected region will be put first as in the order they are within the filename (this is the pre Skyscraper 3.20 behaviour). `inline` will pigeon-hole a detected region at the position at the region prios list, and will put any additionally detected region which is not on the region prios list at the end of the region prios list. The region prio list is calculated for each game file before performing the scraping.  
 You can also disable the filename detection of regions by setting this to `off`.
 
 Accepted values: `first`, `inline`, `off`  
