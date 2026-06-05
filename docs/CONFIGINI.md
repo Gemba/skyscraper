@@ -820,17 +820,17 @@ When to `inline` mode (aka default behaviour):
 regionFromFilename="inline"
 regionPrios="eu, br, us, jp"
 ```
-... with game filename 'Game A (Japan, USA).zip'  
-will result in the region prio list  
-"eu, br, us, jp". Note the different order between filename region and position in list.
+... with game filename 'Game A (Japan, USA).zip'
+will result in the region prio list
+"us, jp, eu, br". This is because it detects Japan and USA from the filename, so they get shifted to the front, but USA was before Japan in the region prio list so USA goes in position 1 (this is different to `first` where there they are added in the order they are in the filename).
 
-... with game filename 'Game B (USA, Europe).zip'  
-will result in the region prio list  
-"eu, br, us, jp". Note the different order between filename region and position in list.
+... with game filename 'Game B (USA, Europe).zip'
+will result in the region prio list
+"eu, us, br, jp". This is because it detects USA and Europe from the filename, so they get shifted to the front, but Europe was before USA in the region prio list so Europe goes in position 1 (this is different to `first` where there they are added in the order they are in the filename).
 
-... with game filename 'Game C (USA, World, Europe).zip'  
-will result in the region prio list  
-"eu, br, us, jp, wor". Note the world at end of list as it was not on the configured `regionPrios`.
+... with game filename 'Game C (USA, World, Europe).zip'
+will result in the region prio list
+"eu, us, wor, br, jp". This is because it detects USA, World, and Europe from the filename, so they get shifted to the front, but Europe was before USA in the region prio list so Europe goes in position 1, USA in position 2, and then World in position 3 as it wasn't in the original region prio list (this is different to `first` where there they are added in the order they are in the filename).
 
 When set to `first` mode (aka pre Skyscraper 3.20 behaviour):
 
@@ -851,13 +851,12 @@ will result in the region prio list
 will result in the region prio list  
 "us, wor, eu, br, jp". Note "World" at the beginning and in order of the position in the filename.
 
-
 ---
 
 #### regionPrios
 
-Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how [regions are handled in general](REGIONS.md). Do not configure the region prios too narrow, as you might not find a match for every game in your collection then, always put one or some fail-safe(s) at the end of the list.  
-Any region [auto-detected](REGIONS.md#region-auto-detection) from the file name will still be added to the end or the beginning of the region prios list unless it is in the region prios list already (see also [regionsFromFile](#regionsfromfile)). If a region from the filename is already in the region prios list, then the order is kept as defined.
+Completely overwrites the internal region priority list inside of Skyscraper. Multiple regions can be configured here separated by commas. Read more about how [regions are handled in general](REGIONS.md). Do not configure the region prios too narrow, as you might not find a match for every game in your collection then, always put one or some fail-safe(s) at the end of the list.
+Any region [auto-detected](REGIONS.md#region-auto-detection) from the file name will still be added to the beginning of the region prios list in the order they are in the filename (see `first` mode under [regionsFromFilename](#regionsfromfilename)), or 'snapped' to the front of the region prio list in the order they are in the region prio list already, inserting detected but non-prioritised regions immediately after before any non-detected regions (see `inline` mode under [regionsFromFilename](#regionsfromfilename)). If [regionsFromFilename](#regionsfromfilename) is set to `off`, then no regions are detected from the filename and regionPrios kicks in, unless [region](#region) is set.
 
 Default value: `eu, us, ss, uk, wor, jp, au, ame, de, cus, cn, kr, asi, br, sp, fr, gr, it, no, dk, nz, nl, pl, ru, se, tw, ca`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
