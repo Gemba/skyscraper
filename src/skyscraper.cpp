@@ -1583,8 +1583,10 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
 void Skyscraper::loadAliasMap() {
     QFile aliasMapFile("aliasMap.csv");
     if (aliasMapFile.open(QIODevice::ReadOnly)) {
+        int lineNo = 0;
         while (!aliasMapFile.atEnd()) {
-            QByteArray line = aliasMapFile.readLine();
+            QByteArray line = aliasMapFile.readLine().trimmed();
+            lineNo++;
             if (line.left(1) == "#") {
                 continue;
             }
@@ -1595,6 +1597,13 @@ void Skyscraper::loadAliasMap() {
                 baseName = baseName.replace("\"", "").simplified();
                 aliasName = aliasName.replace("\"", "").simplified();
                 config.aliasMap[baseName] = aliasName;
+            } else {
+                qWarning() << QString(
+                                  "aliasMap.csv: No pair found at line %1: "
+                                  "'%2'. Skipping this line. Did you miss to "
+                                  "use one semicolon as delimiter?")
+                                  .arg(lineNo)
+                                  .arg(QString(line));
             }
         }
         aliasMapFile.close();
