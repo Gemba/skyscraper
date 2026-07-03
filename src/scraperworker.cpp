@@ -327,10 +327,15 @@ void ScraperWorker::run() {
             mediaSaved =
                 compositor.saveAll(game, info.completeBaseName(), esdeMiximage);
             qDebug() << "mediaSaved" << mediaSaved;
-            // extra media files (not part of compositor)
+            if (config.frontend == "emulationstation") {
+                // avoid copying if image type is not defined in artwork file
+                // https://retropie.org.uk/forum/topic/37510
+                mediaSaved |= GameEntry::MARQUEE | GameEntry::SCREENSHOT |
+                              GameEntry::WHEEL;
+            }
+            // copy extra media files (not part of compositor/artwork)
             const QString baseName = info.completeBaseName();
             const QString subPath = compositor.getSubpath(game.path);
-
             frontend->copyMedia(mediaSaved, baseName, subPath, game);
         }
 
