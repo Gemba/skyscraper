@@ -131,7 +131,7 @@ void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
             }
         } else if (fileOp == FileOp::CREATE_DIST) {
             QString distfn = QString(dest + ".dist");
-            if (QFileInfo(src).size() != QFileInfo(distfn).size()) {
+            if (QFileInfo(src).size() != QFileInfo(dest).size()) {
                 QFile::remove(distfn);
                 QFile::copy(src, distfn);
                 qDebug() << "Copied original distribution file" << src << "as"
@@ -246,6 +246,15 @@ void Config::setupUserConfig() {
     }
 
     QString localEtcPath = QString(SYSCONFDIR "/skyscraper/");
+    if (!QFileInfo::exists(localEtcPath) && !isRpInstall) {
+        if (!QCoreApplication::applicationDirPath().startsWith(
+                QString(PREFIX "/bin"), Qt::CaseInsensitive)) {
+            // could be AppImage or expanded AppImage
+            localEtcPath = QCoreApplication::applicationDirPath().replace(
+                QString(PREFIX "/bin").toLower(),
+                QString(SYSCONFDIR "/skyscraper/"));
+        }
+    }
     if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
         if (!isRpInstall) {
             qDebug() << "local install path does not exist" << localEtcPath;
@@ -253,6 +262,7 @@ void Config::setupUserConfig() {
         // RetroPie or Windows installation type: handled externally
         return;
     }
+    qDebug() << "config source path" << localEtcPath;
 
     int isPristine;
     for (auto src : configFiles.keys()) {

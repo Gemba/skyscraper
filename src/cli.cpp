@@ -110,7 +110,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
         "platform set with '-p'.\nScraping modules web: 'arcadedb', 'igdb', "
         "'mobygames', 'openretro', 'screenscraper', 'thegamesdb' and "
         "'zxinfo' ('worldofspectrum' and 'wos' are backward compability "
-        "aliases)\nScrpaing modules local: 'esgamelist', 'gamebase' and "
+        "aliases)\nScraping modules local: 'esgamelist', 'gamebase' and "
         "'import'\nLeave this option out to enable Skyscraper's gamelist "
         "generation mode.",
         "MODULE", "");
@@ -566,6 +566,16 @@ void Cli::showHint() {
 void Cli::showBuildinfo() {
     QStringList info;
     QString skyVer = "Skyscraper:       " VERSION;
+    bool isAppImage =
+        QProcessEnvironment::systemEnvironment().contains("APPIMAGE") ||
+        QCoreApplication::applicationDirPath().indexOf(QString(PREFIX "/bin"),
+                                                       Qt::CaseInsensitive) > 0;
+    if (isAppImage) {
+        skyVer = skyVer % " (AppImage)";
+    }
+#ifdef XDG
+    skyVer = skyVer % " (XDG)";
+#endif
 #ifdef QT_DEBUG
     skyVer = skyVer % " (Debug)";
 #endif

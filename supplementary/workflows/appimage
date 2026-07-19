@@ -1,0 +1,63 @@
+#! /usr/bin/env bash
+set -euo pipefail
+set -x
+
+export SKYSCRAPER_HOME="$(cd "$(dirname "$0")/../.." && pwd)"
+ARCH=$(uname -m)
+
+app_dir="$SKYSCRAPER_HOME/AppDir"
+
+pushd "$SKYSCRAPER_HOME"
+
+ld_bins=(
+	"https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$ARCH.AppImage"
+	"https://github.com/darealshinji/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt.sh"
+)
+
+for l in "${ld_bins[@]}"; do
+	if [[ ! -f "$(basename "$l")" ]]; then
+		wget --quiet "$l"
+		chmod a+x "$(basename "$l")"
+	fi
+done
+
+make --ignore-errors distclean || true
+#sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
+PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
+jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
+rm -rf "$app_dir"
+make "-j$jobs" install INSTALL_ROOT="$app_dir"
+
+rm "$app_dir"/usr/bin/*.py
+rm "$app_dir/usr/bin/README-Skyscraper-Scripts.md"
+rm "$app_dir/usr/bin/mdb2sqlite.sh"
+
+cat >skyscraper.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Skyscraper
+Exec=Skyscraper
+Icon=skyscraper
+Categories=Utility;
+Terminal=true
+EOF
+
+mkdir -p "$app_dir/usr/share/icons/hicolor/256x256/apps"
+cp -p docs/resources/skyscraper_logo.png \
+	"$app_dir/usr/share/icons/hicolor/256x256/apps/skyscraper.png"
+mkdir -p "$app_dir/usr/share/metainfo"
+cp -p supplementary/com.github.gemba.skyscraper.appdata.xml "$app_dir/usr/share/metainfo"
+
+# shellcheck disable=SC1091
+source VERSION.ini
+export LINUXDEPLOY_OUTPUT_VERSION="$VERSION"
+
+./linuxdeploy-"$ARCH".AppImage \
+	--appdir "$(basename "$app_dir")" \
+	--desktop-file skyscraper.desktop \
+	--output appimage --plugin checkrt \
+	--verbosity 2
+rm skyscraper.desktop
+./Skyscraper-"$VERSION"-"$ARCH".AppImage --buildinfo
+
+popd
