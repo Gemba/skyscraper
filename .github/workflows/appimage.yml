@@ -1,0 +1,25 @@
+name: Create AppImage
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  AppImage:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}  
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: bash ./supplementary/workflows/deps
+      - name: Bundle AppImage
+        run: bash ./supplementary/workflows/appimage
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          files: Skyscraper-*.AppImage        
