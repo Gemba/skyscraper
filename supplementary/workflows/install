@@ -32,14 +32,14 @@ build() {
    cd "$SKYSCRAPER_HOME"
    # Qt5
    make --ignore-errors distclean || true
-   sed -ie "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
+   sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
    qmake
    jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
    make "-j$jobs"
    sudo make install
    # Qt6, without make install
    make --ignore-errors distclean || true
-   sed -ie "0,/CONFIG += /{s/CONFIG.*/CONFIG += release/}" skyscraper.pro
+   sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += release/}" skyscraper.pro
    qmake6
    make "-j$jobs"
 }

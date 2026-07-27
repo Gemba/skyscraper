@@ -11,6 +11,7 @@ pushd "$SKYSCRAPER_HOME"
 
 ld_bins=(
 	"https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$ARCH.AppImage"
+	"https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-$ARCH.AppImage"
 	"https://github.com/darealshinji/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt.sh"
 )
 
@@ -25,7 +26,7 @@ make --ignore-errors distclean || true
 #sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
 PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
 jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
-rm -rf "$app_dir"
+rm -rf "$app_dir" || true
 make "-j$jobs" install INSTALL_ROOT="$app_dir"
 
 rm "$app_dir"/usr/bin/*.py
@@ -48,14 +49,31 @@ cp -p docs/resources/skyscraper_logo.png \
 mkdir -p "$app_dir/usr/share/metainfo"
 cp -p supplementary/com.github.gemba.skyscraper.appdata.xml "$app_dir/usr/share/metainfo"
 
+if [[ "$ARCH" == "aarch64" ]]; then
+	# some aarch64 targets do not provide X11
+	mkdir -p "$app_dir/usr/lib"
+	extra_libs=(
+		libGLdispatch.so.0
+		libGLX.so.0
+		libOpenGL.so.0
+		libX11.so.6
+		libxcb.so.1
+	)
+	for lib in "${extra_libs[@]}"; do
+		cp -L "/usr/lib/$ARCH-linux-gnu/$lib" "$app_dir/usr/lib"
+	done
+fi
+
 # shellcheck disable=SC1091
 source VERSION.ini
 export LINUXDEPLOY_OUTPUT_VERSION="$VERSION"
+export QMAKE=/usr/bin/qmake6
 
 ./linuxdeploy-"$ARCH".AppImage \
 	--appdir "$(basename "$app_dir")" \
 	--desktop-file skyscraper.desktop \
 	--output appimage --plugin checkrt \
+	--plugin qt \
 	--verbosity 2
 rm skyscraper.desktop
 ./Skyscraper-"$VERSION"-"$ARCH".AppImage --buildinfo

@@ -72,6 +72,8 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     if (ext.isEmpty()) {
         QMimeType mime = mimeDb.mimeTypeForFile(cacheFn);
         fnExt = mime.preferredSuffix().replace("jpeg", "jpg");
+        if (fnExt.isEmpty())
+            qDebug() << "No mime type detected for" << baseName;
     }
     QString fp;
     switch (t) {
@@ -107,6 +109,19 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     }
     QString fn = getTargetFileName(t, baseName);
     if (!fp.isEmpty() && !fn.isEmpty()) {
+        if (fnExt.isEmpty()) {
+            if (QSysInfo::prettyProductName().startsWith("Batocera")) {
+                fnExt = defaultMimeType(fn);
+            } else {
+                // flag other edge cases
+                qWarning()
+                    << QString(
+                           "MIME type not detected for '%1'. Is mime type db "
+                           "(/usr/share/mime/packages/freedesktop.org.xml) "
+                           "missing on this system?")
+                           .arg(fn);
+            }
+        }
         fp = fp % QString("/%1/%2.%3").arg(subPath).arg(fn).arg(fnExt);
         QFileInfo fi = QFileInfo(fp);
         QDir d = QDir(fi.absolutePath());
@@ -336,4 +351,14 @@ bool AbstractFrontend::doCopy(GameEntry::Types t, const QString &cacheFn,
         qDebug() << "Copied" << t;
     }
     return success;
+}
+
+QString AbstractFrontend::defaultMimeType(const QString &fn) {
+    QString ext = "png";
+    if (fn.endsWith("-video"))
+        ext = "mp4";
+    else if (fn.endsWith("-manual"))
+        ext = "pdf";
+    qDebug() << "Using failsafe extension" << ext << "for" << fn;
+    return ext;
 }
