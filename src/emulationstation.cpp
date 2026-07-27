@@ -240,7 +240,7 @@ void EmulationStation::assembleList(QString &finalOutput,
     int dots = -1;
     int dotMod = 1 + gameEntries.length() * 0.1;
 
-    finalOutput.append("<?xml version=\"1.0\"?>\n");
+    finalOutput.append("<?xml version=\"1.0\"?>\n" /* TODO: xmlPreamble() per frontend resp. with flag for ' encoding="UTF-8"' */);
     finalOutput.append(taintGamelist());
     finalOutput.append("<gameList>\n");
 

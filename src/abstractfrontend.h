@@ -100,6 +100,7 @@ private:
                               QString ext = "");
     bool doCopy(GameEntry::Types t, const QString &src, QString &tgt,
                 const QByteArray &data, bool skipExisting);
+    QString defaultMimeType(const QString &fn);
 };
 
 #endif // ABSTRACTFRONTEND_H
