@@ -131,7 +131,6 @@ private slots:
                   {"PG", "15"},
                   {"15+", "15"},
                   {"MA-17", "17"},
-                  //{"M","17"}, /* dupe */
                   {"18+", "18"},
                   {"R18+", "18"},
                   {"18 (keine Jugendfreigabe)", "18"},
@@ -139,6 +138,8 @@ private slots:
                   {"AO", "18"},
                   {"AO - Adults Only", "18"},
                   {"Adults Only", "18"},
+                  {"M - Mature 17+", "17"},
+                  {"Mature 17+", "17"},
                   {"M - Mature", "18"},
                   {"Mature", "18"},
                   {"", ""},
