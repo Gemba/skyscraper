@@ -258,7 +258,7 @@ void Config::setupUserConfig() {
     if (!localEtcPath.endsWith('/')) {
         localEtcPath += '/';
     }
-    if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
+    if (localEtcPath.startsWith(QCoreApplication::applicationDirPath()) || !QFileInfo::exists(localEtcPath) || isRpInstall) {
         if (!isRpInstall) {
             qDebug() << "local install path does not exist" << localEtcPath;
         }
