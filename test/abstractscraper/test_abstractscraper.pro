@@ -25,6 +25,7 @@ HEADERS += \
             ../../src/netcomm.h \
             ../../src/netmanager.h \
             ../../src/nocolor.h \
+            ../../src/pathtools.h \
             ../../src/platform.h \
             ../../src/strtools.h
 
@@ -36,6 +37,7 @@ SOURCES += test_abstractscraper.cpp \
             ../../src/netcomm.cpp \
             ../../src/netmanager.cpp \
             ../../src/nocolor.cpp \
+            ../../src/pathtools.cpp \
             ../../src/platform.cpp \
             ../../src/strtools.cpp
 

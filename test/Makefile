@@ -3,13 +3,14 @@ QMAKE = qmake6
 
 tests:
 	$(foreach subdir, $(SUBDIRS), \
-		echo "\n[*] Making all in test/$(subdir) ..."; \
+		echo "\n[*] Making 'all' in test/$(subdir) ..."; \
 		cd $(subdir) && $(QMAKE); \
 		$(MAKE) -j$(shell nproc) all || exit 1; \
 		./test_$(subdir) || exit 1; \
 		echo "[*] ... done tests in test/$(subdir).\n"; \
 		cd .. ; \
 	)
+	@echo "[+] All tests passed: $(SUBDIRS).\n";
 
 clean:
 	$(foreach subdir, $(SUBDIRS), \
