@@ -61,6 +61,9 @@ private slots:
 
         actual = PathTools::makeAbsolutePath("/yadda/meh///", "wuff");
         QCOMPARE(actual, "/yadda/meh/wuff");
+
+        actual = PathTools::makeAbsolutePath("/path/to/app/bin", "wuff/");
+        QCOMPARE(actual, "/path/to/app/bin/wuff");
     }
 
     void testlexicalRel() {
