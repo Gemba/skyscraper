@@ -26,6 +26,7 @@
 #include "platform.h"
 
 #include "config.h"
+#include "pathtools.h"
 #include "settings.h"
 
 #include <QByteArray>
@@ -62,30 +63,15 @@ bool Platform::loadConfig() {
     clearConfigData();
 
     QFile configFile(fnPeas);
-    if (!configFile.open(QIODevice::ReadOnly)) {
-        QString extraInfo = "";
-        if (QString rpVer = Config::getRetropieVersion(); !rpVer.isEmpty()) {
-            QVersionNumber foundVer = QVersionNumber::fromString(rpVer);
-            QVersionNumber reqVer = QVersionNumber::fromString("4.8.6");
-            if (QVersionNumber::compare(foundVer, reqVer) == -1) {
-                extraInfo =
-                    QString(
-                        "\n\nIt seems you are using Skyscraper in a RetroPie "
-                        "setup. The identified RetroPie\nversion is %1, "
-                        "the missing file was introduced with version %2: "
-                        "Update\nyour RetroPie-Setup script and re-install "
-                        "Skyscraper via retropie_setup.sh to\nremediate this "
-                        "error.")
-                        .arg(foundVer.toString())
-                        .arg(reqVer.toString());
-            }
-        }
-        ncprintf("\033[1;31mFile not found '%s'.%s Now quitting...\033[0m\n",
-                 fnPeas.toUtf8().constData(), extraInfo.toUtf8().constData());
-        return false;
+    QByteArray jsonData;
+    if (configFile.open(QIODevice::ReadOnly)) {
+        jsonData = configFile.readAll();
+    } else {
+        // fallback to built-in
+        QFile builtIn = QFile(":/" + fnPeas);
+        builtIn.open(QIODevice::ReadOnly);
+        jsonData = QByteArray(builtIn.readAll());
     }
-
-    QByteArray jsonData = configFile.readAll();
     QJsonDocument json(QJsonDocument::fromJson(jsonData));
 
     if (json.isNull() || json.isEmpty()) {
@@ -163,7 +149,7 @@ QString Platform::getFormats(QString platform, QString extensions,
 #if QT_VERSION >= 0x050e00
     addExts = addExtensions.split(" ", Qt::SkipEmptyParts);
 #else
-    // for RP on Buster
+    // for RP on Buster (Qt 5.11.3)
     addExts = addExtensions.split(" ", QString::SkipEmptyParts);
 #endif
     for (auto f : addExts) {
@@ -201,14 +187,17 @@ static inline QStringList splitPlatformIds(const QString &ids) {
 
 bool Platform::parsePlatformsIdCsv(const QString &platformsIdCsvFn) {
 
-    QFile configFile(platformsIdCsvFn);
+    QFile configFile(PathTools::locateConfigFile(platformsIdCsvFn));
     const char *fn = platformsIdCsvFn.toUtf8().constData();
     if (!configFile.open(QIODevice::ReadOnly)) {
         if (platformsIdCsvFn == fnPlatformsIdMapLocal) {
             return true; // no platforms_idmap_local.csv, no worries
         }
-        ncprintf("\033[1;31mFile not found '%s'. Now quitting...\033[0m\n", fn);
-        return false;
+        if (!configFile.fileName().startsWith(":/")) {
+            ncprintf("\033[1;31mFile not found '%s'. Now quitting...\033[0m\n",
+                     fn);
+            return false;
+        }
     }
     while (!configFile.atEnd()) {
         QString line = QString(configFile.readLine()).trimmed();
@@ -285,7 +274,7 @@ int Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
     QMap<QString, QStringList> sha256sums = {
         // clang-format off
         // add newer sha256 add the end
-        {"peas.json", QStringList(
+        {fnPeas, QStringList(
                 {"67739818ca4d62f277f5c143bff89e0a0083eae96ae26692ec509af5a3db677b",
                  "eb88759262cfa3da46f0f6ff19fba4c89a20c4089ca51294ad4554c6613d9db8",
                  "215c8974fbd2490dedc6e6e59541bc6a36dfb12e8750031aeade99e5e4878c8d",
@@ -299,7 +288,7 @@ int Platform::isPlatformCfgfilePristine(const QString &cfgFilePath) {
                  "c658d5f998b600e81a2e2adc1d216bf00868329ae533a7800c681fe5a421cd6e"}
             )
         },
-        {"platforms_idmap.csv", QStringList(
+        {fnPlatformsIdMap, QStringList(
                 {"78ca2da2de3ee98e57d7ce9bb88504c7b45bdf72a2599a34e583ebcc0855cbef",
                  "30c443a6a6c7583433e62e89febe8d10bae075040e5c1392623a71f348f3f476",
                  "bf12d0f2f7161d45041f8996c44d6c3c2f666cfc33938dbcbd506c1f766062c4",

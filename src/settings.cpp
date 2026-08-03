@@ -108,7 +108,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             } else {
                 infoAndExitOption =
                     (parser->isSet("flags") && parseFlags().contains("help")) ||
-                    parser->isSet("hint") || parser->isSet("buildinfo");
+                    parser->isSet("hint") || parser->isSet("buildinfo") ||
+                    parser->isSet("configinfo") || parser->isSet("ini");
             }
             bool invalidPlatform = !infoAndExitOption && parser->isSet("p") &&
                                    !plafs.contains(parser->value("p"));
@@ -707,9 +708,28 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         config->artworkConfig = toAbsolutePath(true, parser->value("a"));
     } else if (config->artworkConfig.isEmpty()) {
         // failsafe: no CLI and no config.ini artworkConfig provided
-        config->artworkConfig =
+        QString srcArtworkFn = PathTools::locateConfigFile("artwork.xml");
+        QString destArtworkFn =
             PathTools::concatPath(Config::getSkyFolder(), "artwork.xml");
+        if (!QFileInfo(destArtworkFn).exists()) {
+            if (QFile::copy(srcArtworkFn, destArtworkFn)) {
+                if (srcArtworkFn.startsWith(":/")) {
+                    QFile::setPermissions(
+                        destArtworkFn,
+                        QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                            QFileDevice::ReadGroup | QFileDevice::ReadOther);
+                }
+            } else {
+                ncprintf("\033[1;31mFile '%s' cannot be created. Please fix. "
+                         "Quitting.\033[0m\n",
+                         PathTools::pathToStdStr(destArtworkFn).c_str());
+                emit die(1, QString("cannot create '%1'").arg(destArtworkFn),
+                         "Permission denied");
+            }
+        }
+        config->artworkConfig = destArtworkFn;
     }
+
     if (parser->isSet("m") && scraperAllowedForMatch(config->scraper, "-m")) {
         if (parser->value("m").toInt() >= 0 &&
             parser->value("m").toInt() <= 100) {

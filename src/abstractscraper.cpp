@@ -27,6 +27,7 @@
 
 #include "gameentry.h"
 #include "nametools.h"
+#include "pathtools.h"
 #include "platform.h"
 #include "strtools.h"
 
@@ -789,7 +790,8 @@ QVector<int> AbstractScraper::getPlatformId(const QString) {
 */
 QVariantMap AbstractScraper::readJson(const QString &filename) {
     QVariantMap m;
-    QFile jsonFile(filename);
+    QFile jsonFile;
+    jsonFile.setFileName(PathTools::locateConfigFile(filename));
     QJsonObject jsonObj;
     bool canRead = jsonFile.open(QIODevice::ReadOnly);
     if (canRead) {
@@ -804,9 +806,8 @@ QVariantMap AbstractScraper::readJson(const QString &filename) {
                  "fix.\nNot scraping...\n\033[0m",
                  filename.toUtf8().constData());
     } else if (jsonObj.isEmpty()) {
-        ncprintf("\033[1;31mFile '%s' has insky_regio_keyid JSON format. "
-                 "Please fix.\nNot "
-                 "scraping...\n\033[0m",
+        ncprintf("\033[1;31mFile '%s' has invalid JSON format. Please "
+                 "fix.\nNot scraping...\n\033[0m",
                  filename.toUtf8().constData());
     }
     return m;

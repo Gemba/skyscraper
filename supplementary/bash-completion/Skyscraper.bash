@@ -94,7 +94,7 @@ _skyscraper() {
 		_filedir
 		return 0
 		;;
-	'-h' | '--help' | '--help-all' | '-v' | '--version' | '--buildinfo' | '--listext' | '--searchstem-all' | '--stderr')
+	'-h' | '--help' | '--help-all' | '-v' | '--version' | '--buildinfo' | '--configinfo' | '--ini' | '--listext' | '--searchstem-all' | '--stderr')
 		return 0
 		;;
 	'--verbosity')

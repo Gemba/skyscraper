@@ -95,7 +95,7 @@ public:
                          const int verbosity, const bool unattend = false);
     bool assembleReport(const Settings &config, const QString filters);
     void showStats(int verbosity);
-    void readPriorities();
+    void readPriorities(int verbosity);
     bool write(const bool onlyQuickId = false);
     void validate();
     void addResources(GameEntry &entry, const Settings &config,

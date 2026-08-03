@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>artwork.xml</file>
+        <file alias="import/definitions.dat">import/definitions.dat.example1</file>
+        <file alias="config.ini">config.ini.example</file>
+        <file>cache/priorities.xml.example</file>
+        <file>hints.xml</file>
+        <file>mameMap.csv</file>
+        <file>peas.json</file>
+        <file>platforms_idmap.csv</file>
+        <file>resources/boxfront.png</file>
+        <file>resources/boxside.png</file>
+        <file>resources/scanlines1.png</file>
+        <file>tgdb_developers.json</file>
+        <file>tgdb_genres.json</file>
+        <file>tgdb_platforms.json</file>
+        <file>tgdb_publishers.json</file>
+    </qresource>
+</RCC>
