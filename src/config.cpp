@@ -255,7 +255,10 @@ void Config::setupUserConfig() {
                 QString(SYSCONFDIR "/skyscraper/"));
         }
     }
-    if (!QFileInfo::exists(localEtcPath) || isRpInstall) {
+    if (!localEtcPath.endsWith('/')) {
+        localEtcPath += '/';
+    }
+    if (localEtcPath.startsWith(QCoreApplication::applicationDirPath()) || !QFileInfo::exists(localEtcPath) || isRpInstall) {
         if (!isRpInstall) {
             qDebug() << "local install path does not exist" << localEtcPath;
         }
