@@ -681,23 +681,35 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
         }
     }
 
-    QStringList rankedRegionPrios;
-    QStringList retainedRegionPrios = regionPrios;
-    for (int i = regionPrios.size() - 1; i >= 0; i--) {
-        const QString prioRegion = regionPrios.at(i);
-        if (addRegionPrios.contains(prioRegion)) {
-            if (regionsInline) {
-                rankedRegionPrios.prepend(prioRegion);
-                addRegionPrios.removeAt(addRegionPrios.indexOf(prioRegion));
+    // Rebuild regionPrios based on the chosen mode
+    if (regionsInline) {
+        QStringList detectedAndPrioritized;
+        QStringList remainingConfigPrios;
+    
+        // Iterate through original priorities to maintain their native ordering
+        for (const QString &prioRegion : config->regionPrios) {
+            if (addRegionPrios.contains(prioRegion)) {
+                detectedAndPrioritized.append(prioRegion);
+            } else if (regionPrios.contains(prioRegion)) {
+                remainingConfigPrios.append(prioRegion);
             }
-            retainedRegionPrios.removeAt(
-                retainedRegionPrios.indexOf(prioRegion));
         }
-    }
-    if (regionsInline)
-        regionPrios = rankedRegionPrios + retainedRegionPrios + addRegionPrios;
-    else
+        
+        // Result: [Ordered Matches] + [Ordered Remaining] + [Any Extra loose tags]
+        // We append addRegionPrios at the end just in case a tag was found 
+        // that wasn't in config->regionPrios at all.
+        for (const QString &prioRegion : detectedAndPrioritized) {
+            addRegionPrios.removeAll(prioRegion);
+        }
+        regionPrios = detectedAndPrioritized + addRegionPrios + remainingConfigPrios;
+    } else {
+        // regionFromFilename == "first"
+        QStringList retainedRegionPrios = regionPrios;
+        for (const QString &prioRegion : addRegionPrios) {
+            retainedRegionPrios.removeAll(prioRegion);
+        }
         regionPrios = addRegionPrios + retainedRegionPrios;
+    }
 }
 
 void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
