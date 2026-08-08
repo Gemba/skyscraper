@@ -40,6 +40,8 @@ QString PathTools::concatPath(QString path, QString subPath) {
     }
     if (subPath == "." || subPath.isEmpty())
         return path;
+    while (subPath.right(1) == "/")
+        subPath.chop(1);
     if (!path.isEmpty() && path.right(1) != "/") {
         return path % "/" % subPath;
     }
