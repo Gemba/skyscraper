@@ -1,4 +1,4 @@
-# Generated on 2026-01-31,from "MAME 0.284 (arcade).dat", "fbneo.dat", "mame2003-plus.xml"
+# Generated 2026-01-31, sources: "MAME 0.284 (arcade).dat", "fbneo.dat", "mame2003-plus.xml"
 # yarked from: https://raw.githubusercontent.com/RetroPie/EmulationStation/master/resources/mamenames.xml
 rom_filename_stem;rom_title
 "005";"005"

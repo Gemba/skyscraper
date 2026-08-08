@@ -25,6 +25,8 @@ OUTFILE = Path(__file__).parent.resolve() / "../../mameMap.csv"
 req = requests.get(URL)
 lines = req.text.split("\n")
 hdr = lines[0].replace("<!--", "").replace("-->", "").strip()
+hdr = hdr.replace(" on ", " ")
+hdr = hdr.replace(",from", ", sources:")
 print(f"[+] File info: {hdr}")
 
 prev_hdr = ""
