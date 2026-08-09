@@ -251,6 +251,20 @@ Skyscraper -p snes -s thegamesdb --addext '.ext1 ext2'
 
 Show the build configuration and runtime environment of Skyscraper and exits. Use this info when reporting an issue. Thanks!
 
+### --confginfo
+
+Provides information on how Skyscraper sources the essential configuration
+files. The output is limited to the mandatory configuration files of Skyscraper.
+Whenever you provide one of the listed configfiles at the appropiate location,
+the built-in version is ignored. The configinfo option will show the used source
+location in that case. This commmand is especially useful if you run Skyscraper
+as single binary, thus you did not install it for
+every users (did not run `make install`).
+
+!!! info
+
+    You may notice differences in output between the very first usage of Skyscraper and after running some scraping or gamelist creation: Skyscraper puts some files from its built-in file storage to the filesystem, because most likely you will want to modify these config files.
+
 ### --cache <COMMAND[:OPTIONS]>
 
 This is the cache master option. It contains several subcommands that allows you to manipulate the cached data for the selected platform.
