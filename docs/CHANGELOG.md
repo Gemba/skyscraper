@@ -3,6 +3,23 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.21.0 (2026-TBA)
+
+- Added: AppImage support for PC (x64) and ARM (aarch64) architectures (with or
+  without XDG support), find the AppImages in the release section of this repo.
+  Thanks to @goldug for the providing the write-up, which got things rolling
+- Added: Support for running Skyscraper natively on Batocera, via AppImage. See
+  [Batocera usage](FRONTENDS.md#usage-of-skyscraper-for-batocera)
+- Added: Ability to run Skyscraper binary as single binary. You only have to
+  provide your `config.ini`, if needed. Useful for user-level installations (no
+  root/elevated privileges needed) like using it with XDG from path
+  `$HOME/.local/bin` or calling Skyscraper from other tools like Scrappy or
+  EmulationStation-X
+- Added: Option [`--configinfo`](CLIHELP.md#-confginfo) shows config files and
+  their source. Comes in handy when using Skyscraper single binary installs.
+- Fixed: Regression when copying media files on RetroPie (shipped with 3.20.2)
+- Fixed: XDG `resources/` file loading
+
 ### Version 3.20.0 (2026-06-04)
 
 - Added: TheGamesDB does provide videos since a few weeks, thus scraping of

@@ -7,6 +7,8 @@ You can find detailled installation instructions in the respective section in th
 
     - Linux distros with Debian package system (Ubuntu, RaspiOS, aso.), [without
       RetroPie](https://github.com/Gemba/skyscraper/blob/master/README.md#linux)
+    - Linux distros may also use AppImage builds. Provided for PC and ARM (each
+      64 Bit) and with or without XDG support. See Releases section on the GitHub repo.
     - For other Linux distributions assure the [package
       dependencies](https://github.com/Gemba/skyscraper/blob/master/README.md#linux)
       are met for your distro

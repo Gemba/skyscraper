@@ -174,13 +174,18 @@ adds those on occasion) like: `cheevosHash`, `cheevosId`, `scrap`, ...
 
 #### Usage of Skyscraper for Batocera
 
-It is possible to compile Skyscraper on Batocera supported systems but you will
-need the build-toolchain (at least GCC, make and Qt). Additionally, the
-configuration files must be installed in a defined location (see the `PREFIX`
-option in the top-level `README.md`, if you are keen to compile Skyscraper on
-Batocera).
+Preferably you should use the aach64 AppImage (without XDG) and deploy it to
+your Batocera setup. Then login via SSH to Batocera (see their documentation for
+hints). Or, when you have a keyboard attached to your Batocera host: From the
+settings menu in batocera you can choose (command line) applications, from the
+file manager then started pick a terminal.
 
-A more convienient way is to use Skyscraper from you Desktop system: Below you
+In both cases run the AppImage (maybe do `chmod a+x *AppImage*`). Either set the
+`frontend=` to `batocera` or provide `-f batocera` on every Skyscraper call.
+Why? This will ensure that the default file locations for ROMs (input folder),
+gamelist output (gamelist folder) and media files (media folder) are applied.
+
+An alternative way is to use Skyscraper from you Desktop system: Below you
 can find a step-by-step guide for Linux systems, macOS should be similar.
 Windows desktop users can use SMB shares and can adapt the following steps.
 

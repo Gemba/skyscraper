@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#macos">NixOS</a>|<a href="#macos">macOS</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
+  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#macos">NixOS</a>|<a href="#macos">macOS</a>|<a href="#user-level-install">Install without root</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
   <a href="#-how-to-use-skyscraper">Quick Usage</a> •
   <a href="https://gemba.github.io/skyscraper/">User Manual</a> •
   <a href="https://gemba.github.io/skyscraper/CHANGELOG/">Changelog</a>
@@ -55,7 +55,7 @@ You can configure and add platforms without having the needs to edit the code so
 - [peas.json](peas.json): Describes now the supported platforms and recognized gamefile extensions by Skyscraper. See all details in the [platforms documentation](https://gemba.github.io/skyscraper/PLATFORMS/).
 - [platforms_idmap.csv](platforms_idmap.csv): Maps the local platform name to the platform ID of screenscraper.fr, Mobygames or The Games DB web API, this yields more accurate hits.
 
-These files are copied into the folder `/home/pi/.skyscraper` on RetroPie (or `/usr/local/etc/skyscraper/` in general) at the first run of the program.
+These files are copied into the folder `$HOME/.skyscraper` on Linux (or `$XDG_CONFIG_HOME/skyscraper/` with XDG) at the first run of the program.
 
 ## 🕹 Frontends Supported (set with '-f'):
 
@@ -64,6 +64,7 @@ These files are copied into the folder `/home/pi/.skyscraper` on RetroPie (or `/
 * Batocera
 * AttractMode
 * Pegasus
+* RetroArch
 * RetroBat
 
 More details in the [frontends documentation](https://gemba.github.io/skyscraper/FRONTENDS/)
@@ -140,6 +141,17 @@ $ brew install wget
 $ brew install qt
 ```
 You may also need a recent installation of [XCode](https://xcodereleases.com/) for the development tools. Then proceed to the default installation instructions in the "Download, compile and install" section. It will give you a working installation of Skyscraper.
+
+### User Level Install
+
+Linux users may use the provided AppImages (see [Release
+Assets](https://github.com/Gemba/skyscraper/releases)). Pick the image which
+fits your architecture and system configuration (with XDG or without).
+
+After building the binary Linux users (and most likely macOS and Windows users),
+can use the single binary Skyscraper and put it somewhere in the `$PATH` lookup.
+Consider to review the output of `--configinfo` to see which file is sourced from
+which location.
 
 #### Docker <img src="docs/resources/os/docker-mark-blue.svg" width="20px">
 Two Docker setups exist: One general in the `docker/` folder. The other resides in the `.devcontainer/` and its use is for [MS Dev Containers](https://microsoft.github.io/code-with-engineering-playbook/developer-experience/devcontainers/).
