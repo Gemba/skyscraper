@@ -4,7 +4,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += release
 # enable for XDG directory layout - see also Skyscraper docs
-#DEFINES+=XDG
+#DEFINES += XDG
 # set std-C++17 for clang and gcc
 CONFIG += c++1z
 QT += core network sql xml
