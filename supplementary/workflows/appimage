@@ -10,30 +10,34 @@ app_dir="$SKYSCRAPER_HOME/AppDir"
 pushd "$SKYSCRAPER_HOME"
 
 ld_bins=(
-	"https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$ARCH.AppImage"
-	"https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-$ARCH.AppImage"
-	"https://github.com/darealshinji/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt.sh"
+    "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$ARCH.AppImage"
+    "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-$ARCH.AppImage"
+    "https://github.com/darealshinji/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt.sh"
 )
 
 for l in "${ld_bins[@]}"; do
-	if [[ ! -f "$(basename "$l")" ]]; then
-		wget --quiet "$l"
-		chmod a+x "$(basename "$l")"
-	fi
+    if [[ ! -f "$(basename "$l")" ]]; then
+        wget --quiet "$l"
+        chmod a+x "$(basename "$l")"
+    fi
 done
 
-make --ignore-errors distclean || true
-#sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
-PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
-jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
-rm -rf "$app_dir" || true
-make "-j$jobs" install INSTALL_ROOT="$app_dir"
+function build_appimage() {
+    local _xdg="${1:-}"
+    make --ignore-errors distclean || true
+    #sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
+    [[ -n "$_xdg" ]] && sed -i "0,/.+DEFINES += XDG/{s/.*DEFINES/DEFINES/}" skyscraper.pro
+    [[ -z "$_xdg" ]] && sed -i "0,/DEFINES += XDG/{s/.*DEFINES/#DEFINES/}" skyscraper.pro
+    PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
+    jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
+    rm -rf "$app_dir" || true
+    make "-j$jobs" install INSTALL_ROOT="$app_dir"
 
-rm "$app_dir"/usr/bin/*.py
-rm "$app_dir/usr/bin/README-Skyscraper-Scripts.md"
-rm "$app_dir/usr/bin/mdb2sqlite.sh"
+    rm "$app_dir"/usr/bin/*.py
+    rm "$app_dir/usr/bin/README-Skyscraper-Scripts.md"
+    rm "$app_dir/usr/bin/mdb2sqlite.sh"
 
-cat >skyscraper.desktop <<EOF
+    cat >skyscraper.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Skyscraper
@@ -43,39 +47,68 @@ Categories=Utility;
 Terminal=true
 EOF
 
-mkdir -p "$app_dir/usr/share/icons/hicolor/256x256/apps"
-cp -p docs/resources/skyscraper_logo.png \
-	"$app_dir/usr/share/icons/hicolor/256x256/apps/skyscraper.png"
-mkdir -p "$app_dir/usr/share/metainfo"
-cp -p supplementary/com.github.gemba.skyscraper.appdata.xml "$app_dir/usr/share/metainfo"
+    mkdir -p "$app_dir/usr/share/icons/hicolor/256x256/apps"
+    cp -p docs/resources/skyscraper_logo.png \
+        "$app_dir/usr/share/icons/hicolor/256x256/apps/skyscraper.png"
+    mkdir -p "$app_dir/usr/share/metainfo"
+    cp -p supplementary/com.github.gemba.skyscraper.appdata.xml "$app_dir/usr/share/metainfo"
 
-if [[ "$ARCH" == "aarch64" ]]; then
-	# some aarch64 targets do not provide X11
-	mkdir -p "$app_dir/usr/lib"
-	extra_libs=(
-		libGLdispatch.so.0
-		libGLX.so.0
-		libOpenGL.so.0
-		libX11.so.6
-		libxcb.so.1
-	)
-	for lib in "${extra_libs[@]}"; do
-		cp -L "/usr/lib/$ARCH-linux-gnu/$lib" "$app_dir/usr/lib"
-	done
-fi
+    if [[ "$ARCH" == "aarch64" ]]; then
+        # some aarch64 targets do not provide X11
+        mkdir -p "$app_dir/usr/lib"
+        extra_libs=(
+            libGLdispatch.so.0
+            libGLX.so.0
+            libOpenGL.so.0
+            libX11.so.6
+            libxcb.so.1
+        )
+        for lib in "${extra_libs[@]}"; do
+            cp -L "/usr/lib/$ARCH-linux-gnu/$lib" "$app_dir/usr/lib"
+        done
+    fi
 
-# shellcheck disable=SC1091
-source VERSION.ini
-export LINUXDEPLOY_OUTPUT_VERSION="$VERSION"
-export QMAKE=/usr/bin/qmake6
+    # shellcheck disable=SC1091
+    source VERSION.ini
+    export LINUXDEPLOY_OUTPUT_VERSION="$VERSION"
+    export QMAKE=/usr/bin/qmake6
+    local excl_libs=(
+        libaom.so
+        libdav1d.so
+        libgav1.so
+        libicudata.so
+        libicui18n.so
+        libicuuc.so
+        libQt6PrintSupport.so
+        libQt6Widgets.so
+        librav1e.so
+        libSvtAv1Enc.so
+    )
+    local -a excl_libs2
+    for lib in "${excl_libs[@]}"; do
+        excl_libs2+=($(find "/usr/lib/$ARCH-linux-gnu/" -name ${lib}* -printf "%f\n"))
+    done
+    local excl_libs_str
+    printf -v excl_libs_str ';%s' "${excl_libs2[@]}"
+    export LINUXDEPLOY_EXCLUDED_LIBRARIES="${excl_libs_str:1}"
+    export DISABLE_COPYRIGHT_FILES_DEPLOYMENT=1
 
-./linuxdeploy-"$ARCH".AppImage \
-	--appdir "$(basename "$app_dir")" \
-	--desktop-file skyscraper.desktop \
-	--output appimage --plugin checkrt \
-	--plugin qt \
-	--verbosity 2
-rm skyscraper.desktop
-./Skyscraper-"$VERSION"-"$ARCH".AppImage --buildinfo
+    ./linuxdeploy-"$ARCH".AppImage \
+        --appdir "$(basename "$app_dir")" \
+        --desktop-file skyscraper.desktop \
+        --output appimage --plugin checkrt \
+        --plugin qt \
+        --verbosity 2
+    rm skyscraper.desktop
+    if [[ -n "$_xdg" ]]; then
+        mv Skyscraper-"$VERSION"-"$ARCH".AppImage Skyscraper-"$VERSION"-"$ARCH"-"$_xdg".AppImage
+        ./Skyscraper-"$VERSION"-"$ARCH"-"$_xdg".AppImage --buildinfo
+    else
+        ./Skyscraper-"$VERSION"-"$ARCH".AppImage --buildinfo
+    fi
+}
+
+build_appimage "XDG"
+build_appimage
 
 popd
