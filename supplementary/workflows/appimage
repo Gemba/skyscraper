@@ -86,7 +86,7 @@ EOF
     )
     local -a excl_libs2
     for lib in "${excl_libs[@]}"; do
-        excl_libs2+=($(find "/usr/lib/$ARCH-linux-gnu/$lib"* -printf "%f\n"))
+        excl_libs2+=($(find "/usr/lib/$ARCH-linux-gnu/" -name ${lib}* -printf "%f\n"))
     done
     local excl_libs_str
     printf -v excl_libs_str ';%s' "${excl_libs2[@]}"
