@@ -174,7 +174,7 @@ adds those on occasion) like: `cheevosHash`, `cheevosId`, `scrap`, ...
 
 #### Usage of Skyscraper for Batocera
 
-Preferably you should use the aach64 AppImage (without XDG) and deploy it to
+Preferably you should use the regular aach64/x64 AppImage (i.e., without XDG) and deploy it to
 your Batocera setup. Then login via SSH to Batocera (see their documentation for
 hints). Or, when you have a keyboard attached to your Batocera host: From the
 settings menu in batocera you can choose (command line) applications, from the
