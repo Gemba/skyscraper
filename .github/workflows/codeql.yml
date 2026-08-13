@@ -14,8 +14,12 @@ name: "CodeQL"
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'src/**'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'src/**'
   schedule:
     - cron: '18 15 * * 1'
 
@@ -48,7 +52,7 @@ jobs:
           modules: ""
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@master
       
     - name: Install Qt
       uses: jurplel/install-qt-action@v3

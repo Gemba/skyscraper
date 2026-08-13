@@ -61,7 +61,7 @@ public:
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
     void preserveVariants(const GameEntry &oldEntry, GameEntry &entry) override;
-    bool addEmptyElement() { return false; };
+    bool addEmptyElement() override { return false; }
     QString openingElement(GameEntry &entry) override;
     QString getTargetFileName(GameEntry::Types t,
                               const QString &basename) override;
