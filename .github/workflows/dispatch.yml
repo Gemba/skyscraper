@@ -1,0 +1,28 @@
+name: Testbed
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build Android ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            target: android-aarch64
+          - arch: arm
+            target: android-arm
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4   
+      - name: Setup Termux build environment
+        run: bash ./supplementary/workflows/deps "${{ matrix.target }}      
+      - name: Build for Android
+        run: bash ./supplementary/workflows/install "${{ matrix.target }}
+      - name: Smoketest
+        run: bash ./target/Skyscraper --buildinfo && ./target/Skyscraper --configinfo
+      
+        
