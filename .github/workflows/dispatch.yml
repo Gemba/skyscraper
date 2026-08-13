@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
       - name: Install Qt6
         run: |
           brew install qt@6
@@ -34,6 +34,8 @@ jobs:
           tar -czf ../skyscraper-${{ needs.create-release.outputs.version }}-macos-$(uname -m).tar.gz *
           cd ..
       - name: Smoketest
-        run: bash ./Skyscraper.app/Contents/MacOS/Skyscraper --buildinfo && ./Skyscraper.app/Contents/MacOS/Skyscraper --configinfo
+        run: |
+          ./Skyscraper.app/Contents/MacOS/Skyscraper --buildinfo
+          ./Skyscraper.app/Contents/MacOS/Skyscraper --configinfo
       
         
