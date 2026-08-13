@@ -52,7 +52,7 @@ jobs:
           modules: ""
     steps:
     - name: Checkout repository
-      uses: actions/checkout@vmaster
+      uses: actions/checkout@master
       
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
