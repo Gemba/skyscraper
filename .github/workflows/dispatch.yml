@@ -19,9 +19,9 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4   
       - name: Setup Termux build environment
-        run: bash ./supplementary/workflows/deps "${{ matrix.target }}      
+        run: bash ./supplementary/workflows/deps "${{ matrix.target }}"
       - name: Build for Android
-        run: bash ./supplementary/workflows/install "${{ matrix.target }}
+        run: bash ./supplementary/workflows/install "${{ matrix.target }}"
       - name: Smoketest
         run: bash ./target/Skyscraper --buildinfo && ./target/Skyscraper --configinfo
       
