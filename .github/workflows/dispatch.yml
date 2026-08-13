@@ -2,10 +2,9 @@ name: Testbed
 
 on:
   workflow_dispatch:
-  branches: '*'
 
 jobs:
-build-macos:
+  build-macos:
     name: Build macOS
     strategy:
       fail-fast: false
@@ -30,13 +29,11 @@ build-macos:
           mkdir -p package/usr/local/etc/skyscraper/cache
           mkdir -p package/usr/local/etc/skyscraper/import
           mkdir -p package/usr/local/etc/skyscraper/resources
-
-          # Copy binary (macOS creates .app bundle)
           cp Skyscraper.app/Contents/MacOS/Skyscraper package/usr/local/bin/
           cd package
           tar -czf ../skyscraper-${{ needs.create-release.outputs.version }}-macos-$(uname -m).tar.gz *
           cd ..
       - name: Smoketest
-        run: bash ./package/Skyscraper --buildinfo && ./package/Skyscraper --configinfo
+        run: bash ./Skyscraper.app/Contents/MacOS/Skyscraper --buildinfo && ./Skyscraper.app/Contents/MacOS/Skyscraper --configinfo
       
         
