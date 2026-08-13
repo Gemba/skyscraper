@@ -40,7 +40,7 @@ static const QRegularExpression MATCH_COPYRIGHT = QRegularExpression(
 
 ArcadeDB::ArcadeDB(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
-    baseUrl = "http://adb.arcadeitalia.net";
+    baseUrl = "https://adb.arcadeitalia.net";
 
     searchUrlPre =
         baseUrl +
