@@ -37,6 +37,12 @@ function build_appimage() {
     rm "$app_dir/usr/bin/README-Skyscraper-Scripts.md"
     rm "$app_dir/usr/bin/mdb2sqlite.sh"
 
+    # GLIBC baseline for target hosts
+    GLIBC_BASE="2.35" # Ubuntu 22.04 / Debian Bookworm (12)
+    #GLIBC_BASE="2.38" # Ubuntu 24.04 / Debian Trixie (13)
+    build_host_glibc=$(readelf -V "$app_dir"/usr/bin/Skyscraper 2>/dev/null | grep -o 'GLIBC_[0-9.]*' | sort -V | tail -1| cut -d _ -f2)
+    dpkg --compare-versions "$build_host_glibc" eq $GLIBC_BASE
+
     cat >skyscraper.desktop <<EOF
 [Desktop Entry]
 Type=Application
