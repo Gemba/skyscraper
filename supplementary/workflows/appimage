@@ -26,8 +26,11 @@ function build_appimage() {
     local _xdg="${1:-}"
     make --ignore-errors distclean || true
     #sed -i "0,/CONFIG += /{s/CONFIG.*/CONFIG += debug/}" skyscraper.pro
-    [[ -n "$_xdg" ]] && sed -i "0,/.+DEFINES += XDG/{s/.*DEFINES/DEFINES/}" skyscraper.pro
-    [[ -z "$_xdg" ]] && sed -i "0,/DEFINES += XDG/{s/.*DEFINES/#DEFINES/}" skyscraper.pro
+    #sed '/claudio/{s//claudia/;:p;n;bp}'
+    # set XDG
+    [[ -n "$_xdg" ]] && sed -i "/DEFINES += XDG/{s/#DEFINES/DEFINES/}" skyscraper.pro
+    # unset XDG
+    [[ -z "$_xdg" ]] && sed -i "/#*DEFINES += XDG/{s//#DEFINES += XDG/}" skyscraper.pro
     PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
     jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
     rm -rf "$app_dir" || true
