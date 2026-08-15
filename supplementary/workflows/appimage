@@ -82,9 +82,6 @@ EOF
         libaom.so
         libdav1d.so
         libgav1.so
-        libicudata.so
-        libicui18n.so
-        libicuuc.so
         libQt6PrintSupport.so
         libQt6Widgets.so
         librav1e.so
