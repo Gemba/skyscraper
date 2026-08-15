@@ -63,7 +63,7 @@ ScreenScraper::ScreenScraper(Settings *config,
         }
     });
 
-    baseUrl = "http://www.screenscraper.fr";
+    baseUrl = "https://www.screenscraper.fr";
 
     fetchOrder.append(GameEntry::Elem::PUBLISHER);
     fetchOrder.append(GameEntry::Elem::DEVELOPER);
