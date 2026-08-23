@@ -335,7 +335,7 @@ void ScraperWorker::run() {
             }
             // copy extra media files (not part of compositor/artwork)
             const QString baseName = info.completeBaseName();
-            const QString subPath = compositor.getSubpath(game.path);
+            const QString subPath = compositor.getMediaSubpath(game.path);
             frontend->copyMedia(mediaSaved, baseName, subPath, game);
         }
 

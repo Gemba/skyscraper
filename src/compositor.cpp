@@ -294,7 +294,7 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
                                      bool esdeMiximage) {
     bool createSubfolder = false;
     QString fn = "/" % completeBaseName;
-    QString subPath = getSubpath(game.path);
+    QString subPath = getMediaSubpath(game.path);
     if (subPath != ".") {
         fn.prepend("/" % subPath);
         createSubfolder = true;
@@ -581,7 +581,7 @@ void Compositor::processChildLayers(GameEntry &game, Layer &layer) {
     }
 }
 
-QString Compositor::getSubpath(const QString &absPath) {
+QString Compositor::getMediaSubpath(const QString &absPath) {
     QString subPath = ".";
     if (config->frontend == "esde") {
         // ES-DE expects media files in same subpath (tree structure) as
