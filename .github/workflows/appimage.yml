@@ -24,4 +24,4 @@ jobs:
         uses: softprops/action-gh-release@v3
         if: "${{ github.event_name != 'workflow_dispatch' }}"
         with:
-          files: Skyscraper-*.AppImage
+          files: Skyscraper-*.AppImage*
