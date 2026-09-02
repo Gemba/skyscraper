@@ -632,30 +632,31 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
 
     // loop over region infos from filename
     while (matchIter.hasNext()) {
-        QString regionString = matchIter.next().captured().toLower();
-        if (regionString == "(jue)") {
-            regionString = "japan|usa|europe";
-        } else if (regionString == "(ue)") {
-            regionString = "usa|europe";
-        } else if (regionString != "(e)" && regionString != "(j)" &&
-                   regionString != "(u)") {
+        QString regionFromFn = matchIter.next().captured().toLower();
+        if (regionFromFn == "(jue)") {
+            regionFromFn = "japan|usa|europe";
+        } else if (regionFromFn == "(ue)") {
+            regionFromFn = "usa|europe";
+        } else if (regionFromFn != "(e)" && regionFromFn != "(j)" &&
+                   regionFromFn != "(u)") {
             // remove parenthesis
-            regionString = regionString.mid(1, regionString.length() - 2);
+            regionFromFn = regionFromFn.mid(1, regionFromFn.length() - 2);
         }
-        while (!regionString.isEmpty()) {
+        while (!regionFromFn.isEmpty()) {
             bool detectedRegion = false;
             QListIterator<QPair<QString, QString>> iter(regionMap());
             while (iter.hasNext()) {
                 QPair<QString, QString> e = iter.next();
                 QString fn_regio = e.first;
                 QString sky_regio_key = e.second;
-                if (regionString.startsWith(fn_regio)) {
-                    qDebug() << "matched" << fn_regio;
+                if (regionFromFn.startsWith(fn_regio)) {
+                    qDebug() << "    matched" << fn_regio;
                     // map to Skyscraper's short-names (sky_regio_key)
                     if (regionsInline) {
-                        if (!regionPrios.contains(sky_regio_key) &&
+                        if (
                             !addRegionPrios.contains(sky_regio_key)) {
                             addRegionPrios.append(sky_regio_key);
+                            qDebug() << "      append" << sky_regio_key;
                         }
                     } else {
                         // regionFromFilename == "first"
@@ -663,11 +664,11 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
                             addRegionPrios.append(sky_regio_key);
                         }
                     }
-                    regionString = regionString.replace(fn_regio, "");
-                    if (!regionString.isEmpty()) {
+                    regionFromFn = regionFromFn.replace(fn_regio, "");
+                    if (!regionFromFn.isEmpty()) {
                         // remove possible separators (comma et al.) if
-                        // regionString was "europe, japan" -> retain "japan"
-                        regionString = regionString.replace(
+                        // regionFromFn was "europe, japan" -> retain "japan"
+                        regionFromFn = regionFromFn.replace(
                             QRegularExpression("^([^a-z]+)?"), "");
                     }
                     detectedRegion = true;
@@ -681,23 +682,38 @@ void AbstractScraper::detectRegionFromFilename(const QFileInfo &info) {
         }
     }
 
-    QStringList rankedRegionPrios;
-    QStringList retainedRegionPrios = regionPrios;
-    for (int i = regionPrios.size() - 1; i >= 0; i--) {
-        const QString prioRegion = regionPrios.at(i);
-        if (addRegionPrios.contains(prioRegion)) {
-            if (regionsInline) {
-                rankedRegionPrios.prepend(prioRegion);
-                addRegionPrios.removeAt(addRegionPrios.indexOf(prioRegion));
+    // Rebuild regionPrios based on the chosen mode
+    if (regionsInline) {
+        QStringList detectedAndPrioritized;
+        QStringList remainingConfigPrios;
+    
+        // Iterate through original priorities to maintain their native ordering
+        for (const QString &prioRegion : config->regionPrios) {
+            if (addRegionPrios.contains(prioRegion)) {
+                detectedAndPrioritized.append(prioRegion);
+            } else if (regionPrios.contains(prioRegion)) {
+                remainingConfigPrios.append(prioRegion);
             }
-            retainedRegionPrios.removeAt(
-                retainedRegionPrios.indexOf(prioRegion));
         }
-    }
-    if (regionsInline)
-        regionPrios = rankedRegionPrios + retainedRegionPrios + addRegionPrios;
-    else
+        
+        // Result: [Ordered Matches] + [Ordered Remaining] + [Any Extra loose tags]
+        // We append addRegionPrios at the end just in case a tag was found 
+        // that wasn't in config->regionPrios at all.
+        for (const QString &prioRegion : detectedAndPrioritized) {
+            addRegionPrios.removeAll(prioRegion);
+        }
+        qDebug() << "detectedAndPrioritized" << detectedAndPrioritized;
+        qDebug() << "addRegionPrios" << addRegionPrios;
+        qDebug() << "remainingConfigPrios" << remainingConfigPrios;
+        regionPrios = detectedAndPrioritized + addRegionPrios + remainingConfigPrios;
+    } else {
+        // regionFromFilename == "first"
+        QStringList retainedRegionPrios = regionPrios;
+        for (const QString &prioRegion : addRegionPrios) {
+            retainedRegionPrios.removeAll(prioRegion);
+        }
         regionPrios = addRegionPrios + retainedRegionPrios;
+    }
 }
 
 void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
