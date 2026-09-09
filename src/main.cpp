@@ -185,8 +185,14 @@ int main(int argc, char *argv[]) {
     if (argc <= 1 || parser.isSet("help") || parser.isSet("h")) {
         parser.showHelp();
     } else {
-        if (!parser.isSet("buildinfo")) {
+        if (!parser.isSet("buildinfo") && !parser.isSet("configinfo") && !parser.isSet("ini")) {
             ncprintf(StrTools::getVersionHeader().toStdString().c_str());
+        }
+        if (parser.isSet("configinfo")) {
+            configCls.configInfo();
+            return 0;
+        } else if (parser.isSet("ini")) {
+            return configCls.createDefaultConfigIni() ? 0 : 1;
         }
         QObject::connect(skyscraper, &Skyscraper::finished, &app,
                             &QCoreApplication::quit);

@@ -20,6 +20,7 @@
 
 #include "pathtools.h"
 
+#include "config.h"
 #include "platform.h"
 
 #include <QDebug>
@@ -88,6 +89,18 @@ QString &PathTools::expandHomePath(QString &path) {
         // "~account/folder" not supported
     }
     return path;
+}
+
+QString PathTools::locateConfigFile(const QString &configFile) {
+    QString fn = QString(configFile);
+    QString tgtDir = Config::adjustDestinationPath(configFile, fn);
+    QString cfgFilePath = tgtDir % "/" % fn;
+    qDebug() << "Trying" << cfgFilePath;
+    if (!QFileInfo(cfgFilePath).exists()) {
+        cfgFilePath = ":/" % configFile;
+    }
+    qDebug() << configFile << "located at" << cfgFilePath;
+    return cfgFilePath;
 }
 
 const std::string PathTools::pathToStdStr(QString in) {

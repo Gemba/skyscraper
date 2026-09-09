@@ -251,15 +251,15 @@ Skyscraper -p snes -s thegamesdb --addext '.ext1 ext2'
 
 Show the build configuration and runtime environment of Skyscraper and exits. Use this info when reporting an issue. Thanks!
 
-### --confginfo
+### --configinfo
 
 Provides information on how Skyscraper sources the essential configuration
 files. The output is limited to the mandatory configuration files of Skyscraper.
 Whenever you provide one of the listed configfiles at the appropiate location,
 the built-in version is ignored. The configinfo option will show the used source
 location in that case. This commmand is especially useful if you run Skyscraper
-as single binary, thus you did not install it for
-every users (did not run `make install`).
+as single binary, when you did not install it for
+every user (i.e., did not run `make install`).
 
 !!! info
 
@@ -727,6 +727,10 @@ Skyscraper -p amiga --includepattern "*AGA*"
 Skyscraper -p amiga --includepattern "*AGA*,Super*"
 Skyscraper -p amiga --includepattern "*AGA*,Super*,*\, The"
 ```
+
+### --ini
+
+Creates a default configuration `config.ini` at `~/.skyscraper/config.ini` (the [location](XDG.md#file-locations-genuine--and-xdg-skyscraper) when using XDG), if there is none. You get noticed that you do not have one (and the default built-in values are applied) whenever you run Skyscraper (prints out a warning) or run `Skyscraper --configinfo`.
 
 ### --lang &lt;CODE&gt;
 

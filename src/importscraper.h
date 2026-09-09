@@ -34,7 +34,8 @@ class ImportScraper : public AbstractScraper {
     Q_OBJECT
 
 public:
-    ImportScraper(Settings *config, QSharedPointer<NetManager> manager);
+    ImportScraper(Settings *config, QSharedPointer<NetManager> manager,
+                  int threadId);
 
     void runPasses(QList<GameEntry> &gameEntries, const QFileInfo &info,
                    QString &, QString &) override;
@@ -66,7 +67,7 @@ private:
     bool loadDefinitions();
     void loadData();
     bool checkForTag(QList<QString> &pre, QString &post, QString &tag,
-                     QString &line);
+                     QString &line, int &tagCounter);
     QString getElementText(QStringList e);
     QByteArray readFile(const QString &fn);
 
@@ -104,6 +105,8 @@ private:
 
     // true if definition.dat is XML style
     bool isXml;
+    bool definitionsLoaded;
+    QString defDatFilePath;
 };
 
 #endif // IMPORTSCRAPER_H

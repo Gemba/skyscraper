@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#macos">NixOS</a>|<a href="#macos">macOS</a>|<a href="#user-level-install">Install without root</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
+  <a href="#-how-to-install-skyscraper">Installation</a> (<a href="#linux">Linux</a>|<a href="#nixos">NixOS</a>|<a href="#macos">macOS</a>|<a href="#user-level-install">Install without root</a>|<a href="#docker">Docker</a>|<a href="#windows">Windows</a>) •
   <a href="#-how-to-use-skyscraper">Quick Usage</a> •
   <a href="https://gemba.github.io/skyscraper/">User Manual</a> •
   <a href="https://gemba.github.io/skyscraper/CHANGELOG/">Changelog</a>
@@ -143,7 +143,6 @@ $ brew install qt
 You may also need a recent installation of [XCode](https://xcodereleases.com/) for the development tools. Then proceed to the default installation instructions in the "Download, compile and install" section. It will give you a working installation of Skyscraper.
 
 ### User Level Install
-
 Linux users may use the provided AppImages (see [Release
 Assets](https://github.com/Gemba/skyscraper/releases)). Pick the image which
 fits your architecture and system configuration (with XDG or without).
@@ -152,6 +151,14 @@ After building the binary Linux users (and most likely macOS and Windows users),
 can use the single binary Skyscraper and put it somewhere in the `$PATH` lookup.
 Consider to review the output of `--configinfo` to see which file is sourced from
 which location.
+
+Another option is to build Skyscraper with `BUNDLE_QRC=1 qmake6` (or
+`BUNDLE_QRC=1 qmake`). That way you get a Skyscraper binary with the default
+configuration files compiled in. You can put it anywhere in your path
+lookup and you are ready to use Skyscraper. You may still provide the
+configuration files at the appropriate locations, these take precedence over the
+bundled ones. Also, review the output of `--configinfo` to see which file is
+sourced from which location.
 
 #### Docker <img src="docs/resources/os/docker-mark-blue.svg" width="20px">
 Two Docker setups exist: One general in the `docker/` folder. The other resides in the `.devcontainer/` and its use is for [MS Dev Containers](https://microsoft.github.io/code-with-engineering-playbook/developer-experience/devcontainers/).

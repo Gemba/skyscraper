@@ -25,14 +25,16 @@
 
 #include "importscraper.h"
 
+#include "config.h"
 #include "gameentry.h"
+#include "pathtools.h"
 
 #include <QDir>
 #include <QDomDocument>
 #include <QStringBuilder>
 
 ImportScraper::ImportScraper(Settings *config,
-                             QSharedPointer<NetManager> manager)
+                             QSharedPointer<NetManager> manager, int threadId)
     : AbstractScraper(config, manager, MatchType::MATCH_ONE) {
 
     for (auto const &entryElem : GameEntry::commonGamelistElems().keys()) {
@@ -82,7 +84,18 @@ ImportScraper::ImportScraper(Settings *config,
     d.setPath(config->importFolder + "/backcovers");
     backcovers = d.entryInfoList();
 
-    loadDefinitions();
+    definitionsLoaded = loadDefinitions();
+    if (threadId == 1) {
+        if (!definitionsLoaded) {
+            qWarning() << QString(
+                              "File with definitions '%1' cannot be read or "
+                              "has invalid format. Nothing will be imported.")
+                              .arg(defDatFilePath);
+        } else {
+            ncprintf("Using import template '\033[1;32m%s\033[0m'\n",
+                     defDatFilePath.toStdString().c_str());
+        }
+    }
 }
 
 void ImportScraper::getGameData(GameEntry &game) {
@@ -346,42 +359,62 @@ void ImportScraper::loadData() {
 }
 
 bool ImportScraper::loadDefinitions() {
-    // Check for textual resource file
-    QFile defFile = QFile("/definitions.dat");
-    if (QFile::exists(config->importFolder + defFile.fileName())) {
-        // check for per-platform folder definitions file
-        defFile.setFileName(config->importFolder + defFile.fileName());
-    } else {
-        defFile.setFileName(config->importFolder + "/.." + defFile.fileName());
+    // Check for template file
+    QFile defFile;
+    QString definitionsFn = "definitions.dat";
+    QString definitionsFilePath =
+        QString("%1/%2").arg(config->importFolder, definitionsFn);
+    // <importfolder> may end with /<platform>
+    defFile.setFileName(definitionsFilePath);
+    if (!defFile.exists() && config->importFolder.endsWith(config->platform)) {
+        defFile.setFileName(PathTools::lexicallyNormalPath(
+            config->importFolder % "/../" % definitionsFn));
     }
+    // failsafe
+    if (!defFile.exists()) {
+        defFile.setFileName(PathTools::concatPath(
+            Config::getSkyFolder(Config::SkyFolderType::IMPORT),
+            definitionsFn));
+        QFile::copy(":/import/definitions.dat", defFile.fileName());
+        defFile.setPermissions(QFileDevice::ReadOwner |
+                               QFileDevice::WriteOwner |
+                               QFileDevice::ReadGroup | QFileDevice::ReadOther);
+        qDebug() << "Created" << defFile.fileName() << "from QRC";
+    }
+    defDatFilePath = defFile.fileName().replace(QDir::homePath(), "~");
     if (defFile.open(QIODevice::ReadOnly)) {
+        int tagCounter = 0;
         while (!defFile.atEnd()) {
             QString line(defFile.readLine());
-            isXml |= checkForTag(titlePre, titlePost, titleTag, line);
             isXml |=
-                checkForTag(publisherPre, publisherPost, publisherTag, line);
+                checkForTag(titlePre, titlePost, titleTag, line, tagCounter);
+            isXml |= checkForTag(publisherPre, publisherPost, publisherTag,
+                                 line, tagCounter);
+            isXml |= checkForTag(developerPre, developerPost, developerTag,
+                                 line, tagCounter);
+            isXml |= checkForTag(playersPre, playersPost, playersTag, line,
+                                 tagCounter);
+            isXml |= checkForTag(agesPre, agesPost, agesTag, line, tagCounter);
             isXml |=
-                checkForTag(developerPre, developerPost, developerTag, line);
-            isXml |= checkForTag(playersPre, playersPost, playersTag, line);
-            isXml |= checkForTag(agesPre, agesPost, agesTag, line);
-            isXml |= checkForTag(ratingPre, ratingPost, ratingTag, line);
-            isXml |= checkForTag(tagsPre, tagsPost, tagsTag, line);
+                checkForTag(ratingPre, ratingPost, ratingTag, line, tagCounter);
+            isXml |= checkForTag(tagsPre, tagsPost, tagsTag, line, tagCounter);
             isXml |= checkForTag(releaseDatePre, releaseDatePost,
-                                 releaseDateTag, line);
+                                 releaseDateTag, line, tagCounter);
             isXml |= checkForTag(descriptionPre, descriptionPost,
-                                 descriptionTag, line);
+                                 descriptionTag, line, tagCounter);
         }
         defFile.close();
-        return true;
+        return tagCounter > 0;
     }
     return false;
 }
 
 bool ImportScraper::checkForTag(QList<QString> &pre, QString &post,
-                                QString &tag, QString &line) {
+                                QString &tag, QString &line, int &tagCounter) {
     bool isXml = false;
     // tag is ###TITLE### aso.
     if (line.indexOf(tag) > 0) {
+        tagCounter++;
         // preStr must be at least 1 character
         QString preStr = line.left(line.indexOf(tag));
         QString ttmp = preStr.trimmed();
