@@ -22,6 +22,7 @@
 
 #include "cache.h"
 #include "config.h"
+#include "pathtools.h"
 #include "strtools.h"
 
 #include <QCommandLineOption>
@@ -257,12 +258,25 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     QCommandLineOption stderrOption("stderr",
                                     "If Skyscraper could not proceed, print "
                                     "a one-line error message to stderr.");
+    QCommandLineOption configinfoOption(
+        "configinfo",
+        "Show Skyscraper's essential config file sources, then quit.");
+
+    QString cfgHome = Config::getSkyFolder();
+#ifndef Q_OS_WIN
+    cfgHome = cfgHome.replace(QDir::homePath(), "~");
+#endif
+    QCommandLineOption iniOption(
+        "ini", QString("Create a config.ini in '%1' with default "
+                       "values if it does not exist, then quit.")
+                   .arg(cfgHome));
 
     // order alphabetically, per character: long options before short option
     parser->addOption(addextOption);
     parser->addOption(aOption);
     parser->addOption(buildinfoOption);
     parser->addOption(cacheOption);
+    parser->addOption(configinfoOption);
     parser->addOption(cOption);
     parser->addOption(dOption);
     parser->addOption(endatOption);
@@ -277,6 +291,7 @@ void Cli::createParser(QCommandLineParser *parser, QString platforms) {
     parser->addOption(hintOption);
     parser->addOption(includefromOption);
     parser->addOption(includepatternOption);
+    parser->addOption(iniOption);
     parser->addOption(iOption);
     parser->addOption(langOption);
     parser->addOption(listExt);
@@ -537,7 +552,7 @@ void Cli::cacheReportMissingUsage() {
 }
 
 void Cli::showHint() {
-    QFile hintsFile("hints.xml");
+    QFile hintsFile(PathTools::locateConfigFile("hints.xml"));
     QDomDocument hintsXml;
     if (!hintsFile.open(QIODevice::ReadOnly) ||
         !hintsXml.setContent(&hintsFile)) {
@@ -554,7 +569,7 @@ void Cli::showHint() {
     hint = hint.replace("/home/USER/.skyscraper/cache",
                         Config::getSkyFolder(Config::SkyFolderType::CACHE));
     hint = hint.replace("/home/USER/.skyscraper", Config::getSkyFolder());
-#ifdef Q_OS_LINUX
+#ifndef Q_OS_WIN
     hint = hint.replace(QDir::homePath(), "~");
 #endif
     hint = "DID YOU KNOW: " + hint;

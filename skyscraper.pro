@@ -39,6 +39,12 @@ isEmpty(SYSCONFDIR) {
   SYSCONFDIR = $${PREFIX}/etc
 }
 
+# Bundle resources.qrc, if env is set
+BUNDLE_QRC = $$(BUNDLE_QRC)
+!isEmpty(BUNDLE_QRC) {
+  RESOURCES = resources.qrc
+}
+
 unix:target.path=$${PREFIX}/bin
 unix:target.files=Skyscraper Skyscraper.app/Contents/MacOS/Skyscraper
 

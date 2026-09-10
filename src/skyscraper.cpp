@@ -284,7 +284,7 @@ void Skyscraper::run() {
 
     // remaining cache subcommand check
     bool cacheEditCmd = config.cacheOptions.startsWith("edit");
-    cache->readPriorities();
+    cache->readPriorities(config.verbosity);
 
     // Create shared queue with files to process
     prepareFileQueue();
@@ -453,7 +453,7 @@ void Skyscraper::run() {
     if (!Compositor::preCheckArtworkXml(config.artworkXml)) {
         ncprintf("Parsing artwork XML from '%s', failed, see above."
                  "Check the file for errors. Now exiting...\n",
-                 config.artworkConfig.toStdString().c_str());
+                 PathTools::pathToStdStr(config.artworkConfig).c_str());
         emit die(1, "XML error",
                  QString("Artwork file '%1' cannot be parsed")
                      .arg(config.artworkConfig));
@@ -615,7 +615,7 @@ void Skyscraper::prepareFileQueue() {
             queue->append(subFiles);
             if (config.verbosity > 0 && subFiles.size() > 0) {
                 ncprintf("Adding matching files from subdir: '%s'\n",
-                         subdir.toStdString().c_str());
+                         PathTools::pathToStdStr(subdir).c_str());
             }
         }
         if (config.verbosity > 0)
@@ -915,10 +915,18 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         iniFile);
     absIniFile = PathTools::lexicallyNormalPath(absIniFile);
     if (!QFileInfo(absIniFile).exists()) {
-        ncprintf(
-            "\nWARNING! Provided config file '\033[1;33m%s\033[0m' does not "
-            "exist.\nSkyscraper will use default configuration values...\n\n",
-            iniFile.toStdString().c_str());
+        if (parser.isSet("c")) {
+            ncprintf("\n\033[1;33mWARNING!\033[0m Provided config file "
+                     "'\033[1;33m%s\033[0m' does not exist.\nSkyscraper will "
+                     "use built-in default configuration values...\n\n",
+                     PathTools::pathToStdStr(absIniFile).c_str());
+        } else {
+            ncprintf(
+                "\n\033[1;33mWARNING!\033[0m Configuration file not found at "
+                "'%s'.\n  Run 'Skyscraper --ini' to remediate.\nContinuing "
+                "with built-in default configuration values...\n\n",
+                PathTools::pathToStdStr(absIniFile).c_str());
+        }
     }
     config.configFile = absIniFile;
     QSettings settings(absIniFile, QSettings::IniFormat);
@@ -1200,7 +1208,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
             "directory '\033[1;33m%s\033[0m'!\n\nPlease verify the filename "
             "and try again...\n",
             requestedFileInfo.fileName().toStdString().c_str(),
-            config.inputFolder.toStdString().c_str());
+            PathTools::pathToStdStr(config.inputFolder).c_str());
         emit die(1, "cannot access file",
                  QString("File '%1' does neither exist in current directory "
                          "nor in directory '%2")
@@ -1266,7 +1274,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     } else {
         ncprintf("Cannot read artwork xml file '\033[1;32m%s\033[0m'. Please "
                  "check file and permissions. Now exiting...\n",
-                 config.artworkConfig.toStdString().c_str());
+                 PathTools::pathToStdStr(config.artworkConfig).c_str());
         emit die(1, QString("cannot access '%1'").arg(config.artworkConfig),
                  "No such file");
     }
@@ -1281,7 +1289,17 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         // reduce key to relative filepath
         resFile =
             resFile.remove(0, resFile.indexOf(resFolder) + resFolder.length());
-        config.resources[resFile] = QImage(resFolder % resFile);
+        qDebug() << "Loading resource" << resDir.absolutePath() % "/" % resFile;
+        config.resources[resFile] =
+            QImage(resDir.absolutePath() % "/" % resFile);
+    }
+    // failsafe
+    for (const auto &r :
+         QStringList({"boxfront.png", "boxside.png", "scanlines1.png"})) {
+        if (!config.resources.contains(r)) {
+            config.resources[r] =
+                QImage(PathTools::locateConfigFile(resFolder % r));
+        }
     }
 }
 
@@ -1611,7 +1629,7 @@ void Skyscraper::loadAliasMap() {
 }
 
 void Skyscraper::loadMameMap() {
-    QFile mameMapFile("mameMap.csv");
+    QFile mameMapFile(PathTools::locateConfigFile("mameMap.csv"));
     if (config.arcadePlatform && mameMapFile.open(QIODevice::ReadOnly)) {
         while (!mameMapFile.atEnd()) {
             QList<QByteArray> pair = mameMapFile.readLine().split(';');

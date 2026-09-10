@@ -30,7 +30,7 @@ static const QRegularExpression RE_ANSI_CODE =
 
 // capture "%d" with some variants and "%s"
 static const QRegularExpression RE_FORMAT =
-    QRegularExpression("(%(0?)(\\d?)d|%([\\d]*)s)");
+    QRegularExpression("(%(0?)(\\d?)d|%(-?[\\d]*)s)");
 
 void printVA(int nvargs, const char *fmt, ...) {
     va_list args;
@@ -69,18 +69,14 @@ void printVA(int nvargs, const char *fmt, ...) {
                     }
                 } else {
                     // string %s
+                    // pad with spaces by default
                     QString va =
                         QString(va_arg(args, char *)).remove(RE_ANSI_CODE);
-                    if (QString width = m.captured(4); !width.isEmpty()) {
-                        // flushright
-                        fmtPlain.replace(m.capturedStart(1),
-                                         m.capturedLength(1),
-                                         QString("%1").arg(va, width.toInt()));
-                    } else {
-                        // flushleft
-                        fmtPlain.replace(m.capturedStart(1),
-                                         m.capturedLength(1), va);
-                    }
+                    QString width = m.captured(4);
+                    if (width.isEmpty())
+                        width = "0";
+                    fmtPlain.replace(m.capturedStart(1), m.capturedLength(1),
+                                     QString("%1").arg(va, width.toInt()));
                 }
             }
         }

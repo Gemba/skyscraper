@@ -10,15 +10,22 @@ humans](https://keepachangelog.com).
   Thanks to @goldug for the providing the write-up, which got things rolling
 - Added: Support for running Skyscraper natively on Batocera, via AppImage. See
   [Batocera usage](FRONTENDS.md#usage-of-skyscraper-for-batocera)
-- Added: Ability to run Skyscraper binary as single binary. You only have to
-  provide your `config.ini`, if needed. Useful for user-level installations (no
-  root/elevated privileges needed) like using it with XDG from path
-  `$HOME/.local/bin` or calling Skyscraper from other tools like Scrappy or
-  EmulationStation-X
-- Added: Option [`--configinfo`](CLIHELP.md#-confginfo) shows config files and
+- Added: Ability to run Skyscraper binary as single binary. With that you only have to
+  provide your `config.ini`, if needed (see also `--ini` option below). Useful
+  for user-level installations (no root/elevated privileges needed) like using
+  it with XDG from path `$HOME/.local/bin` or calling Skyscraper from other
+  tools like Scrappy or EmulationStation-X. See note in [User Level
+  Install](https://github.com/Gemba/skyscraper/README.md#user-level-install).
+- Added: Option [`--configinfo`](CLIHELP.md#-configinfo) shows config files and
   their source. Comes in handy when using Skyscraper single binary installs.
-- Fixed: Regression when copying media files on RetroPie (shipped with 3.20.2)
-- Fixed: XDG `resources/` file loading
+- Added: Option [`--ini`](CLIHELP.md#-ini) creates a default `config.ini` if
+  none is found at the default filesystem location. Mainly useful when you use
+  Skyscraper as single binary install.
+- Fixed: Path handling on edge cases, thanks @saitamasahil
+- Fixed: ArcadeDB scraping, thanks @obiwanxshinobi
+- Fixed: Regression when copying media files on RetroPie (shipped with 3.20.2),
+  thanks @s1eve-mcdichae1
+- Fixed: A XDG `resources/` file loading bug
 
 ### Version 3.20.0 (2026-06-04)
 

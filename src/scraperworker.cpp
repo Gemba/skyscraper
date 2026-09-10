@@ -86,7 +86,7 @@ void ScraperWorker::run() {
         scraper = new LocalScraper(&config, manager);
         cacheScraper = true;
     } else if (config.scraper == "import") {
-        scraper = new ImportScraper(&config, manager);
+        scraper = new ImportScraper(&config, manager, threadId.toInt());
     } else if (config.scraper == "gamebase") {
         scraper = new GamebaseScraper(&config, manager);
     } else {

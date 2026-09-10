@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include "nocolor.h"
+#include "pathtools.h"
 #include "platform.h"
 #include "skyscraper.h"
 
@@ -144,7 +146,7 @@ void Config::copyFile(const QString &src, const QString &dest, bool isPristine,
     }
 }
 
-void Config::setupUserConfig() {
+Config::Setup Config::setupUserConfig() {
     QDir skyDir(getSkyFolder());
     if (!skyDir.exists()) {
         if (!skyDir.mkpath(".")) {
@@ -158,7 +160,7 @@ void Config::setupUserConfig() {
         }
     }
 
-    // Set the working directory to the applications own path
+    // Set the working directory to the applications config path
     // defaults to the folder containing config.ini, artwork.xml, hints.xml, ...
     // any file outside this folder or subfolders to this folder shall use
     // Config::getSkyFolder(type ...)
@@ -193,48 +195,6 @@ void Config::setupUserConfig() {
                  "Confused Skyscraper problem");
     }
 
-    // copy configs
-    QMap<QString, QPair<QString, FileOp>> configFiles = {
-        // clang-format off
-        {"ARTWORK.md",                      QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example1",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example2",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example3",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"artwork.xml.example4",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"cache/priorities.xml.example",    QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"config.ini.example",              QPair<QString, FileOp>("config.ini.example", FileOp::OVERWRITE)},
-        {"CACHE.md",                        QPair<QString, FileOp>("cache/README.md", FileOp::OVERWRITE)},
-        {"hints.xml",                       QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/definitions.dat.example1", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/definitions.dat.example2", QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"import/IMPORT.md",                QPair<QString, FileOp>("import/README.md", FileOp::OVERWRITE)},
-        {"mameMap.csv",                     QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"mobygames_platforms.json",        QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"README.md",                       QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"resources/boxfront.png",          QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"resources/boxside.png",           QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"screenscraper_platforms.json",    QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_developers.json",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_genres.json",                QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_platforms.json",             QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        {"tgdb_publishers.json",            QPair<QString, FileOp>("", FileOp::OVERWRITE)},
-        // do not overwrite
-        {"config.ini.example",              QPair<QString, FileOp>("config.ini", FileOp::KEEP)},
-        {"import/definitions.dat.example2", QPair<QString, FileOp>("import/definitions.dat", FileOp::KEEP)},
-        {"resources/frameexample.png",      QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/maskexample.png",       QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/scanlines1.png",        QPair<QString, FileOp>("", FileOp::KEEP)},
-        {"resources/scanlines2.png",        QPair<QString, FileOp>("", FileOp::KEEP)},
-        // create <fn>.dist by default if exists
-        {"aliasMap.csv",                    QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"artwork.xml",                     QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"batocera-artwork.xml",            QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"retroarch-artwork.xml",           QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"peas.json",                       QPair<QString, FileOp>("", FileOp::CREATE_DIST)},
-        {"platforms_idmap.csv",             QPair<QString, FileOp>("", FileOp::CREATE_DIST)}
-        // clang-format on
-    };
-
     if (isRpInstall) {
         QString tgtDir = getSkyFolder();
         for (auto const &src :
@@ -243,48 +203,36 @@ void Config::setupUserConfig() {
             // RetroPie's scriptmodule
             isPlatformCfgPristine(tgtDir % "/" % src);
         }
+        // no need to install/check config files (done via scriptmodule).
+        return Setup::RETROPIE;
     }
 
-    QString localEtcPath = QString(SYSCONFDIR "/skyscraper/");
-    if (!QFileInfo::exists(localEtcPath) && !isRpInstall) {
-        if (!QCoreApplication::applicationDirPath().startsWith(
-                QString(PREFIX "/bin"), Qt::CaseInsensitive)) {
-            // could be AppImage or expanded AppImage
-            localEtcPath = QCoreApplication::applicationDirPath().replace(
-                QString(PREFIX "/bin").toLower(),
-                QString(SYSCONFDIR "/skyscraper/"));
-        }
+#ifdef Q_OS_WIN
+    // config deploymend done externally
+    return Setup::WINDOWS;
+#endif
+
+    QString prefixBinPath = QString(PREFIX "/bin/");
+    QString sysConfPath = QString(SYSCONFDIR);
+    QString applPath = QCoreApplication::applicationDirPath();
+    QString configSourcePath =
+        validateConfigSrcPath(sysConfPath, prefixBinPath, applPath);
+
+    if (configSourcePath.isEmpty()) {
+        // manual deployment of Skyscraper binary
+        // essential configs will be loaded from Qt-resource cache of Skyscraper
+        return Setup::SINGLE_BIN;
     }
-    if (!localEtcPath.endsWith('/')) {
-        localEtcPath += '/';
-    }
-    if (localEtcPath.startsWith(QCoreApplication::applicationDirPath()) || !QFileInfo::exists(localEtcPath) || isRpInstall) {
-        if (!isRpInstall) {
-            qDebug() << "local install path does not exist" << localEtcPath;
-        }
-        // RetroPie or Windows installation type: handled externally
-        return;
-    }
-    qDebug() << "config source path" << localEtcPath;
 
     int isPristine;
-    for (auto src : configFiles.keys()) {
+    for (const auto &src : configFiles.keys()) {
         QString dest = configFiles.value(src).first;
         isPristine = false;
         if (dest.isEmpty()) {
-            dest = src;
+            dest = QString(src).replace("!", "");
         }
-        QString tgtDir = getSkyFolder();
-        if (src.startsWith("cache/") || src == "CACHE.md") {
-            tgtDir = getSkyFolder(SkyFolderType::CACHE);
-            dest = dest.replace("cache/", "");
-        } else if (src.startsWith("import/")) {
-            tgtDir = getSkyFolder(SkyFolderType::IMPORT);
-            dest = dest.replace("import/", "");
-        } else if (src.startsWith("resources/")) {
-            tgtDir = getSkyFolder(SkyFolderType::RESOURCE);
-            dest = dest.replace("resources/", "");
-        } else if ((src == "peas.json" || src == "platforms_idmap.csv")) {
+        QString tgtDir = adjustDestinationPath(src, dest);
+        if ((src == "peas.json" || src == "platforms_idmap.csv")) {
             isPristine = isPlatformCfgPristine(tgtDir % "/" % dest);
             // isPristine == 1: keep updated files from release in *.dist
             if (isPristine == 0) {
@@ -299,9 +247,119 @@ void Config::setupUserConfig() {
             }
         }
         QString tgt = tgtDir % "/" % dest;
-        copyFile(localEtcPath % src, tgt, isPristine == 0,
-                 configFiles.value(src).second);
+        copyFile(configSourcePath % "/" % QString(src).replace("!", ""), tgt,
+                 isPristine == 0, configFiles.value(src).second);
     }
+    return Setup::MAKE;
+}
+
+bool Config::createDefaultConfigIni() {
+    const QString tgtFn = PathTools::concatPath(getSkyFolder(), "config.ini");
+    if (QFile(tgtFn).exists()) {
+        return true;
+    }
+    QString srcFn = PathTools::locateConfigFile("config.ini");
+    if (QFile::copy(srcFn, tgtFn)) {
+        if (srcFn.startsWith(":/")) {
+            QFile::setPermissions(
+                tgtFn, QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                           QFileDevice::ReadGroup | QFileDevice::ReadOther);
+        }
+        ncprintf("Successfully created default config in "
+                 "'\033[1m%s\033[0m'.\nHappy scraping!\n\n",
+                 PathTools::pathToStdStr(tgtFn).c_str());
+        return true;
+    }
+    ncprintf("\033[1;31mCannot create config at '%s'. Check file path and "
+             "permissions!\033[0m\n",
+             PathTools::pathToStdStr(tgtFn).c_str());
+    return false;
+}
+
+void Config::configInfo() {
+    ncprintf("\033[1;34mMinimum set of configuration files to get Skyscraper "
+             "running.\033[0m\n");
+    ncprintf("\033[1m%-28s     %s\033[0m\n", "File:", "Source:");
+    bool last;
+    for (const auto &k : essentialCfgs.keys()) {
+        QString dest = k;
+        QString tgtDir = adjustDestinationPath(k, dest);
+        QString tgt = tgtDir % "/" % dest;
+        if (tgt.isEmpty()) {
+            qWarning() << k;
+        }
+        last = k == "tgdb_publishers.json";
+        ncprintf("%s── \033[1m%-28s  %s\033[0m\n", last ? "└" : "├",
+                 k.toStdString().c_str(),
+                 QFile(tgt).exists() ? PathTools::pathToStdStr(tgt).c_str()
+                                     : "built-in");
+        ncprintf("%s   └── %s\n", last ? " " : "│",
+                 essentialCfgs[k].toStdString().c_str());
+    }
+    const QString cfgFn = PathTools::concatPath(getSkyFolder(), "config.ini");
+    if (!QFile(cfgFn).exists()) {
+        ncprintf(
+            "\n\033[1;33mWarning\033[0m: There is no default configuration "
+            "file '\033[1mconfig.ini\033[0m' present in\n  '%s'\nSkyscraper "
+            "can be run without, but it is recommended to use such "
+            "file.\nExecute 'Skyscraper --ini' to create a config file with "
+            "the defaults.\n",
+            PathTools::pathToStdStr(Config::getSkyFolder()).c_str());
+    }
+    ncprintf("\nExpected folders for these files, if you want to override "
+             "built-ins:\n");
+    ncprintf("%-12s: \033[1;32m%s\033[0m\n", "Main configs",
+             PathTools::pathToStdStr(getSkyFolder()).c_str());
+    ncprintf(
+        "%-12s: \033[1;32m%s\033[0m\n", "Cache",
+        PathTools::pathToStdStr(getSkyFolder(SkyFolderType::CACHE)).c_str());
+    ncprintf(
+        "%-12s: \033[1;32m%s\033[0m\n", "Import",
+        PathTools::pathToStdStr(getSkyFolder(SkyFolderType::IMPORT)).c_str());
+    ncprintf(
+        "%-12s: \033[1;32m%s\033[0m\n", "Resources",
+        PathTools::pathToStdStr(getSkyFolder(SkyFolderType::RESOURCE)).c_str());
+    ncprintf("\033[1;34mFor details on these files and usage do consult the "
+             "documentation.\033[0m\n");
+}
+
+QString Config::adjustDestinationPath(const QString &src, QString &dest) {
+    QString tgtDir = getSkyFolder(SkyFolderType::CONFIG);
+    if (src.startsWith("cache/") || src == "CACHE.md") {
+        tgtDir = getSkyFolder(SkyFolderType::CACHE);
+        dest = dest.replace("cache/", "");
+    } else if (src.startsWith("import/")) {
+        tgtDir = getSkyFolder(SkyFolderType::IMPORT);
+        dest = dest.replace("import/", "");
+    } else if (src.startsWith("resources/")) {
+        tgtDir = getSkyFolder(SkyFolderType::RESOURCE);
+        dest = dest.replace("resources/", "");
+    }
+    return tgtDir;
+}
+
+QString Config::validateConfigSrcPath(const QString &sysConfPath,
+                                      const QString &prefixPath,
+                                      const QString &applDirPath) {
+    QString configSourcePath = PathTools::concatPath(sysConfPath, "skyscraper");
+    const QString prefixBinPath = PathTools::concatPath(prefixPath, "bin");
+    qDebug() << "configSourcePath initial" << configSourcePath;
+    if (!QFileInfo(configSourcePath).exists()) {
+        if (!applDirPath.startsWith(prefixBinPath, Qt::CaseInsensitive)) {
+            // could be AppImage or expanded AppImage
+            QString tmpPiggy =
+                QString(applDirPath).replace(prefixBinPath, configSourcePath);
+            configSourcePath = tmpPiggy;
+        }
+    }
+    if (configSourcePath.startsWith(applDirPath) /* PR #261 */
+        || !QFileInfo(configSourcePath).exists()) {
+        if (!QFileInfo(configSourcePath).exists())
+            qDebug() << "config source path does not exist" << configSourcePath;
+        return "";
+    }
+    qDebug() << "config source path is" << configSourcePath;
+    return configSourcePath;
 }
 
 int Config::isPlatformCfgPristine(QString platformCfgFilePath) {

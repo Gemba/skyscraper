@@ -164,7 +164,15 @@ bool Cache::createFolders(const QString &scraper) {
 
     // Copy priorities.xml example file to cache folder if it doesn't already
     // exist
-    QFile::copy("cache/priorities.xml.example", prioFilePath());
+    QString srcPrioFn =
+        PathTools::locateConfigFile("cache/priorities.xml.example");
+    if (QFile::copy(srcPrioFn, prioFilePath()) && srcPrioFn.startsWith(":/")) {
+        qDebug() << "Copied default priorities.xml file to" << prioFilePath();
+        QFile::setPermissions(prioFilePath(), QFileDevice::ReadOwner |
+                                                  QFileDevice::WriteOwner |
+                                                  QFileDevice::ReadGroup |
+                                                  QFileDevice::ReadOther);
+    }
     return true;
 }
 
@@ -1470,11 +1478,17 @@ void Cache::addToResCounts(const QString source, const QString type) {
     }
 }
 
-void Cache::readPriorities() {
+void Cache::readPriorities(int verbosity) {
     QDomDocument prioDoc;
     QFile prioFile(prioFilePath());
-    ncprintf("Looking for optional '\033[1;33mpriorities.xml\033[0m' file in "
-             "cache folder... ");
+    QString txt = verbosity ? QString("at '%1'").arg(prioFilePath())
+                            : QString("in cache folder");
+#ifndef Q_OS_WIN
+    txt = txt.replace(QDir::homePath(), "~");
+#endif
+    ncprintf(
+        "Looking for optional '\033[1;33mpriorities.xml\033[0m' file %s... ",
+        txt.toStdString().c_str());
     if (prioFile.open(QIODevice::ReadOnly)) {
         ncprintf("\033[1;32mFound!\033[0m\n");
         if (!prioDoc.setContent(prioFile.readAll())) {
