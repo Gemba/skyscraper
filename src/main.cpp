@@ -101,7 +101,7 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
             if (skyscraper != nullptr) {
                 if (skyscraper->state == Skyscraper::OpMode::SINGLE) {
                     // Nothing important going on, just exit
-                    exit(1);
+                    exit(2);
                 } else if (skyscraper->state == Skyscraper::OpMode::NO_INTR) {
                     // Ignore signal, something important is going on
                     // that needs to finish!
@@ -119,12 +119,12 @@ BOOL WINAPI ConsoleHandler(DWORD dwType) {
                     skyscraper->queue->clearAll();
                 }
             } else {
-                exit(1);
+                exit(2);
             }
         } else {
             ncprintf("\033[1;31mUser REALLY wants to quit NOW, forcing "
                     "unclean exit...\033[0m\n");
-            exit(1);
+            exit(2);
         }
     }
 #if defined(Q_OS_WIN)
