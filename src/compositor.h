@@ -42,8 +42,7 @@ public:
     void processXml();
     GameEntry::Types saveAll(GameEntry &game, QString completeBaseName,
                              bool isEsde);
-    // TODO: check, does member fit in here?
-    QString getSubpath(const QString &absPath);
+    QString getMediaSubpath(const QString &absPath);
 
 private:
     void addChildLayers(Layer &layer, QXmlStreamReader &xml);
