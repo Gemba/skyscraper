@@ -119,6 +119,13 @@ private:
     QMap<QString, ResCounts> resCountsMap;
 
     QList<Resource> resources;
+    // cacheId -> positions in 'resources'. Built lazily under cacheMutex so
+    // hasEntries()/fillBlanks()/addResource() are a hash lookup instead of a
+    // scan of every cached resource per ROM; any bulk mutation of 'resources'
+    // (read, purge, vacuum, edit, merge) invalidates it.
+    QHash<QString, QList<int>> idIndex;
+    bool idIndexValid = false;
+    void ensureIdIndex();
     QMap<QString, QPair<qint64, QString>>
         quickIds; // filePath, timestamp + cacheId for quick lookup
 
