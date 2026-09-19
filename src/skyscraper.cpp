@@ -1257,7 +1257,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     }
 
     if (!config.userCreds.isEmpty()) {
-        QStringList userCreds = config.userCreds.split(":");
+        // userCreds is valid at this point, as invalid formats will be reset to
+        // empty at settings.cpp
+        QStringList userCreds = StrTools::splitOnce(config.userCreds, ":");
         if (userCreds.length() == 2) {
             config.user = userCreds.at(0);
             config.password = userCreds.at(1);
@@ -1548,12 +1550,15 @@ void Skyscraper::prepareScreenscraper(NetComm &netComm, QEventLoop &q) {
                  "sec...\n",
                  config.user.toStdString().c_str());
         netComm.request(
-            "https://www.screenscraper.fr/api2/"
-            "ssuserInfos.php?devid=muldjord&devpassword=" +
-            StrTools::unMagic("204;198;236;130;203;181;203;126;191;167;200;"
-                              "198;192;228;169;156") +
-            "&softname=skyscraper" VERSION "&output=json&ssid=" + config.user +
-            "&sspassword=" + config.password);
+            QString(
+                "https://www.screenscraper.fr/api2/"
+                "ssuserInfos.php?devid=muldjord&devpassword=" %
+                StrTools::unMagic("204;198;236;130;203;181;203;126;191;167;200;"
+                                  "198;192;228;169;156") %
+                "&softname=skyscraper" VERSION
+                "&output=json&ssid=%1&sspassword=%2")
+                .arg(QString(QUrl::toPercentEncoding(config.user)))
+                .arg(QString(QUrl::toPercentEncoding(config.password))));
         q.exec();
         QJsonObject jsonObj =
             QJsonDocument::fromJson(netComm.getData()).object();

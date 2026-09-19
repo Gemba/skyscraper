@@ -4,9 +4,20 @@ Look below to find a thorough description of all options and sections available 
 
 Almost all of these options are set at a useful default as documented here (and can therefore be left out) and should only be set if your use case requires it.
 
+### The INI-format
+
+In your configuration INI-file you should stick to the common INI-format conventions. This means:
+
+- Comments should start with a semicolon (`;`), although a hash (`#`) may be used, but can have knock-on effects, so better refrain from using it.
+- Boolean and numeric values may be entered without quotation.
+- String values should be always in doublequotes (`"`). This gives you the freedom to use otherwise reserved characters like `;`, `=` or even the doublequote. If you want to use a doublequote, escape it with an backslash, e.g., `\"`.
+- More generally, you can also use the backslash followed by `x` to enter any character in hexadecimal format. Thus you can also escape a doubleqoute by using `\x22`, which is ascii character 34 in decimal, which is `"`.
+
 !!! warning
 
-    Some users seem to have a habbit of editing the `/home/<USER>/skysource/config.ini` file. _This is not the correct file!_ Please read the first paragraph. :)
+    Some users seem to have a habbit of editing the `/home/<USER>/skysource/config.ini` file. _This is not the correct file!_ Please read the firstmost paragraph. :)
+
+### Sections of the Configuration File
 
 Options can be set on four levels; either `[main]`, `[<PLATFORM>]`, `[<FRONTEND>]` or `[<SCRAPER>]`.
 
@@ -1100,13 +1111,15 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 #### userCreds
 
-Some scraping modules require a `key` or `user:password` to work. You can create a `[<SCRAPER>]` section and add a `userCreds="user:pass"` or `userCreds="key"` line beneath it. Doing this will always use these credentials when scraping from the module in question. Check the [scraping module overview](SCRAPINGMODULES.md) to see the specific requirements for each module.
+Some scraping modules require a `key` or `user:password` to work. You can create a `[<SCRAPER>]` section and add a `userCreds="user:pass"` or `userCreds="key"` line beneath it. Doing this will always use these credentials when scraping from the module in question. Check the [scraping module overview](SCRAPINGMODULES.md) to see the specific requirements for each module.  
+If you have a doublequote in your password do escape it by preceeding a backslash i.e., `\"`. You may have a colon (`:`) in your password in the "user:pass" pair, Skyscraper will interpret anything after the first colon as password. However, if it ever should happen you have a colon in your API-key then Skyscraper will interpret it as user:pass. So, do not have a colon in your API-key!  
+Also consider the notes on the [INI format](#the-ini-format) of Qt respective Skyscraper.
 
 **Example(s)**
 
 ```ini
 [screenscraper]
-userCreds="<account>:<password>"
+userCreds="<account>:#\"safe\" 123:456" ; password is '#"safe" 123:456'
 ```
 
 or

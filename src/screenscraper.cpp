@@ -97,15 +97,23 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 
     QString gameUrl =
-        "https://www.screenscraper.fr/api2/"
-        "jeuInfos.php?devid=muldjord&devpassword=" +
-        StrTools::unMagic(
-            "204;198;236;130;203;181;203;126;191;167;200;198;192;228;169;156") +
-        "&softname=skyscraper" VERSION +
-        (config->user.isEmpty() ? "" : "&ssid=" + config->user) +
-        (config->password.isEmpty() ? "" : "&sspassword=" + config->password) +
-        (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
-        "&output=json&" + searchName;
+        QString(baseUrl % "/api2/jeuInfos.php?devid=muldjord&devpassword=" %
+                StrTools::unMagic("204;198;236;130;203;181;203;126;191;167;200;"
+                                  "198;192;228;169;156") %
+                "&softname=skyscraper%1&output=json")
+            .arg(QString(VERSION));
+    if (!config->user.isEmpty() && !config->password.isEmpty()) {
+        gameUrl =
+            gameUrl % "&ssid=" % QString(QUrl::toPercentEncoding(config->user));
+        gameUrl = gameUrl % "&sspassword=" %
+                  QString(QUrl::toPercentEncoding(config->password));
+    }
+    gameUrl =
+        gameUrl %
+        (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId));
+    // searchName is percent encoded, see getSearchNames()
+    gameUrl =
+        gameUrl % "&" % searchName;
 
     tctr = 0;
     statusTimer.start(1000);
