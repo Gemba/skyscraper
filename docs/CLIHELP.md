@@ -224,7 +224,7 @@ Skyscraper -p snes -s thegamesdb -t 5
 
 ### -u &lt;KEY or USERID:PASSWORD&gt;
 
-Some scraping modules require a user key or a user id + password to work. Check the scraping module overview to see the specific requirements for [each module](SCRAPINGMODULES.md). Consider setting this in [`config.ini`](CONFIGINI.md#usercreds) instead.
+Some scraping modules require a user key or a user id + password to work. Check the scraping module overview to see the specific requirements for [each module](SCRAPINGMODULES.md). See full documentation at its [`config.ini`](CONFIGINI.md#usercreds) counterpart.
 
 **Example(s)**
 
