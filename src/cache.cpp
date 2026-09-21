@@ -177,6 +177,7 @@ bool Cache::createFolders(const QString &scraper) {
 }
 
 bool Cache::read() {
+    idIndexValid = false;
     QFile quickIdFile(quickIdFilePath());
     if (quickIdFile.open(QIODevice::ReadOnly)) {
         ncprintf("Reading and parsing quick id xml, please wait... ");
@@ -380,6 +381,7 @@ void Cache::printCacheEditMenu() {
 
 int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                          const QString &type) {
+    idIndexValid = false;
     // Check sanity of command and parameters, if any
     if (command == "new" && !txtTypes().contains(type)) {
         QStringList sortedTypes = txtTypes();
@@ -888,6 +890,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
 }
 
 bool Cache::purgeResources(QString purgeStr) {
+    idIndexValid = false;
     purgeStr.replace("purge:", "");
 
     QString module = "";
@@ -939,6 +942,7 @@ bool Cache::purgeResources(QString purgeStr) {
 }
 
 bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
+    idIndexValid = false;
     if (!unattend) {
         ncprintf(
             "\033[1;31mWARNING! You are about to remove ALL "
@@ -1294,6 +1298,7 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
 
 bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                             const int verbosity, const bool unattend) {
+    idIndexValid = false;
     if (!unattend) {
         std::string userInput = "";
         ncprintf(
@@ -1605,6 +1610,7 @@ bool Cache::write(const bool onlyQuickId) {
 // This verifies all attached media files and deletes those that have no entry
 // in the cache
 void Cache::validate() {
+    idIndexValid = false;
     // TODO: Add format checks for each resource type, and remove if deemed
     // corrupt
     ncprintf("Starting resource cache validation run for %s platform, please "
@@ -1646,6 +1652,7 @@ void Cache::validate() {
 
 void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
                         int &notDeletedCount, QString resType) {
+    idIndexValid = false;
     QList<QString> resFileNames;
     for (const auto &resource : resources) {
         if (resource.type == resType) {
@@ -1671,6 +1678,7 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
 }
 
 void Cache::merge(bool overwrite, const QString &otherCacheFolder) {
+    idIndexValid = false;
     Cache mergeCache(otherCacheFolder);
     mergeCache.read();
     ncprintf("Merging databases, please wait...\n");
@@ -1791,15 +1799,16 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         const QString &cacheAbsolutePath,
                         const Settings &config, QString &output) {
     QMutexLocker locker(&cacheMutex);
+    ensureIdIndex();
     bool cacheMiss = true;
-    // This type of iterator ensures we can delete items while iterating
-    QMutableListIterator<Resource> it(resources);
-    while (it.hasNext()) {
-        Resource res = it.next();
-        if (res.cacheId == resource.cacheId && res.type == resource.type &&
-            res.source == resource.source) {
+    // Under --flags refresh the existing resource is replaced in place, which
+    // keeps every index position valid; a failed replacement removes it below.
+    int replaceAt = -1;
+    for (int i : idIndex.value(resource.cacheId)) {
+        const Resource &res = resources.at(i);
+        if (res.type == resource.type && res.source == resource.source) {
             if (config.refresh) {
-                it.remove();
+                replaceAt = i;
             } else {
                 cacheMiss = false;
             }
@@ -1939,8 +1948,19 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 }
             }
             // add record to cache index
-            resources.append(resource);
+            if (replaceAt >= 0) {
+                resources[replaceAt] = resource;
+            } else {
+                resources.append(resource);
+                idIndex[resource.cacheId].append(resources.size() - 1);
+            }
         } else {
+            if (replaceAt >= 0) {
+                // same outcome as before: a refreshed resource that could not
+                // be written is dropped rather than kept stale
+                resources.removeAt(replaceAt);
+                idIndexValid = false;
+            }
             ncprintf("\033[1;33mWarning! Cannot add resource to cache. Have "
                      "you run out of disk space?\n\033[0m");
         }
@@ -2061,11 +2081,23 @@ QString Cache::getQuickId(const QFileInfo &info) {
     return QString();
 }
 
+void Cache::ensureIdIndex() {
+    if (idIndexValid) {
+        return;
+    }
+    idIndex.clear();
+    idIndex.reserve(resources.size());
+    for (int i = 0; i < resources.size(); ++i) {
+        idIndex[resources.at(i).cacheId].append(i);
+    }
+    idIndexValid = true;
+}
+
 bool Cache::hasEntries(const QString &cacheId, const QString scraper) {
     QMutexLocker locker(&cacheMutex);
-    for (const auto &res : resources) {
-        if ((scraper.isEmpty() || res.source == scraper) &&
-            res.cacheId == cacheId) {
+    ensureIdIndex();
+    for (int i : idIndex.value(cacheId)) {
+        if (scraper.isEmpty() || resources.at(i).source == scraper) {
             return true;
         }
     }
@@ -2074,11 +2106,12 @@ bool Cache::hasEntries(const QString &cacheId, const QString scraper) {
 
 void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
     QMutexLocker locker(&cacheMutex);
+    ensureIdIndex();
     QList<Resource> matchingResources;
     // Find all resources related to this particular rom
-    for (const auto &resource : resources) {
-        if ((scraper.isEmpty() || resource.source == scraper) &&
-            entry.cacheId == resource.cacheId) {
+    for (int i : idIndex.value(entry.cacheId)) {
+        const Resource &resource = resources.at(i);
+        if (scraper.isEmpty() || resource.source == scraper) {
             matchingResources.append(resource);
         }
     }
