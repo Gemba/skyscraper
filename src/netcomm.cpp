@@ -43,6 +43,8 @@ void NetComm::request(QString query, QString postData,
                       QList<QPair<QString, QString>> headers) {
     QUrl url(query);
     QNetworkRequest request(url);
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                         QNetworkRequest::NoLessSafeRedirectPolicy);
 
     QString ua = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) "
                  "Gecko/20100101 Firefox/74.0";
