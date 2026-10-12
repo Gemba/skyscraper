@@ -99,6 +99,9 @@ void Skyscraper::run() {
         } else if (config.cacheOptions == "validate") {
             Cache::validateAllPlatform(config, this);
             exit(0);
+        } else if (config.cacheOptions.startsWith("convert:")) {
+            Cache::convertAllPlatform(config, this, config.cacheOptions.mid(8));
+            exit(0);
         }
     }
 
@@ -201,7 +204,8 @@ void Skyscraper::run() {
         }
     }
 
-    cache = QSharedPointer<Cache>(new Cache(config.cacheFolder));
+    cache = QSharedPointer<Cache>(
+        new Cache(config.cacheFolder, config.cacheFormat));
     if (cacheScrapeMode || cache->createFolders(config.scraper)) {
         if (!cache->read() && cacheScrapeMode) {
             ncprintf("No resources for this platform found in the resource "
@@ -252,6 +256,16 @@ void Skyscraper::run() {
     }
     if (config.cacheOptions == "validate") {
         cache->validate();
+        state = NO_INTR;
+        cache->write();
+        state = SINGLE;
+        exit(0);
+    }
+    if (config.cacheOptions.startsWith("convert:")) {
+        const QString format = config.cacheOptions.mid(8);
+        ncprintf("Converting resource cache to format '%s'...\n",
+                 format.toStdString().c_str());
+        cache->setFormat(format);
         state = NO_INTR;
         cache->write();
         state = SINGLE;

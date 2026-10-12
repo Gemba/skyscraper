@@ -44,6 +44,8 @@ struct Settings {
     QString currentDir = "";
 
     QString cacheFolder = "";
+    // db.xml format to write, empty means default, see Cache::getFormats()
+    QString cacheFormat = "";
     QString skippedFileString = "";
     QString configFile = "";
     QString frontend = "";
@@ -221,6 +223,7 @@ private:
         {"brackets",                QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"cacheCovers",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheFolder",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
+        {"cacheFormat",             QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"cacheMarquees",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheRefresh",            QPair<QString, int>("bool", CfgType::MAIN |                                         CfgType::SCRAPER )},
         {"cacheResize",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},

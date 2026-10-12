@@ -88,6 +88,7 @@ This is an alphabetical index of all configuration options their usage level and
 | [brackets](CONFIGINI.md#brackets)                           | Basic          |    Y     |       Y        |       Y        |               |
 | [cacheCovers](CONFIGINI.md#cachecovers)                     | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheFolder](CONFIGINI.md#cachefolder)                     | Basic          |    Y     |       Y        |                |               |
+| [cacheFormat](CONFIGINI.md#cacheformat)                     | Advanced       |    Y     |       Y        |                |               |
 | [cacheMarquees](CONFIGINI.md#cachemarquees)                 | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheRefresh](CONFIGINI.md#cacherefresh)                   | Basic          |    Y     |                |                |       Y       |
 | [cacheResize](CONFIGINI.md#cacheresize)                     | Basic          |    Y     |       Y        |                |       Y       |
@@ -268,6 +269,16 @@ Sets a non-default location for the storing and loading of cached game resources
     If this is set in the `[main]` section (recommended) it will automatically add `/<PLATFORM>` to the end of the path. If you want better control consider adding it to a `[<PLATFORM>]` section instead where it will be used as is.
 
 Default value: `/home/<USER>/.skyscraper/cache/<PLATFORM>`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`
+
+---
+
+#### cacheFormat
+
+Sets the format in which the resource cache file `db.xml` is written. The default format `v2` groups the resources by game. Set this to `"legacy-v1"` to keep writing the format of Skyscraper 3.21.1 and older, for instance if you share the cache with an older installation. Skyscraper reads both formats regardless of this option. To convert a cache once, use [`--cache convert:<FORMAT>`](CLIHELP.md#-cache-convertformat). See also [Resource Cache Format](CACHE.md#resource-cache-format).
+
+Default value: `v2`  
+Allowed values: `v2`, `legacy-v1`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`
 
 ---

@@ -3,6 +3,22 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.22.0 (2026-TBA)
+
+- Changed: The resource cache is held in memory grouped by game, which makes
+  game list generation from a large cache several times faster, especially
+  with multiple threads (`-t`)
+- Changed: New resource cache format `v2` for `db.xml`, which groups the
+  resources by game. Existing caches are read as before and are written as
+  `v2` on the next save. Skyscraper 3.21.1 and older cannot read `v2`: run
+  [`--cache convert:legacy-v1`](CLIHELP.md#-cache-convertformat) before going
+  back to an older version, or set
+  [`cacheFormat="legacy-v1"`](CONFIGINI.md#cacheformat) to keep writing the
+  old format. See [Resource Cache Format](CACHE.md#resource-cache-format)
+- Added: Cache subcommand
+  [`--cache convert:<FORMAT>`](CLIHELP.md#-cache-convertformat) and
+  `config.ini` option [`cacheFormat`](CONFIGINI.md#cacheformat)
+
 ### Version 3.21.0 (2026-09-20)
 
 - Added: AppImage support for PC (x64) and ARM (aarch64) architectures (with or
