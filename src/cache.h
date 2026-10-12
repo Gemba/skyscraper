@@ -36,6 +36,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
+#include <functional>
 
 class Skyscraper;
 
@@ -107,7 +108,8 @@ public:
     void merge(bool overwrite, const QString &otherCacheFolder);
 
 private:
-    QList<Resource> getResources();
+    const QMap<QString, QList<Resource>> &getResources() const;
+    int resourceCount() const;
 
 private:
     QDir cacheDir;
@@ -118,14 +120,10 @@ private:
 
     QMap<QString, ResCounts> resCountsMap;
 
-    QList<Resource> resources;
-    // cacheId -> positions in 'resources'. Built lazily under cacheMutex so
-    // hasEntries()/fillBlanks()/addResource() are a hash lookup instead of a
-    // scan of every cached resource per ROM; any bulk mutation of 'resources'
-    // (read, purge, vacuum, edit, merge) invalidates it.
-    QHash<QString, QList<int>> idIndex;
-    bool idIndexValid = false;
-    void ensureIdIndex();
+    // cacheId -> all resources of that rom. Keyed so per-rom lookups during
+    // scraping and gamelist generation do not scan the whole cache; a QMap so
+    // db.xml is written in a stable order.
+    QMap<QString, QList<Resource>> resources;
     QMap<QString, QPair<qint64, QString>>
         quickIds; // filePath, timestamp + cacheId for quick lookup
 
@@ -144,6 +142,9 @@ private:
                      QString resType);
     void verifyResources(int &resourcesDeleted);
     bool removeMediaFile(Resource &res, const char *msg);
+    int removeMatching(QList<Resource> &romRes,
+                       const std::function<bool(const Resource &)> &match,
+                       const char *mediaMsg = nullptr);
     bool fillType(const QString &type, QList<Resource> &matchingResources,
                   QString &result, QString &source);
     bool doVideoConvert(Resource &resource, QString &cacheFile,

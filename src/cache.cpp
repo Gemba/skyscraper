@@ -177,7 +177,6 @@ bool Cache::createFolders(const QString &scraper) {
 }
 
 bool Cache::read() {
-    idIndexValid = false;
     QFile quickIdFile(quickIdFilePath());
     if (quickIdFile.open(QIODevice::ReadOnly)) {
         ncprintf("Reading and parsing quick id xml, please wait... ");
@@ -282,10 +281,10 @@ bool Cache::read() {
                 continue;
             }
 
-            resources.append(resource);
+            resources[resource.cacheId].append(resource);
         }
         cacheFile.close();
-        resAtLoad = resources.length();
+        resAtLoad = resourceCount();
         ncprintf("\033[1;32mDone!\033[0m\n");
         ncprintf("Successfully parsed %d resources!\n\n", resAtLoad);
         return true;
@@ -381,7 +380,6 @@ void Cache::printCacheEditMenu() {
 
 int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                          const QString &type) {
-    idIndexValid = false;
     // Check sanity of command and parameters, if any
     if (command == "new" && !txtTypes().contains(type)) {
         QStringList sortedTypes = txtTypes();
@@ -442,19 +440,17 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 QMap<QString, QList<QPair<QString, QString>>> connectedRes;
                 int lenType = 0;
                 int lenSrc = 0;
-                for (const auto &res : resources) {
-                    if (res.cacheId == cacheId) {
-                        QList l = connectedRes[res.type];
-                        QPair<QString, QString> kv =
-                            QPair<QString, QString>(res.source, res.value);
-                        l.append(kv);
-                        connectedRes[res.type] = l;
-                        if (res.source.length() > lenSrc) {
-                            lenSrc = res.source.length();
-                        }
-                        if (res.type.length() > lenType) {
-                            lenType = res.type.length();
-                        }
+                for (const auto &res : resources.value(cacheId)) {
+                    QList l = connectedRes[res.type];
+                    QPair<QString, QString> kv =
+                        QPair<QString, QString>(res.source, res.value);
+                    l.append(kv);
+                    connectedRes[res.type] = l;
+                    if (res.source.length() > lenSrc) {
+                        lenSrc = res.source.length();
+                    }
+                    if (res.type.length() > lenType) {
+                        lenType = res.type.length();
                     }
                 }
                 if (connectedRes.isEmpty()) {
@@ -616,17 +612,17 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                                    .hasMatch()) {
                         newRes.value = value;
                         bool updated = false;
-                        QMutableListIterator<Resource> it(resources);
+                        QList<Resource> &romRes = resources[cacheId];
+                        QMutableListIterator<Resource> it(romRes);
                         while (it.hasNext()) {
                             Resource res = it.next();
-                            if (res.cacheId == newRes.cacheId &&
-                                res.type == newRes.type &&
+                            if (res.type == newRes.type &&
                                 res.source == newRes.source) {
                                 it.remove();
                                 updated = true;
                             }
                         }
-                        resources.append(newRes);
+                        romRes.append(newRes);
                         if (updated) {
                             ncprintf("[\033[1;34m*\033[0m] Updated existing ");
                         } else {
@@ -652,9 +648,8 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 int idx = 1;
                 int lenType = 0;
                 int lenSrc = 0;
-                for (const auto &res : resources) {
-                    if (res.cacheId == cacheId &&
-                        !binTypes().contains(res.type)) {
+                for (const auto &res : resources.value(cacheId)) {
+                    if (!binTypes().contains(res.type)) {
                         QList l = connectedRes[res.type];
                         QStringList resValues = {res.cacheId, res.source,
                                                  res.type, res.value};
@@ -714,18 +709,18 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                 } else {
                     int chosen = atoi(typeInput.c_str());
                     if (chosen >= 1 && chosen < idx) {
-                        QString cacheId = idxCacheIdMap[chosen];
+                        QString resKey = idxCacheIdMap[chosen];
+                        QList<Resource> &romRes = resources[cacheId];
                         int idxInResList = 0;
-                        for (const auto &res : resources) {
-                            if (cacheId ==
-                                res.cacheId % res.source % res.type) {
+                        for (const auto &res : romRes) {
+                            if (resKey == res.cacheId % res.source % res.type) {
                                 break;
                             }
                             idxInResList++;
                         }
-                        QString delType = resources[idxInResList].type;
-                        QString delSource = resources[idxInResList].source;
-                        resources.removeAt(idxInResList);
+                        QString delType = romRes[idxInResList].type;
+                        QString delSource = romRes[idxInResList].source;
+                        romRes.removeAt(idxInResList);
                         ncprintf("[\033[1;31m-\033[0m] Removed resource: %s "
                                  "(%s)\n\n",
                                  delType.toStdString().c_str(),
@@ -736,20 +731,15 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     }
                 }
             } else if (userInput == "D") {
-                QMutableListIterator<Resource> it(resources);
-                bool found = false;
-                while (it.hasNext()) {
-                    Resource res = it.next();
-                    if (res.cacheId == cacheId) {
-                        ncprintf("[\033[1;31m-\033[0m] Removed "
-                                 "\033[1;33m%s\033[0m (%s) with "
-                                 "value '\033[1;32m%s\033[0m'\n",
-                                 res.type.toStdString().c_str(),
-                                 res.source.toStdString().c_str(),
-                                 res.value.toStdString().c_str());
-                        it.remove();
-                        found = true;
-                    }
+                const QList<Resource> romRes = resources.take(cacheId);
+                bool found = !romRes.isEmpty();
+                for (const auto &res : romRes) {
+                    ncprintf("[\033[1;31m-\033[0m] Removed "
+                             "\033[1;33m%s\033[0m (%s) with "
+                             "value '\033[1;32m%s\033[0m'\n",
+                             res.type.toStdString().c_str(),
+                             res.source.toStdString().c_str(),
+                             res.value.toStdString().c_str());
                 }
                 if (!found)
                     ncprintf("No resources found for this rom...\n");
@@ -760,12 +750,10 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                          "cancel)\n");
                 QMap<QString, int> modules;
                 int lenSrc = 0;
-                for (const auto &res : resources) {
-                    if (res.cacheId == cacheId) {
-                        modules[res.source] += 1;
-                        if (res.source.length() > lenSrc) {
-                            lenSrc = res.source.length();
-                        }
+                for (const auto &res : resources.value(cacheId)) {
+                    modules[res.source] += 1;
+                    if (res.source.length() > lenSrc) {
+                        lenSrc = res.source.length();
                     }
                 }
                 QMap<QString, int>::iterator it;
@@ -789,16 +777,11 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     ncprintf("Resource removal cancelled...\n\n");
                     continue;
                 } else if (modules.contains(QString(typeInput.c_str()))) {
-                    QMutableListIterator<Resource> it(resources);
-                    int removed = 0;
-                    while (it.hasNext()) {
-                        Resource res = it.next();
-                        if (res.cacheId == cacheId &&
-                            res.source == QString(typeInput.c_str())) {
-                            it.remove();
-                            removed++;
-                        }
-                    }
+                    const QString module = QString(typeInput.c_str());
+                    int removed = removeMatching(
+                        resources[cacheId], [&module](const Resource &res) {
+                            return res.source == module;
+                        });
                     ncprintf("[\033[1;31m-\033[0m] Removed %d %s connected to "
                              "rom from "
                              "module '\033[1;32m%s\033[0m'\n\n",
@@ -816,12 +799,10 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     "remove?\033[0m (enter type or press Enter to cancel)\n");
                 QMap<QString, int> types;
                 int lenType = 0;
-                for (const auto &res : resources) {
-                    if (res.cacheId == cacheId) {
-                        types[res.type] += 1;
-                        if (res.type.length() > lenType) {
-                            lenType = res.type.length();
-                        }
+                for (const auto &res : resources.value(cacheId)) {
+                    types[res.type] += 1;
+                    if (res.type.length() > lenType) {
+                        lenType = res.type.length();
                     }
                 }
                 for (auto const &key : getKeywordOrder()) {
@@ -848,16 +829,11 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     ncprintf("Resource removal cancelled...\n\n");
                     continue;
                 } else if (types.contains(QString(typeInput.c_str()))) {
-                    QMutableListIterator<Resource> it(resources);
-                    int removed = 0;
-                    while (it.hasNext()) {
-                        Resource res = it.next();
-                        if (res.cacheId == cacheId &&
-                            res.type == QString(typeInput.c_str())) {
-                            it.remove();
-                            removed++;
-                        }
-                    }
+                    const QString resType = QString(typeInput.c_str());
+                    int removed = removeMatching(
+                        resources[cacheId], [&resType](const Resource &res) {
+                            return res.type == resType;
+                        });
                     ncprintf("[\033[1;31m-\033[0m] Removed %d %s connected to "
                              "rom of "
                              "type '\033[1;32m%s\033[0m'\n\n",
@@ -890,7 +866,6 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
 }
 
 bool Cache::purgeResources(QString purgeStr) {
-    idIndexValid = false;
     purgeStr.replace("purge:", "");
 
     QString module = "";
@@ -913,22 +888,15 @@ bool Cache::purgeResources(QString purgeStr) {
 
     int purged = 0;
 
-    QMutableListIterator<Resource> it(resources);
-    while (it.hasNext()) {
-        Resource res = it.next();
-        bool remove = false;
-        if ((res.source == module && res.type == type) ||
-            (module.isEmpty() && res.type == type) ||
-            (res.source == module && type.isEmpty())) {
-            remove = true;
-        }
-        if (remove) {
-            if (!removeMediaFile(res, "Cannot purge media file '%s'")) {
-                continue;
-            }
-            it.remove();
-            purged++;
-        }
+    for (auto &romRes : resources) {
+        purged += removeMatching(
+            romRes,
+            [&module, &type](const Resource &res) {
+                return (res.source == module && res.type == type) ||
+                       (module.isEmpty() && res.type == type) ||
+                       (res.source == module && type.isEmpty());
+            },
+            "Cannot purge media file '%s'");
     }
     if (purged == 0) {
         ncprintf("No resources for the current platform found or no match for "
@@ -942,7 +910,6 @@ bool Cache::purgeResources(QString purgeStr) {
 }
 
 bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
-    idIndexValid = false;
     if (!unattend) {
         ncprintf(
             "\033[1;31mWARNING! You are about to remove ALL "
@@ -965,19 +932,15 @@ bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
     int dots = 0;
     int dotMod = resources.size() * 0.1 + 1;
 
-    QMutableListIterator<Resource> it(resources);
-    while (it.hasNext()) {
+    for (auto &romRes : resources) {
         if (dots % dotMod == 0) {
             ncprintf(".");
             fflush(stdout);
         }
         dots++;
-        Resource res = it.next();
-        if (!removeMediaFile(res, "Cannot purge media file '%s'")) {
-            continue;
-        }
-        it.remove();
-        purged++;
+        purged += removeMatching(
+            romRes, [](const Resource &) { return true; },
+            "Cannot purge media file '%s'");
     }
     if (purged == 0) {
         ncprintf("\033[1;32m Foiled!\033[0m\n");
@@ -1249,9 +1212,8 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
                 }
                 dots++;
                 bool found = false;
-                for (const auto &res : resources) {
-                    if (res.cacheId == cacheIdList.at(a) &&
-                        res.type == resType) {
+                for (const auto &res : resources.value(cacheIdList.at(a))) {
+                    if (res.type == resType) {
                         found = true;
                         break;
                     }
@@ -1298,7 +1260,6 @@ bool Cache::assembleReport(const Settings &config, const QString filter) {
 
 bool Cache::vacuumResources(const QString inputFolder, const QString filter,
                             const int verbosity, const bool unattend) {
-    idIndexValid = false;
     if (!unattend) {
         std::string userInput = "";
         ncprintf(
@@ -1344,28 +1305,23 @@ bool Cache::vacuumResources(const QString inputFolder, const QString filter,
              cacheDir.dirName().toStdString().c_str());
 
     int vacuumed = 0;
-    {
-        QMutableListIterator<Resource> it(resources);
+    const QSet<QString> romCacheIds(cacheIdList.cbegin(), cacheIdList.cend());
+    for (auto romIt = resources.begin(); romIt != resources.end(); ++romIt) {
+        if (romCacheIds.contains(romIt.key())) {
+            continue;
+        }
+        QMutableListIterator<Resource> it(romIt.value());
         while (it.hasNext()) {
             Resource res = it.next();
-            bool remove = true;
-            for (const auto &cacheId : cacheIdList) {
-                if (res.cacheId == cacheId) {
-                    remove = false;
-                    break;
-                }
+            if (!removeMediaFile(res, "Cannot remove media file '%s'")) {
+                continue;
             }
-            if (remove) {
-                if (!removeMediaFile(res, "Cannot remove media file '%s'")) {
-                    continue;
-                }
-                if (verbosity > 1)
-                    ncprintf("Purged resource for '%s' with value '%s'...\n",
-                             res.cacheId.toStdString().c_str(),
-                             res.value.toStdString().c_str());
-                it.remove();
-                vacuumed++;
-            }
+            if (verbosity > 1)
+                ncprintf("Purged resource for '%s' with value '%s'...\n",
+                         res.cacheId.toStdString().c_str(),
+                         res.value.toStdString().c_str());
+            it.remove();
+            vacuumed++;
         }
     }
     ncprintf("\033[1;32m Done!\033[0m\n");
@@ -1577,7 +1533,7 @@ bool Cache::write(const bool onlyQuickId) {
     if (!onlyQuickId) {
         QFile cacheFile(dbFilePath());
         if (cacheFile.open(QIODevice::WriteOnly)) {
-            int resCountNew = static_cast<int>(resources.length());
+            int resCountNew = resourceCount();
             int delta = resCountNew - resAtLoad;
             ncprintf("Writing %d (%d%s) resource%s to cache, please wait... ",
                      resCountNew, delta, delta < 0 ? "" : " new",
@@ -1587,15 +1543,17 @@ bool Cache::write(const bool onlyQuickId) {
             xml.setAutoFormatting(true);
             xml.writeStartDocument();
             xml.writeStartElement("resources");
-            for (const auto &resource : resources) {
-                xml.writeStartElement(R_ELEM);
-                xml.writeAttribute(ATTR_ID, resource.cacheId);
-                xml.writeAttribute(ATTR_TYPE, resource.type);
-                xml.writeAttribute(ATTR_SRC, resource.source);
-                xml.writeAttribute(ATTR_TS,
-                                   QString::number(resource.timestamp));
-                xml.writeCharacters(resource.value);
-                xml.writeEndElement();
+            for (const auto &romRes : resources) {
+                for (const auto &resource : romRes) {
+                    xml.writeStartElement(R_ELEM);
+                    xml.writeAttribute(ATTR_ID, resource.cacheId);
+                    xml.writeAttribute(ATTR_TYPE, resource.type);
+                    xml.writeAttribute(ATTR_SRC, resource.source);
+                    xml.writeAttribute(ATTR_TS,
+                                       QString::number(resource.timestamp));
+                    xml.writeCharacters(resource.value);
+                    xml.writeEndElement();
+                }
             }
             xml.writeEndElement();
             xml.writeEndDocument();
@@ -1610,7 +1568,6 @@ bool Cache::write(const bool onlyQuickId) {
 // This verifies all attached media files and deletes those that have no entry
 // in the cache
 void Cache::validate() {
-    idIndexValid = false;
     // TODO: Add format checks for each resource type, and remove if deemed
     // corrupt
     ncprintf("Starting resource cache validation run for %s platform, please "
@@ -1652,12 +1609,13 @@ void Cache::validate() {
 
 void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
                         int &notDeletedCount, QString resType) {
-    idIndexValid = false;
-    QList<QString> resFileNames;
-    for (const auto &resource : resources) {
-        if (resource.type == resType) {
-            QFileInfo resInfo(cacheDir.path() + "/" + resource.value);
-            resFileNames.append(resInfo.absoluteFilePath());
+    QSet<QString> resFileNames;
+    for (const auto &romRes : resources) {
+        for (const auto &resource : romRes) {
+            if (resource.type == resType) {
+                QFileInfo resInfo(cacheDir.path() + "/" + resource.value);
+                resFileNames.insert(resInfo.absoluteFilePath());
+            }
         }
     }
 
@@ -1678,11 +1636,11 @@ void Cache::verifyFiles(QDirIterator &dirIt, int &filesDeleted,
 }
 
 void Cache::merge(bool overwrite, const QString &otherCacheFolder) {
-    idIndexValid = false;
     Cache mergeCache(otherCacheFolder);
     mergeCache.read();
     ncprintf("Merging databases, please wait...\n");
-    QList<Resource> mergeResources = mergeCache.getResources();
+    const QMap<QString, QList<Resource>> &mergeResources =
+        mergeCache.getResources();
 
     QDir mergeCacheDir(otherCacheFolder);
     mergeCacheDir.makeAbsolute();
@@ -1690,47 +1648,49 @@ void Cache::merge(bool overwrite, const QString &otherCacheFolder) {
     int resUpdated = 0;
     int resMerged = 0;
 
-    for (const auto &mergeResource : mergeResources) {
-        bool resExists = false;
-        // This type of iterator ensures we can delete items while iterating
-        QMutableListIterator<Resource> it(resources);
-        while (it.hasNext()) {
-            Resource res = it.next();
-            if (res.cacheId == mergeResource.cacheId &&
-                res.type == mergeResource.type &&
-                res.source == mergeResource.source) {
-                if (overwrite) {
-                    if (!removeMediaFile(res,
-                                         "Cannot remove media file '%s' for "
-                                         "updating")) {
+    for (const auto &mergeRomRes : mergeResources) {
+        for (const auto &mergeResource : mergeRomRes) {
+            bool resExists = false;
+            QList<Resource> &romRes = resources[mergeResource.cacheId];
+            // This type of iterator ensures we can delete items while iterating
+            QMutableListIterator<Resource> it(romRes);
+            while (it.hasNext()) {
+                Resource res = it.next();
+                if (res.type == mergeResource.type &&
+                    res.source == mergeResource.source) {
+                    if (overwrite) {
+                        if (!removeMediaFile(
+                                res, "Cannot remove media file '%s' for "
+                                     "updating")) {
+                            continue;
+                        }
+                        it.remove();
+                    } else {
+                        resExists = true;
+                        break;
+                    }
+                }
+            }
+            if (!resExists) {
+                if (binTypes().contains(mergeResource.type)) {
+                    const QString absTgtFile =
+                        cacheDir.path() + "/" + mergeResource.value;
+                    cacheDir.mkpath(absTgtFile);
+                    if (!QFile::copy(mergeCacheDir.path() + "/" +
+                                         mergeResource.value,
+                                     absTgtFile)) {
+                        ncprintf("Cannot copy media file '%s', skipping...\n",
+                                 mergeResource.value.toStdString().c_str());
                         continue;
                     }
-                    it.remove();
+                }
+                if (overwrite) {
+                    resUpdated++;
                 } else {
-                    resExists = true;
-                    break;
+                    resMerged++;
                 }
+                romRes.append(mergeResource);
             }
-        }
-        if (!resExists) {
-            if (binTypes().contains(mergeResource.type)) {
-                const QString absTgtFile =
-                    cacheDir.path() + "/" + mergeResource.value;
-                cacheDir.mkpath(absTgtFile);
-                if (!QFile::copy(mergeCacheDir.path() + "/" +
-                                     mergeResource.value,
-                                 absTgtFile)) {
-                    ncprintf("Cannot copy media file '%s', skipping...\n",
-                             mergeResource.value.toStdString().c_str());
-                    continue;
-                }
-            }
-            if (overwrite) {
-                resUpdated++;
-            } else {
-                resMerged++;
-            }
-            resources.append(mergeResource);
         }
     }
     ncprintf("Successfully updated %d %s in cache!\n", resUpdated,
@@ -1739,7 +1699,36 @@ void Cache::merge(bool overwrite, const QString &otherCacheFolder) {
              pluralizeWordStd("resource", resMerged != 1).c_str());
 }
 
-QList<Resource> Cache::getResources() { return resources; }
+const QMap<QString, QList<Resource>> &Cache::getResources() const {
+    return resources;
+}
+
+int Cache::resourceCount() const {
+    int count = 0;
+    for (const auto &romRes : resources) {
+        count += romRes.size();
+    }
+    return count;
+}
+
+int Cache::removeMatching(QList<Resource> &romRes,
+                          const std::function<bool(const Resource &)> &match,
+                          const char *mediaMsg) {
+    int removed = 0;
+    QMutableListIterator<Resource> it(romRes);
+    while (it.hasNext()) {
+        Resource res = it.next();
+        if (!match(res)) {
+            continue;
+        }
+        if (mediaMsg != nullptr && !removeMediaFile(res, mediaMsg)) {
+            continue;
+        }
+        it.remove();
+        removed++;
+    }
+    return removed;
+}
 
 void Cache::addResources(GameEntry &entry, const Settings &config,
                          QString &output) {
@@ -1799,13 +1788,13 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                         const QString &cacheAbsolutePath,
                         const Settings &config, QString &output) {
     QMutexLocker locker(&cacheMutex);
-    ensureIdIndex();
+    QList<Resource> &romRes = resources[resource.cacheId];
     bool cacheMiss = true;
-    // Under --flags refresh the existing resource is replaced in place, which
-    // keeps every index position valid; a failed replacement removes it below.
+    // Under --flags refresh the existing resource is replaced in place; a
+    // failed replacement removes it below.
     int replaceAt = -1;
-    for (int i : idIndex.value(resource.cacheId)) {
-        const Resource &res = resources.at(i);
+    for (int i = 0; i < romRes.size(); ++i) {
+        const Resource &res = romRes.at(i);
         if (res.type == resource.type && res.source == resource.source) {
             if (config.refresh) {
                 replaceAt = i;
@@ -1949,17 +1938,15 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
             }
             // add record to cache index
             if (replaceAt >= 0) {
-                resources[replaceAt] = resource;
+                romRes[replaceAt] = resource;
             } else {
-                resources.append(resource);
-                idIndex[resource.cacheId].append(resources.size() - 1);
+                romRes.append(resource);
             }
         } else {
             if (replaceAt >= 0) {
                 // same outcome as before: a refreshed resource that could not
                 // be written is dropped rather than kept stale
-                resources.removeAt(replaceAt);
-                idIndexValid = false;
+                romRes.removeAt(replaceAt);
             }
             ncprintf("\033[1;33mWarning! Cannot add resource to cache. Have "
                      "you run out of disk space?\n\033[0m");
@@ -2081,23 +2068,10 @@ QString Cache::getQuickId(const QFileInfo &info) {
     return QString();
 }
 
-void Cache::ensureIdIndex() {
-    if (idIndexValid) {
-        return;
-    }
-    idIndex.clear();
-    idIndex.reserve(resources.size());
-    for (int i = 0; i < resources.size(); ++i) {
-        idIndex[resources.at(i).cacheId].append(i);
-    }
-    idIndexValid = true;
-}
-
 bool Cache::hasEntries(const QString &cacheId, const QString scraper) {
     QMutexLocker locker(&cacheMutex);
-    ensureIdIndex();
-    for (int i : idIndex.value(cacheId)) {
-        if (scraper.isEmpty() || resources.at(i).source == scraper) {
+    for (const auto &res : resources.value(cacheId)) {
+        if (scraper.isEmpty() || res.source == scraper) {
             return true;
         }
     }
@@ -2106,11 +2080,9 @@ bool Cache::hasEntries(const QString &cacheId, const QString scraper) {
 
 void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
     QMutexLocker locker(&cacheMutex);
-    ensureIdIndex();
     QList<Resource> matchingResources;
     // Find all resources related to this particular rom
-    for (int i : idIndex.value(entry.cacheId)) {
-        const Resource &resource = resources.at(i);
+    for (const auto &resource : resources.value(entry.cacheId)) {
         if (scraper.isEmpty() || resource.source == scraper) {
             matchingResources.append(resource);
         }
