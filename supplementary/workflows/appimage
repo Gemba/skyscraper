@@ -31,7 +31,7 @@ function build_appimage() {
     # unset XDG
     [[ -z "$_xdg" ]] && sed -i "/#*DEFINES += XDG/{s//#DEFINES += XDG/}" skyscraper.pro
 
-    PREFIX=/usr SYSCONFDIR=/etc qmake6 skyscraper.pro
+    PREFIX=/usr SYSCONFDIR=/etc BUNDLE_QRC=1 qmake6 skyscraper.pro
     jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)
     rm -rf "$app_dir" || true
     make "-j$jobs" install INSTALL_ROOT="$app_dir"

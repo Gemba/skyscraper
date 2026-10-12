@@ -454,3 +454,21 @@ QString StrTools::wrapText(const QString &inText, int width) {
     wrappedLines.append(line);
     return wrappedLines.join("\n");
 }
+
+QStringList StrTools::splitOnce(QString in, const QString split) {
+    QStringList ret;
+    QStringList tmpPiggy = in.split(split, Qt::KeepEmptyParts);
+    if (tmpPiggy.length() == 1) {
+        ret.append(tmpPiggy[0]);
+    }
+    if (tmpPiggy.length() == 2) {
+        ret.append(tmpPiggy[0]);
+        ret.append(tmpPiggy[1]);
+    }
+    if (tmpPiggy.length() > 2) {
+        ret.append(tmpPiggy[0]);
+        tmpPiggy.removeFirst();
+        ret.append(tmpPiggy.join(split));
+    }
+    return ret;
+}

@@ -5,8 +5,8 @@
 #include "platform.h"
 #include "settings.h"
 
-#include <QStringBuilder>
 #include <QDebug>
+#include <QStringBuilder>
 #include <QTest>
 
 class TestSettings : public QObject {
@@ -56,7 +56,8 @@ private slots:
             configCls.getSkyFolder(Config::SkyFolderType::CACHE), platform);
         QCOMPARE(config.cacheFolder, exp);
 
-        exp = PathTools::makeAbsolutePath(configCls.getSkyFolder(), "artwork.xml");
+        exp = PathTools::makeAbsolutePath(configCls.getSkyFolder(),
+                                          "artwork.xml");
         QCOMPARE(config.artworkConfig, exp);
 
         // platform subfolder will be used when present in import/ but not
@@ -114,16 +115,17 @@ private slots:
                                mediaFolderSet);
         settings.endGroup();
 
-        exp = PathTools::makeAbsolutePath(config.currentDir, "amiga_artwork.xml");
+        exp =
+            PathTools::makeAbsolutePath(config.currentDir, "amiga_artwork.xml");
         QCOMPARE(config.artworkConfig, exp);
 
-        exp =
-            PathTools::makeAbsolutePath(config.currentDir, "cfgini/rel/gamelist");
+        exp = PathTools::makeAbsolutePath(config.currentDir,
+                                          "cfgini/rel/gamelist");
         QCOMPARE(config.gameListFolder, exp);
 
         // Config::makeAbsolutePath is called in skyscraper.cpp:loadConfig()
         exp = PathTools::makeAbsolutePath(config.gameListFolder,
-                                       "../../rel/inout-roms");
+                                          "../../rel/inout-roms");
         QCOMPARE(config.gameListFolder % "/" % config.inputFolder, exp);
 
         exp = PathTools::makeAbsolutePath(config.gameListFolder, "./rel/media");
@@ -136,7 +138,8 @@ private slots:
         exp = PathTools::makeAbsolutePath(config.gameListFolder, ".");
         QCOMPARE(config.gameListFolder, exp);
 
-        exp = PathTools::makeAbsolutePath(config.gameListFolder, "~/dont/change");
+        exp =
+            PathTools::makeAbsolutePath(config.gameListFolder, "~/dont/change");
         QCOMPARE("~/dont/change", exp);
     }
 
@@ -637,6 +640,50 @@ private slots:
         QCOMPARE(config.videoSizeLimit, exp.toInt() * 1000 * 1000);
 
         settings.endGroup();
+    }
+
+    void testConfigScreenScraperCreds() {
+        QString currentDir = QDir::currentPath();
+        Settings config;
+        if (!Platform::get().loadConfig()) {
+            qWarning() << "*** AIEEE !!!\n";
+            exit(1);
+        }
+        QCommandLineParser *parser = new QCommandLineParser();
+        Cli::createParser(parser, "amiga");
+
+        const QStringList params = {"x", "-p"
+                                         "amiga"};
+
+        parser->parse(params);
+        RuntimeCfg *rtConf = new RuntimeCfg(&config, parser);
+
+        bool inputFolderSet = false;
+        bool gameListFolderSet = false;
+        bool mediaFolderSet = false;
+
+        QSettings settings("config_creds1.ini", QSettings::IniFormat);
+        config.userCreds = "user_scrs:pass\"wo rd:_";
+
+        config.scraper = "screenscraper";
+        settings.beginGroup("screenscraper");
+        QVariant exp;
+        exp = settings.value("userCreds");
+
+        rtConf->applyConfigIni(RuntimeCfg::CfgType::SCRAPER, &settings,
+                               inputFolderSet, gameListFolderSet,
+                               mediaFolderSet);
+        QCOMPARE(config.userCreds, exp);
+
+        settings.endGroup();
+        settings.beginGroup("screenscraper");
+        settings.setValue("userCreds", "user:");
+        rtConf->applyConfigIni(RuntimeCfg::CfgType::SCRAPER, &settings,
+                               inputFolderSet, gameListFolderSet,
+                               mediaFolderSet);
+        QCOMPARE(config.userCreds, "");
+        // restore for next test run
+        settings.setValue("userCreds","user_scrs:pass\"wo rd:_");
     }
 };
 

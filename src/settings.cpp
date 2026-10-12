@@ -24,6 +24,7 @@
 #include "config.h"
 #include "pathtools.h"
 #include "platform.h"
+#include "strtools.h"
 
 #include <QDebug>
 #include <QFileInfo>
@@ -410,6 +411,17 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
             }
             if (k == "userCreds") {
                 config->userCreds = v;
+                QStringList parts = StrTools::splitOnce(config->userCreds, ":");
+                for (auto const &p : parts) {
+                    if (p.isEmpty()) {
+                        ncprintf(
+                            "\033[1;33mValue for userCreds= is empty or has "
+                            "incomplete format. Value will be ignored. Consult "
+                            "the documentation.\n\033[0m");
+                        config->userCreds = "";
+                        break;
+                    }
+                }
                 continue;
             }
             if (k == "videoConvertCommand") {
@@ -741,6 +753,16 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
     }
     if (parser->isSet("u")) {
         config->userCreds = parser->value("u");
+        QStringList parts = StrTools::splitOnce(config->userCreds, ":");
+        for (auto const &p : parts) {
+            if (p.isEmpty()) {
+                ncprintf("\033[1;33mValue for -u is empty or has "
+                         "incomplete format. Value will be ignored. Consult "
+                         "the documentation.\n\033[0m");
+                config->userCreds = "";
+                break;
+            }
+        }
     }
     if (parser->isSet("d")) {
         config->cacheFolder = toAbsolutePath(true, parser->value("d"));

@@ -303,7 +303,7 @@ private slots:
         QStringList zaxxon_expected = {
             "crc=BB2E0146", "md5=852605F01A3E2D21FBAF35FCAB385B94",
             "sha1=05F32B2286ECE2F30CB1EFBC2B4C7C2AEF2F9662",
-            "romnom=zaxxon.zip", "romtaille=32768"};
+            "romnom=zaxxon", "romtaille=32768"};
         QMap<QString, QPair<QString, QStringList>> tests = {
 #ifndef VER_3_10_3
             {"Screenscraper, with aliasMap match",
@@ -321,11 +321,11 @@ private slots:
                                          {zaxxon_expected.join("&")})},
             {"Screenscraper, 0 byte ROM",
              QPair<QString, QStringList>("./rom_samples/empty (0 bytes).zip",
-                                         {"romnom=empty%20(0%20bytes).zip"})},
+                                         {"romnom=empty%20(0%20bytes)"})},
             {"Screenscraper, with amiga whdl match",
              QPair<QString, QStringList>(
                  "./rom_samples/BillsTomatoGame_v2.0_1748.lha",
-                 {"romnom=BillsTomatoGame_v2.0_1748.lha"})},
+                 {"romnom=Bill%27s%20Tomato%20Game"})},
             {"Screenscraper, ROM with search by stem suffix and size greater "
              "zero",
              QPair<QString, QStringList>("./rom_samples/Pac Man.desktop",

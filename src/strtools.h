@@ -46,5 +46,6 @@ namespace StrTools {
     QString tidyText(QString text, bool ignoreBangs);
     QString shortenText(QString text, int maxLength);
     QString wrapText(const QString &inText, int width = 80);
+    QStringList splitOnce(QString in, const QString split);
 };     // namespace StrTools
 #endif // STRTOOLS_H

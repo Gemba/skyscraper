@@ -202,6 +202,31 @@ private slots:
             QCOMPARE(out, exp);
         }
     }
+
+    void testConfigUserCreds() {
+        // QString userCreds = "user:pass";
+        QMap<QString, QStringList> tc = {
+            {"user:pass", {"user", "pass"}},
+            {"user:pa:ss", {"user", "pa:ss"}},
+            {"user:pa:s:s", {"user", "pa:s:s"}},
+            {"no_colon", {"no_colon"}},
+            {":", {"", ""}},
+            {"user:", {"user", ""}},
+            {"user::", {"user", ":"}},
+            {":pass", {"", "pass"}},
+        };
+        QStringList parts;
+        parts = StrTools::splitOnce("", ":");
+        QCOMPARE(parts.length(), 1);
+        QCOMPARE(parts[0], "");
+        QMapIterator<QString, QStringList> i(tc);
+        while (i.hasNext()) {
+            i.next();
+            qDebug() << "Testing" << i.key();
+            parts = StrTools::splitOnce(i.key(), ":");
+            QCOMPARE(parts, i.value());
+        }
+    }
 };
 
 QTEST_MAIN(TestStrTools)
