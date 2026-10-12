@@ -73,7 +73,7 @@ struct ResCounts {
 
 class Cache {
 public:
-    Cache(const QString &cacheFolder);
+    Cache(const QString &cacheFolder, const QString &format = "");
 
     static bool isCommandValidOnAllPlatform(const QString &command);
 
@@ -81,10 +81,15 @@ public:
     static bool reportAllPlatform(Settings &config, Skyscraper *app);
     static void vacuumAllPlatform(Settings &config, Skyscraper *app);
     static void validateAllPlatform(Settings &config, Skyscraper *app);
+    static void convertAllPlatform(Settings &config, Skyscraper *app,
+                                   const QString &format);
 
+    // db.xml formats which can be written, see docs/CACHE.md
+    static const QStringList getFormats();
     static const QStringList getAllResourceTypes();
     static const QStringList getBinResourceTypes();
 
+    void setFormat(const QString &format);
     bool createFolders(const QString &scraper);
     bool read();
     void printPriorities(QString cacheId);
@@ -113,6 +118,7 @@ private:
 
 private:
     QDir cacheDir;
+    QString dbFormat;
     QMutex cacheMutex;
     QMutex quickIdMutex;
 

@@ -55,6 +55,8 @@ const QString SRC_USER = "user";
 
 // quickids.xml and db.xml
 const QString Q_ELEM = "quickid";
+const QString DB_ROOT_ELEM = "resources";
+const QString G_ELEM = "game";
 const QString R_ELEM = "resource";
 const QString ATTR_FILEPATH = "filepath";
 const QString ATTR_ID = "id";
@@ -62,6 +64,13 @@ const QString ATTR_SHA1_LEGACY = "sha1";
 const QString ATTR_SRC = "source";
 const QString ATTR_TS = "timestamp";
 const QString ATTR_TYPE = "type";
+const QString ATTR_VERSION = "version";
+
+// db.xml formats: legacy-v1 is the flat list of <resource id=...> elements
+// written up to 3.21.1, v2 groups the resources of a rom in <game id=...>
+const QString FORMAT_LEGACY_V1 = "legacy-v1";
+const QString FORMAT_V2 = "v2";
+const QString FORMAT_DEFAULT = FORMAT_V2;
 
 const QStringList NO_RESIZE_MEDIA = {"fanart", "manual", "backcover"};
 
@@ -148,10 +157,17 @@ static inline std::string pluralizeWordStd(QString word, bool plural) {
     return pluralizeWord(word, plural).toStdString();
 }
 
-Cache::Cache(const QString &cacheFolder) {
+Cache::Cache(const QString &cacheFolder, const QString &format) {
     cacheDir.setPath(cacheFolder);
     cacheDir.makeAbsolute();
-    qDebug() << "Cache folder:" << cacheDir;
+    setFormat(format);
+    qDebug() << "Cache folder:" << cacheDir << "format:" << dbFormat;
+}
+
+const QStringList Cache::getFormats() { return {FORMAT_LEGACY_V1, FORMAT_V2}; }
+
+void Cache::setFormat(const QString &format) {
+    dbFormat = getFormats().contains(format) ? format : FORMAT_DEFAULT;
 }
 
 bool Cache::createFolders(const QString &scraper) {
@@ -228,27 +244,38 @@ bool Cache::read() {
         ncprintf("Reading and parsing resource cache, please wait... ");
         fflush(stdout);
         QXmlStreamReader xml(&cacheFile);
+        // v2: id of the enclosing <game>, legacy-v1: id is on each <resource>
+        QString gameId;
         while (!xml.atEnd()) {
-            if (xml.readNext() != QXmlStreamReader::StartElement) {
+            QXmlStreamReader::TokenType token = xml.readNext();
+            if (token == QXmlStreamReader::EndElement && xml.name() == G_ELEM) {
+                gameId.clear();
+                continue;
+            }
+            if (token != QXmlStreamReader::StartElement) {
+                continue;
+            }
+            if (xml.name() == G_ELEM) {
+                gameId = xml.attributes().value(ATTR_ID).toString();
                 continue;
             }
             if (xml.name() != R_ELEM) {
                 continue;
             }
             QXmlStreamAttributes attribs = xml.attributes();
-            if (!attribs.hasAttribute(ATTR_SHA1_LEGACY) &&
-                !attribs.hasAttribute(ATTR_ID)) {
-                ncprintf("Resource is missing unique id, skipping...\n");
-                continue;
-            }
-
             Resource resource;
             if (attribs.hasAttribute(
                     ATTR_SHA1_LEGACY)) { // Obsolete, but needed for backwards
                                          // compat
                 resource.cacheId = attribs.value(ATTR_SHA1_LEGACY).toString();
-            } else {
+            } else if (attribs.hasAttribute(ATTR_ID)) {
                 resource.cacheId = attribs.value(ATTR_ID).toString();
+            } else {
+                resource.cacheId = gameId;
+            }
+            if (resource.cacheId.isEmpty()) {
+                ncprintf("Resource is missing unique id, skipping...\n");
+                continue;
             }
 
             if (attribs.hasAttribute(ATTR_SRC)) {
@@ -959,7 +986,8 @@ bool Cache::purgeAllOnSinglePlatform(const bool unattend) {
 bool Cache::isCommandValidOnAllPlatform(const QString &command) {
     QList<QString> validCommands({"help", "purge:all", "vacuum", "validate"});
     return validCommands.contains(command) ||
-           command.startsWith("report:missing=");
+           command.startsWith("report:missing=") ||
+           command.startsWith("convert:");
 }
 
 void Cache::purgeAllOnAllPlatforms(Settings &config, Skyscraper *app) {
@@ -980,7 +1008,7 @@ void Cache::purgeAllOnAllPlatforms(Settings &config, Skyscraper *app) {
     for (const auto &platform :
          cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         config.platform = platform;
-        Cache cache(cacheDir.filePath(platform));
+        Cache cache(cacheDir.filePath(platform), config.cacheFormat);
         if (cache.read() && cache.purgeAllOnSinglePlatform(true)) {
             app->state = Skyscraper::OpMode::NO_INTR;
             cache.write();
@@ -999,7 +1027,7 @@ bool Cache::reportAllPlatform(Settings &config, Skyscraper *app) {
         config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
         config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "reportAllPlatform()" << config.inputFolder;
-        Cache cache(config.cacheFolder);
+        Cache cache(config.cacheFolder, config.cacheFormat);
         if (cache.read()) {
             if (!cache.assembleReport(
                     config, app->getPlatformFileExtensions(platform))) {
@@ -1034,7 +1062,7 @@ void Cache::vacuumAllPlatform(Settings &config, Skyscraper *app) {
         config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
         config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "vacuumAllPlatform()" << config.inputFolder;
-        Cache cache(config.cacheFolder);
+        Cache cache(config.cacheFolder, config.cacheFormat);
         if (cache.read() &&
             cache.vacuumResources(QDir(config.inputFolder).filePath(platform),
                                   app->getPlatformFileExtensions(platform),
@@ -1056,9 +1084,27 @@ void Cache::validateAllPlatform(Settings &config, Skyscraper *app) {
         config.cacheFolder = PathTools::concatPath(initCacheFolder, platform);
         config.inputFolder = PathTools::concatPath(initInputFolder, platform);
         qDebug() << "validateAllPlatform()" << config.inputFolder;
-        Cache cache(cacheDir.filePath(platform));
+        Cache cache(cacheDir.filePath(platform), config.cacheFormat);
         if (cache.read()) {
             cache.validate();
+            app->state = Skyscraper::OpMode::NO_INTR;
+            cache.write();
+            app->state = Skyscraper::OpMode::SINGLE;
+        }
+    }
+}
+
+void Cache::convertAllPlatform(Settings &config, Skyscraper *app,
+                               const QString &format) {
+    QDir cacheDir(config.cacheFolder);
+    for (const auto &platform :
+         cacheDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        Cache cache(cacheDir.filePath(platform), format);
+        if (cache.read()) {
+            ncprintf("Converting resource cache of %s platform to format "
+                     "'%s'...\n",
+                     platform.toStdString().c_str(),
+                     format.toStdString().c_str());
             app->state = Skyscraper::OpMode::NO_INTR;
             cache.write();
             app->state = Skyscraper::OpMode::SINGLE;
@@ -1539,19 +1585,35 @@ bool Cache::write(const bool onlyQuickId) {
                      resCountNew, delta, delta < 0 ? "" : " new",
                      resCountNew == 1 ? "" : "s");
             fflush(stdout);
+            const bool legacyV1 = dbFormat == FORMAT_LEGACY_V1;
             QXmlStreamWriter xml(&cacheFile);
             xml.setAutoFormatting(true);
             xml.writeStartDocument();
-            xml.writeStartElement("resources");
-            for (const auto &romRes : resources) {
-                for (const auto &resource : romRes) {
+            xml.writeStartElement(DB_ROOT_ELEM);
+            if (!legacyV1) {
+                xml.writeAttribute(ATTR_VERSION, "2");
+            }
+            for (auto it = resources.cbegin(); it != resources.cend(); ++it) {
+                if (it.value().isEmpty()) {
+                    continue;
+                }
+                if (!legacyV1) {
+                    xml.writeStartElement(G_ELEM);
+                    xml.writeAttribute(ATTR_ID, it.key());
+                }
+                for (const auto &resource : it.value()) {
                     xml.writeStartElement(R_ELEM);
-                    xml.writeAttribute(ATTR_ID, resource.cacheId);
+                    if (legacyV1) {
+                        xml.writeAttribute(ATTR_ID, resource.cacheId);
+                    }
                     xml.writeAttribute(ATTR_TYPE, resource.type);
                     xml.writeAttribute(ATTR_SRC, resource.source);
                     xml.writeAttribute(ATTR_TS,
                                        QString::number(resource.timestamp));
                     xml.writeCharacters(resource.value);
+                    xml.writeEndElement();
+                }
+                if (!legacyV1) {
                     xml.writeEndElement();
                 }
             }

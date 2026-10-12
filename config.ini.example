@@ -33,6 +33,7 @@
 ;includeFrom="./includes.txt"
 ;gameListBackup="false"
 ;cacheFolder="./cache"
+;cacheFormat="v2"
 ;cacheResize="false"
 ;nameTemplate="%t [%f], %P player(s)"
 ;jpgQuality="95"

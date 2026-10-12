@@ -52,7 +52,7 @@ Preferred way of editing the cache is via the various [`--cache`](CLIHELP.md#-ca
     If you decide to add your own files to the subfolders, you risk them being deleted by Skyscraper later on if it is run with one of the cache cleanup command line options. You've been warned!
 
 
-**Other cool stuff you CAN DO**: Each subfolder in the `/home/<USER>/.skyscraper/cache/` folder is self-contained and can be copied to other Skyscraper installations at your convenience. Just copy the folder itself over to some other computer that has Skyscraper v1.6 or later installed, and you can make use of the data when generating game lists. If you add it at a non-default location, set the custom folder with `-d <FOLDER>`.
+**Other cool stuff you CAN DO**: Each subfolder in the `/home/<USER>/.skyscraper/cache/` folder is self-contained and can be copied to other Skyscraper installations at your convenience. Just copy the folder itself over to some other computer that has Skyscraper v1.6 or later installed, and you can make use of the data when generating game lists. If you add it at a non-default location, set the custom folder with `-d <FOLDER>`. If the other installation is Skyscraper 3.21.1 or older, convert the cache to the `legacy-v1` format first, see below.
 
 ### Resource Cache Format
 
@@ -60,14 +60,39 @@ I do not recommend editing the `db.xml` resource cache files manually. But the f
 
 **Resource id**
 
-The database consists of resource entries connected to a unique id. The id is calculated from the rom data or, in special cases, the filename (in cases where the file data is a script or a ROM gets changed by the gameplay). An entry can look like this:
+The database consists of resource entries connected to a unique id. The id is calculated from the rom data or, in special cases, the filename (in cases where the file data is a script or a ROM gets changed by the gameplay). The resources of one rom are grouped in a `game` element carrying the id:
 
 ```xml
-<resource id="<ID KEY>" 
-        type="<RESOURCE TYPE>" 
-      source="<SCRAPING SOURCE>"
-   timestamp="<UNIX TIMESTAMP IN MSECS>">Resource data</resource>
+<resources version="2">
+    <game id="<ID KEY>">
+        <resource type="<RESOURCE TYPE>"
+                source="<SCRAPING SOURCE>"
+             timestamp="<UNIX TIMESTAMP IN MSECS>">Resource data</resource>
+        ...
+    </game>
+    ...
+</resources>
 ```
+
+**Format versions**
+
+The layout above is format `v2`, written by default. Skyscraper 3.21.1 and older use format `legacy-v1`, a flat list where each resource carries the id itself:
+
+```xml
+<resources>
+    <resource id="<ID KEY>"
+            type="<RESOURCE TYPE>"
+          source="<SCRAPING SOURCE>"
+       timestamp="<UNIX TIMESTAMP IN MSECS>">Resource data</resource>
+    ...
+</resources>
+```
+
+Skyscraper reads both formats. A `legacy-v1` cache is rewritten as `v2` the next time Skyscraper saves it.
+
+!!! warning "Going back to an older Skyscraper version"
+
+    Skyscraper 3.21.1 and older cannot read the `v2` format and will treat the cache as empty. Before you use the cache with an older version, run [`--cache convert:legacy-v1`](CLIHELP.md#-cache-convertformat). To keep writing `legacy-v1`, for instance when you share a cache with an older installation, set [`cacheFormat="legacy-v1"`](CONFIGINI.md#cacheformat).
 
 #### Resource Types
 
