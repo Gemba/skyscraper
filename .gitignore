@@ -76,3 +76,10 @@ platforms_idmap_local.csv
 
 # docker config
 docker/config.ini
+
+# Debian packaging artifacts (see packaging/build-deb.sh)
+*.deb
+# ...but keep the build script itself (matched by *build-* above)
+!packaging/build-deb.sh
+# Local scratch for packaging builds (build tree, staging dir)
+.tmp/

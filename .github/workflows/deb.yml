@@ -1,0 +1,68 @@
+name: Debian package
+
+# Builds a Skyscraper .deb via packaging/build-deb.sh on Debian trixie
+# (Qt6; avoids libc mismatch with current Debian) and attaches it to
+# published releases, next to the AppImages.
+#
+# Version numbering and shipping stay manual: this only reacts to releases
+# and to changes under packaging/ (plus manual dispatch for testing).
+#
+# For a new upstream version: bump PINNED_VERSION/PINNED_COMMIT in
+# packaging/build-deb.sh first (CI always builds the exact triggering
+# commit via --pin-commit).
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    paths: ['packaging/**', '.github/workflows/deb.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container:
+      image: debian:trixie
+    steps:
+      # debian:trixie ships no git, so this falls back to a REST tarball.
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            ca-certificates git g++ make dpkg-dev \
+            qmake6 qt6-base-dev qt6-base-dev-tools libqt6sql6-sqlite p7zip-full
+      # Now that git exists, check out again for a real repository.
+      - name: Checkout sources with git
+        uses: actions/checkout@v4
+      - name: Build .deb
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          ./packaging/build-deb.sh --out-dir dist --pin-commit "$GITHUB_SHA"
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skyscraper-deb
+          path: dist/*.deb
+          if-no-files-found: error
+
+  attach:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download .deb artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: skyscraper-deb
+          path: dist
+      - name: Attach .deb to release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*.deb
