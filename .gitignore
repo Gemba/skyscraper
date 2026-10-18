@@ -14,21 +14,18 @@
 object_script.*.Release
 object_script.*.Debug
 *_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
+.qmake*
 *.pro.user
 *.pro.user.*
 *.qbs.user
 *.qbs.user.*
 *.moc
-moc_*.cpp
-moc_*.h
+moc_*
 qrc_*.cpp
 ui_*.h
 *.qmlc
 *.jsc
 Makefile*
-*build-*
 *.qm
 *.prl
 
@@ -45,19 +42,14 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 
-# QtCreator 4.8< compilation database 
-compile_commands.json
-
 # QtCreator local machine specific files for imported projects
 *creator.user*
 
 *_qmlcache.qrc
 
-moc_*
 *.tmp
 *.bkp
 *.bk
-.qmake*
 Skyscraper
 Skyscraper.app/**/*
 packages
@@ -76,3 +68,6 @@ platforms_idmap_local.csv
 
 # docker config
 docker/config.ini
+
+# Debian packaging artifacts (see build-deb.sh)
+*.deb
