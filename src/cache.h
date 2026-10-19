@@ -36,6 +36,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
+#include <functional>
 
 class Skyscraper;
 
@@ -72,7 +73,7 @@ struct ResCounts {
 
 class Cache {
 public:
-    Cache(const QString &cacheFolder);
+    Cache(const QString &cacheFolder, const QString &format = "");
 
     static bool isCommandValidOnAllPlatform(const QString &command);
 
@@ -80,10 +81,15 @@ public:
     static bool reportAllPlatform(Settings &config, Skyscraper *app);
     static void vacuumAllPlatform(Settings &config, Skyscraper *app);
     static void validateAllPlatform(Settings &config, Skyscraper *app);
+    static void convertAllPlatform(Settings &config, Skyscraper *app,
+                                   const QString &format);
 
+    // db.xml formats which can be written, see docs/CACHE.md
+    static const QStringList getFormats();
     static const QStringList getAllResourceTypes();
     static const QStringList getBinResourceTypes();
 
+    void setFormat(const QString &format);
     bool createFolders(const QString &scraper);
     bool read();
     void printPriorities(QString cacheId);
@@ -107,10 +113,12 @@ public:
     void merge(bool overwrite, const QString &otherCacheFolder);
 
 private:
-    QList<Resource> getResources();
+    const QMap<QString, QList<Resource>> &getResources() const;
+    int resourceCount() const;
 
 private:
     QDir cacheDir;
+    QString dbFormat;
     QMutex cacheMutex;
     QMutex quickIdMutex;
 
@@ -118,7 +126,10 @@ private:
 
     QMap<QString, ResCounts> resCountsMap;
 
-    QList<Resource> resources;
+    // cacheId -> all resources of that rom. Keyed so per-rom lookups during
+    // scraping and gamelist generation do not scan the whole cache; a QMap so
+    // db.xml is written in a stable order.
+    QMap<QString, QList<Resource>> resources;
     QMap<QString, QPair<qint64, QString>>
         quickIds; // filePath, timestamp + cacheId for quick lookup
 
@@ -137,6 +148,9 @@ private:
                      QString resType);
     void verifyResources(int &resourcesDeleted);
     bool removeMediaFile(Resource &res, const char *msg);
+    int removeMatching(QList<Resource> &romRes,
+                       const std::function<bool(const Resource &)> &match,
+                       const char *mediaMsg = nullptr);
     bool fillType(const QString &type, QList<Resource> &matchingResources,
                   QString &result, QString &source);
     bool doVideoConvert(Resource &resource, QString &cacheFile,

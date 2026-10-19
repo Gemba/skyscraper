@@ -215,6 +215,18 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 }
                 continue;
             }
+            if (k == "cacheFormat") {
+                const QStringList allowed = Cache::getFormats();
+                if (allowed.contains(v)) {
+                    config->cacheFormat = v;
+                } else {
+                    ncprintf("\033[1;33mValue '%s' of parameter %s is ignored. "
+                             "Valid values are: %s.\n\033[0m",
+                             v.toUtf8().constData(), k.toUtf8().constData(),
+                             allowed.join(", ").toUtf8().constData());
+                }
+                continue;
+            }
             if (k == "emulator") {
                 if (config->frontend == "attractmode") {
                     config->frontendExtra = v;
@@ -841,6 +853,17 @@ void RuntimeCfg::applyCli(bool &inputFolderSet, bool &gameListFolderSet,
         } else if (config->cacheOptions == "report:missing=help") {
             Cli::cacheReportMissingUsage();
             exit(0);
+        } else if (config->cacheOptions.startsWith("convert:")) {
+            const QString format = config->cacheOptions.mid(8);
+            if (!Cache::getFormats().contains(format)) {
+                ncprintf("\033[1;31mInvalid format '%s' for '--cache "
+                         "convert:'\033[0m, valid formats are: %s.\n",
+                         format.toUtf8().constData(),
+                         Cache::getFormats().join(", ").toUtf8().constData());
+                emit die(2, "invalid cache convert command",
+                         QString("Cannot apply --cache %1")
+                             .arg(config->cacheOptions));
+            }
         } else if (config->cacheOptions.startsWith("purge:")) {
             if (!validatePurgeParameters(config->cacheOptions)) {
                 ncprintf(
@@ -1070,8 +1093,8 @@ bool RuntimeCfg::validateFileParameter(const QString &param, QString &val) {
 
 bool RuntimeCfg::validateCacheSubCommand(const QString &subCmd) {
     const QStringList cmdsRe = QStringList(
-        {"^(edit(:new=[a-z]{4,})?", "help", "merge:.+", "purge:all",
-         "purge:(m|t)=[a-z]+(,(m|t)=[a-z]+)?", "refresh",
+        {"^(convert:[a-z0-9-]+", "edit(:new=[a-z]{4,})?", "help", "merge:.+",
+         "purge:all", "purge:(m|t)=[a-z]+(,(m|t)=[a-z]+)?", "refresh",
          "report:missing=[a-z]{3,}", "show", "vacuum", "validate)$"});
     const QRegularExpression REGEX_CACHE_SUBCMD =
         QRegularExpression(cmdsRe.join("|"));

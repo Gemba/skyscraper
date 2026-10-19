@@ -279,6 +279,21 @@ Read more about the resource cache at the [cache documentation](CACHE.md).
 
 Outputs a description of all available `--cache` functions.
 
+#### --cache convert:&lt;FORMAT&gt;
+
+Rewrites the resource cache file `db.xml` in the given format, either `v2` (the default) or `legacy-v1`. Use `legacy-v1` before you use the cache with Skyscraper 3.21.1 or older, which cannot read the `v2` format. See [Resource Cache Format](CACHE.md#resource-cache-format).
+
+If _no platform is specified_, the caches of all platforms are converted.
+
+To keep writing the `legacy-v1` format on every run, set [`cacheFormat`](CONFIGINI.md#cacheformat) in your `config.ini`.
+
+**Example(s)**
+
+```
+Skyscraper -p snes --cache convert:legacy-v1
+Skyscraper --cache convert:legacy-v1
+```
+
 #### --cache edit[:new=&lt;TYPE&gt;]
 
 Allows editing of any cached resources connected to your roms. The editing mode will go through each of the files in the queue one by one, allowing you to add and remove resources as needed. Any resource you add manually will be prioritized above all others.

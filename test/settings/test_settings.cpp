@@ -188,6 +188,8 @@ private slots:
         QCOMPARE(config.cacheCovers, exp);
         exp = settings.value("cacheFolder").toString() + "amiga";
         QCOMPARE(config.cacheFolder, exp);
+        exp = settings.value("cacheFormat");
+        QCOMPARE(config.cacheFormat, exp);
         exp = settings.value("cacheMarquees");
         QCOMPARE(config.cacheMarquees, exp);
         exp = settings.value("cacheRefresh");
@@ -363,6 +365,8 @@ private slots:
         QCOMPARE(config.cacheCovers, exp);
         exp = settings.value("cacheFolder");
         QCOMPARE(config.cacheFolder, exp);
+        exp = settings.value("cacheFormat");
+        QCOMPARE(config.cacheFormat, exp);
         exp = settings.value("cacheMarquees");
         QCOMPARE(config.cacheMarquees, exp);
         exp = settings.value("cacheResize");

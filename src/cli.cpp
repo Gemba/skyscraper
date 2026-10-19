@@ -372,6 +372,11 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"validate",
              "Checks the consistency of the cache for the selected platform. "
              "If platform is omitted it validates over all platforms."},
+            {"convert:<FORMAT>",
+             "Rewrites the resource cache 'db.xml' of the selected platform in "
+             "<FORMAT>, which is 'v2' (default) or 'legacy-v1' (readable by "
+             "Skyscraper 3.21.1 and older). If platform is omitted it "
+             "converts the caches of all platforms."},
             {"edit",
              "Let's you edit resources for the selected platform for all files "
              "or a range of files. Add a filename on command line to edit "
