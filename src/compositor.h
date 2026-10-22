@@ -47,6 +47,7 @@ public:
 private:
     void addChildLayers(Layer &layer, QXmlStreamReader &xml);
     void processChildLayers(GameEntry &game, Layer &layer);
+    static bool existsWithAltSuffix(const QString &filename);
     Settings *config;
     Layer outputs;
 };

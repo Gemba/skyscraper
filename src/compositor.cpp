@@ -59,6 +59,24 @@
 
 Compositor::Compositor(Settings *config) { this->config = config; }
 
+bool Compositor::existsWithAltSuffix(const QString &filename) {
+    if (QFileInfo::exists(filename)) {
+        return true;
+    }
+    // Compositor output is always written as '.png' (see 'saveAll' below),
+    // but a non-composited leftover from another source or an earlier
+    // config may sit at the same key with the other common image suffix.
+    // AbstractFrontend::doCopy already treats either suffix as "present";
+    // do the same here so skipExisting* doesn't add a duplicate.
+    QString altFilename = filename;
+    if (filename.endsWith(".jpg")) {
+        altFilename.replace(altFilename.length() - 3, 3, "png");
+    } else if (filename.endsWith(".png")) {
+        altFilename.replace(altFilename.length() - 3, 3, "jpg");
+    }
+    return QFileInfo::exists(altFilename);
+}
+
 bool Compositor::preCheckArtworkXml(const QString &artworkXml) {
     // Check document for errors before running through it with threads
     QDomDocument doc;
@@ -312,7 +330,7 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
         }
         if (output.resType == "cover") {
             filename.prepend(config->coversFolder);
-            if (config->skipExistingCovers && QFileInfo::exists(filename)) {
+            if (config->skipExistingCovers && existsWithAltSuffix(filename)) {
                 game.coverFile = filename;
                 continue;
             }
@@ -328,26 +346,26 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
                 filename.prepend(config->screenshotsFolder);
             }
             if (config->skipExistingScreenshots &&
-                QFileInfo::exists(filename)) {
+                existsWithAltSuffix(filename)) {
                 // set screenshotFile to generate XML element later
                 game.screenshotFile = filename;
                 continue;
             }
         } else if (output.resType == "wheel") {
             filename.prepend(config->wheelsFolder);
-            if (config->skipExistingWheels && QFileInfo::exists(filename)) {
+            if (config->skipExistingWheels && existsWithAltSuffix(filename)) {
                 game.wheelFile = filename;
                 continue;
             }
         } else if (output.resType == "marquee") {
             filename.prepend(config->marqueesFolder);
-            if (config->skipExistingMarquees && QFileInfo::exists(filename)) {
+            if (config->skipExistingMarquees && existsWithAltSuffix(filename)) {
                 game.marqueeFile = filename;
                 continue;
             }
         } else if (output.resType == "texture") {
             filename.prepend(config->texturesFolder);
-            if (config->skipExistingTextures && QFileInfo::exists(filename)) {
+            if (config->skipExistingTextures && existsWithAltSuffix(filename)) {
                 game.textureFile = filename;
                 continue;
             }
