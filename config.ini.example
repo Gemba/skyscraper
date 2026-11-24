@@ -89,14 +89,14 @@
 
 ; The following is an example of configs that only affect the 'snes' platform.
 ;[snes]
-;inputFolder="/home/pi/RetroPie/roms/amiga"
+;inputFolder="/home/pi/RetroPie/roms/snes"
 ;excludePattern="*[BIOS]*"
 ;includePattern="Super*"
 ;excludeFrom="/home/pi/.skyscraper/excludes/snes/excludes.txt"
 ;includeFrom="/home/pi/.skyscraper/includes/snes/includes.txt"
-;gameListFolder="/home/pi/RetroPie/roms/amiga"
-;mediaFolder="/home/pi/RetroPie/roms/amiga/media"
-;cacheFolder="/home/pi/.skyscraper/cache/amiga"
+;gameListFolder="/home/pi/RetroPie/roms/snes"
+;mediaFolder="/home/pi/RetroPie/roms/snes/media"
+;cacheFolder="/home/pi/.skyscraper/cache/snes"
 ;cacheResize="false"
 ;nameTemplate="%t [%f], %P player(s)"
 ;jpgQuality="95"
@@ -105,7 +105,7 @@
 ;cacheWheels="true"
 ;cacheMarquees="true"
 ;cacheTextures="true"
-;importFolder="/home/pi/.skyscraper/import/amiga"
+;importFolder="/home/pi/.skyscraper/import/snes"
 ;unpack="false"
 ;emulator=""
 ;launch=""
