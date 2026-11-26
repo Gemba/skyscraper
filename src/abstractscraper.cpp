@@ -492,6 +492,7 @@ QString AbstractScraper::lookupAliasMap(const QString &baseName,
     }
     return baseName;
 }
+
 QString AbstractScraper::lookupSearchName(const QFileInfo &info,
                                           const QString &baseName,
                                           QString &debug) {
@@ -713,7 +714,9 @@ void AbstractScraper::runPasses(QList<GameEntry> &gameEntries,
     QList<QString> searchNames;
     if (!config->searchName.isEmpty()) {
         // set the string provided by "--query"
-        searchNames.append(applyQuerySearchName(config->searchName));
+        QString const sn = applyQuerySearchName(config->searchName);
+        if (!sn.isEmpty())
+            searchNames.append(sn);
     } else {
         searchNames = getSearchNames(info, debug);
     }
