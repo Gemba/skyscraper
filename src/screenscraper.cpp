@@ -112,8 +112,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         gameUrl %
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId));
     // searchName is percent encoded, see getSearchNames()
-    gameUrl =
-        gameUrl % "&" % searchName;
+    gameUrl = gameUrl % "&" % searchName;
 
     tctr = 0;
     statusTimer.start(1000);
@@ -123,7 +122,6 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         netComm->request(gameUrl);
         q.exec();
         data = netComm->getData();
-
         // Minor optimization with minimal more RAM usage
         QByteArray headerData = data.left(1024);
         // Do error checks on headerData. It's more stable than checking the
@@ -136,7 +134,8 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
             netComm->setTimeout(timeout);
             tctr = 0;
             continue;
-        } else if (headerData.contains("non trouvée")) {
+        } else if (netComm->getHttpStatus() == 404 ||
+                   headerData.contains("non trouvée")) {
             statusTimer.stop();
             return;
         } else if (headerData.contains("API totalement fermé")) {
@@ -663,11 +662,44 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
 }
 
 QString ScreenScraper::applyQuerySearchName(QString query) {
-    if (query.startsWith("romnom=") || query.contains("=")) {
-        return QUrl::toPercentEncoding(query);
-    } else {
+    if (!query.contains("=")) {
         return "romnom=" + QUrl::toPercentEncoding(query);
     }
+    const QStringList queryKeys = {"crc",    "md5",       "sha1",
+                                   "romnom", "serialnum", "gameid"};
+    const QMap<QString, int> hashLengths = {
+        {"crc", 8}, {"md5", 32}, {"sha1", 40}};
+    const QRegularExpression re = QRegularExpression("(\\w+)=(.*)");
+    QRegularExpressionMatch match;
+    QStringList kvList = query.split("&", Qt::SkipEmptyParts);
+    QStringList params;
+
+    for (const auto &kv : kvList) {
+        match = re.match(kv);
+        if (match.hasMatch()) {
+            const QString key = match.captured(1).toLower();
+            const QString val = match.captured(2);
+            if (queryKeys.contains(key)) {
+                if ((key == "crc" || key == "md5" || key == "sha1") &&
+                    val.length() != hashLengths[key]) {
+                    ncprintf("\033[1;31mInvalid parameter: Value for %s= must "
+                             "have %d characters, but has %d.\nScraping "
+                             "stopped.\033[0m\n",
+                             key.toStdString().c_str(), hashLengths[key],
+                             val.length());
+                    return "";
+                } else if (val.isEmpty()) {
+                    ncprintf("\033[1;31mInvalid parameter: Value for %s= may "
+                             "not be empty.\nScraping stopped.\033[0m\n",
+                             key.toStdString().c_str());
+                    return "";
+                }
+                params.append(key % "=" %
+                              QUrl::toPercentEncoding(val));
+            }
+        }
+    }
+    return params.join("&");
 }
 
 QString ScreenScraper::getUrlOrTextPropertyValue(const QJsonObject &jsonObj,

@@ -3,6 +3,12 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.22.0 (2026-TBA)
+
+- Fixed: Query parameter handling when using Screenscraper.fr with `--query`.
+  See [#277](https://github.com/Gemba/skyscraper/issues/277) thanks @mateusaires
+  (shipped with 3.21.2)
+
 ### Version 3.21.0 (2026-09-20)
 
 - Added: AppImage support for PC (x64) and ARM (aarch64) architectures (with or
